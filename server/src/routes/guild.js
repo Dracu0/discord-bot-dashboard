@@ -409,7 +409,7 @@ router.get('/:id/settings', async (req, res) => {
                 welcomeEmbed: config.welcomeEmbed,
                 welcomeColor: colorToHex(config.welcomeColor, '#00aa00'),
                 goodbyeColor: colorToHex(config.goodbyeColor, '#ff0000'),
-                suggestionCooldownMs: config.suggestionCooldownMs,
+                suggestionCooldownMs: config.suggestionCooldownMs / 1000,
             },
         });
     } catch (err) {
@@ -456,14 +456,16 @@ router.patch('/:id/settings', async (req, res) => {
                     return res.status(400).json({ error: `${key} must be a hex color string (#RRGGBB)` });
                 }
             } else if (key === 'suggestionCooldownMs') {
-                if (typeof value !== 'number' || value < 0 || value > 86400000) {
-                    return res.status(400).json({ error: 'suggestionCooldownMs must be a number (0-86400000)' });
+                if (typeof value !== 'number' || value < 0 || value > 86400) {
+                    return res.status(400).json({ error: 'suggestionCooldownMs must be a number in seconds (0-86400)' });
                 }
             }
 
             // Convert hex color strings to numbers for DB storage
             if ((key === 'welcomeColor' || key === 'goodbyeColor') && typeof value === 'string') {
                 config[key] = parseInt(value.replace('#', ''), 16);
+            } else if (key === 'suggestionCooldownMs') {
+                config[key] = value * 1000;
             } else {
                 config[key] = value;
             }
@@ -477,7 +479,7 @@ router.patch('/:id/settings', async (req, res) => {
             welcomeEmbed: config.welcomeEmbed,
             welcomeColor: colorToHex(config.welcomeColor, '#00aa00'),
             goodbyeColor: colorToHex(config.goodbyeColor, '#ff0000'),
-            suggestionCooldownMs: config.suggestionCooldownMs,
+            suggestionCooldownMs: config.suggestionCooldownMs / 1000,
         });
     } catch (err) {
         console.error('Failed to update settings:', err);

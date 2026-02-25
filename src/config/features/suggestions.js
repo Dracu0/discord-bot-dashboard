@@ -30,11 +30,11 @@ export const SuggestionsFeature = {
             },
             {
                 id: "suggestionCooldownMs",
-                name: "Suggestion Cooldown (ms)",
+                name: "Suggestion Cooldown (s)",
                 description:
-                    "Cooldown between suggestions per user in milliseconds (0 = no cooldown, max 86400000 = 24 hours)",
+                    "Cooldown between suggestions per user in seconds (0 = no cooldown, max 86400 = 24 hours)",
                 type: "number",
-                value: values.suggestionCooldownMs ?? 0,
+                value: (values.suggestionCooldownMs ?? 0) / 1000,
             },
         ];
     },
