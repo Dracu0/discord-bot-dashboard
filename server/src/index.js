@@ -53,7 +53,7 @@ app.use(helmet({
     contentSecurityPolicy: IS_PRODUCTION ? {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
             imgSrc: ["'self'", "data:", "https://cdn.discordapp.com"],
@@ -81,7 +81,7 @@ if (!IS_PRODUCTION) {
     }));
 }
 
-app.use(express.json({ strict: false }));
+app.use(express.json());
 
 // Connect to MongoDB (same DB as the bot)
 mongoose.connect(DATABASE_TOKEN, {

@@ -17,6 +17,9 @@ function requireGuildAccess(req, res, next) {
     }
 
     const guildId = req.params.id;
+    if (!/^\d{17,20}$/.test(guildId)) {
+        return res.status(400).json({ error: 'Invalid guild ID format' });
+    }
     const guilds = req.user.guilds || [];
 
     const guild = guilds.find(g => g.id === guildId);

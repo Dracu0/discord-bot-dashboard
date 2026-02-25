@@ -25,7 +25,7 @@ export async function setFeatureEnabled(serverId, featureId, enabled = true) {
 
   return fetchAuto(`/guild/${serverId}/feature/${featureId}/enabled`, {
     method: "PATCH",
-    body: enabled,
+    body: JSON.stringify({ enabled }),
   })
 }
 

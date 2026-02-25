@@ -22,6 +22,7 @@ const suggestionSchema = new Schema({
     content: {
         type: String,
         required: true,
+        maxlength: 4000,
     },
     status: {
         type: String,
@@ -31,6 +32,7 @@ const suggestionSchema = new Schema({
     reason: {
         type: String,
         default: '',
+        maxlength: 2000,
     },
     upvotes: {
         type: [String],

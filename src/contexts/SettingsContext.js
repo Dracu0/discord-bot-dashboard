@@ -44,6 +44,10 @@ function getItem(key, initial) {
         case "string":
             return result
         default:
-            return JSON.parse(result)
+            try {
+                return JSON.parse(result)
+            } catch {
+                return initial
+            }
     }
 }

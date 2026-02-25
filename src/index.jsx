@@ -81,9 +81,22 @@ function AppRouter() {
     );
 }
 
+const TRUSTED_REDIRECT_DOMAINS = ['discord.com', 'discordapp.com'];
+
 function Redirect({ url }) {
     useEffect(() => {
-        window.location.href = url;
+        try {
+            const parsed = new URL(url);
+            if (TRUSTED_REDIRECT_DOMAINS.some(d => parsed.hostname === d || parsed.hostname.endsWith('.' + d))) {
+                window.location.href = url;
+            } else {
+                console.error('Redirect blocked: untrusted domain', parsed.hostname);
+                window.location.href = '/admin';
+            }
+        } catch {
+            console.error('Redirect blocked: invalid URL', url);
+            window.location.href = '/admin';
+        }
     }, [url]);
 
     return <Center height="100vh">

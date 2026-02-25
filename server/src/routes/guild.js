@@ -1,10 +1,20 @@
 const router = require('express').Router();
+const { randomUUID } = require('crypto');
 const { requireGuildAccess } = require('../auth/middleware');
 const GuildConfiguration = require('../models/GuildConfiguration');
 const Level = require('../models/Level');
 const ModLog = require('../models/ModLog');
 const Suggestion = require('../models/Suggestion');
 const { fetchGuild, fetchGuildChannels, fetchGuildRoles } = require('../utils/discord');
+
+// Validation helpers
+const VALID_SUGGESTION_STATUSES = ['pending', 'approved', 'rejected', 'in-progress'];
+function isValidObjectId(id) {
+    return /^[0-9a-fA-F]{24}$/.test(id);
+}
+function isObject(val) {
+    return val != null && typeof val === 'object' && !Array.isArray(val);
+}
 
 // All guild routes require access
 router.use('/:id', requireGuildAccess);
@@ -215,7 +225,11 @@ router.get('/:id/features', async (req, res) => {
 router.patch('/:id/feature/:featureId/enabled', async (req, res) => {
     try {
         const { id: guildId, featureId } = req.params;
-        const enabled = req.body;
+
+        if (!isObject(req.body) || typeof req.body.enabled !== 'boolean') {
+            return res.status(400).json({ error: 'Body must be { enabled: boolean }' });
+        }
+        const { enabled } = req.body;
 
         const featureDef = FEATURE_FIELDS[featureId];
         if (!featureDef) {
@@ -290,6 +304,10 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
         const { id: guildId, featureId } = req.params;
         const updates = req.body;
 
+        if (!isObject(updates)) {
+            return res.status(400).json({ error: 'Body must be a JSON object' });
+        }
+
         const featureDef = FEATURE_FIELDS[featureId];
         if (!featureDef) {
             return res.status(404).json({ error: 'Unknown feature' });
@@ -304,6 +322,11 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
         const allowedFields = new Set(featureDef.fields);
         for (const [key, value] of Object.entries(updates)) {
             if (!allowedFields.has(key)) continue;
+
+            // Validate string field lengths
+            if (typeof value === 'string' && value.length > 2000) {
+                return res.status(400).json({ error: `${key} exceeds maximum length (2000 chars)` });
+            }
 
             // Convert levelRoles from [[level, roleId], ...] to [{level, roleId}, ...]
             if (key === 'levelRoles' && Array.isArray(value)) {
@@ -401,6 +424,10 @@ router.patch('/:id/settings', async (req, res) => {
         const guildId = req.params.id;
         const updates = req.body;
 
+        if (!isObject(updates)) {
+            return res.status(400).json({ error: 'Body must be a JSON object' });
+        }
+
         let config = await GuildConfiguration.findOne({ guildId });
         if (!config) {
             config = await GuildConfiguration.create({ guildId });
@@ -414,6 +441,25 @@ router.patch('/:id/settings', async (req, res) => {
         const settingsSet = new Set(SETTINGS_FIELDS);
         for (const [key, value] of Object.entries(updates)) {
             if (!settingsSet.has(key)) continue;
+
+            // Type validation per field
+            if (key === 'welcomeMessage' || key === 'goodbyeMessage') {
+                if (typeof value !== 'string' || value.length > 2000) {
+                    return res.status(400).json({ error: `${key} must be a string (max 2000 chars)` });
+                }
+            } else if (key === 'welcomeEmbed') {
+                if (typeof value !== 'boolean') {
+                    return res.status(400).json({ error: 'welcomeEmbed must be a boolean' });
+                }
+            } else if (key === 'welcomeColor' || key === 'goodbyeColor') {
+                if (typeof value !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(value)) {
+                    return res.status(400).json({ error: `${key} must be a hex color string (#RRGGBB)` });
+                }
+            } else if (key === 'suggestionCooldownMs') {
+                if (typeof value !== 'number' || value < 0 || value > 86400000) {
+                    return res.status(400).json({ error: 'suggestionCooldownMs must be a number (0-86400000)' });
+                }
+            }
 
             // Convert hex color strings to numbers for DB storage
             if ((key === 'welcomeColor' || key === 'goodbyeColor') && typeof value === 'string') {
@@ -545,6 +591,9 @@ router.get('/:id/action/:actionId/:taskId', async (req, res) => {
                 },
             });
         } else if (actionId === 'mod_history') {
+            if (!isValidObjectId(taskId)) {
+                return res.status(400).json({ error: 'Invalid task ID format' });
+            }
             const log = await ModLog.findById(taskId).lean();
 
             if (!log || log.guildId !== guildId) {
@@ -576,6 +625,10 @@ router.get('/:id/action/:actionId/:taskId', async (req, res) => {
 router.patch('/:id/action/:actionId/:taskId', async (req, res) => {
     try {
         const { id: guildId, actionId, taskId } = req.params;
+
+        if (!isObject(req.body) || !isObject(req.body.options)) {
+            return res.status(400).json({ error: 'Body must contain { options: {} }' });
+        }
         const { options } = req.body;
 
         if (actionId === 'manage_suggestions') {
@@ -588,8 +641,18 @@ router.patch('/:id/action/:actionId/:taskId', async (req, res) => {
                 return res.status(404).json({ error: 'Suggestion not found' });
             }
 
-            if (options.status) suggestion.status = options.status;
-            if (options.reason !== undefined) suggestion.reason = options.reason;
+            if (options.status) {
+                if (!VALID_SUGGESTION_STATUSES.includes(options.status)) {
+                    return res.status(400).json({ error: 'Invalid status value' });
+                }
+                suggestion.status = options.status;
+            }
+            if (options.reason !== undefined) {
+                if (typeof options.reason !== 'string' || options.reason.length > 2000) {
+                    return res.status(400).json({ error: 'Reason must be a string (max 2000 chars)' });
+                }
+                suggestion.reason = options.reason;
+            }
             await suggestion.save();
 
             res.json({
@@ -615,16 +678,30 @@ router.patch('/:id/action/:actionId/:taskId', async (req, res) => {
 router.post('/:id/action/:actionId', async (req, res) => {
     try {
         const { id: guildId, actionId } = req.params;
+
+        if (!isObject(req.body)) {
+            return res.status(400).json({ error: 'Body must be a JSON object' });
+        }
         const { name, options } = req.body;
 
         if (actionId === 'manage_suggestions') {
+            if (!isObject(options)) {
+                return res.status(400).json({ error: 'Body must contain { options: {} }' });
+            }
+            const content = options.content || name || '';
+            if (!content || typeof content !== 'string' || content.length > 4000) {
+                return res.status(400).json({ error: 'Content is required (max 4000 chars)' });
+            }
+            if (options.status && !VALID_SUGGESTION_STATUSES.includes(options.status)) {
+                return res.status(400).json({ error: 'Invalid status value' });
+            }
             const suggestion = await Suggestion.create({
                 guildId,
                 authorId: req.user.id,
-                messageId: `dashboard-${Date.now()}`,
-                content: options.content || name || '',
+                messageId: `dashboard-${randomUUID()}`,
+                content,
                 status: options.status || 'pending',
-                reason: options.reason || '',
+                reason: typeof options.reason === 'string' ? options.reason.slice(0, 2000) : '',
             });
 
             res.json({
@@ -663,6 +740,9 @@ router.delete('/:id/action/:actionId/:taskId', async (req, res) => {
 
             res.sendStatus(200);
         } else if (actionId === 'mod_history') {
+            if (!isValidObjectId(taskId)) {
+                return res.status(400).json({ error: 'Invalid task ID format' });
+            }
             const log = await ModLog.findById(taskId).lean();
 
             if (!log || log.guildId !== guildId) {

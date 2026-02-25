@@ -42,7 +42,6 @@ async function fetchGuildMembers(guildId, limit = 100) {
 }
 
 module.exports = {
-    rest,
     fetchGuild,
     fetchGuildChannels,
     fetchGuildRoles,

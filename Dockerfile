@@ -15,6 +15,7 @@ COPY src/ src/
 COPY jsconfig.json ./
 
 ENV NODE_ENV=production
+ENV INLINE_RUNTIME_CHUNK=false
 RUN npm run build
 
 # Stage 2: Production server
@@ -31,6 +32,10 @@ COPY server/src/ ./server/src/
 
 # Copy React build from stage 1
 COPY --from=frontend-build /app/build ./build
+
+# Run as non-root user for defense in depth
+RUN addgroup -S app && adduser -S -G app app && chown -R app:app /app
+USER app
 
 ENV NODE_ENV=production
 ENV PORT=8080

@@ -29,6 +29,7 @@ const guildConfigurationSchema = new Schema({
     suggestionChannelIds: {
         type: [String],
         default: [],
+        validate: [v => v.length <= 10, 'Maximum 10 suggestion channels'],
     },
     suggestionCooldownMs: {
         type: Number,
@@ -41,10 +42,12 @@ const guildConfigurationSchema = new Schema({
     mcServers: {
         type: [mcServerSchema],
         default: [],
+        validate: [v => v.length <= 10, 'Maximum 10 Minecraft servers'],
     },
     xpIgnoredChannelIds: {
         type: [String],
         default: [],
+        validate: [v => v.length <= 50, 'Maximum 50 ignored channels'],
     },
     xpLevelUpChannelId: {
         type: String,
@@ -57,6 +60,7 @@ const guildConfigurationSchema = new Schema({
     levelRoles: {
         type: [levelRoleSchema],
         default: [],
+        validate: [v => v.length <= 50, 'Maximum 50 level roles'],
     },
     welcomeChannelId: {
         type: String,
@@ -65,10 +69,12 @@ const guildConfigurationSchema = new Schema({
     welcomeMessage: {
         type: String,
         default: 'Welcome to {server}, {user}! You are member #{membercount}.',
+        maxlength: 2000,
     },
     goodbyeMessage: {
         type: String,
         default: '{user} has left {server}. We now have {membercount} members.',
+        maxlength: 2000,
     },
     welcomeEmbed: {
         type: Boolean,
@@ -85,6 +91,7 @@ const guildConfigurationSchema = new Schema({
     autoRoleIds: {
         type: [String],
         default: [],
+        validate: [v => v.length <= 25, 'Maximum 25 auto-roles'],
     },
     modLogChannelId: {
         type: String,
