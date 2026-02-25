@@ -7,6 +7,24 @@ import {useBrandBg, useNoteColor, useTextColor} from "utils/colors";
 import {useLocale} from "utils/Language";
 import {CgShapeCircle} from "react-icons/cg";
 
+/**
+ * Check if a path segment appears in the pathname as a proper segment
+ * (not as a substring of another segment)
+ */
+function hasSegment(pathname, segment) {
+  const segments = pathname.split('/').filter(Boolean);
+  return segments.includes(segment);
+}
+
+/**
+ * Check if the current path exactly ends with the given segment
+ * (the last non-empty segment matches)
+ */
+function endsWithSegment(pathname, segment) {
+  const segments = pathname.split('/').filter(Boolean);
+  return segments[segments.length - 1] === segment;
+}
+
 export function SidebarLinks({ routes }) {
 
   return routes.map((route, index) =>
@@ -16,8 +34,8 @@ export function SidebarLinks({ routes }) {
 
 function RouteItem({route}) {
   const location = useLocation();
-  const active = location.pathname.endsWith(route.path);
-  const includes = location.pathname.includes(route.path)
+  const active = endsWithSegment(location.pathname, route.path);
+  const includes = hasSegment(location.pathname, route.path);
 
   return (
       <>
@@ -30,7 +48,7 @@ function RouteItem({route}) {
             return <Item
                 key={key}
                 path={path}
-                active={location.pathname.includes(path)}
+                active={hasSegment(location.pathname, item.path)}
                 name={item.name}
                 icon={<CgShapeCircle />}
             />

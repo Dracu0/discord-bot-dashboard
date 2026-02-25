@@ -24,13 +24,13 @@ import {config} from "./config/config";
  */
 const routes = [
     {
-        name: {zh: "服務器儀表板", en: "Statistics"},
+        name: {zh: "儀表板", en: "Dashboard"},
         icon: <Icon as={BiServer} width="20px" height="20px" color="inherit"/>,
         path: "dashboard",
         component: <Dashboard/>,
     },
     {
-        name: {zh: "功能控制板", en: "Features"},
+        name: {zh: "功能面板", en: "Features"},
         icon: (
             <Icon as={RiFunctionFill} width="20px" height="20px" color="inherit"/>
         ),
@@ -90,7 +90,7 @@ const routes = [
         ]
     },
     {
-        name: {zh: "服務器設置", en: "Settings"},
+        name: {zh: "設置", en: "Settings"},
         icon: (
             <Icon as={IoIosSettings} width="20px" height="20px" color="inherit"/>
         ),

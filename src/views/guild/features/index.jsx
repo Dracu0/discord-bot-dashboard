@@ -24,12 +24,12 @@ function Content() {
   useLayoutUpdate({
     banner: {
       title: locale({
-        zh: "在線管理所有功能",
-        en: `Features Panel`
+        zh: "機器人功能",
+        en: "Bot Features"
       }),
       description: locale({
-        zh: `發掘、學習、以及客製化${config.name}強大的功能`,
-        en: `Discover, Learn, And Customize the Powerful Features of ${config.name}`
+        zh: `啟用並配置${config.name}在此伺服器的功能`,
+        en: `Enable and configure ${config.name}'s features for this server`
       }),
       buttons: [
         config.tutorialUrl && <TutorialButton />

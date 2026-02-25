@@ -11,7 +11,7 @@ export function ActionsLayout() {
     const locale = useLocale()
 
     usePageInfo(
-        locale({zh: "動作面板", en: "Action Panel"})
+        locale({zh: "動作面板", en: "Actions"})
     );
 
     return <LayoutProvider>

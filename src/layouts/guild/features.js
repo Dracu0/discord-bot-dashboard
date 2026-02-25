@@ -38,7 +38,7 @@ function Content() {
     const locale = useLocale()
 
     usePageInfo(
-        locale({ zh: "功能控制面板", en: "Features" })
+        locale({ zh: "功能面板", en: "Features" })
     )
 
     if (dataList) {

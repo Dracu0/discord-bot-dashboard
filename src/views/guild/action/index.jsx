@@ -18,12 +18,12 @@ export default function ActionsBoard() {
     useLayoutUpdate({
         banner: {
             title: locale({
-                zh: "通過儀表板直接管理您的服務器",
-                en: "Manage Your server Online"
+                zh: "伺服器動作",
+                en: "Server Actions"
             }),
             description: locale({
-                zh: "讓您的服務器充滿活力，活躍起來!",
-                en: "Grow your server up and Let it come alive!"
+                zh: "審核建議、查看審核歷史並管理伺服器任務",
+                en: "Review suggestions, view moderation history, and manage server tasks"
             }),
             buttons: [config.tutorialUrl && <TutorialButton />]
         },
@@ -33,7 +33,7 @@ export default function ActionsBoard() {
     })
 
     usePageInfo(
-        locale({zh: "動作面板", en: "Action Panel"})
+        locale({zh: "動作面板", en: "Actions"})
     );
 
     return <ActionsList />

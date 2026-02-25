@@ -17,7 +17,7 @@ import { useDetailColor, useTextColor } from "utils/colors";
 export default function Dashboard() {
     const locale = useLocale()
 
-    usePageInfo(locale({ zh: "服務器儀表板", en: "Server Statistics" }))
+    usePageInfo(locale({ zh: "儀表板", en: "Dashboard" }))
 
     return <ServerDetailProvider>
         <UserReports />

@@ -1,1 +1,1 @@
-export const homepage = "https://github.com/SonMooSans/discord-bot-dashboard"
+export const homepage = "https://github.com/Dracu0/Discord-Bot-v0.3.4"
