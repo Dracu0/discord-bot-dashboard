@@ -1,9 +1,8 @@
 // Chakra imports
-import {Button, Stack, Text, useColorMode} from "@chakra-ui/react";
+import {Text, useColorMode} from "@chakra-ui/react";
 import Card from "components/card/Card.js";
 // Custom components
 import SwitchField from "components/fields/impl/SwitchField";
-import {useLogout} from "../../api/internal";
 import {useContext} from "react";
 //Context
 import {SettingsContext} from "contexts/SettingsContext";
@@ -15,7 +14,6 @@ export default function Settings({...rest}) {
     const {colorMode, setColorMode} = useColorMode();
     const {updateSettings, devMode, fixedWidth, language} = useContext(SettingsContext)
     const locale = useLocale()
-    const logout = useLogout()
 
     // Chakra Color Mode
     const textColorPrimary = useTextColor()
@@ -73,17 +71,6 @@ export default function Settings({...rest}) {
                     language: lang
                 })
             }/>
-            <Stack mt="auto" gap={3}>
-                <Button
-                    mt={10}
-                    size="lg"
-                    variant="brand"
-                    isLoading={logout.isLoading}
-                    onClick={logout.mutate}
-                >
-                    <Locale en="Sign out" zh="登出帳號" />
-                </Button>
-            </Stack>
         </Card>
     );
 }
