@@ -1,33 +1,34 @@
-import React, {useContext, useMemo} from "react";
+import React, { useContext, useMemo } from "react";
 
-import {Flex} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 // Custom components
-import {updateFeatureOptions} from "api/internal";
+import { updateFeatureOptions } from "api/internal";
 
-import {useFeatureDetailQuery, useFeatureInfo,} from "contexts/FeatureDetailContext";
-import {GuildContext} from "contexts/guild/GuildContext";
-import {ConfigGrid, ConfigGridSkeleton} from "components/fields/ConfigPanel";
-import {config} from "config/config";
+import { useFeatureDetailQuery, useFeatureInfo, } from "contexts/FeatureDetailContext";
+import { GuildContext } from "contexts/guild/GuildContext";
+import { FeaturesContext } from "contexts/FeaturesContext";
+import { ConfigGrid, ConfigGridSkeleton } from "components/fields/ConfigPanel";
+import { config } from "config/config";
 import NotFound from "../../info/Not_Found";
-import {useParams} from "react-router-dom";
-import {useQueryClient} from "react-query";
-import {usePageState} from "utils/State";
-import {useLocale} from "utils/Language";
+import { useParams } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import { usePageState } from "utils/State";
+import { useLocale } from "utils/Language";
 import useBanner from "./components/Banner";
 
 export default function Feature() {
-  const { feature } = useParams()
+    const { feature } = useParams()
 
-  if (config.features[feature] == null) {
-    return <NotFound />
-  } else {
-    return <FeaturePanel />
-  }
+    if (config.features[feature] == null) {
+        return <NotFound />
+    } else {
+        return <FeaturePanel />
+    }
 }
 
 function FeaturePanel() {
-    const {id, name} = useFeatureInfo()
+    const { id, name } = useFeatureInfo()
     const locale = useLocale()
     const query = useFeatureDetailQuery(id)
     useBanner(locale(name))
@@ -37,7 +38,7 @@ function FeaturePanel() {
             flexDirection="column"
             mb="10"
         >
-            {query.isLoading?
+            {query.isLoading ?
                 <ConfigGridSkeleton />
                 :
                 <FeatureConfigPanel detail={query.data} />
@@ -46,11 +47,12 @@ function FeaturePanel() {
     );
 }
 
-function FeatureConfigPanel({detail}) {
+function FeatureConfigPanel({ detail }) {
     const { id: serverId } = useContext(GuildContext);
-    const state = usePageState()
+    const featuresData = useContext(FeaturesContext);
+    const state = usePageState({ data: featuresData.data })
     const info = useFeatureInfo()
-    const {values} = detail
+    const { values } = detail
 
     const client = useQueryClient()
     const options = useMemo(
@@ -62,9 +64,9 @@ function FeatureConfigPanel({detail}) {
     const onSaved = (data) => {
 
         return client.setQueryData(["feature_detail", serverId, info.id], current => ({
-                ...current,
-                values: data
-            })
+            ...current,
+            values: data
+        })
         )
     }
 

@@ -1,0 +1,228 @@
+# Plan: Discord Bot Web Dashboard
+
+## Overview
+
+A Next.js 16 (App Router, TypeScript) dashboard in a **separate GitHub repo** (e.g. `Discord-Bot-Dashboard`), deployed to Vercel for free. Uses Discord OAuth2 to log in, connects to the same MongoDB as the bot, and lets guild admins configure all 5 sections from a browser.
+
+## Architecture
+
+- **Repo:** New standalone repo — not a subdirectory of the bot repo
+- **Framework:** Next.js 16.1.6 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Auth:** NextAuth v4.24.13 (stable, supports Next.js 16) with Discord provider (scopes: `identify guilds`)
+- **Database:** Mongoose 8.14.3 connecting to the same MongoDB cluster
+- **Validation:** Zod
+- **Forms:** react-hook-form + @hookform/resolvers
+- **Hosting:** Vercel (free tier, auto-deploys from GitHub)
+
+## Dependencies
+
+```json
+{
+  "dependencies": {
+    "next": "^16.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next-auth": "^4.24.13",
+    "mongoose": "^8.14.3",
+    "zod": "^3.24.0",
+    "react-hook-form": "^7.54.0",
+    "@hookform/resolvers": "^3.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "tailwindcss": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  }
+}
+```
+
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| `AUTH_SECRET` | Random string for NextAuth session encryption |
+| `DISCORD_CLIENT_ID` | Discord OAuth2 application client ID |
+| `DISCORD_CLIENT_SECRET` | Discord OAuth2 application client secret |
+| `DATABASE_TOKEN` | MongoDB connection string (same as bot) |
+| `DISCORD_BOT_TOKEN` | Bot token — used to fetch guild channels/roles via Discord REST |
+| `NEXTAUTH_URL` | Dashboard URL (e.g. `https://your-app.vercel.app`) |
+
+## Phase 1: Project Bootstrap
+
+1. Create new GitHub repo and scaffold with `npx create-next-app@latest . --typescript --tailwind --app --no-src-dir`
+2. Install dependencies listed above
+3. `lib/db.ts` — Mongoose singleton connection (reuses `DATABASE_TOKEN`)
+4. `models/GuildConfiguration.ts` — TypeScript Mongoose model mirroring the bot's `GuildConfiguration` schema exactly
+5. `lib/auth.ts` — NextAuth v4 config with Discord provider (scopes: `identify guilds`), persist `accessToken` in session
+6. `app/api/auth/[...nextauth]/route.ts` — NextAuth API route handler
+7. `middleware.ts` — protect all `/guilds/**` routes; redirect unauthenticated users to `/login`
+
+## Phase 2: Guild Selection
+
+8. `app/login/page.tsx` — Landing page with "Login with Discord" button
+9. `lib/discord.ts` — Helper functions using Discord REST API:
+   - `getUserGuilds(accessToken)` — `GET /users/@me/guilds` (user's guilds)
+   - `getBotGuilds()` — `GET /users/@me/guilds` with bot token (guilds the bot is in)
+   - `getGuildChannels(guildId)` — `GET /guilds/{id}/channels` with bot token
+   - `getGuildRoles(guildId)` — `GET /guilds/{id}/roles` with bot token
+10. `app/guilds/page.tsx` — Lists guilds where user has Administrator AND bot is present; shows "Invite Bot" link for guilds where bot is missing
+11. `app/api/guilds/route.ts` — API endpoint backing the guilds page
+
+## Phase 3: Dashboard Layout + Config Pages
+
+12. `app/guilds/[guildId]/layout.tsx` — Sidebar navigation with tabs (Suggestions, XP, Welcome, Mod Log, Minecraft) + guild name/icon
+13. `app/guilds/[guildId]/page.tsx` — Overview or redirect to first section
+
+Each config page follows the same pattern:
+- Server component loads current config from DB + fetches channels/roles from Discord API
+- Passes data to a client `<ConfigForm>` component
+- Form uses react-hook-form + Zod validation
+- Submits via `fetch()` PATCH to the corresponding API route
+
+### Suggestions
+
+- **Page:** `app/guilds/[guildId]/suggestions/page.tsx`
+- **API:** `app/api/guilds/[guildId]/config/suggestions/route.ts`
+- **Fields:**
+  - `suggestionChannelIds` — multi-select of text channels
+  - `suggestionCooldownMs` — number input (0–86400 seconds, stored as ms)
+
+### XP
+
+- **Page:** `app/guilds/[guildId]/xp/page.tsx`
+- **API:** `app/api/guilds/[guildId]/config/xp/route.ts`
+- **Fields:**
+  - `xpIgnoredChannelIds` — multi-select of channels
+  - `xpLevelUpChannelId` — single channel select (empty = same channel)
+  - `xpDisableLevelUpMessages` — toggle
+  - `levelRoles` — array of { level (number), roleId (role select) }, max 20 entries
+
+### Welcome / Goodbye
+
+- **Page:** `app/guilds/[guildId]/welcome/page.tsx`
+- **API:** `app/api/guilds/[guildId]/config/welcome/route.ts`
+- **Fields:**
+  - `welcomeChannelId` — single channel select
+  - `welcomeMessage` — textarea with placeholder hints (`{user}`, `{server}`, `{membercount}`)
+  - `goodbyeMessage` — textarea with same placeholders
+  - `welcomeEmbed` — toggle (embed vs plain text)
+  - `welcomeColor` — hex color picker (default: `#00AA00`)
+  - `goodbyeColor` — hex color picker (default: `#FF0000`)
+  - `autoRoleIds` — multi-select of roles, max 5
+
+### Mod Log
+
+- **Page:** `app/guilds/[guildId]/modlog/page.tsx`
+- **API:** `app/api/guilds/[guildId]/config/modlog/route.ts`
+- **Fields:**
+  - `modLogChannelId` — single channel select
+
+### Minecraft
+
+- **Page:** `app/guilds/[guildId]/minecraft/page.tsx`
+- **API:** `app/api/guilds/[guildId]/config/minecraft/route.ts`
+- **Fields:**
+  - `pingEnabled` — toggle (enable/disable `/minecraft` command)
+  - `mcServers` — CRUD list (max 10 servers per guild):
+    - `name` — text input (lowercase, 1–32 chars, regex: `/^[a-z0-9][a-z0-9_-]{0,31}$/`)
+    - `ip` — text input (hostname/IP with optional port 1–65535)
+    - `alertChannelId` — single channel select
+    - `alertRoleId` — single role select (requires alertChannelId set first)
+    - `alertPingMode` — select: `both` | `online` | `offline`
+    - `liveEmbedChannelId` — single channel select (read-only display; managing live embeds is done via bot commands)
+    - `liveEmbedMode` — select: `edit` | `resend` (read-only display)
+  - **Read-only fields** (displayed but not editable): `lastOnlineStatus`, `peakPlayersToday`, `peakPlayersDate`, `liveEmbedMessageId`
+
+## Phase 4: Security & Validation
+
+14. `lib/validateAdmin.ts` — Shared helper called by every PATCH API route:
+    - Verifies the authenticated user has `ADMINISTRATOR` permission (bit `0x8`) on the target guild
+    - Uses Discord REST: `GET /guilds/{id}/member/{userId}` or checks permissions from the guilds list
+    - Returns 403 if unauthorized
+15. `lib/schemas.ts` — Zod schemas per config section, mirroring bot-side validation:
+    - Minecraft: server name regex, IP format, port range 1–65535, max 10 servers
+    - Suggestions: cooldown 0–86400000ms
+    - XP: max 20 level roles
+    - Welcome: max 5 auto-roles, color as valid hex number
+16. All `PATCH` API routes: `validateAdmin()` → Zod `.parse(body)` → `findOneAndUpdate()` → return saved config
+
+## Phase 5: Deployment
+
+17. Push repo to GitHub
+18. Create Vercel project → connect to the GitHub repo (root directory: `/`)
+19. Set environment variables on Vercel (see table above)
+20. In Discord Developer Portal → OAuth2 → Add redirect URI: `https://<vercel-domain>/api/auth/callback/discord`
+
+## Bot-Side Impact
+
+- **None.** The dashboard writes directly to MongoDB. The bot's in-memory guild config cache (`guildConfigCache.js`) has a 60-second TTL — changes made via the dashboard take effect within ≤60 seconds.
+- No changes to the bot codebase are required.
+- No Express server or API is added to the bot.
+
+## GuildConfiguration Schema Reference
+
+```typescript
+{
+  guildId: string; // unique, required
+
+  // Suggestions
+  suggestionChannelIds: string[];
+  suggestionCooldownMs: number; // default: 0
+
+  // Minecraft
+  pingEnabled: boolean; // default: false
+  mcServers: Array<{
+    name: string;
+    ip: string;
+    alertChannelId: string;
+    alertRoleId: string;
+    alertPingMode: 'both' | 'online' | 'offline';
+    lastOnlineStatus: boolean;
+    lastStatusChangeAt: Date;
+    liveEmbedChannelId: string;
+    liveEmbedMessageId: string;
+    liveEmbedMode: 'edit' | 'resend';
+    peakPlayersToday: number;
+    peakPlayersDate: string;
+  }>;
+
+  // XP
+  xpIgnoredChannelIds: string[];
+  xpLevelUpChannelId: string;
+  xpDisableLevelUpMessages: boolean;
+  levelRoles: Array<{ level: number; roleId: string }>;
+
+  // Welcome / Goodbye
+  welcomeChannelId: string;
+  welcomeMessage: string;
+  goodbyeMessage: string;
+  welcomeEmbed: boolean;
+  welcomeColor: number; // hex, default: 0x00AA00
+  goodbyeColor: number; // hex, default: 0xFF0000
+  autoRoleIds: string[];
+
+  // Mod Log
+  modLogChannelId: string;
+}
+```
+
+## Verification Checklist
+
+- [ ] `npm run build` passes with zero TypeScript errors
+- [ ] Login flow: visit `/login` → Discord OAuth → redirects to `/guilds` with correct guild list
+- [ ] Only guilds where user is Administrator AND bot is present are shown
+- [ ] Save a suggestion channel → verify update in MongoDB → bot uses it within 60s
+- [ ] Non-admin user accessing another guild's config → 403 from API
+- [ ] Invalid input (e.g. Minecraft server name with spaces) → rejected by Zod before DB write
+- [ ] All 5 config sections load and save correctly
+- [ ] Vercel deployment succeeds and is accessible at the configured domain
+
+## Prerequisites
+
+1. **Discord OAuth2 Application** — same app as the bot or a new one; needs `identify` + `guilds` scopes enabled and the Vercel redirect URI added
+2. **Bot token** as env var on Vercel — used server-side only to fetch guild channels/roles (the bot is already in those guilds, so no additional permissions needed)
+3. **MongoDB network access** — ensure the Atlas cluster allows connections from Vercel's IP range (or use `0.0.0.0/0` if already configured)

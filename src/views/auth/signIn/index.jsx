@@ -1,16 +1,16 @@
 import React from "react";
 // Chakra imports
-import {Box, Button, Flex, Heading, Icon, Text,} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Icon, Text, } from "@chakra-ui/react";
 // Custom components
 import DefaultAuth from "layouts/auth/Default";
 // Assets
 import illustration from "assets/img/auth/Banner.jpg";
-import {FaDiscord} from "react-icons/fa";
-import {config} from "config/config";
-import {Locale} from "../../../utils/Language";
-import {useDetailColor, useTextColor} from "../../../utils/colors";
+import { FaDiscord } from "react-icons/fa";
+import { config } from "config/config";
+import { Locale } from "../../../utils/Language";
+import { useDetailColor, useTextColor } from "../../../utils/colors";
 
-function SignIn({loading = false}) {
+function SignIn({ loading = false }) {
 
   // Chakra color mode
 
@@ -18,7 +18,7 @@ function SignIn({loading = false}) {
   const textColorSecondary = useDetailColor();
 
   const onSignIn = () => {
-    window.location.href = `${config.serverUrl}/login`
+    window.location.href = `${config.serverUrl}/auth/discord`
   };
 
   return (
@@ -62,7 +62,7 @@ function SignIn({loading = false}) {
           mb={{ base: "20px", md: "auto" }}
         >
           <Button
-              variant="action"
+            variant="action"
             mb="26px"
             h="50px"
             color={textColor}
