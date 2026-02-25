@@ -49,7 +49,7 @@ app.use(cors({
     credentials: true,
 }));
 
-app.use(express.json());
+app.use(express.json({ strict: false }));
 
 // Connect to MongoDB (same DB as the bot)
 mongoose.connect(DATABASE_TOKEN, {
@@ -103,7 +103,8 @@ app.get('/health', (req, res) => {
 // Error handler
 app.use((err, req, res, _next) => {
     console.error('Server error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    const status = err.status || 500;
+    res.status(status).json({ error: err.message || 'Internal server error' });
 });
 
 app.listen(PORT, () => {

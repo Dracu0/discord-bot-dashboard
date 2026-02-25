@@ -1,8 +1,9 @@
-import {OptionField} from "../OptionPanel";
-import {Box, Button, Flex, Text} from "@chakra-ui/react";
-import {HSeparator} from "../../separator/Separator";
+import React from "react";
+import { OptionField } from "../OptionPanel";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { HSeparator } from "../../separator/Separator";
 
-export default function ArrayField({element, value: valueRaw, onChange}) {
+export default function ArrayField({ element, value: valueRaw, onChange }) {
     const value = valueRaw || []
 
     const change = (i, v) => {
@@ -26,13 +27,13 @@ export default function ArrayField({element, value: valueRaw, onChange}) {
                     )
                 }
 
-                return <>
-                    {i !== 0 && <HSeparator my={3}/>}
+                return <React.Fragment key={i}>
+                    {i !== 0 && <HSeparator my={3} />}
                     <Flex direction="row" gap={5}>
                         <OptionField option={option} value={val} onChange={v => change(i, v)} />
                         <Button variant="brand" onClick={removeItem}>刪除此行</Button>
                     </Flex>
-                </>
+                </React.Fragment>
             })
         }
 
