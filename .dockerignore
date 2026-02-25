@@ -2,6 +2,10 @@
 node_modules
 server/node_modules
 
+# Ensure lockfiles are always included
+!package-lock.json
+!server/package-lock.json
+
 # Build outputs (built inside Docker)
 build
 
