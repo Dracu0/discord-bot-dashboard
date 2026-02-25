@@ -4,28 +4,40 @@ import { Locale } from "../utils/Language";
 
 /**
  * Dashboard data rows for the bot - uses real data from the backend
+ *
+ * Layout:
+ *   Row 1 – Member stats (2 individual cards)
+ *   Row 2 – Server overview info map (full width)
+ *   Row 3 – Activity counters (4 stat cards across)
+ *   Row 4 – Data tables (XP Leaderboard + Recent Mod Actions side-by-side)
+ *
  * @type Array<DashboardDataRow>
  */
 export const dashboardData = [
+    // ── Row 1: Member Stats ───────────────────────────────────
     {
+        label: "Members",
         advanced: false,
         count: 2,
         items: (detail) => [
             {
-                type: DataTypes.Group,
-                value: [
-                    {
-                        name: <Locale en="Total Members" />,
-                        value: detail.members || 0,
-                        type: DataTypes.Statistics,
-                    },
-                    {
-                        name: <Locale en="Online Members" />,
-                        value: detail.online || 0,
-                        type: DataTypes.Statistics,
-                    },
-                ],
+                name: <Locale en="Total Members" />,
+                value: detail.members || 0,
+                type: DataTypes.Statistics,
             },
+            {
+                name: <Locale en="Online Members" />,
+                value: detail.online || 0,
+                type: DataTypes.Statistics,
+            },
+        ],
+    },
+    // ── Row 2: Server Overview (full width) ───────────────────
+    {
+        label: "Server Overview",
+        advanced: false,
+        count: 1,
+        items: (detail) => [
             {
                 name: <Locale en="Server Overview" />,
                 description: <Locale en="Current server configuration status" />,
@@ -55,12 +67,47 @@ export const dashboardData = [
             },
         ],
     },
+    // ── Row 3: Activity Counters ──────────────────────────────
     {
+        label: "Activity",
+        advanced: true,
+        count: 4,
+        items: (detail) => {
+            const xp = detail?.xp || {};
+            const suggestions = detail?.suggestions || {};
+            const moderation = detail?.moderation || {};
+
+            return [
+                {
+                    name: <Locale en="XP Tracked Users" />,
+                    value: xp.totalTrackedUsers || 0,
+                    type: DataTypes.Statistics,
+                },
+                {
+                    name: <Locale en="Total Suggestions" />,
+                    value: suggestions.total || 0,
+                    type: DataTypes.Statistics,
+                },
+                {
+                    name: <Locale en="Pending Suggestions" />,
+                    value: suggestions.pending || 0,
+                    type: DataTypes.Statistics,
+                },
+                {
+                    name: <Locale en="Total Mod Actions" />,
+                    value: moderation.totalActions || 0,
+                    type: DataTypes.Statistics,
+                },
+            ];
+        },
+    },
+    // ── Row 4: Data Tables (side-by-side) ─────────────────────
+    {
+        label: "Detailed Reports",
         advanced: true,
         count: 2,
         items: (detail) => {
             const xp = detail?.xp || {};
-            const suggestions = detail?.suggestions || {};
             const moderation = detail?.moderation || {};
 
             return [
@@ -74,31 +121,6 @@ export const dashboardData = [
                         { header: "XP", accessor: "xp" },
                     ],
                     value: xp.leaderboard || [],
-                },
-                {
-                    type: DataTypes.Group,
-                    value: [
-                        {
-                            name: <Locale en="XP Tracked Users" />,
-                            value: xp.totalTrackedUsers || 0,
-                            type: DataTypes.Statistics,
-                        },
-                        {
-                            name: <Locale en="Total Suggestions" />,
-                            value: suggestions.total || 0,
-                            type: DataTypes.Statistics,
-                        },
-                        {
-                            name: <Locale en="Pending Suggestions" />,
-                            value: suggestions.pending || 0,
-                            type: DataTypes.Statistics,
-                        },
-                        {
-                            name: <Locale en="Total Mod Actions" />,
-                            value: moderation.totalActions || 0,
-                            type: DataTypes.Statistics,
-                        },
-                    ],
                 },
                 {
                     name: <Locale en="Recent Mod Actions" />,

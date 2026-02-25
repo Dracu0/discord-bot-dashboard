@@ -1,5 +1,5 @@
 // Chakra imports
-import { Box, SimpleGrid, } from "@chakra-ui/react";
+import { Box, Divider, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
 // Custom components
 import React, { useContext, useMemo } from "react";
 import { usePageInfo } from "../../../contexts/PageInfoContext";
@@ -12,6 +12,7 @@ import { DataList } from "components/card/data/DataCard";
 import { config } from "config/config";
 import { usePageState } from "utils/State";
 import { useLocale } from "utils/Language";
+import { useDetailColor, useTextColor } from "utils/colors";
 
 export default function Dashboard() {
     const locale = useLocale()
@@ -38,28 +39,45 @@ export function UserReports() {
 
     return (
         <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-            {
-                data.map((row, key) => {
+            <VStack spacing="32px" align="stretch">
+                {data.map((row, key) => {
                     const count = row.count
 
-                    return <SimpleGrid
-                        key={key}
-                        columns={{ base: 1, md: Math.min(2, count), "2xl": count }}
-                        gap="20px"
-                        mb="20px"
-                    >
-                        {row.advanced ?
-                            <QueryHolderSkeleton query={query} height="400px" count={row.count}>
-                                {() => <Data row={row} detail={query.data} />}
-                            </QueryHolderSkeleton>
-                            :
-                            <Data row={row} detail={detail} />
-                        }
-                    </SimpleGrid>
-                })
-            }
+                    return (
+                        <Box key={key}>
+                            {row.label && <SectionHeader label={row.label} />}
+                            <SimpleGrid
+                                columns={{ base: 1, md: Math.min(2, count), "2xl": count }}
+                                gap="20px"
+                            >
+                                {row.advanced ? (
+                                    <QueryHolderSkeleton query={query} height="400px" count={row.count}>
+                                        {() => <Data row={row} detail={query.data} />}
+                                    </QueryHolderSkeleton>
+                                ) : (
+                                    <Data row={row} detail={detail} />
+                                )}
+                            </SimpleGrid>
+                        </Box>
+                    )
+                })}
+            </VStack>
         </Box>
     );
+}
+
+function SectionHeader({ label }) {
+    const textColor = useTextColor()
+    const borderColor = useDetailColor()
+
+    return (
+        <Box mb="16px">
+            <Heading size="md" color={textColor} mb="8px">
+                {label}
+            </Heading>
+            <Divider borderColor={borderColor} opacity={0.4} />
+        </Box>
+    )
 }
 
 function Data({ row, detail }) {
