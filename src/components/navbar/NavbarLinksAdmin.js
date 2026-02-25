@@ -5,6 +5,7 @@ import {
     IconButton,
     Menu,
     MenuButton,
+    Portal,
     Text,
     useColorMode,
     useColorModeValue,
@@ -114,7 +115,9 @@ function UserMenu() {
                     </Text>
                 </HStack>
             </MenuButton>
-            <UserOptionMenu/>
+            <Portal>
+                <UserOptionMenu/>
+            </Portal>
         </Menu>
     );
 }

@@ -16,8 +16,12 @@ export function SelectField({ value, onChange, options, ...props }) {
 
   return (
     <BaseSelect
+      menuPortalTarget={document.body}
       menuPosition="fixed"
       menuShouldScrollIntoView={false}
+      styles={{
+        menuPortal: (base) => ({ ...base, zIndex: 1500 }),
+      }}
       chakraStyles={{
         dropdownIndicator: (provided) => ({
           ...provided,
@@ -26,11 +30,6 @@ export function SelectField({ value, onChange, options, ...props }) {
         menuList: (provided) => ({
           ...provided,
           background: bgColor,
-          zIndex: 1500,
-        }),
-        menu: (provided) => ({
-          ...provided,
-          zIndex: 1500,
         }),
       }}
       focusBorderColor={brandColor}

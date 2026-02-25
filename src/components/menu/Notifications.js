@@ -5,6 +5,7 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
+    Portal,
     Text,
     useColorModeValue,
     useDisclosure
@@ -45,6 +46,7 @@ export function Notifications() {
                 color={navbarIcon}
             />
         </MenuButton>
+        <Portal>
         <MenuList
             boxShadow={shadow}
             p="20px"
@@ -70,5 +72,6 @@ export function Notifications() {
                 </QueryHolderSkeleton>
             </Flex>
         </MenuList>
+        </Portal>
     </Menu>
 }

@@ -26,7 +26,7 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
             borderRadius="20px"
             borderWidth="1.5px"
             borderStyle="solid"
-            transition="all 0.3s ease"
+            transition="box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease"
             alignItems={{xl: "center"}}
             minH="75px"
             justifyContent={{xl: "center"}}
@@ -101,6 +101,7 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
                         "rgba(255,255,255,0.6)",
                         "rgba(139, 92, 246, 0.1)"
                     )}
+                    overflow="visible"
                 >
                     {children}
                 </Flex>
