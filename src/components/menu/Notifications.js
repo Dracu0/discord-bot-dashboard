@@ -18,16 +18,14 @@ import {MdNotificationsNone} from "react-icons/md";
 import {Locale} from "../../utils/Language";
 import {QueryHolderSkeleton} from "../../contexts/components/AsyncContext";
 import {NotificationItem} from "./NotificationItem";
-import {useCardBg, useTextColor} from "../../utils/colors";
+import {useCardBg, useNeuRaised, useTextColor} from "../../utils/colors";
 
 export function Notifications() {
     const navbarIcon = useColorModeValue("gray.400", "white");
     const textColor = useTextColor();
     const menuBg = useCardBg()
-    const shadow = useColorModeValue(
-        "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
-        "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
-    );
+    const neuShadow = useNeuRaised();
+    const borderColor = useColorModeValue("rgba(255,255,255,0.6)", "rgba(139,92,246,0.1)");
     const {isOpen, onOpen, onClose} = useDisclosure()
 
     const {id: serverId} = useContext(GuildContext)
@@ -48,11 +46,12 @@ export function Notifications() {
         </MenuButton>
         <Portal>
         <MenuList
-            boxShadow={shadow}
+            boxShadow={neuShadow}
             p="20px"
             borderRadius="20px"
             bg={menuBg}
-            border="none"
+            border="1px solid"
+            borderColor={borderColor}
             mt="22px"
             zIndex={1500}
             me={{base: "30px", md: "unset"}}

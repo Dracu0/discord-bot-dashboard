@@ -5,27 +5,25 @@ import {UserDataContext} from "contexts/UserDataContext";
 import {Link} from "react-router-dom";
 import {useLogout} from "../../api/internal";
 import {Locale} from "../../utils/Language";
-import {useCardBg, useTextColor} from "../../utils/colors";
+import {useCardBg, useNeuRaised, useTextColor} from "../../utils/colors";
 
 export default function UserOptionMenu() {
     const menuBg = useCardBg()
     const textColor = useTextColor();
-    const shadow = useColorModeValue(
-        "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
-        "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
-    );
-    const borderColor = useColorModeValue("#E6ECFA", "rgba(135, 140, 189, 0.3)");
+    const neuShadow = useNeuRaised();
+    const borderColor = useColorModeValue("rgba(255,255,255,0.6)", "rgba(139,92,246,0.1)");
     const user = useContext(UserDataContext);
     const logout = useLogout()
 
     return (
         <MenuList
-            boxShadow={shadow}
+            boxShadow={neuShadow}
             p="0px"
             mt="10px"
             borderRadius="20px"
             bg={menuBg}
-            border="none"
+            border="1px solid"
+            borderColor={borderColor}
             zIndex={1500}
         >
             <Flex w="100%" mb="0px">

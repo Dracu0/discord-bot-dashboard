@@ -17,7 +17,7 @@ import React, {useEffect, useRef} from "react";
 import {useQuery} from "react-query";
 import {MdArrowDropDown} from "react-icons/md";
 import {QueryHolderSkeleton} from "contexts/components/AsyncContext";
-import {useTextColor} from "../../../utils/colors";
+import {useNeuRaised, useTextColor} from "../../../utils/colors";
 
 export default function EmojiField({value, onChange: change}) {
     const query = useQuery(
@@ -35,6 +35,8 @@ export default function EmojiField({value, onChange: change}) {
         change(event.native)
     }
 
+    const neuShadow = useNeuRaised()
+    const emojiBorderColor = useColorModeValue("rgba(255,255,255,0.6)", "rgba(139,92,246,0.1)")
     const {onOpen, onToggle, isOpen, onClose} = useDisclosure()
 
     return <InputGroup>
@@ -63,7 +65,7 @@ export default function EmojiField({value, onChange: change}) {
                      aria-label="Select Emoji" />
                 </InputRightElement>
             </PopoverTrigger>
-            <PopoverContent bg="transparent" _focus={{outline: "none"}} zIndex={1500}>
+            <PopoverContent bg="transparent" _focus={{outline: "none"}} zIndex={1500} boxShadow={neuShadow} border="1px solid" borderColor={emojiBorderColor} borderRadius="16px" overflow="hidden">
                 <QueryHolderSkeleton query={query}>
                     <EmojiPicker data={query.data} onChange={onChange}/>
                 </QueryHolderSkeleton>
