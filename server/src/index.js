@@ -150,6 +150,7 @@ app.use((err, req, res, _next) => {
     res.status(status).json({ error: err.message || 'Internal server error' });
 });
 
-app.listen(PORT, () => {
+// Bind to 0.0.0.0 so Fly.io proxy can reach the container (not just localhost)
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Dashboard server running on port ${PORT} [${IS_PRODUCTION ? 'production' : 'development'}]`);
 });
