@@ -93,10 +93,10 @@ export function getInput(value, onChange, option) {
             return (
                 <InputField
                     type={isText ? "text" : "number"}
-                    value={value}
+                    value={value ?? (isText ? "" : 0)}
                     placeholder={isText ? "Enter text" : "Enter a number"}
                     onChange={({ target }) =>
-                        onChange(isText ? target.value : target.valueAsNumber)
+                        onChange(isText ? target.value : (isNaN(target.valueAsNumber) ? 0 : target.valueAsNumber))
                     }
                 />
             );
