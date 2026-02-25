@@ -7,11 +7,14 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const configurePassport = require('./auth/passport');
 const authRoutes = require('./routes/auth');
 const guildRoutes = require('./routes/guild');
 const userRoutes = require('./routes/users');
+
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const {
     DISCORD_CLIENT_ID,
@@ -20,9 +23,17 @@ const {
     DATABASE_TOKEN,
     PORT = 8080,
     SESSION_SECRET,
-    DASHBOARD_URL = 'http://localhost:3000',
-    CALLBACK_URL = 'http://localhost:8080/auth/discord/callback',
+    DASHBOARD_URL = IS_PRODUCTION ? '' : 'http://localhost:3000',
+    CALLBACK_URL = IS_PRODUCTION ? '/auth/discord/callback' : 'http://localhost:8080/auth/discord/callback',
+    APP_URL, // e.g. https://my-dashboard.fly.dev — set in Fly.io secrets
 } = process.env;
+
+// In production, derive the dashboard URL from APP_URL if not explicitly set
+const dashboardOrigin = DASHBOARD_URL || APP_URL || `http://localhost:${PORT}`;
+// Build the full callback URL for Discord OAuth2
+const fullCallbackURL = CALLBACK_URL.startsWith('http')
+    ? CALLBACK_URL
+    : `${APP_URL || `http://localhost:${PORT}`}${CALLBACK_URL}`;
 
 // Validate environment
 if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_BOT_TOKEN || !DATABASE_TOKEN || !SESSION_SECRET) {
@@ -32,8 +43,24 @@ if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_BOT_TOKEN || !DATAB
 
 const app = express();
 
-// Security
-app.use(helmet());
+// Trust Fly.io proxy (required for secure cookies, rate limiting, etc.)
+if (IS_PRODUCTION) {
+    app.set('trust proxy', 1);
+}
+
+// Security — in production, relax CSP to allow the React app's inline scripts/styles
+app.use(helmet({
+    contentSecurityPolicy: IS_PRODUCTION ? {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "https://cdn.discordapp.com"],
+            connectSrc: ["'self'"],
+        },
+    } : false,
+}));
 
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
@@ -41,13 +68,18 @@ const limiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
 });
-app.use(limiter);
+app.use('/auth', limiter);
+app.use('/guild', limiter);
+app.use('/guilds', limiter);
+app.use('/users', limiter);
 
-// CORS - allow dashboard frontend
-app.use(cors({
-    origin: DASHBOARD_URL,
-    credentials: true,
-}));
+// CORS — only needed in development (separate origins)
+if (!IS_PRODUCTION) {
+    app.use(cors({
+        origin: dashboardOrigin,
+        credentials: true,
+    }));
+}
 
 app.use(express.json({ strict: false }));
 
@@ -76,7 +108,7 @@ app.use(session({
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        secure: IS_PRODUCTION,
     },
 }));
 
@@ -84,12 +116,12 @@ app.use(session({
 configurePassport(passport, {
     clientID: DISCORD_CLIENT_ID,
     clientSecret: DISCORD_CLIENT_SECRET,
-    callbackURL: CALLBACK_URL,
+    callbackURL: fullCallbackURL,
 });
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
+// API Routes
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/guild', guildRoutes);
@@ -100,6 +132,17 @@ app.get('/health', (req, res) => {
     res.json({ status: 'ok', uptime: process.uptime() });
 });
 
+// --- Production: serve React build ---
+if (IS_PRODUCTION) {
+    const buildPath = path.join(__dirname, '../../build');
+    app.use(express.static(buildPath));
+
+    // SPA catch-all: any non-API route serves index.html (React Router handles client routing)
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(buildPath, 'index.html'));
+    });
+}
+
 // Error handler
 app.use((err, req, res, _next) => {
     console.error('Server error:', err);
@@ -108,5 +151,5 @@ app.use((err, req, res, _next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Dashboard API server running on port ${PORT}`);
+    console.log(`Dashboard server running on port ${PORT} [${IS_PRODUCTION ? 'production' : 'development'}]`);
 });

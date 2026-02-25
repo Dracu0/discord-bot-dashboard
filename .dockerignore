@@ -1,0 +1,11 @@
+node_modules
+server/node_modules
+build
+.env
+server/.env
+*.md
+.git
+.gitignore
+document
+*.iml
+*.prompt

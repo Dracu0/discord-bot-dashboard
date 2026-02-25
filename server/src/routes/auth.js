@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const passport = require('passport');
 
-const DASHBOARD_URL = process.env.DASHBOARD_URL || 'http://localhost:3000';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+// In production (same-origin), use relative paths. In dev, use the separate frontend URL.
+const DASHBOARD_URL = IS_PRODUCTION ? '' : (process.env.DASHBOARD_URL || 'http://localhost:3000');
 
 // Check if user is authenticated (HEAD request from dashboard)
 router.head('/', (req, res) => {
