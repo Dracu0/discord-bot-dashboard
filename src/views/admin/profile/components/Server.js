@@ -1,5 +1,5 @@
 // Chakra imports
-import {Avatar, Button, Flex, Stack, Text,} from "@chakra-ui/react";
+import {Avatar, Button, Flex, Stack, Text, useColorModeValue} from "@chakra-ui/react";
 // Custom components
 import {Link} from "react-router-dom";
 import Card from "components/card/Card.js";
@@ -12,20 +12,31 @@ import {useCardBg, useTextColor} from "../../../../utils/colors";
 export default function Server({ server, ...rest }) {
   const { name, id, icon } = server;
 
-  // Chakra Color Mode
   const textColorPrimary = useTextColor();
-  const bg = useCardBg()
+  const bg = useCardBg();
+  const hoverBorder = useColorModeValue("brand.200", "brand.600");
 
   return (
-    <Card bg={bg} {...rest} p="14px">
+    <Card
+      bg={bg}
+      {...rest}
+      p="14px"
+      transition="all 0.25s ease"
+      _hover={{
+        transform: "translateY(-4px)",
+        borderColor: hoverBorder,
+      }}
+      border="1px solid"
+      borderColor="transparent"
+    >
       <Flex align="center" direction={{ base: "column", md: "row" }}>
         <Avatar
-          h="160px"
-          w="160px"
+          h="140px"
+          w="140px"
           src={icon && iconToUrl(id, icon)}
           name={name}
           bg={icon && "transparent"}
-          borderRadius="8px"
+          borderRadius="16px"
           me="20px"
           loading="lazy"
         />
@@ -35,9 +46,10 @@ export default function Server({ server, ...rest }) {
         >
           <Text
             color={textColorPrimary}
-            fontWeight="500"
+            fontWeight="600"
             fontSize="2xl"
             mb="4px"
+            fontFamily="'Space Grotesk', sans-serif"
           >
             {name}
           </Text>

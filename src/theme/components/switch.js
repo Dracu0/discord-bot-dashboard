@@ -1,4 +1,6 @@
 import { mode } from "@chakra-ui/theme-tools";
+import { neuLight, neuDark } from "../additions/neumorphic";
+
 export const switchStyles = {
   components: {
     Switch: {
@@ -19,7 +21,7 @@ export const switchStyles = {
           p: "2px",
           ps: "2px",
           _focus: {
-            boxShadow: "none",
+            boxShadow: "0 0 0 2px rgba(139, 92, 246, 0.4)",
           },
         },
       },
@@ -27,7 +29,20 @@ export const switchStyles = {
       variants: {
         main: (props) => ({
           track: {
-            bg: mode("gray.300", "navy.700")(props),
+            bg: mode("secondaryGray.400", "navy.700")(props),
+            boxShadow: mode(neuLight.inset, neuDark.inset)(props),
+            borderRadius: "12px",
+            _checked: {
+              bg: mode("brand.500", "brand.400")(props),
+              boxShadow: mode(
+                `${neuLight.flat}, 0 0 8px rgba(124, 58, 237, 0.3)`,
+                `${neuDark.flat}, 0 0 8px rgba(139, 92, 246, 0.35)`
+              )(props),
+            },
+          },
+          thumb: {
+            bg: "white",
+            boxShadow: mode(neuLight.flat, neuDark.flat)(props),
           },
         }),
       },

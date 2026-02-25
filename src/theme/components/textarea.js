@@ -1,44 +1,54 @@
 import {mode} from "@chakra-ui/theme-tools";
+import {neuLight, neuDark} from "../additions/neumorphic";
 
 export const textareaStyles = {
     components: {
         Textarea: {
             baseStyle: {
                     fontWeight: 400,
-                    borderRadius: "8px",
+                    borderRadius: "12px",
             },
 
             variants: {
                 main: (props) => ({
-                    bg: mode("transparent", "navy.800")(props),
+                    bg: mode("secondaryGray.300", "navy.700")(props),
                     border: "1px solid",
                     color: mode("secondaryGray.900", "white")(props),
-                    borderColor: mode("secondaryGray.100", "whiteAlpha.100")(props),
+                    borderColor: mode("rgba(255,255,255,0.5)", "rgba(139,92,246,0.1)")(props),
                     borderRadius: "16px",
                     fontSize: "sm",
                     p: "20px",
-                    _placeholder: {color: "secondaryGray.600"},
+                    boxShadow: mode(neuLight.inset, neuDark.inset)(props),
+                    _placeholder: {color: "secondaryGray.500"},
+                    _focus: {
+                        boxShadow: mode(
+                            `${neuLight.inset}, 0 0 0 2px rgba(124, 58, 237, 0.3)`,
+                            `${neuDark.inset}, 0 0 0 2px rgba(139, 92, 246, 0.4)`
+                        )(props),
+                        borderColor: mode("brand.300", "brand.400")(props),
+                    },
                 }),
-                auth: () => ({
-                    bg: "white",
+                auth: (props) => ({
+                    bg: mode("secondaryGray.300", "navy.700")(props),
                     border: "1px solid",
-                    borderColor: "secondaryGray.100",
+                    borderColor: mode("rgba(255,255,255,0.5)", "rgba(139,92,246,0.1)")(props),
                     borderRadius: "16px",
-                    _placeholder: {color: "secondaryGray.600"},
+                    boxShadow: mode(neuLight.inset, neuDark.inset)(props),
+                    _placeholder: {color: "secondaryGray.500"},
                 }),
-                authSecondary: () => ({
-                    bg: "white",
+                authSecondary: (props) => ({
+                    bg: mode("secondaryGray.300", "navy.700")(props),
                     border: "1px solid",
-
-                    borderColor: "secondaryGray.100",
+                    borderColor: mode("rgba(255,255,255,0.5)", "rgba(139,92,246,0.1)")(props),
                     borderRadius: "16px",
-                    _placeholder: {color: "secondaryGray.600"},
+                    boxShadow: mode(neuLight.inset, neuDark.inset)(props),
+                    _placeholder: {color: "secondaryGray.500"},
                 }),
                 search: (props) => ({
                     border: "none",
                     py: "11px",
                     borderRadius: "inherit",
-                    _placeholder: {color: "secondaryGray.600"},
+                    _placeholder: {color: "secondaryGray.500"},
                 }),
             },
         },

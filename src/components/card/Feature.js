@@ -1,5 +1,5 @@
 // Chakra imports
-import {Box, Button, ButtonGroup, Flex, Heading, Image, Text} from "@chakra-ui/react";
+import {Box, Button, ButtonGroup, Flex, Heading, Image, Text, useColorModeValue} from "@chakra-ui/react";
 import {Link} from "react-router-dom";
 // Custom components
 import Card from "components/card/Card.js";
@@ -8,7 +8,7 @@ import React, {useContext} from "react";
 import {GuildContext} from "../../contexts/guild/GuildContext";
 import {Locale, useLocale} from "../../utils/Language";
 import {useEnableFeatureMutation} from "../../api/utils";
-import {useBrandBg, useDetailColor, useTextColor} from "../../utils/colors";
+import {useDetailColor, useTextColor} from "../../utils/colors";
 
 export default function Feature({banner, name, description, id: featureId, enabled}) {
     const {id: serverId} = useContext(GuildContext);
@@ -16,30 +16,44 @@ export default function Feature({banner, name, description, id: featureId, enabl
     const enableMutation = useEnableFeatureMutation(serverId, featureId)
     const locale = useLocale()
 
-    //chakra colors
     const textColor = useTextColor();
     const detailColor = useDetailColor();
-    const brandColor = useBrandBg()
+    const hoverBorder = useColorModeValue("brand.200", "brand.600");
 
     return (
-        <Card p="20px" overflow="hidden" gap={3}>
+        <Card
+            p="20px"
+            overflow="hidden"
+            gap={3}
+            transition="all 0.25s ease"
+            border="1px solid"
+            borderColor="transparent"
+            _hover={{
+                transform: "translateY(-4px)",
+                borderColor: hoverBorder,
+            }}
+        >
             {banner?
                 <Image
                     h={20}
                     src={banner}
                     bgSize="cover"
-                    rounded="lg"
+                    rounded="16px"
                 />:
                 <Box
                     h={20}
-                    bg={brandColor}
-                    rounded="lg"
+                    bgGradient="linear(135deg, brand.500 0%, brand.300 50%, accent.cyan 100%)"
+                    rounded="16px"
                 />
             }
 
             <Flex direction="column" justify="space-between" gap={3}>
                 <Flex direction="column">
-                    <Heading size="md" color={textColor}>
+                    <Heading
+                        size="md"
+                        color={textColor}
+                        fontFamily="'Space Grotesk', sans-serif"
+                    >
                         {locale(name)}
                     </Heading>
                     <Text

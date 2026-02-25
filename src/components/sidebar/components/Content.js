@@ -6,7 +6,7 @@ import Links from "components/sidebar/components/Links";
 import React, {useContext} from "react";
 import {UserDataContext} from "../../../contexts/UserDataContext";
 import {avatarToUrl} from "../../../api/discord/DiscordApi";
-import {useBrandBg, useTextColor} from "../../../utils/colors";
+import {useBrandBg, useTextColor, useNeuInset, useNeuFlat} from "../../../utils/colors";
 import {NavLink} from "react-router-dom";
 import {IoIosArrowRoundBack} from "react-icons/io";
 import {Locale} from "../../../utils/Language";
@@ -26,7 +26,7 @@ function SidebarContent(props) {
     >
       <Brand />
       <Stack direction="column" mb="auto" mt="8px">
-        <Box ps="20px">
+        <Box ps="16px" pe="12px">
           <Links routes={routes} />
         </Box>
       </Stack>
@@ -38,37 +38,43 @@ function SidebarContent(props) {
 function UserPreview() {
   const {id, username, avatar} = useContext(UserDataContext)
   const color = useTextColor()
-  const bg = useColorModeValue("secondaryGray.400", "navy.600")
+  const neuInset = useNeuInset()
+  const cardBg = useColorModeValue("secondaryGray.300", "navy.700")
   const brand = useBrandBg()
 
-  return <HStack
+  return <Box
       pos="relative"
-      px={3} py={10}
       m={3}
-      justify="center"
-      rounded="lg"
-      bgGradient={`linear(to-br, ${bg} 60%, ${brand}) 40%`}
+      p={4}
+      borderRadius="20px"
+      bg={cardBg}
+      boxShadow={neuInset}
   >
-    <Box pos="absolute" mt="-40%" p={3} rounded="full" bg={bg}>
-      <Text fontWeight="bold">
-        <Locale zh="登錄為" en="Logged As"/>
-      </Text>
-    </Box>
-
-    <Box pos="absolute" top={0} left={0} m={4}>
+    <Box pos="absolute" top={0} left={0} m={3}>
       <NavLink to="../">
-        <Icon as={IoIosArrowRoundBack} w="35px" h="35px"/>
+        <Icon as={IoIosArrowRoundBack} w="28px" h="28px" color={color} opacity={0.6} _hover={{ opacity: 1 }}/>
       </NavLink>
     </Box>
 
-    <Avatar
-        color={color}
-        name={username}
-        src={avatarToUrl(id, avatar)}
-        bg={brand}
-    />
-    <Text color={color} fontSize={23}>{username}</Text>
-  </HStack>
+    <Flex direction="column" align="center" pt={4} gap={2}>
+      <Text fontSize="xs" fontWeight="600" color={color} opacity={0.5}
+        fontFamily="'Space Grotesk', 'DM Sans', sans-serif"
+        textTransform="uppercase"
+        letterSpacing="1px"
+      >
+        <Locale zh="登錄為" en="Logged As"/>
+      </Text>
+
+      <Avatar
+          size="md"
+          name={username}
+          src={avatarToUrl(id, avatar)}
+          border="2px solid"
+          borderColor={brand}
+      />
+      <Text color={color} fontSize="md" fontWeight="bold">{username}</Text>
+    </Flex>
+  </Box>
 }
 
 export default SidebarContent;

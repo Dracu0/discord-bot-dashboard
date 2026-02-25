@@ -1,43 +1,32 @@
 import React from "react";
 import {Box, Breadcrumb, BreadcrumbItem, Flex, Text, useColorModeValue} from "@chakra-ui/react";
-import {useAlertBg, useCardBg, useDetailColor, useTextColor} from "../../utils/colors";
+import {useAlertBg, useCardBg, useDetailColor, useNeuRaised, useTextColor} from "../../utils/colors";
 
 export default function NavAlert({rootText, childText, children, clip = true}) {
-    // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
     let mainText = useTextColor();
     let secondaryText = useDetailColor();
-    let navbarPosition = "fixed";
-    let navbarFilter = "none";
-    let navbarBackdrop = "blur(20px)";
-    let navbarShadow = "none";
-    const navbarBg = useAlertBg()
-    let navbarBorder = "transparent";
+    const navbarBg = useAlertBg();
     const menuBg = useCardBg();
-    const shadow = useColorModeValue(
-        "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
-        "14px 17px 40px 4px rgba(112, 144, 176, 0.1)"
-    );
-    const margin = "5vw"
-    const clipMargin = {base: "12px", md: "30px", lg: "30px", xl: "30px"}
+    const neuShadow = useNeuRaised();
+    const brandAccent = useColorModeValue("brand.500", "brand.400");
+    const margin = "5vw";
+    const clipMargin = {base: "12px", md: "30px", lg: "30px", xl: "30px"};
 
     return (
         <Box
             zIndex={10}
-            position={navbarPosition}
-            boxShadow={navbarShadow}
+            position="fixed"
+            boxShadow="none"
             bg={navbarBg}
-            borderColor={navbarBorder}
-            filter={navbarFilter}
-            backdropFilter={navbarBackdrop}
+            borderColor="transparent"
+            filter="none"
+            backdropFilter="blur(24px) saturate(180%)"
             backgroundPosition="center"
             backgroundSize="cover"
-            borderRadius="16px"
+            borderRadius="20px"
             borderWidth="1.5px"
             borderStyle="solid"
-            transitionDelay="0s, 0s, 0s, 0s"
-            transitionDuration=" 0.25s, 0.25s, 0.25s, 0s"
-            transition-property="box-shadow, background-color, filter, border"
-            transitionTimingFunction="linear, linear, linear, linear"
+            transition="all 0.3s ease"
             alignItems={{xl: "center"}}
             minH="75px"
             justifyContent={{xl: "center"}}
@@ -73,8 +62,8 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
             >
                 <Box mb={{sm: "8px", md: "0px"}}>
                     <Breadcrumb>
-                        <BreadcrumbItem color={secondaryText} fontSize="sm" mb="5px">
-                            <Text color={secondaryText}>{rootText}</Text>
+                        <BreadcrumbItem fontSize="sm" mb="5px">
+                            <Text color={brandAccent} fontWeight="600">{rootText}</Text>
                         </BreadcrumbItem>
                         {
                             Array.isArray(childText)?
@@ -92,6 +81,8 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
                         color={mainText}
                         fontWeight="bold"
                         fontSize="34px"
+                        fontFamily="'Space Grotesk', sans-serif"
+                        letterSpacing="-0.02em"
                     >
                         {Array.isArray(childText)? childText[childText.length - 1] : childText}
                     </Text>
@@ -103,8 +94,13 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
                     flexDirection="row"
                     bg={menuBg}
                     p="10px"
-                    borderRadius="30px"
-                    boxShadow={shadow}
+                    borderRadius="20px"
+                    boxShadow={neuShadow}
+                    border="1px solid"
+                    borderColor={useColorModeValue(
+                        "rgba(255,255,255,0.6)",
+                        "rgba(139, 92, 246, 0.1)"
+                    )}
                 >
                     {children}
                 </Flex>

@@ -1,4 +1,5 @@
 import {mode} from "@chakra-ui/theme-tools";
+import {neuLight, neuDark} from "../additions/neumorphic";
 
 export const inputStyles = {
     components: {
@@ -6,35 +7,51 @@ export const inputStyles = {
             baseStyle: {
                 field: {
                     fontWeight: 400,
-                    borderRadius: "8px",
+                    borderRadius: "12px",
                 },
             },
 
             variants: {
                 main: (props) => ({
                     field: {
-                        bg: mode("transparent", "navy.800")(props),
+                        bg: mode("secondaryGray.300", "navy.700")(props),
                         border: "1px solid",
                         color: mode("secondaryGray.900", "white")(props),
-                        borderColor: mode("secondaryGray.100", "whiteAlpha.100")(props),
+                        borderColor: mode("rgba(255,255,255,0.5)", "rgba(139,92,246,0.1)")(props),
                         borderRadius: "16px",
                         fontSize: "sm",
                         p: "20px",
-                        _placeholder: {color: "secondaryGray.400"},
+                        boxShadow: mode(neuLight.inset, neuDark.inset)(props),
+                        _placeholder: {color: "secondaryGray.500"},
+                        _focus: {
+                            boxShadow: mode(
+                                `${neuLight.inset}, 0 0 0 2px rgba(124, 58, 237, 0.3)`,
+                                `${neuDark.inset}, 0 0 0 2px rgba(139, 92, 246, 0.4)`
+                            )(props),
+                            borderColor: mode("brand.300", "brand.400")(props),
+                        },
                     },
                 }),
                 auth: (props) => ({
                     field: {
                         fontWeight: "500",
                         color: mode("navy.700", "white")(props),
-                        bg: mode("transparent", "transparent")(props),
+                        bg: mode("secondaryGray.300", "navy.700")(props),
                         border: "1px solid",
                         borderColor: mode(
-                            "secondaryGray.100",
-                            "rgba(135, 140, 189, 0.3)"
+                            "rgba(255,255,255,0.5)",
+                            "rgba(139,92,246,0.15)"
                         )(props),
                         borderRadius: "16px",
-                        _placeholder: {color: "secondaryGray.600", fontWeight: "400"},
+                        boxShadow: mode(neuLight.inset, neuDark.inset)(props),
+                        _placeholder: {color: "secondaryGray.500", fontWeight: "400"},
+                        _focus: {
+                            boxShadow: mode(
+                                `${neuLight.inset}, 0 0 0 2px rgba(124, 58, 237, 0.3)`,
+                                `${neuDark.inset}, 0 0 0 2px rgba(139, 92, 246, 0.4)`
+                            )(props),
+                            borderColor: mode("brand.300", "brand.400")(props),
+                        },
                     },
                 }),
                 authSecondary: (props) => ({
@@ -51,7 +68,7 @@ export const inputStyles = {
                         border: "none",
                         py: "11px",
                         borderRadius: "inherit",
-                        _placeholder: {color: "secondaryGray.600"},
+                        _placeholder: {color: "secondaryGray.500"},
                     },
                 }),
             },
@@ -66,12 +83,19 @@ export const inputStyles = {
             variants: {
                 main: (props) => ({
                     field: {
-                        bg: "transparent",
+                        bg: mode("secondaryGray.300", "navy.700")(props),
                         border: "1px solid",
-
-                        borderColor: "secondaryGray.100",
+                        borderColor: mode("rgba(255,255,255,0.5)", "rgba(139,92,246,0.1)")(props),
                         borderRadius: "16px",
-                        _placeholder: {color: "secondaryGray.600"},
+                        boxShadow: mode(neuLight.inset, neuDark.inset)(props),
+                        _placeholder: {color: "secondaryGray.500"},
+                        _focus: {
+                            boxShadow: mode(
+                                `${neuLight.inset}, 0 0 0 2px rgba(124, 58, 237, 0.3)`,
+                                `${neuDark.inset}, 0 0 0 2px rgba(139, 92, 246, 0.4)`
+                            )(props),
+                            borderColor: mode("brand.300", "brand.400")(props),
+                        },
                     },
                 }),
                 auth: (props) => ({

@@ -11,7 +11,7 @@ import { ModHistoryAction } from "./actions/ModHistory";
  * @type ConfigType
  */
 export const config = {
-    name: "Discord Bot",
+    name: "Mocotron",
     footer: [
         {
             name: { en: "GitHub" },

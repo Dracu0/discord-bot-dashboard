@@ -7,13 +7,13 @@ import React from "react";
 export default function FixedPlugin(props) {
   const { ...rest } = props;
   const { colorMode, toggleColorMode } = useColorMode();
-  let bgButton = "linear-gradient(135deg, #868CFF 0%, #4318FF 100%)";
+  let bgButton = "linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #22D3EE 100%)";
 
   return (
     <Button
       {...rest}
-      h='60px'
-      w='60px'
+      h='56px'
+      w='56px'
       bg={bgButton}
       zIndex='99'
       position='fixed'
@@ -22,16 +22,23 @@ export default function FixedPlugin(props) {
       right={document.documentElement.dir === "rtl" ? "" : "35px"}
       bottom='30px'
       border='1px solid'
-      borderColor='#6A53FF'
+      borderColor='rgba(139, 92, 246, 0.3)'
       borderRadius='50px'
       onClick={toggleColorMode}
       display='flex'
       p='0px'
       align='center'
-      justify='center'>
+      justify='center'
+      boxShadow='0 4px 24px rgba(124, 58, 237, 0.4)'
+      _hover={{
+        transform: "scale(1.1)",
+        boxShadow: "0 6px 32px rgba(124, 58, 237, 0.5)",
+      }}
+      transition="all 0.25s ease"
+    >
       <Icon
-        h='24px'
-        w='24px'
+        h='22px'
+        w='22px'
         color='white'
         as={colorMode === "light" ? IoMdMoon : IoMdSunny}
       />

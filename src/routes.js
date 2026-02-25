@@ -24,13 +24,15 @@ import {config} from "./config/config";
  */
 const routes = [
     {
+        category: {zh: "概覽", en: "Overview"},
         name: {zh: "儀表板", en: "Dashboard"},
         icon: <Icon as={BiServer} width="20px" height="20px" color="inherit"/>,
         path: "dashboard",
         component: <Dashboard/>,
     },
     {
-        name: {zh: "功能面板", en: "Features"},
+        category: {zh: "配置", en: "Configuration"},
+        name: {zh: "功能面板", en: "Bot Features"},
         icon: (
             <Icon as={RiFunctionFill} width="20px" height="20px" color="inherit"/>
         ),
@@ -54,6 +56,16 @@ const routes = [
         ]
     },
     {
+        category: {zh: "配置", en: "Configuration"},
+        name: {zh: "設置", en: "Server Settings"},
+        icon: (
+            <Icon as={IoIosSettings} width="20px" height="20px" color="inherit"/>
+        ),
+        path: "settings",
+        component: <SettingsPanel/>
+    },
+    {
+        category: {zh: "管理", en: "Management"},
         name: {zh: "動作面板", en: "Actions"},
         icon: (
             <Icon as={MdFrontHand} width="20px" height="20px" color="inherit"/>
@@ -88,14 +100,6 @@ const routes = [
                 component: <ActionsBoard/>,
             },
         ]
-    },
-    {
-        name: {zh: "設置", en: "Settings"},
-        icon: (
-            <Icon as={IoIosSettings} width="20px" height="20px" color="inherit"/>
-        ),
-        path: "settings",
-        component: <SettingsPanel/>
     },
 ];
 

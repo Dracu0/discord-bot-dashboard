@@ -28,24 +28,23 @@ export default function Footer({children}) {
                     base: "center",
                     xl: "start",
                 }}
-                mb={{base: "20px", xl: "0px"}}>
-                &copy; {1900 + new Date().getYear()}
+                mb={{base: "20px", xl: "0px"}}
+                fontSize="sm"
+                opacity={0.7}
+            >
+                &copy; {new Date().getFullYear()}
                 <Text as='span' fontWeight='500' ms='4px'>
+                    {config.name} Dashboard.
                     <Locale
-                        zh={`
-                            ${config.name} 儀表板，基於
-                        `}
-                        en={`
-                            ${config.name} Dashboard. All Rights Reserved. Made with
-                        `}
+                        zh=" 版權所有。基於"
+                        en=" All Rights Reserved. Built with"
                     />
-
                     <LinkText
                         mx='3px'
-                        color={textColor}
+                        color='brand.400'
                         href={homepage}
                         target='_blank'
-                        fontWeight='700'>
+                        fontWeight='600'>
                         Discord Dashboard
                     </LinkText>
                 </Text>

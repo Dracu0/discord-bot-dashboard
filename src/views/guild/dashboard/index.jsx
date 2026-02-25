@@ -72,10 +72,16 @@ function SectionHeader({ label }) {
 
     return (
         <Box mb="16px">
-            <Heading size="md" color={textColor} mb="8px">
+            <Heading
+                size="md"
+                color={textColor}
+                mb="8px"
+                fontFamily="'Space Grotesk', sans-serif"
+                letterSpacing="-0.01em"
+            >
                 {label}
             </Heading>
-            <Divider borderColor={borderColor} opacity={0.4} />
+            <Divider borderColor={borderColor} opacity={0.2} />
         </Box>
     )
 }

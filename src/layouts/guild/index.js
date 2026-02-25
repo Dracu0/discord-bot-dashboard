@@ -51,6 +51,8 @@ function RouteWrapper({children}) {
                     pe="20px"
                     minH="100vh"
                     pt="50px"
+                    id="main-content"
+                    as="main"
                 >
                     {children}
                 </Box>

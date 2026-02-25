@@ -1,5 +1,5 @@
 // Chakra imports
-import {Flex, SimpleGrid, Text, useColorModeValue} from "@chakra-ui/react";
+import {Flex, SimpleGrid, Text} from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card.js";
 import React, {useState} from "react";
@@ -8,11 +8,10 @@ import {QueryHolderSkeleton} from "../../../../contexts/components/AsyncContext"
 import SearchInput from "../../../../components/fields/impl/SearchInput";
 import {config} from "../../../../config/config";
 import {Locale} from "../../../../utils/Language";
-import {useDetailColor, useTextColor} from "../../../../utils/colors";
+import {useDetailColor, useNeuFlat, useTextColor} from "../../../../utils/colors";
 
 export default function ServerPicker({query, ...rest}) {
 
-    // Chakra Color Mode
     const textColorPrimary = useTextColor();
     const textColorSecondary = useDetailColor();
 
@@ -26,6 +25,7 @@ export default function ServerPicker({query, ...rest}) {
                     fontWeight="bold"
                     fontSize="2xl"
                     mt="10px"
+                    fontFamily="'Space Grotesk', sans-serif"
                 >
                     <Locale zh="您的服務器" en="Your Servers" />
                 </Text>
@@ -51,10 +51,7 @@ export default function ServerPicker({query, ...rest}) {
 }
 
 function Servers({filter, guilds}) {
-    const cardShadow = useColorModeValue(
-        "0px 18px 40px rgba(112, 144, 176, 0.12)",
-        "unset"
-    );
+    const neuFlat = useNeuFlat();
 
     return guilds
         .filter(server => server.name
@@ -65,7 +62,7 @@ function Servers({filter, guilds}) {
             return (
                 <Server
                     key={server.id}
-                    boxShadow={cardShadow}
+                    boxShadow={neuFlat}
                     server={server}
                 />
             );

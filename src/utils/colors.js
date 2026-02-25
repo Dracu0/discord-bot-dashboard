@@ -2,11 +2,11 @@ import {useColorModeValue, useToken} from "@chakra-ui/react";
 import hexToRgba from "hex-to-rgba";
 
 export function useAlertBg() {
-    const [secondaryGray300, navy800] = useToken("colors", ["secondaryGray.300", "navy.900"])
+    const [secondaryGray300, navy900] = useToken("colors", ["secondaryGray.300", "navy.900"])
 
     return useColorModeValue(
         hexToRgba(secondaryGray300, 0.5),
-        hexToRgba(navy800, 0.5)
+        hexToRgba(navy900, 0.5)
     );
 }
 
@@ -36,4 +36,29 @@ export function useIconColor() {
 
 export function useCardBg() {
     return useColorModeValue("white", "navy.800");
+}
+
+export function useNeuRaised() {
+    return useColorModeValue(
+        "6px 6px 14px #d1cbe0, -6px -6px 14px #ffffff",
+        "6px 6px 14px #110d1e, -6px -6px 14px #2f254a"
+    );
+}
+
+export function useNeuInset() {
+    return useColorModeValue(
+        "inset 3px 3px 6px #d1cbe0, inset -3px -3px 6px #ffffff",
+        "inset 3px 3px 6px #110d1e, inset -3px -3px 6px #2f254a"
+    );
+}
+
+export function useNeuFlat() {
+    return useColorModeValue(
+        "2px 2px 5px #d1cbe0, -2px -2px 5px #ffffff",
+        "2px 2px 5px #110d1e, -2px -2px 5px #2f254a"
+    );
+}
+
+export function useSurfaceBg() {
+    return useColorModeValue("secondaryGray.300", "navy.900");
 }

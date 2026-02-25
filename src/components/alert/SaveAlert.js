@@ -1,10 +1,11 @@
 import {Alert, AlertIcon, Button, ButtonGroup, Slide,} from "@chakra-ui/react";
-import {useAlertBg, useSuccessBg, useTextColor} from "../../utils/colors";
+import {useAlertBg, useNeuRaised, useSuccessBg, useTextColor} from "../../utils/colors";
 import {Locale} from "../../utils/Language";
 
 function BaseAlert({isOpen, children}) {
     const alertBg = useAlertBg()
     const mainText = useTextColor();
+    const neuShadow = useNeuRaised();
 
     return <Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }}>
         <Alert
@@ -16,12 +17,15 @@ function BaseAlert({isOpen, children}) {
                 "2xl": "calc(100vw - 365px)",
             }}
             mx="auto"
-            rounded="2xl"
+            rounded="20px"
             status="warning"
-            backdropFilter="blur(10px)"
+            backdropFilter="blur(16px)"
             bg={alertBg}
             textColor={mainText}
             mb="10"
+            boxShadow={neuShadow}
+            border="1px solid"
+            borderColor="rgba(139, 92, 246, 0.15)"
             flexDirection={{base: "column", "2sm": "row"}}
         >
             <AlertIcon />

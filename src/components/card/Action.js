@@ -1,18 +1,11 @@
 import React, {useContext} from "react";
-import {Box, Button, Flex, HStack, Image, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, HStack, Image, Text, useColorModeValue} from "@chakra-ui/react";
 import Card from "components/card/Card";
 import {Link} from "react-router-dom";
 import {GuildContext} from "contexts/guild/GuildContext";
 import {Locale, useLocale} from "../../utils/Language";
-import {useBrandBg, useDetailColor, useTextColor} from "../../utils/colors";
+import {useDetailColor, useTextColor} from "../../utils/colors";
 
-/**
- * {
- *  banner: "",
- *  name: "Kill Kane",
- *  description: "Kill Kane in a channel"
- * }
- */
 export function Action({id, action}) {
     const {id: serverId} = useContext(GuildContext)
     const configUrl = `/guild/${serverId}/actions/${id}`
@@ -20,22 +13,38 @@ export function Action({id, action}) {
 
     const textColor = useTextColor();
     const detailColor = useDetailColor();
-    const brandBg = useBrandBg()
+    const hoverBorder = useColorModeValue("brand.200", "brand.600");
 
     return (
-        <Card p="20px">
+        <Card
+            p="20px"
+            transition="all 0.25s ease"
+            border="1px solid"
+            borderColor="transparent"
+            _hover={{
+                transform: "translateY(-4px)",
+                borderColor: hoverBorder,
+            }}
+        >
             <Flex direction="column" gap={3}>
                 {action.banner?
-                    <Image h="5rem" objectFit="cover" rounded="lg" bg={brandBg} src={action.banner}/> :
-                    <Box h="5rem" rounded="lg" bg={brandBg} />
+                    <Image
+                        h="5rem"
+                        objectFit="cover"
+                        rounded="16px"
+                        src={action.banner}
+                    /> :
+                    <Box
+                        h="5rem"
+                        rounded="16px"
+                        bgGradient="linear(135deg, brand.600 0%, accent.pink 50%, accent.gold 100%)"
+                    />
                 }
                 <Text
                     color={textColor}
-                    fontSize={{
-                        base: "xl",
-                        md: "lg",
-                    }}
+                    fontSize={{ base: "xl", md: "lg" }}
                     fontWeight="bold"
+                    fontFamily="'Space Grotesk', sans-serif"
                 >
                     {locale(action.name)}
                 </Text>

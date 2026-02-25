@@ -14,6 +14,7 @@ export default function ActionsList() {
                 color={textColor}
                 fontSize="2xl"
                 fontWeight="700"
+                fontFamily="'Space Grotesk', sans-serif"
                 ms="24px"
                 mt="45px">
                 <Locale zh="動作列表" en="Actions List" />

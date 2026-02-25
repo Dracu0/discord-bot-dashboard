@@ -1,9 +1,7 @@
 // Chakra imports
-// Chakra imports
 import {Flex, Stat, StatLabel, StatNumber} from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card.js";
-// Custom icons
 import React from "react";
 import {useDetailColor, useTextColor} from "../../../utils/colors";
 
@@ -25,16 +23,17 @@ export default function Default(props) {
           <StatLabel
             lineHeight='100%'
             color={textColorSecondary}
-            fontSize={{
-              base: "sm",
-            }}>
+            fontSize={{ base: "sm" }}
+            fontWeight="500"
+          >
             {name}
           </StatLabel>
           <StatNumber
             color={textColor}
-            fontSize={{
-              base: "2xl",
-            }}>
+            fontSize={{ base: "2xl" }}
+            fontFamily="'Space Grotesk', sans-serif"
+            fontWeight="700"
+          >
             {value}
           </StatNumber>
         </Stat>

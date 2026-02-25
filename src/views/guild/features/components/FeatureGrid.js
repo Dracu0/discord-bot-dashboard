@@ -16,6 +16,7 @@ export default function FeatureGrid() {
                 color={textColor}
                 fontSize="2xl"
                 fontWeight="700"
+                fontFamily="'Space Grotesk', sans-serif"
                 ms="24px"
                 mt="45px">
                 <Locale zh="功能列表" en="Features List" />

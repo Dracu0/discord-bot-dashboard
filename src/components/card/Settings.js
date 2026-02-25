@@ -39,6 +39,7 @@ export default function Settings({...rest}) {
                 color={textColorPrimary}
                 fontWeight="bold"
                 fontSize="2xl"
+                fontFamily="'Space Grotesk', sans-serif"
                 mb="30px">
                 <Locale zh="用戶設置" en="Settings" />
             </Text>
