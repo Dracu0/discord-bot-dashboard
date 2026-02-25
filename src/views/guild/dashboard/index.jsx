@@ -1,22 +1,22 @@
 // Chakra imports
-import {Box, SimpleGrid,} from "@chakra-ui/react";
+import { Box, SimpleGrid, } from "@chakra-ui/react";
 // Custom components
-import React, {useContext, useMemo} from "react";
-import {usePageInfo} from "../../../contexts/PageInfoContext";
-import {GuildDetailContext, ServerDetailProvider} from "../../../contexts/guild/GuildDetailContext";
-import {useQuery} from "react-query";
-import {getServerAdvancedDetails} from "api/internal";
-import {QueryHolderSkeleton} from "contexts/components/AsyncContext";
-import {GuildContext} from "contexts/guild/GuildContext";
-import {DataList} from "components/card/data/DataCard";
-import {config} from "config/config";
-import {usePageState} from "utils/State";
-import {useLocale} from "utils/Language";
+import React, { useContext, useMemo } from "react";
+import { usePageInfo } from "../../../contexts/PageInfoContext";
+import { GuildDetailContext, ServerDetailProvider } from "../../../contexts/guild/GuildDetailContext";
+import { useQuery } from "react-query";
+import { getServerAdvancedDetails } from "api/internal";
+import { QueryHolderSkeleton } from "contexts/components/AsyncContext";
+import { GuildContext } from "contexts/guild/GuildContext";
+import { DataList } from "components/card/data/DataCard";
+import { config } from "config/config";
+import { usePageState } from "utils/State";
+import { useLocale } from "utils/Language";
 
 export default function Dashboard() {
     const locale = useLocale()
 
-    usePageInfo(locale({zh: "服務器儀表板", en: "Server Statistics"}))
+    usePageInfo(locale({ zh: "服務器儀表板", en: "Server Statistics" }))
 
     return <ServerDetailProvider>
         <UserReports />
@@ -24,8 +24,8 @@ export default function Dashboard() {
 }
 
 export function UserReports() {
-    const {detail} = useContext(GuildDetailContext)
-    const {id: serverId} = useContext(GuildContext)
+    const { detail } = useContext(GuildDetailContext)
+    const { id: serverId } = useContext(GuildContext)
     const data = config.data.dashboard
 
     const query = useQuery(
@@ -37,20 +37,20 @@ export function UserReports() {
     )
 
     return (
-        <Box pt={{base: "130px", md: "80px", xl: "80px"}}>
+        <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
             {
                 data.map((row, key) => {
                     const count = row.count
 
                     return <SimpleGrid
                         key={key}
-                        columns={{base: 1, md: Math.min(2, count), "2xl": count}}
+                        columns={{ base: 1, md: Math.min(2, count), "2xl": count }}
                         gap="20px"
                         mb="20px"
                     >
-                        {row.advanced?
+                        {row.advanced ?
                             <QueryHolderSkeleton query={query} height="400px" count={row.count}>
-                                {() => <Data row={row} data={detail} advanced={query.data} />}
+                                {() => <Data row={row} detail={query.data} />}
                             </QueryHolderSkeleton>
                             :
                             <Data row={row} detail={detail} />
@@ -62,10 +62,8 @@ export function UserReports() {
     );
 }
 
-function Data({row, detail, advanced}) {
-    const state = usePageState({
-        advanced
-    })
+function Data({ row, detail }) {
+    const state = usePageState()
 
     const items = useMemo(
         () => row.items(detail, state),
