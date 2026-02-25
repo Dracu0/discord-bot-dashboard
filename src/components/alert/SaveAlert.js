@@ -7,7 +7,7 @@ function BaseAlert({isOpen, children}) {
     const mainText = useTextColor();
     const neuShadow = useNeuRaised();
 
-    return <Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }}>
+    return <Slide direction="bottom" in={isOpen} style={{ zIndex: 40 }}>
         <Alert
             w={{
                 base: "calc(100vw - 6%)",

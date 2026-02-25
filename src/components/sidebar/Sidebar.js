@@ -32,7 +32,7 @@ function Sidebar({ routes }) {
 
   // SIDEBAR
   return (
-    <Box display={{ base: "none", xl: "block" }} position="fixed" minH="100%">
+    <Box display={{ base: "none", xl: "block" }} position="fixed" minH="100%" zIndex={20}>
       <Box
         bg={sidebarBg}
         transition={variantChange}

@@ -63,7 +63,7 @@ export default function EmojiField({value, onChange: change}) {
                      aria-label="Select Emoji" />
                 </InputRightElement>
             </PopoverTrigger>
-            <PopoverContent bg="transparent" _focus={{outline: "none"}}>
+            <PopoverContent bg="transparent" _focus={{outline: "none"}} zIndex={1500}>
                 <QueryHolderSkeleton query={query}>
                     <EmojiPicker data={query.data} onChange={onChange}/>
                 </QueryHolderSkeleton>

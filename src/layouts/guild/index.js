@@ -37,7 +37,7 @@ function RouteWrapper({children}) {
                 transitionDuration=".2s, .2s, .35s"
                 transitionProperty="top, bottom, width"
                 transitionTimingFunction="linear, linear, ease"
-                overflow="hidden"
+                overflow="visible"
             >
                 <Portal>
                     <Box>

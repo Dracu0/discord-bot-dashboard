@@ -26,11 +26,11 @@ export function SelectField({ value, onChange, options, ...props }) {
         menuList: (provided) => ({
           ...provided,
           background: bgColor,
-          zIndex: 9999,
+          zIndex: 1500,
         }),
         menu: (provided) => ({
           ...provided,
-          zIndex: 9999,
+          zIndex: 1500,
         }),
       }}
       focusBorderColor={brandColor}

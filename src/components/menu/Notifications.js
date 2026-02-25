@@ -52,6 +52,7 @@ export function Notifications() {
             bg={menuBg}
             border="none"
             mt="22px"
+            zIndex={1500}
             me={{base: "30px", md: "unset"}}
             minW={{base: "80vw", md: "400px", xl: "450px"}}
             maxW={{base: "360px", md: "unset"}}

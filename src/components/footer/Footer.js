@@ -10,7 +10,7 @@ export default function Footer({children}) {
 
     return (
         <Flex
-            zIndex='3'
+            zIndex='1'
             direction={{
                 base: "column",
                 xl: "row",

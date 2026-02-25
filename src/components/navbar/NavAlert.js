@@ -14,7 +14,7 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
 
     return (
         <Box
-            zIndex={10}
+            zIndex={30}
             position="fixed"
             boxShadow="none"
             bg={navbarBg}

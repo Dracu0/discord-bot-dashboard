@@ -26,6 +26,7 @@ export default function UserOptionMenu() {
             borderRadius="20px"
             bg={menuBg}
             border="none"
+            zIndex={1500}
         >
             <Flex w="100%" mb="0px">
                 <Text

@@ -123,7 +123,7 @@ export const globalStyles = {
         px: "16px",
         py: "8px",
         borderRadius: "8px",
-        zIndex: 9999,
+        zIndex: 9999,  /* skip-to-content must be topmost */
         fontWeight: "600",
         transition: "top 0.2s ease",
         _focus: {
