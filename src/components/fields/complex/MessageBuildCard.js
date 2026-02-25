@@ -11,9 +11,9 @@ import {
     Tabs,
     Text
 } from "@chakra-ui/react";
-import {OptionField, OptionHandlerContext} from "../OptionPanel";
-import {HSeparator} from "../../separator/Separator";
-import {InputField} from "../impl/InputField";
+import { OptionField, OptionHandlerContext } from "../OptionPanel";
+import { HSeparator } from "../../separator/Separator";
+import { InputField } from "../impl/InputField";
 
 const DefaultEmbed = {
     title: "",
@@ -36,7 +36,7 @@ const handler = {
     "_embed_field": (props) => <EmbedField {...props} />
 }
 
-export default function MessageBuildCard({value, onChange}) {
+export default function MessageBuildCard({ value, onChange }) {
     const get = (name) => {
         return value != null && value[name]
     }
@@ -49,22 +49,22 @@ export default function MessageBuildCard({value, onChange}) {
 
     return <Tabs defaultIndex={data.type === "message" ? 0 : 1}>
         <TabList>
-            <Tab>信息</Tab>
-            <Tab>嵌入</Tab>
+            <Tab>Message</Tab>
+            <Tab>Embed</Tab>
         </TabList>
 
         <TabPanels>
             <TabPanel>
-                <MessagePanel data={data} onChange={onChange}/>
+                <MessagePanel data={data} onChange={onChange} />
             </TabPanel>
             <TabPanel>
-                <EmbedPanel data={data} onChange={onChange}/>
+                <EmbedPanel data={data} onChange={onChange} />
             </TabPanel>
         </TabPanels>
     </Tabs>
 }
 
-function MessagePanel({data, onChange}) {
+function MessagePanel({ data, onChange }) {
     const onType = (v) => {
         onChange({
             ...data,
@@ -73,7 +73,7 @@ function MessagePanel({data, onChange}) {
     }
 
     return <FormControl>
-        <FormLabel htmlFor='content'>內容</FormLabel>
+        <FormLabel htmlFor='content'>Content</FormLabel>
         <InputField
             id='content'
             variant="main"
@@ -81,11 +81,11 @@ function MessagePanel({data, onChange}) {
             value={data.message}
             onChange={event => onType(event.target.value)}
         />
-        <FormHelperText>內容不能為空</FormHelperText>
+        <FormHelperText>Content cannot be empty</FormHelperText>
     </FormControl>
 }
 
-function EmbedPanel({data, onChange}) {
+function EmbedPanel({ data, onChange }) {
     const embed = data.embed
 
     const update = (name, v) => {
@@ -106,30 +106,30 @@ function EmbedPanel({data, onChange}) {
     }
 
     const info = {
-        name: "基本設置",
+        name: "Basic Settings",
         fields: [
             {
-                name: "標題",
+                name: "Title",
                 id: "title",
                 type: "string",
             },
             {
-                name: "描述",
+                name: "Description",
                 id: "detail",
                 type: "long_string"
             },
             {
-                name: "網址",
+                name: "URL",
                 id: "url",
                 type: "string"
             },
             {
-                name: "頁腳",
+                name: "Footer",
                 id: "footer",
                 type: "string"
             },
             {
-                name: "顏色",
+                name: "Color",
                 id: "color",
                 type: "color"
             }
@@ -146,10 +146,10 @@ function EmbedPanel({data, onChange}) {
     }
 
     const advanced = {
-        name: "高級設置",
+        name: "Advanced Settings",
         fields: [
             {
-                name: "信息字段",
+                name: "Fields",
                 id: "fields",
                 type: "array",
                 element: {
@@ -174,21 +174,21 @@ function EmbedPanel({data, onChange}) {
     }
 
     const author = {
-        name: "作者設置",
+        name: "Author Settings",
         fields: [
             {
                 id: "name",
-                name: "姓名",
+                name: "Name",
                 type: "string"
             },
             {
                 id: "link",
-                name: "網址鏈接",
+                name: "URL",
                 type: "string"
             },
             {
                 id: "icon",
-                name: "頭像",
+                name: "Icon",
                 type: "string"
             }
         ],
@@ -205,16 +205,16 @@ function EmbedPanel({data, onChange}) {
 
     return <FormControl>
         <OptionHandlerContext.Provider value={handler}>
-            <Category {...info} isFirst/>
+            <Category {...info} isFirst />
             <Category {...author} />
             <Category {...advanced} />
         </OptionHandlerContext.Provider>
     </FormControl>
 }
 
-function Category({isFirst, name, fields, mapper}) {
+function Category({ isFirst, name, fields, mapper }) {
     return <Stack>
-        {!isFirst && <HSeparator my="5"/>}
+        {!isFirst && <HSeparator my="5" />}
         <Text fontSize="2xl" fontWeight="bold" my="4">{name}</Text>
         <Stack gap={3}>
             {fields.map(mapper)}
@@ -222,14 +222,14 @@ function Category({isFirst, name, fields, mapper}) {
     </Stack>
 }
 
-function Field({option, value, onChange, head}) {
+function Field({ option, value, onChange, head }) {
     return <>
         <Text wordBreak="keep-all" fontSize={head && "xl"} fontWeight={head && "bold"}>{option.name}</Text>
-        <OptionField value={value} onChange={onChange} option={option}/>
+        <OptionField value={value} onChange={onChange} option={option} />
     </>
 }
 
-function EmbedField({value, onChange}) {
+function EmbedField({ value, onChange }) {
     const change = (name, v) => {
         onChange({
             ...value,
@@ -237,28 +237,28 @@ function EmbedField({value, onChange}) {
         })
     }
 
-    return <Stack w="full" direction={{base: "column", md: "row"}} alignItems={{md: "baseline"}}>
+    return <Stack w="full" direction={{ base: "column", md: "row" }} alignItems={{ md: "baseline" }}>
         <Field option={{
-            name: "名稱",
+            name: "Name",
             type: "string"
         }}
-               value={value.name}
-               onChange={v => change("name", v)}
+            value={value.name}
+            onChange={v => change("name", v)}
         />
         <Field option={{
-            name: "數值",
+            name: "Value",
             type: "string"
         }}
-               value={value.value}
-               onChange={v => change("value", v)}
+            value={value.value}
+            onChange={v => change("value", v)}
         />
         <HStack w="full" direction="row-reverse" alignItems="baseline">
             <Field option={{
-                name: "水平",
+                name: "Inline",
                 type: "boolean"
             }}
-                   value={value.inline}
-                   onChange={v => change("inline", v)}
+                value={value.inline}
+                onChange={v => change("inline", v)}
             />
         </HStack>
     </Stack>

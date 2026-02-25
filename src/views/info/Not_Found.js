@@ -1,4 +1,4 @@
-import {Box, Center, Heading, Image, Text} from "@chakra-ui/react";
+import { Box, Center, Heading, Image, Text } from "@chakra-ui/react";
 import not_found from "assets/img/info/not_found_404.svg"
 
 export default function NotFound() {
@@ -6,7 +6,7 @@ export default function NotFound() {
         <Box position="relative">
             <Image width={400} src={not_found} alt="Not Found" />
             <Heading>404 Not Found</Heading>
-            <Text fontSize={20}>我們找不到您請求的資源</Text>
+            <Text fontSize={20}>The resource you requested could not be found</Text>
         </Box>
     </Center>
 }

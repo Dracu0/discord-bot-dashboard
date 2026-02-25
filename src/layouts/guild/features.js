@@ -1,21 +1,24 @@
-import {Box, Fade, Flex, Grid} from "@chakra-ui/react";
-import React, {Fragment, useContext} from "react";
-import {Outlet} from "react-router-dom"
-import {LayoutContext, LayoutProvider} from "../../contexts/layouts/LayoutContext";
+import { Box, Fade, Flex, Grid } from "@chakra-ui/react";
+import React, { Fragment, useContext } from "react";
+import { Outlet } from "react-router-dom"
+import { LayoutContext, LayoutProvider } from "../../contexts/layouts/LayoutContext";
 import Banner from "../../components/card/Banner";
 import bannerImg from "assets/img/common/FeatureBanner.png";
-import {useLocale} from "../../utils/Language";
-import {usePageInfo} from "../../contexts/PageInfoContext";
+import { useLocale } from "../../utils/Language";
+import { usePageInfo } from "../../contexts/PageInfoContext";
+import { FeaturesProvider } from "../../contexts/FeaturesContext";
 
 export function FeaturesLayout() {
-    return <LayoutProvider>
-        <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
-            <Content />
-        </Box>
-    </LayoutProvider>
+    return <FeaturesProvider>
+        <LayoutProvider>
+            <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
+                <Content />
+            </Box>
+        </LayoutProvider>
+    </FeaturesProvider>
 }
 
-function BannerWrapper({banner}) {
+function BannerWrapper({ banner }) {
     if (banner == null) return <></>
 
     return <Fade in={true}>
@@ -31,11 +34,11 @@ function BannerWrapper({banner}) {
 }
 
 function Content() {
-    const {banner, dataList} = useContext(LayoutContext)
+    const { banner, dataList } = useContext(LayoutContext)
     const locale = useLocale()
 
     usePageInfo(
-        locale({zh: "功能控制面板", en: "Features"})
+        locale({ zh: "功能控制面板", en: "Features" })
     )
 
     if (dataList) {

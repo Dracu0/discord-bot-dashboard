@@ -1,26 +1,24 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 
 // Custom components
 import FeatureGrid from "./components/FeatureGrid";
-import {FeaturesContext, FeaturesProvider} from "contexts/FeaturesContext";
-import {DataList} from "components/card/data/DataCard";
-import {config} from "config/config";
-import {Locale, useLocale} from "utils/Language";
-import {useLayoutUpdate} from "contexts/layouts/LayoutContext";
-import {BannerButton} from "components/card/Banner";
-import {FaTripadvisor} from "react-icons/fa";
+import { FeaturesContext } from "contexts/FeaturesContext";
+import { DataList } from "components/card/data/DataCard";
+import { config } from "config/config";
+import { Locale, useLocale } from "utils/Language";
+import { useLayoutUpdate } from "contexts/layouts/LayoutContext";
+import { BannerButton } from "components/card/Banner";
+import { FaTripadvisor } from "react-icons/fa";
 
 export default function FeaturesBoard() {
 
   return (
-      <FeaturesProvider>
-        <Content />
-      </FeaturesProvider>
+    <Content />
   );
 }
 
 function Content() {
-  const {data} = useContext(FeaturesContext)
+  const { data } = useContext(FeaturesContext)
   const locale = useLocale()
 
   useLayoutUpdate({
@@ -44,10 +42,10 @@ function Content() {
 }
 
 function TutorialButton() {
-  return  <BannerButton
-      leftIcon={<FaTripadvisor size={20}/>}
-      url={config.tutorialUrl}
+  return <BannerButton
+    leftIcon={<FaTripadvisor size={20} />}
+    url={config.tutorialUrl}
   >
-    <Locale zh="發現它們" en="Discover"/>
+    <Locale zh="發現它們" en="Discover" />
   </BannerButton>
 }

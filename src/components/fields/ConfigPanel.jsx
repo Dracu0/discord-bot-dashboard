@@ -1,11 +1,11 @@
-import React, {useState} from "react";
-import {OptionPanel} from "./OptionPanel";
-import {SaveAlert} from "components/alert/SaveAlert";
+import React, { useState } from "react";
+import { OptionPanel } from "./OptionPanel";
+import { SaveAlert } from "components/alert/SaveAlert";
 import ErrorModal from "../modal/ErrorModal";
-import {useMutation} from "react-query";
-import {Flex, SimpleGrid, Skeleton, SlideFade} from "@chakra-ui/react";
+import { useMutation } from "react-query";
+import { Flex, SimpleGrid, Skeleton, SlideFade } from "@chakra-ui/react";
 
-export function ConfigItemListAnimated({options, changes, onChange}) {
+export function ConfigItemListAnimated({ options, changes, onChange }) {
     return options.map((option) => (
         <SlideFade key={option.id} in={true}>
             <Flex w="full" h="full">
@@ -22,7 +22,7 @@ export function ConfigItemListAnimated({options, changes, onChange}) {
 }
 
 export function ConfigGridSkeleton() {
-    return <SimpleGrid columns={{base: 1, lg: 2}} gap={5} mt={10}>
+    return <SimpleGrid columns={{ base: 1, lg: 2 }} gap={5} mt={10}>
         <Skeleton height="20rem" rounded="lg" />
         <Skeleton height="20rem" rounded="lg" />
         <Skeleton height="20rem" rounded="lg" />
@@ -31,12 +31,12 @@ export function ConfigGridSkeleton() {
 }
 
 export function ConfigGrid(props) {
-    return <SimpleGrid columns={{base: 1, lg: 2}} gap={5} mt={10}>
+    return <SimpleGrid columns={{ base: 1, lg: 2 }} gap={5} mt={10}>
         <ConfigPanel {...props} />
     </SimpleGrid>
 }
 
-export function MultiConfigPanel({groups, onSave: save, onSaved}) {
+export function MultiConfigPanel({ groups, onSave: save, onSaved }) {
     function getInitial() {
         return groups.map(() => new Map())
     }
@@ -62,7 +62,7 @@ export function MultiConfigPanel({groups, onSave: save, onSaved}) {
     return (
         <>
             <ErrorModal
-                header="未能保存更改"
+                header="Failed to save changes"
                 error={mutation.error && mutation.error.toString()}
                 onClose={mutation.reset}
             />
@@ -86,7 +86,7 @@ export function MultiConfigPanel({groups, onSave: save, onSaved}) {
     );
 }
 
-export function ConfigPanel({options, onDiscard, onSave: save, onSaved}) {
+export function ConfigPanel({ options, onDiscard, onSave: save, onSaved }) {
     const [changes, setChanges] = useState(new Map());
     const mutation = useMutation(save, {
         onSuccess(data) {
@@ -106,7 +106,7 @@ export function ConfigPanel({options, onDiscard, onSave: save, onSaved}) {
     return (
         <>
             <ErrorModal
-                header="未能保存更改"
+                header="Failed to save changes"
                 error={mutation.error && mutation.error.toString()}
                 onClose={mutation.reset}
             />

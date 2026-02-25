@@ -31,16 +31,16 @@ export default function ArrayField({ element, value: valueRaw, onChange }) {
                     {i !== 0 && <HSeparator my={3} />}
                     <Flex direction="row" gap={5}>
                         <OptionField option={option} value={val} onChange={v => change(i, v)} />
-                        <Button variant="brand" onClick={removeItem}>刪除此行</Button>
+                        <Button variant="brand" onClick={removeItem}>Remove</Button>
                     </Flex>
                 </React.Fragment>
             })
         }
 
-        {value.length === 0 && <Text color="secondaryGray.600">還沒有任何內容</Text>}
+        {value.length === 0 && <Text color="secondaryGray.600">No items yet</Text>}
 
         <Box mt={2}>
-            <Button onClick={() => onChange([...value, element.holder])}>添加新行</Button>
+            <Button onClick={() => onChange([...value, element.holder])}>Add New</Button>
         </Box>
     </>
 }

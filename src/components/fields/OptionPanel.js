@@ -1,19 +1,19 @@
-import {FormControl, FormHelperText, FormLabel, Switch, Text} from "@chakra-ui/react";
+import { FormControl, FormHelperText, FormLabel, Switch, Text } from "@chakra-ui/react";
 import Card from "components/card/Card.js";
-import {SelectField} from "components/fields/SelectField";
-import {InputField} from "./impl/InputField";
+import { SelectField } from "components/fields/SelectField";
+import { InputField } from "./impl/InputField";
 import MessageBuildCard from "./complex/MessageBuildCard";
 import ColorField from "./impl/ColorField";
-import {createContext, useContext, useMemo} from "react";
+import { createContext, useContext, useMemo } from "react";
 import ArrayField from "./complex/ArrayField";
 import TextArea from "./TextArea";
 import IdSelectField from "./impl/IdSelectField";
 import ImageField from "./impl/ImageField";
 import EmojiField from "./impl/EmojiField";
 import PairField from "./complex/PairField";
-import {OptionTypes} from "../../variables/type";
+import { OptionTypes } from "../../variables/type";
 
-export function OptionPanel({value, onChange, option}) {
+export function OptionPanel({ value, onChange, option }) {
     const input = useInput(value, onChange, option)
 
     const inline = option.type === OptionTypes.Boolean
@@ -49,7 +49,7 @@ export function useInput(value, onChange, option) {
     const handler = handlers && handlers[option.type]
 
     if (handler) {
-        return handler({value, onChange, option})
+        return handler({ value, onChange, option })
     }
 }
 
@@ -76,7 +76,7 @@ export function getInput(value, onChange, option) {
                     size="md"
                     isChecked={value}
                     variant="main"
-                    onChange={({target}) => onChange(target.checked)}
+                    onChange={({ target }) => onChange(target.checked)}
                 />
             );
         case OptionTypes.MultiLine_Text:
@@ -94,8 +94,8 @@ export function getInput(value, onChange, option) {
                 <InputField
                     type={isText ? "text" : "number"}
                     value={value}
-                    placeholder={isText ? "請輸入文字" : "請輸入數字"}
-                    onChange={({target}) =>
+                    placeholder={isText ? "Enter text" : "Enter a number"}
+                    onChange={({ target }) =>
                         onChange(isText ? target.value : target.valueAsNumber)
                     }
                 />
@@ -107,7 +107,7 @@ export function getInput(value, onChange, option) {
                         label: choice,
                         value: choice,
                     }))}
-                    placeholder="選擇一個項目"
+                    placeholder="Select an item"
                     value={value}
                     onChange={onChange}
                     isMulti={option.multiple}
@@ -125,22 +125,22 @@ export function getInput(value, onChange, option) {
             )
         case OptionTypes.Image:
             return (
-                <ImageField value={value} onChange={onChange}/>
+                <ImageField value={value} onChange={onChange} />
             )
         case OptionTypes.Emoji:
             return (
-                <EmojiField value={value} onChange={onChange}/>
+                <EmojiField value={value} onChange={onChange} />
             )
         case OptionTypes.Pair:
             return (
-                <PairField element={option.element} value={value} onChange={onChange}/>
+                <PairField element={option.element} value={value} onChange={onChange} />
             )
         default:
             return null;
     }
 }
 
-export function OptionField({value, onChange, option}) {
+export function OptionField({ value, onChange, option }) {
     return useInput(value, onChange, option)
 }
 

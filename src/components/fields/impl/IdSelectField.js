@@ -1,8 +1,8 @@
-import {SelectField} from "../SelectField";
-import {chakraComponents} from "chakra-react-select";
-import {Icon} from "@chakra-ui/react";
-import {BsChatRightTextFill, BsPeopleFill} from "react-icons/bs";
-import {VscCircleFilled} from "react-icons/vsc";
+import { SelectField } from "../SelectField";
+import { chakraComponents } from "chakra-react-select";
+import { Icon } from "@chakra-ui/react";
+import { BsChatRightTextFill, BsPeopleFill } from "react-icons/bs";
+import { VscCircleFilled } from "react-icons/vsc";
 
 const components = {
     Option: ({ children, ...props }) => (
@@ -12,7 +12,7 @@ const components = {
     ),
 };
 
-export default function IdSelectField({value, onChange, options, placeholder, multiple}) {
+export default function IdSelectField({ value, onChange, options, placeholder, multiple }) {
 
     const getIcon = (icon) => {
         switch (icon) {
@@ -30,7 +30,7 @@ export default function IdSelectField({value, onChange, options, placeholder, mu
                 <Icon as={getIcon(option.icon)} mr={3} color={option.color} />
             )
         }))}
-        placeholder={placeholder || "選擇一個項目"}
+        placeholder={placeholder || "Select an item"}
         value={value}
         onChange={onChange}
         isMulti={multiple}
