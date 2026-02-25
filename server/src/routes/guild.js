@@ -548,7 +548,7 @@ router.get('/:id/action/:actionId', async (req, res) => {
             res.json({
                 tasks: logs.map(l => ({
                     id: l._id.toString(),
-                    name: `${l.action} - ${l.targetId}`,
+                    name: `${l.action} - ${l.targetId} by ${l.moderatorId}`,
                     status: l.action,
                     createdAt: l.createdAt,
                 })),
@@ -602,7 +602,7 @@ router.get('/:id/action/:actionId/:taskId', async (req, res) => {
 
             res.json({
                 id: log._id.toString(),
-                name: `${log.action} - ${log.targetId}`,
+                name: `${log.action} - ${log.targetId} by ${log.moderatorId}`,
                 createdAt: log.createdAt,
                 values: {
                     action: log.action,
