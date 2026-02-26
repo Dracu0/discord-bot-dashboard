@@ -27,6 +27,21 @@ export const ModLogFeature = {
                 element: { type: "channel" },
                 value: values.modLogChannelId || "",
             },
+            {
+                id: "warnThresholds",
+                name: "Warning Thresholds",
+                description:
+                    "Auto-escalation rules. When a member reaches X warnings, automatically apply an action (timeout/kick/ban). Format: warn count → action (max 10)",
+                type: "array",
+                element: {
+                    type: "pair",
+                    holder: "",
+                },
+                value: (values.warnThresholds || []).map((t) => [
+                    t.count,
+                    `${t.action}${t.duration ? `:${t.duration}` : ""}`,
+                ]),
+            },
         ];
     },
 };

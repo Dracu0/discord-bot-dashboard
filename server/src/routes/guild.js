@@ -168,7 +168,7 @@ const FEATURE_FIELDS = {
     },
     xp: {
         enableCheck: (c) => !c.xpDisableLevelUpMessages,
-        fields: ['xpIgnoredChannelIds', 'xpLevelUpChannelId', 'xpDisableLevelUpMessages', 'levelRoles'],
+        fields: ['xpIgnoredChannelIds', 'xpLevelUpChannelId', 'xpDisableLevelUpMessages', 'levelRoles', 'xpChannelMultipliers', 'xpRoleMultipliers'],
     },
     suggestions: {
         enableCheck: (c) => c.suggestionChannelIds.length > 0,
@@ -180,7 +180,11 @@ const FEATURE_FIELDS = {
     },
     modlog: {
         enableCheck: (c) => !!c.modLogChannelId,
-        fields: ['modLogChannelId'],
+        fields: ['modLogChannelId', 'warnThresholds'],
+    },
+    reaction_roles: {
+        enableCheck: (c) => (c.reactionRoles || []).length > 0,
+        fields: ['reactionRoles'],
     },
 };
 
@@ -257,6 +261,9 @@ router.patch('/:id/feature/:featureId/enabled', async (req, res) => {
                 break;
             case 'modlog':
                 if (!enabled) config.modLogChannelId = '';
+                break;
+            case 'reaction_roles':
+                if (!enabled) config.reactionRoles = [];
                 break;
             default:
                 break;
@@ -346,6 +353,54 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
                         return { level: Number(item.level), roleId: String(item.roleId) };
                     }
                     return null;
+                }).filter(Boolean);
+            }
+            // Convert XP multipliers from [[targetId, multiplier], ...] to [{targetId, multiplier}, ...]
+            else if ((key === 'xpChannelMultipliers' || key === 'xpRoleMultipliers') && Array.isArray(value)) {
+                const limit = 25;
+                if (value.length > limit) {
+                    return res.status(400).json({ error: `Maximum ${limit} ${key}` });
+                }
+                config[key] = value.map(item => {
+                    if (Array.isArray(item)) {
+                        const targetId = String(item[0]);
+                        const multiplier = Number(item[1]);
+                        if (!/^\d{17,20}$/.test(targetId) || !Number.isFinite(multiplier) || multiplier < 0 || multiplier > 10) {
+                            return null;
+                        }
+                        return { targetId, multiplier };
+                    }
+                    if (isObject(item) && /^\d{17,20}$/.test(String(item.targetId))) {
+                        const multiplier = Number(item.multiplier);
+                        if (!Number.isFinite(multiplier) || multiplier < 0 || multiplier > 10) return null;
+                        return { targetId: String(item.targetId), multiplier };
+                    }
+                    return null;
+                }).filter(Boolean);
+            }
+            // Convert warnThresholds from [[count, "action:duration"], ...] to [{count, action, duration}, ...]
+            else if (key === 'warnThresholds' && Array.isArray(value)) {
+                if (value.length > 10) {
+                    return res.status(400).json({ error: 'Maximum 10 warn thresholds' });
+                }
+                const VALID_ACTIONS = ['timeout', 'kick', 'ban'];
+                config[key] = value.map(item => {
+                    let count, actionStr;
+                    if (Array.isArray(item)) {
+                        count = Number(item[0]);
+                        actionStr = String(item[1] || '');
+                    } else if (isObject(item)) {
+                        count = Number(item.count);
+                        actionStr = item.duration ? `${item.action}:${item.duration}` : String(item.action || '');
+                    } else {
+                        return null;
+                    }
+                    if (!Number.isFinite(count) || count < 1) return null;
+                    const [action, durationStr] = actionStr.split(':');
+                    if (!VALID_ACTIONS.includes(action)) return null;
+                    const duration = durationStr ? Number(durationStr) : 0;
+                    if (!Number.isFinite(duration) || duration < 0) return null;
+                    return { count: Math.floor(count), action, duration };
                 }).filter(Boolean);
             }
             // Convert mcServers from ["name:ip", ...] to [{name, ip}, ...] preserving existing sub-fields

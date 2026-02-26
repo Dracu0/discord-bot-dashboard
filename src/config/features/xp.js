@@ -68,6 +68,36 @@ export const XPFeature = {
                     lr.roleId,
                 ]),
             },
+            {
+                id: "xpChannelMultipliers",
+                name: "Channel XP Multipliers",
+                description:
+                    "Set XP multipliers per channel. A multiplier of 2 doubles XP earned; 0.5 halves it. Format: channel ID → multiplier (max 25)",
+                type: "array",
+                element: {
+                    type: "pair",
+                    holder: "",
+                },
+                value: (values.xpChannelMultipliers || []).map((m) => [
+                    m.targetId,
+                    m.multiplier,
+                ]),
+            },
+            {
+                id: "xpRoleMultipliers",
+                name: "Role XP Multipliers",
+                description:
+                    "Set XP multipliers per role. Members with the role get boosted/reduced XP. Format: role ID → multiplier (max 25)",
+                type: "array",
+                element: {
+                    type: "pair",
+                    holder: "",
+                },
+                value: (values.xpRoleMultipliers || []).map((m) => [
+                    m.targetId,
+                    m.multiplier,
+                ]),
+            },
         ];
     },
 };

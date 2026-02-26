@@ -20,6 +20,24 @@ const levelRoleSchema = new Schema({
     roleId: { type: String, required: true },
 }, { _id: false });
 
+const reactionRoleSchema = new Schema({
+    messageId: { type: String, required: true },
+    channelId: { type: String, required: true },
+    emoji: { type: String, required: true },
+    roleId: { type: String, required: true },
+}, { _id: false });
+
+const xpMultiplierSchema = new Schema({
+    targetId: { type: String, required: true },
+    multiplier: { type: Number, required: true, min: 0, max: 10 },
+}, { _id: false });
+
+const warnThresholdSchema = new Schema({
+    count: { type: Number, required: true, min: 1 },
+    action: { type: String, enum: ['timeout', 'kick', 'ban'], required: true },
+    duration: { type: Number, default: 0 },
+}, { _id: false });
+
 const guildConfigurationSchema = new Schema({
     guildId: {
         type: String,
@@ -96,6 +114,29 @@ const guildConfigurationSchema = new Schema({
     modLogChannelId: {
         type: String,
         default: '',
+    },
+    // Reaction roles
+    reactionRoles: {
+        type: [reactionRoleSchema],
+        default: [],
+        validate: [v => v.length <= 50, 'Maximum 50 reaction roles'],
+    },
+    // XP multipliers
+    xpChannelMultipliers: {
+        type: [xpMultiplierSchema],
+        default: [],
+        validate: [v => v.length <= 25, 'Maximum 25 channel multipliers'],
+    },
+    xpRoleMultipliers: {
+        type: [xpMultiplierSchema],
+        default: [],
+        validate: [v => v.length <= 25, 'Maximum 25 role multipliers'],
+    },
+    // Warn thresholds
+    warnThresholds: {
+        type: [warnThresholdSchema],
+        default: [],
+        validate: [v => v.length <= 10, 'Maximum 10 warn thresholds'],
     },
 });
 
