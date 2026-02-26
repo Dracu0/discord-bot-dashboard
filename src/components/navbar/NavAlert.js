@@ -21,13 +21,15 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
+    const scrolledBorderColor = useColorModeValue("rgba(255,255,255,0.6)", "rgba(139,92,246,0.12)");
+
     return (
         <Box
             zIndex={30}
             position="fixed"
             boxShadow={scrolled ? neuScrollShadow : "none"}
             bg={navbarBg}
-            borderColor={scrolled ? useColorModeValue("rgba(255,255,255,0.6)", "rgba(139,92,246,0.12)") : "transparent"}
+            borderColor={scrolled ? scrolledBorderColor : "transparent"}
             filter="none"
             backdropFilter="blur(32px) saturate(180%)"
             backgroundPosition="center"
