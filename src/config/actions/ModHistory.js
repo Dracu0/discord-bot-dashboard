@@ -1,12 +1,21 @@
 import { Locale } from "utils/Language";
 
+const ACTION_TYPES = [
+    { label: "Warn", value: "warn" },
+    { label: "Kick", value: "kick" },
+    { label: "Ban", value: "ban" },
+    { label: "Unban", value: "unban" },
+    { label: "Timeout", value: "timeout" },
+    { label: "Untimeout", value: "untimeout" },
+];
+
 export const ModHistoryAction = {
     name: {
         en: "Moderation History",
     },
     description: (
         <Locale
-            en="View moderation action history — bans, timeouts, role changes, and other logged moderator actions."
+            en="View moderation action history — warns, kicks, bans, timeouts, and other logged moderator actions."
         />
     ),
     options: (values) => [
@@ -14,7 +23,8 @@ export const ModHistoryAction = {
             id: "action",
             name: "Action Type",
             description: "The type of moderation action",
-            type: "string",
+            type: "enum",
+            choices: ACTION_TYPES,
             value: values ? values.action : "",
         },
         {

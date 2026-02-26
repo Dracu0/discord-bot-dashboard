@@ -398,6 +398,34 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
             }
         }
 
+        // Handle per-server Minecraft sub-fields (mcServer_N_fieldName)
+        if (featureId === 'minecraft' && config.mcServers) {
+            const MC_SUB_FIELDS = new Set([
+                'alertChannelId', 'alertRoleId', 'alertPingMode',
+                'liveEmbedChannelId', 'liveEmbedMode',
+            ]);
+            const VALID_PING_MODES = ['both', 'online', 'offline'];
+            const VALID_EMBED_MODES = ['edit', 'resend'];
+
+            for (const [key, value] of Object.entries(updates)) {
+                const match = key.match(/^mcServer_(\d+)_(\w+)$/);
+                if (!match) continue;
+
+                const idx = parseInt(match[1], 10);
+                const field = match[2];
+                if (!MC_SUB_FIELDS.has(field) || idx >= config.mcServers.length) continue;
+
+                // Validate field values
+                if (field === 'alertPingMode' && !VALID_PING_MODES.includes(value)) continue;
+                if (field === 'liveEmbedMode' && !VALID_EMBED_MODES.includes(value)) continue;
+                if ((field === 'alertChannelId' || field === 'alertRoleId' || field === 'liveEmbedChannelId')
+                    && typeof value === 'string' && value !== '' && !/^\d{17,20}$/.test(value)) continue;
+
+                config.mcServers[idx][field] = typeof value === 'string' ? value : '';
+            }
+            config.markModified('mcServers');
+        }
+
         await config.save();
 
         // Return updated values

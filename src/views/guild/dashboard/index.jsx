@@ -14,6 +14,7 @@ import { usePageState } from "utils/State";
 import { useLocale } from "utils/Language";
 import { useDetailColor, useTextColor } from "utils/colors";
 import { PAGE_PT } from "utils/layout-tokens";
+import NotificationFeed from "components/card/NotificationFeed";
 
 export default function Dashboard() {
     const locale = useLocale()
@@ -40,6 +41,7 @@ export function UserReports() {
 
     return (
         <Box pt={PAGE_PT}>
+            <NotificationFeed />
             <VStack spacing="32px" align="stretch">
                 {data.map((row, key) => {
                     const count = row.count
