@@ -330,15 +330,29 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
 
             // Convert levelRoles from [[level, roleId], ...] to [{level, roleId}, ...]
             if (key === 'levelRoles' && Array.isArray(value)) {
+                if (value.length > 50) {
+                    return res.status(400).json({ error: 'Maximum 50 level roles' });
+                }
                 config[key] = value.map(item => {
                     if (Array.isArray(item)) {
-                        return { level: Number(item[0]), roleId: String(item[1]) };
+                        const level = Number(item[0]);
+                        const roleId = String(item[1]);
+                        if (!Number.isFinite(level) || level < 0 || !/^\d{17,20}$/.test(roleId)) {
+                            return null;
+                        }
+                        return { level, roleId };
                     }
-                    return item;
-                });
+                    if (isObject(item) && Number.isFinite(Number(item.level)) && /^\d{17,20}$/.test(String(item.roleId))) {
+                        return { level: Number(item.level), roleId: String(item.roleId) };
+                    }
+                    return null;
+                }).filter(Boolean);
             }
             // Convert mcServers from ["name:ip", ...] to [{name, ip}, ...] preserving existing sub-fields
             else if (key === 'mcServers' && Array.isArray(value)) {
+                if (value.length > 10) {
+                    return res.status(400).json({ error: 'Maximum 10 Minecraft servers' });
+                }
                 const existing = config.mcServers || [];
                 config[key] = value.map((item, i) => {
                     if (typeof item === 'string') {
@@ -361,9 +375,25 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
             }
             // Convert hex color strings to numbers for DB storage
             else if ((key === 'welcomeColor' || key === 'goodbyeColor') && typeof value === 'string') {
+                if (!/^#[0-9a-fA-F]{6}$/.test(value)) {
+                    return res.status(400).json({ error: `${key} must be a hex color string (#RRGGBB)` });
+                }
                 config[key] = parseInt(value.replace('#', ''), 16);
             }
-            else {
+            // Array-of-string fields: validate each element is a snowflake
+            else if (Array.isArray(value) && ['suggestionChannelIds', 'xpIgnoredChannelIds', 'autoRoleIds'].includes(key)) {
+                config[key] = value.filter(v => typeof v === 'string' && /^\d{17,20}$/.test(v));
+            }
+            // Boolean fields
+            else if (typeof value === 'boolean' && ['pingEnabled', 'welcomeEmbed', 'xpDisableLevelUpMessages'].includes(key)) {
+                config[key] = value;
+            }
+            // String fields (channel IDs, messages)
+            else if (typeof value === 'string') {
+                config[key] = value;
+            }
+            // Number fields
+            else if (typeof value === 'number' && Number.isFinite(value)) {
                 config[key] = value;
             }
         }

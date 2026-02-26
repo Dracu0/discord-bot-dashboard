@@ -5,15 +5,15 @@ import {RiFunctionFill} from "react-icons/ri";
 import {BiServer} from "react-icons/bi";
 import {MdFrontHand} from "react-icons/md";
 import {IoIosSettings} from "react-icons/io";
-// Admin Imports
-import Dashboard from "views/guild/dashboard";
-import Features from "views/guild/features";
-import SettingsPanel from "./views/guild/settings";
-import ActionsBoard from "./views/guild/action";
-import Feature from "./views/guild/feature";
-import ActionTasks from "./views/guild/action/action";
-import TaskConfigBoard from "./views/guild/action/task";
-import SubmitTaskBoard from "./views/guild/action/add";
+// Lazy-load view components for code splitting
+const Dashboard = React.lazy(() => import("views/guild/dashboard"));
+const Features = React.lazy(() => import("views/guild/features"));
+const SettingsPanel = React.lazy(() => import("./views/guild/settings"));
+const ActionsBoard = React.lazy(() => import("./views/guild/action"));
+const Feature = React.lazy(() => import("./views/guild/feature"));
+const ActionTasks = React.lazy(() => import("./views/guild/action/action"));
+const TaskConfigBoard = React.lazy(() => import("./views/guild/action/task"));
+const SubmitTaskBoard = React.lazy(() => import("./views/guild/action/add"));
 import {FeaturesLayout} from "./layouts/guild/features";
 import {ActionsLayout} from "./layouts/guild/actions";
 import {config} from "./config/config";

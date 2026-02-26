@@ -1,10 +1,7 @@
-import React, { useContext, useEffect } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import ReactDOM from 'react-dom';
 import "assets/css/App.css";
 import { BrowserRouter, Navigate, Route, Routes, } from "react-router-dom";
-import AuthLayout from "layouts/auth";
-import AdminLayout from "layouts/admin";
-import GuildLayout, { GuildRoutes } from "layouts/guild";
 import { Center, ChakraProvider, Spinner, Stack, Text } from "@chakra-ui/react";
 import theme from "theme/theme";
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
@@ -13,8 +10,29 @@ import { hasLoggedIn } from "./api/internal";
 import { QueryHolder } from "./contexts/components/AsyncContext";
 import { SettingsContext, SettingsProvider } from "./contexts/SettingsContext";
 import { config } from "./config/config";
+import GuildBoard, { GuildRoutes } from "layouts/guild";
 
-const queryClient = new QueryClient()
+// Lazy-load auth and admin layouts for code splitting
+const AuthLayout = React.lazy(() => import("layouts/auth"));
+const AdminLayout = React.lazy(() => import("layouts/admin"));
+
+function LazyFallback() {
+    return <Center height="100vh">
+        <Stack direction="column" align="center">
+            <Spinner size="lg" />
+            <Text>Loading...</Text>
+        </Stack>
+    </Center>;
+}
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 5 * 60 * 1000,
+            refetchOnWindowFocus: false,
+        },
+    },
+})
 
 ReactDOM.render(
     <React.StrictMode>
@@ -48,11 +66,12 @@ function AppRouter() {
             <meta name="viewport" content={`width=${fixedWidth ? "340" : "device-width"}, initial-scale=1`} />
 
             <BrowserRouter>
+                <Suspense fallback={<LazyFallback />}>
                 <Routes>
                     {loggedIn && (
                         <>
                             <Route path={`/admin`} element={<AdminLayout />} />
-                            <Route path="/guild/:id/*" element={<GuildLayout />}>
+                            <Route path="/guild/:id" element={<GuildBoard />}>
                                 {GuildRoutes()}
                             </Route>
 
@@ -76,6 +95,7 @@ function AppRouter() {
                         </>
                     )}
                 </Routes>
+                </Suspense>
             </BrowserRouter>
         </QueryHolder>
     );

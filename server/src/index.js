@@ -151,6 +151,32 @@ app.use((err, req, res, _next) => {
 });
 
 // Bind to 0.0.0.0 so Fly.io proxy can reach the container (not just localhost)
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`Dashboard server running on port ${PORT} [${IS_PRODUCTION ? 'production' : 'development'}]`);
 });
+
+// Graceful shutdown
+let shuttingDown = false;
+function shutdown(signal) {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    console.log(`Received ${signal}, shutting down...`);
+
+    const forceExit = setTimeout(() => {
+        console.error('Shutdown timed out after 30s, forcing exit');
+        process.exit(1);
+    }, 30000);
+    forceExit.unref();
+
+    server.close(async () => {
+        try {
+            await mongoose.connection.close();
+        } catch (err) {
+            console.error('Error closing DB:', err.message);
+        }
+        process.exit(0);
+    });
+}
+
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));
