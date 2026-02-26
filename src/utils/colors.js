@@ -40,23 +40,52 @@ export function useCardBg() {
 
 export function useNeuRaised() {
     return useColorModeValue(
-        "6px 6px 14px #d1cbe0, -6px -6px 14px #ffffff",
-        "6px 6px 14px #110d1e, -6px -6px 14px #2f254a"
+        "4px 4px 12px #d1cbe0, -4px -4px 12px #faf8fe",
+        "4px 4px 12px #110d1e, -4px -4px 12px #352a54"
     );
 }
 
 export function useNeuInset() {
     return useColorModeValue(
-        "inset 3px 3px 6px #d1cbe0, inset -3px -3px 6px #ffffff",
-        "inset 3px 3px 6px #110d1e, inset -3px -3px 6px #2f254a"
+        "inset 3px 3px 6px #d1cbe0, inset -3px -3px 6px #faf8fe",
+        "inset 3px 3px 6px #110d1e, inset -3px -3px 6px #352a54"
     );
 }
 
 export function useNeuFlat() {
     return useColorModeValue(
-        "2px 2px 5px #d1cbe0, -2px -2px 5px #ffffff",
-        "2px 2px 5px #110d1e, -2px -2px 5px #2f254a"
+        "2px 2px 5px #d1cbe0, -2px -2px 5px #faf8fe",
+        "2px 2px 5px #110d1e, -2px -2px 5px #352a54"
     );
+}
+
+export function useNeuSubtle() {
+    return useColorModeValue(
+        "1px 1px 3px #d1cbe0, -1px -1px 3px #faf8fe",
+        "1px 1px 3px #110d1e, -1px -1px 3px #352a54"
+    );
+}
+
+export function useNeuHover() {
+    return useColorModeValue(
+        "6px 6px 16px #d1cbe0, -6px -6px 16px #faf8fe",
+        "6px 6px 16px #0e0a19, -6px -6px 16px #352a54"
+    );
+}
+
+export function useNeuElevated() {
+    return useColorModeValue(
+        "8px 8px 24px #d1cbe0, -4px -4px 12px #faf8fe",
+        "8px 8px 24px #110d1e, -4px -4px 12px #352a54"
+    );
+}
+
+export function useSurface1() {
+    return useColorModeValue("white", "navy.800");
+}
+
+export function useSurface2() {
+    return useColorModeValue("gray.100", "navy.700");
 }
 
 export function useSurfaceBg() {

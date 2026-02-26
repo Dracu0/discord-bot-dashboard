@@ -17,7 +17,7 @@ export const textareaStyles = {
                     borderColor: mode("rgba(255,255,255,0.5)", "rgba(139,92,246,0.1)")(props),
                     borderRadius: "16px",
                     fontSize: "sm",
-                    p: "20px",
+                    p: "16px",
                     boxShadow: mode(neuLight.inset, neuDark.inset)(props),
                     _placeholder: {color: "secondaryGray.500"},
                     _focus: {

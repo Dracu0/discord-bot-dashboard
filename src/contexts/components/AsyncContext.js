@@ -1,4 +1,4 @@
-import {Button, Center, Skeleton, Spinner, Stack, Text} from "@chakra-ui/react";
+import {Button, Center, Skeleton, Spinner, Stack, Text, useColorModeValue} from "@chakra-ui/react";
 import React from "react";
 import {Locale} from "../../utils/Language";
 
@@ -50,6 +50,8 @@ export function Query({query, children, placeholder, height = "200px"}) {
 
 export function QueryHolderSkeleton({query, height = "200px", children, count = 1, nullable = false}) {
     const {error, isLoading, refetch} = query
+    const startColor = useColorModeValue("secondaryGray.200", "navy.700");
+    const endColor = useColorModeValue("secondaryGray.300", "navy.600");
 
     if (error) {
         return <ErrorPanel height={height} error={error} onRetry={refetch}/>
@@ -58,7 +60,8 @@ export function QueryHolderSkeleton({query, height = "200px", children, count = 
     if (isLoading) {
 
         return [...Array(count)].map((_, i) =>
-            <Skeleton key={i} isLoaded={false} height={height} rounded="lg" />
+            <Skeleton key={i} isLoaded={false} height={height} rounded="20px"
+                      startColor={startColor} endColor={endColor} />
         )
     }
 

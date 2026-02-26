@@ -32,6 +32,7 @@ export const switchStyles = {
             bg: mode("secondaryGray.400", "navy.700")(props),
             boxShadow: mode(neuLight.inset, neuDark.inset)(props),
             borderRadius: "12px",
+            transition: "background 0.25s cubic-bezier(.4,0,.2,1), box-shadow 0.3s ease",
             _checked: {
               bg: mode("brand.500", "brand.400")(props),
               boxShadow: mode(
@@ -43,6 +44,7 @@ export const switchStyles = {
           thumb: {
             bg: "white",
             boxShadow: mode(neuLight.flat, neuDark.flat)(props),
+            transition: "transform 0.25s cubic-bezier(.34,1.56,.64,1)",
           },
         }),
       },

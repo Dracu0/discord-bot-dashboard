@@ -21,11 +21,9 @@ export default function FeatureGrid() {
                 mt="45px">
                 <Locale zh="功能列表" en="Features List" />
             </Text>
-            <SlideFade in={true} offsetY='20px'>
-                <SimpleGrid columns={{ base: 1, lg: 3, xl:2, "2xl": 3 }} gap="20px">
-                    <Features />
-                </SimpleGrid>
-            </SlideFade>
+            <SimpleGrid columns={{ base: 1, md: 2, xl: 2, "2xl": 3 }} gap="20px">
+                <Features />
+            </SimpleGrid>
         </Flex>
     );
 }
@@ -33,12 +31,14 @@ export default function FeatureGrid() {
 function Features() {
     const {enabled} = useContext(FeaturesContext);
 
-    return Object.entries(config.features).map(([id, feature]) =>
-        <Feature
-            key={id}
-            {...feature}
-            id={id}
-            enabled={enabled.includes(id)}
-        />
+    return Object.entries(config.features).map(([id, feature], index) =>
+        <SlideFade key={id} in={true} offsetY="16px"
+            transition={{ enter: { duration: 0.3, delay: index * 0.06 } }}>
+            <Feature
+                {...feature}
+                id={id}
+                enabled={enabled.includes(id)}
+            />
+        </SlideFade>
     )
 }

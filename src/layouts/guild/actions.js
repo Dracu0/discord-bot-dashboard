@@ -6,6 +6,7 @@ import {LayoutContext, LayoutProvider} from "../../contexts/layouts/LayoutContex
 import bannerImg from "../../assets/img/common/ActionBanner.png";
 import Banner from "../../components/card/Banner";
 import {Outlet} from "react-router-dom"
+import {PAGE_PT} from "../../utils/layout-tokens";
 
 export function ActionsLayout() {
     const locale = useLocale()
@@ -15,7 +16,7 @@ export function ActionsLayout() {
     );
 
     return <LayoutProvider>
-        <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
+        <Box pt={PAGE_PT}>
             <Content />
         </Box>
     </LayoutProvider>

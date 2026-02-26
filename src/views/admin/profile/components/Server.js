@@ -7,7 +7,7 @@ import React from "react";
 // Assets
 import {iconToUrl} from "api/discord/DiscordApi";
 import {Locale} from "utils/Language";
-import {useCardBg, useTextColor} from "../../../../utils/colors";
+import {useCardBg, useNeuHover, useTextColor} from "../../../../utils/colors";
 
 export default function Server({ server, ...rest }) {
   const { name, id, icon } = server;
@@ -15,6 +15,7 @@ export default function Server({ server, ...rest }) {
   const textColorPrimary = useTextColor();
   const bg = useCardBg();
   const hoverBorder = useColorModeValue("brand.200", "brand.600");
+  const neuHover = useNeuHover();
 
   return (
     <Card
@@ -22,9 +23,11 @@ export default function Server({ server, ...rest }) {
       {...rest}
       p="14px"
       transition="all 0.25s ease"
+      cursor="pointer"
       _hover={{
-        transform: "translateY(-4px)",
+        transform: "translateY(-3px)",
         borderColor: hoverBorder,
+        boxShadow: neuHover,
       }}
       border="1px solid"
       borderColor="transparent"

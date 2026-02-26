@@ -7,11 +7,12 @@ import bannerImg from "assets/img/common/FeatureBanner.png";
 import { useLocale } from "../../utils/Language";
 import { usePageInfo } from "../../contexts/PageInfoContext";
 import { FeaturesProvider } from "../../contexts/FeaturesContext";
+import { PAGE_PT } from "../../utils/layout-tokens";
 
 export function FeaturesLayout() {
     return <FeaturesProvider>
         <LayoutProvider>
-            <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
+            <Box pt={PAGE_PT}>
                 <Content />
             </Box>
         </LayoutProvider>

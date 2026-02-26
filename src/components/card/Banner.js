@@ -12,7 +12,7 @@ export default function Banner({image, title, description, clip = true, children
             bgSize="cover"
             py={{base: "30px", md: "56px"}}
             px={{base: "30px", md: "64px"}}
-            borderRadius="24px"
+            borderRadius="20px"
             position="relative"
             overflow="hidden"
             _before={{
@@ -23,7 +23,7 @@ export default function Banner({image, title, description, clip = true, children
                 right: 0,
                 bottom: 0,
                 bg: image ? "blackAlpha.400" : "transparent",
-                borderRadius: "24px",
+                borderRadius: "20px",
                 zIndex: 0,
             }}
         >
@@ -33,11 +33,8 @@ export default function Banner({image, title, description, clip = true, children
                 mb="14px"
                 maxW={clip && {
                     base: "100%",
-                    md: "64%",
-                    lg: "46%",
-                    xl: "70%",
-                    "2xl": "50%",
-                    "3xl": "42%",
+                    md: "65%",
+                    xl: "50%",
                 }}
                 fontWeight="700"
                 fontFamily="'Space Grotesk', sans-serif"
@@ -54,11 +51,8 @@ export default function Banner({image, title, description, clip = true, children
                 opacity="0.85"
                 maxW={clip && {
                     base: "100%",
-                    md: "64%",
-                    lg: "40%",
-                    xl: "56%",
-                    "2xl": "46%",
-                    "3xl": "34%",
+                    md: "60%",
+                    xl: "46%",
                 }}
                 fontWeight="500"
                 mb="40px"

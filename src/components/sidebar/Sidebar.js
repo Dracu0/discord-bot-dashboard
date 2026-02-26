@@ -20,15 +20,15 @@ import PropTypes from "prop-types";
 
 // Assets
 import {IoMenuOutline} from "react-icons/io5";
-import {useCardBg, useNeuRaised} from "../../utils/colors";
+import {useCardBg, useNeuElevated} from "../../utils/colors";
 
 function Sidebar({ routes }) {
 
   let variantChange = "0.2s linear";
-  const neuShadow = useNeuRaised();
+  const neuShadow = useNeuElevated();
   // Chakra Color Mode
   let sidebarBg = useCardBg();
-  const borderColor = useColorModeValue("rgba(255,255,255,0.6)", "rgba(139,92,246,0.08)");
+  const borderColor = useColorModeValue("rgba(255,255,255,0.6)", "rgba(139,92,246,0.12)");
 
   // SIDEBAR
   return (
@@ -43,7 +43,7 @@ function Sidebar({ routes }) {
         boxShadow={neuShadow}
         border="1px solid"
         borderColor={borderColor}
-        borderRadius="0 24px 24px 0"
+        borderRadius="0 20px 20px 0"
       >
         <Scrollbars
           autoHide

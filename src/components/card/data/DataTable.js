@@ -1,6 +1,7 @@
-import {Flex, Table, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue,} from "@chakra-ui/react";
+import {Flex, Table, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue, Icon, Center} from "@chakra-ui/react";
 import React from "react";
 import {useGlobalFilter, usePagination, useSortBy, useTable,} from "react-table";
+import {IoArrowUp, IoArrowDown} from "react-icons/io5";
 
 // Custom components
 import Card from "components/card/Card";
@@ -30,12 +31,14 @@ export default function DataTable({name, data, columns}) {
 
   const textColor = useTextColor();
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+  const headerBg = useColorModeValue("gray.50", "navy.700");
+  const stripeBg = useColorModeValue("gray.50", "whiteAlpha.50");
   return (
     <Card
       direction='column'
       w='100%'
       px='0px'
-      overflowX={{ sm: "scroll", lg: "hidden" }}>
+      overflowX='auto'>
         <Text
             ml="25px"
             color={textColor}
@@ -54,13 +57,20 @@ export default function DataTable({name, data, columns}) {
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   pe='10px'
                   key={index}
-                  borderColor={borderColor}>
+                  borderColor={borderColor}
+                  bg={headerBg}
+                  cursor="pointer"
+                  userSelect="none">
                   <Flex
                     justify='space-between'
                     align='center'
                     fontSize={{ sm: "10px", lg: "12px" }}
-                    color='gray.400'>
+                    color='gray.400'
+                    fontWeight='700'>
                     {column.render("header")}
+                    {column.isSorted && (
+                      <Icon as={column.isSortedDesc ? IoArrowDown : IoArrowUp} ml={1} w={3} h={3} />
+                    )}
                   </Flex>
                 </Th>
               ))}
@@ -68,10 +78,18 @@ export default function DataTable({name, data, columns}) {
           ))}
         </Thead>
         <Tbody {...getTableBodyProps()}>
-          {page.map((row, index) => {
+          {page.length === 0 ? (
+            <Tr>
+              <Td colSpan={columns.length} borderColor="transparent">
+                <Center py={8}>
+                  <Text color="gray.400" fontSize="md">No data available</Text>
+                </Center>
+              </Td>
+            </Tr>
+          ) : page.map((row, index) => {
             prepareRow(row);
             return (
-              <Tr {...row.getRowProps()} key={index}>
+              <Tr {...row.getRowProps()} key={index} bg={index % 2 === 1 ? stripeBg : "transparent"}>
                 {row.cells.map((cell, index) => {
 
                   return (

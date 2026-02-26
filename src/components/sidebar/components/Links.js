@@ -112,6 +112,7 @@ function Item({active, name, path, icon}) {
           transition="all 0.2s ease"
           _hover={{
             bg: active ? activeBg : useColorModeValue("secondaryGray.200", "navy.600"),
+            boxShadow: active ? neuInset : neuFlat,
             transform: active ? "none" : "translateX(2px)",
           }}
         >

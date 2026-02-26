@@ -4,7 +4,7 @@ import Card from "components/card/Card";
 import {Link} from "react-router-dom";
 import {GuildContext} from "contexts/guild/GuildContext";
 import {Locale, useLocale} from "../../utils/Language";
-import {useDetailColor, useTextColor} from "../../utils/colors";
+import {useDetailColor, useNeuHover, useTextColor} from "../../utils/colors";
 
 export function Action({id, action}) {
     const {id: serverId} = useContext(GuildContext)

@@ -18,7 +18,7 @@ export default function ServerPicker({query, ...rest}) {
     const [filter, setFilter] = useState("")
 
     return (
-        <Card mb={{base: "0px", "2xl": "20px"}} gap="5rem" {...rest}>
+        <Card mb={{base: "0px", "2xl": "20px"}} gap="2rem" {...rest}>
             <Flex direction="column" align="center">
                 <Text
                     color={textColorPrimary}

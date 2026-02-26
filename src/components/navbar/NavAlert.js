@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Breadcrumb, BreadcrumbItem, Flex, Text, useColorModeValue} from "@chakra-ui/react";
-import {useAlertBg, useCardBg, useDetailColor, useNeuRaised, useTextColor} from "../../utils/colors";
+import {useAlertBg, useCardBg, useDetailColor, useNeuFlat, useNeuRaised, useTextColor} from "../../utils/colors";
+import {contentWidth} from "../../utils/layout-tokens";
 
 export default function NavAlert({rootText, childText, children, clip = true}) {
     let mainText = useTextColor();
@@ -8,19 +9,27 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
     const navbarBg = useAlertBg();
     const menuBg = useCardBg();
     const neuShadow = useNeuRaised();
+    const neuScrollShadow = useNeuFlat();
     const brandAccent = useColorModeValue("brand.500", "brand.400");
     const margin = "5vw";
     const clipMargin = {base: "12px", md: "30px", lg: "30px", xl: "30px"};
+
+    const [scrolled, setScrolled] = useState(false);
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
     return (
         <Box
             zIndex={30}
             position="fixed"
-            boxShadow="none"
+            boxShadow={scrolled ? neuScrollShadow : "none"}
             bg={navbarBg}
-            borderColor="transparent"
+            borderColor={scrolled ? useColorModeValue("rgba(255,255,255,0.6)", "rgba(139,92,246,0.12)") : "transparent"}
             filter="none"
-            backdropFilter="blur(24px) saturate(180%)"
+            backdropFilter="blur(32px) saturate(180%)"
             backgroundPosition="center"
             backgroundSize="cover"
             borderRadius="20px"
@@ -43,14 +52,8 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
             pt="8px"
             left={clip ? "unset" : margin}
             right={clip ? clipMargin : margin}
-            top={{base: "12px", md: "16px", xl: "18px"}}
-            w={clip && {
-                base: "calc(100vw - 6%)",
-                md: "calc(100vw - 8%)",
-                lg: "calc(100vw - 6%)",
-                xl: "calc(100vw - 350px)",
-                "2xl": "calc(100vw - 365px)",
-            }}
+            top={{base: "12px", md: "16px"}}
+            w={clip && contentWidth}
         >
             <Flex
                 w="100%"

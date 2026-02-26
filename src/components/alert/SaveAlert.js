@@ -1,6 +1,7 @@
 import {Alert, AlertIcon, Button, ButtonGroup, Slide,} from "@chakra-ui/react";
 import {useAlertBg, useNeuRaised, useSuccessBg, useTextColor} from "../../utils/colors";
 import {Locale} from "../../utils/Language";
+import {contentWidth} from "../../utils/layout-tokens";
 
 function BaseAlert({isOpen, children}) {
     const alertBg = useAlertBg()
@@ -9,13 +10,7 @@ function BaseAlert({isOpen, children}) {
 
     return <Slide direction="bottom" in={isOpen} style={{ zIndex: 40 }}>
         <Alert
-            w={{
-                base: "calc(100vw - 6%)",
-                md: "calc(100vw - 8%)",
-                lg: "calc(100vw - 6%)",
-                xl: "calc(100vw - 350px)",
-                "2xl": "calc(100vw - 365px)",
-            }}
+            w={contentWidth}
             mx="auto"
             rounded="20px"
             status="warning"

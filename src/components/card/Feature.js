@@ -1,5 +1,5 @@
 // Chakra imports
-import {Box, Button, ButtonGroup, Flex, Heading, Image, Text, useColorModeValue} from "@chakra-ui/react";
+import {Box, Button, ButtonGroup, Flex, Heading, Image, Text, Tooltip, useColorModeValue} from "@chakra-ui/react";
 import {Link} from "react-router-dom";
 // Custom components
 import Card from "components/card/Card.js";
@@ -8,7 +8,7 @@ import React, {useContext} from "react";
 import {GuildContext} from "../../contexts/guild/GuildContext";
 import {Locale, useLocale} from "../../utils/Language";
 import {useEnableFeatureMutation} from "../../api/utils";
-import {useDetailColor, useTextColor} from "../../utils/colors";
+import {useDetailColor, useNeuHover, useTextColor} from "../../utils/colors";
 
 export default function Feature({banner, name, description, id: featureId, enabled}) {
     const {id: serverId} = useContext(GuildContext);
@@ -19,18 +19,22 @@ export default function Feature({banner, name, description, id: featureId, enabl
     const textColor = useTextColor();
     const detailColor = useDetailColor();
     const hoverBorder = useColorModeValue("brand.200", "brand.600");
+    const neuHover = useNeuHover();
+    const statusColor = enabled ? "green.400" : "red.400";
 
     return (
         <Card
-            p="20px"
+            p="16px"
             overflow="hidden"
             gap={3}
             transition="all 0.25s ease"
             border="1px solid"
             borderColor="transparent"
+            cursor="pointer"
             _hover={{
-                transform: "translateY(-4px)",
+                transform: "translateY(-3px)",
                 borderColor: hoverBorder,
+                boxShadow: neuHover,
             }}
         >
             {banner?
@@ -49,20 +53,26 @@ export default function Feature({banner, name, description, id: featureId, enabl
 
             <Flex direction="column" justify="space-between" gap={3}>
                 <Flex direction="column">
-                    <Heading
-                        size="md"
-                        color={textColor}
-                        fontFamily="'Space Grotesk', sans-serif"
-                    >
-                        {locale(name)}
-                    </Heading>
-                    <Text
-                        color={detailColor}
-                        fontSize="sm"
-                        fontWeight="400"
-                    >
-                        {description}
-                    </Text>
+                    <Flex align="center" gap={2}>
+                        <Box w="8px" h="8px" borderRadius="full" bg={statusColor} flexShrink={0} />
+                        <Heading
+                            size="md"
+                            color={textColor}
+                            fontFamily="'Space Grotesk', sans-serif"
+                        >
+                            {locale(name)}
+                        </Heading>
+                    </Flex>
+                    <Tooltip label={description} hasArrow placement="top" openDelay={500}>
+                        <Text
+                            color={detailColor}
+                            fontSize="sm"
+                            fontWeight="400"
+                            noOfLines={2}
+                        >
+                            {description}
+                        </Text>
+                    </Tooltip>
                 </Flex>
                 <ButtonGroup mt="5">
                     {enabled && (

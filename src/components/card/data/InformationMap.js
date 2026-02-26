@@ -2,7 +2,7 @@
 import {SimpleGrid, Text, useColorModeValue} from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card.js";
-import {useDetailColor, useNoteColor, useTextColor} from "utils/colors";
+import {useDetailColor, useNeuSubtle, useNoteColor, useTextColor} from "utils/colors";
 
 export default function InformationMap({name, description, value, ...rest}) {
     // Chakra Color Mode
@@ -28,7 +28,7 @@ export default function InformationMap({name, description, value, ...rest}) {
                 {description}
             </Text>
 
-            <SimpleGrid columns={2} gap="20px">{
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap="20px">{
                 value.map((item, key) =>
                     <Information
                         key={key}
@@ -48,10 +48,11 @@ function Information(props) {
     // Chakra Color Mode
     const textColorPrimary = useTextColor();
     const textColorSecondary = useDetailColor();
-    const bg = useColorModeValue("white", "navy.700");
+    const bg = useColorModeValue("gray.50", "navy.700");
+    const neuSubtle = useNeuSubtle();
 
     return (
-        <Card bg={bg} {...rest}>
+        <Card bg={bg} boxShadow={neuSubtle} p="12px" {...rest}>
             <Text fontWeight='500' color={textColorSecondary} fontSize='sm'>
                 {title}
             </Text>

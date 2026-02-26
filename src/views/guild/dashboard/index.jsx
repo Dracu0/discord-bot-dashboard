@@ -13,6 +13,7 @@ import { config } from "config/config";
 import { usePageState } from "utils/State";
 import { useLocale } from "utils/Language";
 import { useDetailColor, useTextColor } from "utils/colors";
+import { PAGE_PT } from "utils/layout-tokens";
 
 export default function Dashboard() {
     const locale = useLocale()
@@ -38,7 +39,7 @@ export function UserReports() {
     )
 
     return (
-        <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+        <Box pt={PAGE_PT}>
             <VStack spacing="32px" align="stretch">
                 {data.map((row, key) => {
                     const count = row.count

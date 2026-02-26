@@ -16,6 +16,7 @@ export const buttonStyles = {
         },
         _active: {
           boxShadow: "none",
+          transform: "scale(0.97)",
         },
       },
       variants: {

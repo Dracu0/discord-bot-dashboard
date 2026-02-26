@@ -19,7 +19,7 @@ export default function ActionsList() {
                 mt="45px">
                 <Locale zh="動作列表" en="Actions List" />
             </Text>
-            <SimpleGrid columns={{base: 1, lg: 2}} gap="20px">
+            <SimpleGrid columns={{base: 1, md: 2, xl: 2, "2xl": 3}} gap="20px">
                 <Actions/>
             </SimpleGrid>
         </Flex>
@@ -28,9 +28,10 @@ export default function ActionsList() {
 
 function Actions() {
 
-    return Object.entries(config.actions).map(([id, action]) => {
+    return Object.entries(config.actions).map(([id, action], index) => {
         return (
-            <ScaleFade key={id} in={true}>
+            <ScaleFade key={id} in={true}
+                transition={{ enter: { duration: 0.3, delay: index * 0.06 } }}>
                 <Action
                     id={id}
                     action={action}

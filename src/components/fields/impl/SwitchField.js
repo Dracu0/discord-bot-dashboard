@@ -13,6 +13,8 @@ export default function Default(props) {
     ...rest
   } = props;
   const textColorPrimary = useColorModeValue("secondaryGray.900", "white");
+  const brandColor = useColorModeValue("brand.500", "brand.300");
+  const labelColor = isChecked ? brandColor : textColorPrimary;
   return (
     <Box w="100%" fontWeight="500" {...rest}>
         <Flex direction={reversed? "row-reverse" : "row"} align="center" justify={reversed? "start" : "space-between"} gap={5}>
@@ -23,7 +25,8 @@ export default function Default(props) {
               mb="0px"
               maxW="75%"
           >
-            <Text align="start" color={textColorPrimary} fontSize="md" fontWeight="500">
+            <Text align="start" color={labelColor} fontSize="md" fontWeight="500"
+                  transition="color 0.2s ease">
               {label}
             </Text>
           </FormLabel>

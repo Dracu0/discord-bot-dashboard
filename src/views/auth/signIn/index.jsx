@@ -49,7 +49,7 @@ function SignIn({ loading = false }) {
         <Box
           w="100%"
           bg={cardBg}
-          borderRadius="24px"
+          borderRadius="20px"
           boxShadow={neuShadow}
           border="1px solid"
           borderColor={useColorModeValue(
@@ -58,6 +58,10 @@ function SignIn({ loading = false }) {
           )}
           p={{ base: "32px", md: "48px" }}
           mt="24px"
+          transition="box-shadow 0.4s ease"
+          _hover={{
+            boxShadow: `${neuShadow}, 0 0 32px rgba(139, 92, 246, 0.15)`,
+          }}
         >
           <Heading
             color={textColor}
