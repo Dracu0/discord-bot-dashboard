@@ -12,10 +12,11 @@ export const LayoutContext = createContext({
 
 export function useLayoutUpdate(props) {
     const {update} = useContext(LayoutContext)
+    const title = props?.banner?.title
 
     useEffect(
         () => update(props),
-        []
+        [title]
     )
 }
 
