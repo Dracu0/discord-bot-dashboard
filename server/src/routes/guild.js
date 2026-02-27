@@ -5,6 +5,10 @@ const GuildConfiguration = require('../models/GuildConfiguration');
 const Level = require('../models/Level');
 const ModLog = require('../models/ModLog');
 const Suggestion = require('../models/Suggestion');
+const CustomCommand = require('../models/CustomCommand');
+const ScheduledMessage = require('../models/ScheduledMessage');
+const TempRole = require('../models/TempRole');
+const Giveaway = require('../models/Giveaway');
 const { fetchGuild, fetchGuildChannels, fetchGuildRoles } = require('../utils/discord');
 
 // Validation helpers
@@ -199,6 +203,30 @@ const FEATURE_FIELDS = {
         enableCheck: (c) => !!c.starboardEnabled,
         fields: ['starboardEnabled', 'starboardChannelId', 'starboardThreshold', 'starboardEmoji'],
     },
+    tickets: {
+        enableCheck: (c) => !!c.ticketEnabled,
+        fields: ['ticketEnabled', 'ticketCategoryId', 'ticketSupportRoleIds', 'ticketLogChannelId', 'ticketMaxOpen'],
+    },
+    custom_commands: {
+        enableCheck: () => true,
+        fields: [],
+        virtual: true,
+    },
+    announcements: {
+        enableCheck: () => true,
+        fields: [],
+        virtual: true,
+    },
+    temp_roles: {
+        enableCheck: () => true,
+        fields: [],
+        virtual: true,
+    },
+    giveaways: {
+        enableCheck: () => true,
+        fields: [],
+        virtual: true,
+    },
 };
 
 // GET /guild/:id/features - List features and enabled status
@@ -225,7 +253,7 @@ router.get('/:id/features', async (req, res) => {
             enabled,
             data: {
                 channels: channels
-                    .filter(ch => ch.type === 0 || ch.type === 5) // text & announcement
+                    .filter(ch => ch.type === 0 || ch.type === 4 || ch.type === 5) // text, category & announcement
                     .map(ch => ({ id: ch.id, name: ch.name, type: ch.type })),
                 roles: roles
                     .filter(r => !r.managed && r.name !== '@everyone')
@@ -285,6 +313,9 @@ router.patch('/:id/feature/:featureId/enabled', async (req, res) => {
                 config.starboardEnabled = enabled;
                 if (!enabled) config.starboardChannelId = '';
                 break;
+            case 'tickets':
+                config.ticketEnabled = enabled;
+                break;
             default:
                 break;
         }
@@ -316,6 +347,17 @@ router.get('/:id/feature/:featureId', async (req, res) => {
         const values = {};
         for (const field of featureDef.fields) {
             values[field] = config[field];
+        }
+
+        // Fetch virtual data from separate collections
+        if (featureId === 'custom_commands') {
+            values.customCommands = await CustomCommand.find({ guildId }).sort({ name: 1 }).lean();
+        } else if (featureId === 'announcements') {
+            values.scheduledMessages = await ScheduledMessage.find({ guildId }).sort({ cronLabel: 1 }).lean();
+        } else if (featureId === 'temp_roles') {
+            values.tempRoles = await TempRole.find({ guildId }).sort({ expiresAt: 1 }).lean();
+        } else if (featureId === 'giveaways') {
+            values.giveaways = await Giveaway.find({ guildId }).sort({ createdAt: -1 }).limit(20).lean();
         }
 
         res.json({ values });
@@ -456,7 +498,7 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
                 config[key] = parseInt(value.replace('#', ''), 16);
             }
             // Array-of-string fields: validate each element is a snowflake
-            else if (Array.isArray(value) && ['suggestionChannelIds', 'xpIgnoredChannelIds', 'autoRoleIds', 'automodExemptRoleIds', 'automodExemptChannelIds'].includes(key)) {
+            else if (Array.isArray(value) && ['suggestionChannelIds', 'xpIgnoredChannelIds', 'autoRoleIds', 'automodExemptRoleIds', 'automodExemptChannelIds', 'ticketSupportRoleIds'].includes(key)) {
                 config[key] = value.filter(v => typeof v === 'string' && /^\d{17,20}$/.test(v));
             }
             // Array-of-string fields: plain strings (no snowflake validation)
@@ -471,7 +513,7 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
             else if (typeof value === 'boolean' && [
                 'pingEnabled', 'welcomeEmbed', 'xpDisableLevelUpMessages',
                 'automodEnabled', 'automodBlockInvites', 'automodBlockLinks', 'automodAntiSpamEnabled',
-                'starboardEnabled',
+                'starboardEnabled', 'ticketEnabled',
             ].includes(key)) {
                 config[key] = value;
             }

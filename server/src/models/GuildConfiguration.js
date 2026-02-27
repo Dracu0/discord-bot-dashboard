@@ -212,7 +212,27 @@ const guildConfigurationSchema = new Schema({
     starboardEmoji: {
         type: String,
         default: '⭐',
+    },    // Ticket system
+    ticketEnabled: {
+        type: Boolean,
+        default: false,
     },
-});
+    ticketCategoryId: {
+        type: String,
+        default: '',
+    },
+    ticketSupportRoleIds: {
+        type: [String],
+        default: [],
+        validate: [v => v.length <= 10, 'Maximum 10 support roles'],
+    },
+    ticketLogChannelId: {
+        type: String,
+        default: '',
+    },
+    ticketMaxOpen: {
+        type: Number,
+        default: 3,
+    },});
 
 module.exports = model('GuildConfiguration', guildConfigurationSchema);

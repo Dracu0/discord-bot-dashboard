@@ -7,6 +7,11 @@ import { ModLogFeature } from "./features/modlog";
 import { ReactionRolesFeature } from "./features/reactionroles";
 import { AutoModFeature } from "./features/automod";
 import { StarboardFeature } from "./features/starboard";
+import { TicketsFeature } from "./features/tickets";
+import { CustomCommandsFeature } from "./features/customcommands";
+import { AnnouncementsFeature } from "./features/announcements";
+import { TempRolesFeature } from "./features/temproles";
+import { GiveawaysFeature } from "./features/giveaways";
 import { ManageSuggestionsAction } from "./actions/ManageSuggestions";
 import { ModHistoryAction } from "./actions/ModHistory";
 
@@ -58,6 +63,11 @@ export const config = {
         "reaction_roles": ReactionRolesFeature,
         "automod": AutoModFeature,
         "starboard": StarboardFeature,
+        "tickets": TicketsFeature,
+        "custom_commands": CustomCommandsFeature,
+        "announcements": AnnouncementsFeature,
+        "temp_roles": TempRolesFeature,
+        "giveaways": GiveawaysFeature,
     },
     tutorialUrl: "https://github.com/Dracu0/Discord-Bot-v0.3.4",
     serverUrl: process.env.NODE_ENV === 'production' ? "" : "http://localhost:8080",
