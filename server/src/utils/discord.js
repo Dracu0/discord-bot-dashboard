@@ -26,6 +26,23 @@ async function fetchGuildRoles(guildId) {
 }
 
 /**
+ * Fetch all guild IDs the bot is in (paginated, single/few API calls instead of N).
+ */
+async function fetchBotGuildIds() {
+    const ids = new Set();
+    let after = '0';
+    while (true) {
+        const batch = await rest.get(Routes.userGuilds(), {
+            query: new URLSearchParams({ limit: '200', after }),
+        });
+        for (const g of batch) ids.add(g.id);
+        if (batch.length < 200) break;
+        after = batch[batch.length - 1].id;
+    }
+    return ids;
+}
+
+/**
  * Fetch guild member via the Discord Bot API
  */
 async function fetchGuildMember(guildId, userId) {
@@ -43,6 +60,7 @@ async function fetchGuildMembers(guildId, limit = 100) {
 
 module.exports = {
     fetchGuild,
+    fetchBotGuildIds,
     fetchGuildChannels,
     fetchGuildRoles,
     fetchGuildMember,

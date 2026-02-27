@@ -83,16 +83,30 @@ if (!IS_PRODUCTION) {
 
 app.use(express.json());
 
-// Connect to MongoDB (same DB as the bot)
-mongoose.connect(DATABASE_TOKEN, {
-    serverSelectionTimeoutMS: 10000,
-    maxPoolSize: 10,
-}).then(() => {
-    console.log('Dashboard server connected to MongoDB');
-}).catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
-});
+// Connect to MongoDB (same DB as the bot) with retry
+const MAX_DB_RETRIES = 3;
+async function connectWithRetry() {
+    for (let attempt = 1; attempt <= MAX_DB_RETRIES; attempt++) {
+        try {
+            await mongoose.connect(DATABASE_TOKEN, {
+                serverSelectionTimeoutMS: 10000,
+                maxPoolSize: 10,
+            });
+            console.log('Dashboard server connected to MongoDB');
+            return;
+        } catch (err) {
+            if (attempt < MAX_DB_RETRIES) {
+                const delay = 2000 * attempt;
+                console.warn(`DB connection attempt ${attempt}/${MAX_DB_RETRIES} failed, retrying in ${delay}ms...`);
+                await new Promise(r => setTimeout(r, delay));
+            } else {
+                console.error('MongoDB connection failed after all retries:', err);
+                process.exit(1);
+            }
+        }
+    }
+}
+connectWithRetry();
 
 // Session store in MongoDB
 app.use(session({

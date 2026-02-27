@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { requireAuth } = require('../auth/middleware');
-const { fetchGuild } = require('../utils/discord');
+const { fetchBotGuildIds } = require('../utils/discord');
 
 // GET /users/@me - Get current user's account info
 router.get('/@me', requireAuth, (req, res) => {
@@ -24,26 +24,16 @@ router.get('/', requireAuth, async (req, res) => {
             return (perms & BigInt(0x20)) !== BigInt(0) || (perms & BigInt(0x8)) !== BigInt(0);
         });
 
-    // Check which guilds the bot is actually in
-    const guilds = await Promise.all(
-        manageable.map(async (g) => {
-            let exist = false;
-            try {
-                await fetchGuild(g.id);
-                exist = true;
-            } catch {
-                // Bot is not in this guild
-            }
-            return {
-                id: g.id,
-                name: g.name,
-                icon: g.icon,
-                owner: g.owner,
-                permissions: g.permissions,
-                exist,
-            };
-        })
-    );
+    // Fetch all bot guild IDs in one batch instead of N individual API calls
+    const botGuildIds = await fetchBotGuildIds();
+    const guilds = manageable.map((g) => ({
+        id: g.id,
+        name: g.name,
+        icon: g.icon,
+        owner: g.owner,
+        permissions: g.permissions,
+        exist: botGuildIds.has(g.id),
+    }));
 
     res.json(guilds);
 });
