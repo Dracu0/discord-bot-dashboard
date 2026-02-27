@@ -70,7 +70,7 @@ export const config = {
         "giveaways": GiveawaysFeature,
     },
     tutorialUrl: "https://github.com/Dracu0/Discord-Bot-v0.3.4",
-    serverUrl: process.env.NODE_ENV === 'production' ? "" : "http://localhost:8080",
+    serverUrl: process.env.NODE_ENV === 'production' ? "/api" : "http://localhost:8080/api",
     inviteUrl: "https://discord.com/api/oauth2/authorize?client_id=1150062748848373850&permissions=8&scope=bot%20applications.commands",
     data: {
         dashboard: dashboardData,

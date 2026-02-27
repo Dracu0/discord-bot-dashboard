@@ -26,7 +26,7 @@ const {
     PORT = 8080,
     SESSION_SECRET,
     DASHBOARD_URL = IS_PRODUCTION ? '' : 'http://localhost:3000',
-    CALLBACK_URL = IS_PRODUCTION ? '/auth/discord/callback' : 'http://localhost:8080/auth/discord/callback',
+    CALLBACK_URL = IS_PRODUCTION ? '/api/auth/discord/callback' : 'http://localhost:8080/api/auth/discord/callback',
     APP_URL, // e.g. https://my-dashboard.fly.dev — set in Fly.io secrets
 } = process.env;
 
@@ -78,10 +78,10 @@ const limiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
 });
-app.use('/auth', limiter);
-app.use('/guild', limiter);
-app.use('/guilds', limiter);
-app.use('/users', limiter);
+app.use('/api/auth', limiter);
+app.use('/api/guild', limiter);
+app.use('/api/guilds', limiter);
+app.use('/api/users', limiter);
 
 // CORS — only needed in development (separate origins)
 if (!IS_PRODUCTION) {
@@ -147,10 +147,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // API Routes
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/guild', guildRoutes);
-app.use('/guilds', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/guild', guildRoutes);
+app.use('/api/guilds', userRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
