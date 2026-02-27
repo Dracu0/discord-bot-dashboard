@@ -5,6 +5,19 @@ import ErrorModal from "../modal/ErrorModal";
 import { useMutation } from "react-query";
 import { Flex, SimpleGrid, Skeleton, SlideFade } from "@chakra-ui/react";
 
+function useConfigSaveState(save, onSaved, getInitialState) {
+    const [changes, setChanges] = useState(getInitialState)
+
+    const mutation = useMutation(save, {
+        onSuccess(data) {
+            setChanges(getInitialState())
+            return onSaved && onSaved(data)
+        }
+    })
+
+    return { changes, setChanges, mutation }
+}
+
 export function ConfigItemListAnimated({ options, changes, onChange }) {
     return options.map((option) => (
         <SlideFade key={option.id} in={true}>
@@ -41,14 +54,7 @@ export function MultiConfigPanel({ groups, onSave: save, onSaved }) {
         return groups.map(() => new Map())
     }
 
-    const [changes, setChanges] = useState(getInitial())
-
-    const mutation = useMutation(save, {
-        onSuccess(data) {
-            setChanges(getInitial())
-            return onSaved && onSaved(data)
-        }
-    })
+    const { changes, setChanges, mutation } = useConfigSaveState(save, onSaved, getInitial)
 
     const onChange = (i, id, value) => {
         if (mutation.isLoading) return;
@@ -87,13 +93,7 @@ export function MultiConfigPanel({ groups, onSave: save, onSaved }) {
 }
 
 export function ConfigPanel({ options, onDiscard, onSave: save, onSaved }) {
-    const [changes, setChanges] = useState(new Map());
-    const mutation = useMutation(save, {
-        onSuccess(data) {
-            setChanges(new Map());
-            return onSaved && onSaved(data)
-        }
-    })
+    const { changes, setChanges, mutation } = useConfigSaveState(save, onSaved, () => new Map())
 
     const onChange = (id, value) => {
         if (mutation.isLoading) return;

@@ -62,7 +62,7 @@ export default function Banner({image, title, description, clip = true, children
             >
                 {description}
             </Text>
-            <Flex align="center" justify="start" gap={5} position="relative" zIndex={1}>
+            <Flex align="center" justify="start" gap={{ base: 3, md: 4 }} wrap="wrap" position="relative" zIndex={1}>
                 {children}
             </Flex>
         </Flex>
@@ -73,6 +73,8 @@ export function BannerButton({url, ...props}) {
     return <Link href={url}>
         <Button
             variant="white"
+            size="sm"
+            minH="40px"
             {...props}
         />
     </Link>

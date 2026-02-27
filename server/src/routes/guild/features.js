@@ -103,7 +103,7 @@ router.get('/', async (req, res) => {
             },
         });
     } catch (err) {
-        console.error('Failed to get features:', err);
+        req.log?.error('features_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch features' });
     }
 });
@@ -163,9 +163,15 @@ router.patch('/:featureId/enabled', async (req, res) => {
         }
 
         await config.save();
+        req.log?.info('feature_toggle_updated', {
+            guildId,
+            featureId,
+            enabled,
+            actorId: req.user?.id || null,
+        });
         res.sendStatus(200);
     } catch (err) {
-        console.error('Failed to toggle feature:', err);
+        req.log?.error('feature_toggle_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
         res.status(500).json({ error: 'Failed to toggle feature' });
     }
 });
@@ -203,7 +209,7 @@ router.get('/:featureId', async (req, res) => {
 
         res.json({ values });
     } catch (err) {
-        console.error('Failed to get feature detail:', err);
+        req.log?.error('feature_detail_fetch_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
         res.status(500).json({ error: 'Failed to fetch feature detail' });
     }
 });
@@ -395,9 +401,16 @@ router.patch('/:featureId', async (req, res) => {
             values[field] = config[field];
         }
 
+        req.log?.info('feature_config_updated', {
+            guildId,
+            featureId,
+            updatedKeys: Object.keys(updates),
+            actorId: req.user?.id || null,
+        });
+
         res.json(values);
     } catch (err) {
-        console.error('Failed to update feature:', err);
+        req.log?.error('feature_config_update_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
         res.status(500).json({ error: 'Failed to update feature' });
     }
 });

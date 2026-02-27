@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 
 import {Box, Center, Flex, SimpleGrid, SlideFade, Text, useColorModeValue, VStack} from "@chakra-ui/react";
 
@@ -13,6 +13,7 @@ import not_found from "assets/img/info/not_found.svg"
 import CreateButton from "./components/CreateButton";
 import {Locale, useLocale} from "../../../../utils/Language";
 import {Task} from "../components/Task";
+import {useTextFilter} from "hooks/useTextFilter";
 
 export default function ActionTasks() {
     const info = useActionInfo()
@@ -24,13 +25,9 @@ export default function ActionTasks() {
     return <TasksPanel />
 }
 
-function like(s1, s2) {
-    return s1.toLowerCase().includes(s2.toLowerCase())
-}
-
 function TasksPanel() {
     useBanner()
-    const [filter, setFilter] = useState("")
+    const {query: filter, setQuery: setFilter, includes} = useTextFilter("")
     const {name} = useActionInfo()
     const locale = useLocale()
 
@@ -50,12 +47,12 @@ function TasksPanel() {
             <SearchInput value={filter} onChange={setFilter} bg={inputBg} groupStyle={{maxW: "20rem"}} />
         </Center>
         <ActionDetailProvider>
-            <TasksContent filter={filter} />
+            <TasksContent includes={includes} />
         </ActionDetailProvider>
     </Flex>
 }
 
-function TasksContent({filter}) {
+function TasksContent({includes}) {
     const {tasks} = useContext(ActionDetailContext)
 
     return tasks.length === 0?
@@ -71,7 +68,7 @@ function TasksContent({filter}) {
         <SlideFade in={true}>
             <SimpleGrid columns={{base: 1, lg: 2}} gap={5}>
                 {tasks
-                    .filter(task => like(task.name, filter))
+                    .filter(task => includes(task.name))
                     .map(task =>
                         <Task key={task.id} task={task} />
                     )

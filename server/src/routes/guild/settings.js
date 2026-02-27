@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
             },
         });
     } catch (err) {
-        console.error('Failed to get settings:', err);
+        req.log?.error('settings_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch settings' });
     }
 });
@@ -80,6 +80,12 @@ router.patch('/', async (req, res) => {
 
         await config.save();
 
+        req.log?.info('settings_updated', {
+            guildId,
+            updatedKeys: Object.keys(updates),
+            actorId: req.user?.id || null,
+        });
+
         res.json({
             welcomeMessage: config.welcomeMessage,
             goodbyeMessage: config.goodbyeMessage,
@@ -89,7 +95,7 @@ router.patch('/', async (req, res) => {
             suggestionCooldownMs: config.suggestionCooldownMs / 1000,
         });
     } catch (err) {
-        console.error('Failed to update settings:', err);
+        req.log?.error('settings_update_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to update settings' });
     }
 });

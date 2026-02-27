@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
             })),
         });
     } catch (err) {
-        console.error('Failed to get actions data:', err);
+        req.log?.error('actions_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch actions data' });
     }
 });
@@ -72,7 +72,7 @@ router.get('/:actionId', async (req, res) => {
             res.status(404).json({ error: 'Unknown action' });
         }
     } catch (err) {
-        console.error('Failed to get action detail:', err);
+        req.log?.error('action_detail_fetch_failed', { guildId: req.params.id, actionId: req.params.actionId, error: err });
         res.status(500).json({ error: 'Failed to fetch action detail' });
     }
 });
@@ -131,7 +131,12 @@ router.get('/:actionId/:taskId', async (req, res) => {
             res.status(404).json({ error: 'Unknown action' });
         }
     } catch (err) {
-        console.error('Failed to get task detail:', err);
+        req.log?.error('task_detail_fetch_failed', {
+            guildId: req.params.id,
+            actionId: req.params.actionId,
+            taskId: req.params.taskId,
+            error: err,
+        });
         res.status(500).json({ error: 'Failed to fetch task detail' });
     }
 });
@@ -170,6 +175,14 @@ router.patch('/:actionId/:taskId', async (req, res) => {
             }
             await suggestion.save();
 
+            req.log?.info('action_task_updated', {
+                guildId,
+                actionId,
+                taskId,
+                actorId: req.user?.id || null,
+                updatedKeys: Object.keys(options),
+            });
+
             res.json({
                 id: suggestion.suggestionId,
                 name: suggestion.content.substring(0, 50),
@@ -184,7 +197,12 @@ router.patch('/:actionId/:taskId', async (req, res) => {
             res.status(404).json({ error: 'Action does not support updates' });
         }
     } catch (err) {
-        console.error('Failed to update task:', err);
+        req.log?.error('action_task_update_failed', {
+            guildId: req.params.id,
+            actionId: req.params.actionId,
+            taskId: req.params.taskId,
+            error: err,
+        });
         res.status(500).json({ error: 'Failed to update task' });
     }
 });
@@ -219,6 +237,13 @@ router.post('/:actionId', async (req, res) => {
                 reason: typeof options.reason === 'string' ? options.reason.slice(0, 2000) : '',
             });
 
+            req.log?.info('action_task_created', {
+                guildId,
+                actionId,
+                taskId: suggestion.suggestionId,
+                actorId: req.user?.id || null,
+            });
+
             res.json({
                 id: suggestion.suggestionId,
                 name: suggestion.content.substring(0, 50),
@@ -233,7 +258,7 @@ router.post('/:actionId', async (req, res) => {
             res.status(404).json({ error: 'Action does not support creation' });
         }
     } catch (err) {
-        console.error('Failed to create task:', err);
+        req.log?.error('action_task_create_failed', { guildId: req.params.id, actionId: req.params.actionId, error: err });
         res.status(500).json({ error: 'Failed to create task' });
     }
 });
@@ -253,6 +278,13 @@ router.delete('/:actionId/:taskId', async (req, res) => {
                 return res.status(404).json({ error: 'Suggestion not found' });
             }
 
+            req.log?.info('action_task_deleted', {
+                guildId,
+                actionId,
+                taskId,
+                actorId: req.user?.id || null,
+            });
+
             res.sendStatus(200);
         } else if (actionId === 'mod_history') {
             if (!isValidObjectId(taskId)) {
@@ -265,12 +297,23 @@ router.delete('/:actionId/:taskId', async (req, res) => {
             }
 
             await ModLog.findByIdAndDelete(taskId);
+            req.log?.info('modlog_entry_deleted', {
+                guildId,
+                actionId,
+                taskId,
+                actorId: req.user?.id || null,
+            });
             res.sendStatus(200);
         } else {
             res.status(404).json({ error: 'Unknown action' });
         }
     } catch (err) {
-        console.error('Failed to delete task:', err);
+        req.log?.error('action_task_delete_failed', {
+            guildId: req.params.id,
+            actionId: req.params.actionId,
+            taskId: req.params.taskId,
+            error: err,
+        });
         res.status(500).json({ error: 'Failed to delete task' });
     }
 });

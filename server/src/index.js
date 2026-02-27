@@ -8,6 +8,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const path = require('path');
+const logger = require('./utils/logger');
+const { requestContext } = require('./middleware/requestContext');
 
 const configurePassport = require('./auth/passport');
 const authRoutes = require('./routes/auth');
@@ -37,7 +39,15 @@ const fullCallbackURL = CALLBACK_URL.startsWith('http')
 
 // Validate environment
 if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_BOT_TOKEN || !DATABASE_TOKEN || !SESSION_SECRET) {
-    console.error('FATAL: Missing required environment variables. See .env.example');
+    logger.error('missing_required_env_vars', {
+        missing: {
+            DISCORD_CLIENT_ID: !DISCORD_CLIENT_ID,
+            DISCORD_CLIENT_SECRET: !DISCORD_CLIENT_SECRET,
+            DISCORD_BOT_TOKEN: !DISCORD_BOT_TOKEN,
+            DATABASE_TOKEN: !DATABASE_TOKEN,
+            SESSION_SECRET: !SESSION_SECRET,
+        },
+    });
     process.exit(1);
 }
 
@@ -82,6 +92,7 @@ if (!IS_PRODUCTION) {
 }
 
 app.use(express.json());
+app.use(requestContext);
 
 // Connect to MongoDB (same DB as the bot) with retry
 const MAX_DB_RETRIES = 3;
@@ -92,15 +103,15 @@ async function connectWithRetry() {
                 serverSelectionTimeoutMS: 10000,
                 maxPoolSize: 10,
             });
-            console.log('Dashboard server connected to MongoDB');
+            logger.info('mongodb_connected');
             return;
         } catch (err) {
             if (attempt < MAX_DB_RETRIES) {
                 const delay = 2000 * attempt;
-                console.warn(`DB connection attempt ${attempt}/${MAX_DB_RETRIES} failed, retrying in ${delay}ms...`);
+                logger.warn('mongodb_connect_retry', { attempt, maxRetries: MAX_DB_RETRIES, delayMs: delay, error: err });
                 await new Promise(r => setTimeout(r, delay));
             } else {
-                console.error('MongoDB connection failed after all retries:', err);
+                logger.error('mongodb_connect_failed', { attempt, maxRetries: MAX_DB_RETRIES, error: err });
                 process.exit(1);
             }
         }
@@ -159,14 +170,18 @@ if (IS_PRODUCTION) {
 
 // Error handler
 app.use((err, req, res, _next) => {
-    console.error('Server error:', err);
+    const log = req?.log || logger;
+    log.error('unhandled_server_error', { error: err });
     const status = err.status || 500;
     res.status(status).json({ error: err.message || 'Internal server error' });
 });
 
 // Bind to 0.0.0.0 so Fly.io proxy can reach the container (not just localhost)
 const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Dashboard server running on port ${PORT} [${IS_PRODUCTION ? 'production' : 'development'}]`);
+    logger.info('server_started', {
+        port: Number(PORT),
+        mode: IS_PRODUCTION ? 'production' : 'development',
+    });
 });
 
 // Graceful shutdown
@@ -174,10 +189,10 @@ let shuttingDown = false;
 function shutdown(signal) {
     if (shuttingDown) return;
     shuttingDown = true;
-    console.log(`Received ${signal}, shutting down...`);
+    logger.info('shutdown_signal_received', { signal });
 
     const forceExit = setTimeout(() => {
-        console.error('Shutdown timed out after 30s, forcing exit');
+        logger.error('shutdown_timeout_forced_exit', { timeoutMs: 30000 });
         process.exit(1);
     }, 30000);
     forceExit.unref();
@@ -186,7 +201,7 @@ function shutdown(signal) {
         try {
             await mongoose.connection.close();
         } catch (err) {
-            console.error('Error closing DB:', err.message);
+            logger.error('db_close_error', { error: err });
         }
         process.exit(0);
     });

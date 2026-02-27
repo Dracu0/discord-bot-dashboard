@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
             presence_count: guild.approximate_presence_count,
         });
     } catch (err) {
-        console.error('Failed to fetch guild:', err);
+        req.log?.error('guild_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch guild info' });
     }
 });
@@ -47,7 +47,7 @@ router.get('/detail', async (req, res) => {
             modLogEnabled: !!(config?.modLogChannelId),
         });
     } catch (err) {
-        console.error('Failed to get server detail:', err);
+        req.log?.error('guild_detail_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch server details' });
     }
 });
@@ -100,7 +100,7 @@ router.get('/detail/advanced', async (req, res) => {
             },
         });
     } catch (err) {
-        console.error('Failed to get advanced details:', err);
+        req.log?.error('guild_advanced_detail_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch advanced details' });
     }
 });
@@ -133,7 +133,7 @@ router.get('/notification', async (req, res) => {
 
         res.json(notifications);
     } catch (err) {
-        console.error('Failed to get notifications:', err);
+        req.log?.error('guild_notifications_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch notifications' });
     }
 });
@@ -168,7 +168,7 @@ router.get('/leaderboard', async (req, res) => {
             totalPages: Math.ceil(total / limit),
         });
     } catch (err) {
-        console.error('Failed to get leaderboard:', err);
+        req.log?.error('guild_leaderboard_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch leaderboard' });
     }
 });

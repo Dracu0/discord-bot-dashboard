@@ -2,20 +2,21 @@
 import {Flex, SimpleGrid, Text} from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card.js";
-import React, {useState} from "react";
+import React from "react";
 import Server from "views/admin/profile/components/Server";
 import {QueryHolderSkeleton} from "../../../../contexts/components/AsyncContext";
 import SearchInput from "../../../../components/fields/impl/SearchInput";
 import {config} from "../../../../config/config";
 import {Locale} from "../../../../utils/Language";
 import {useDetailColor, useNeuFlat, useTextColor} from "../../../../utils/colors";
+import {useTextFilter} from "../../../../hooks/useTextFilter";
 
 export default function ServerPicker({query, ...rest}) {
 
     const textColorPrimary = useTextColor();
     const textColorSecondary = useDetailColor();
 
-    const [filter, setFilter] = useState("")
+    const {query: filter, setQuery: setFilter, includes} = useTextFilter()
 
     return (
         <Card mb={{base: "0px", "2xl": "20px"}} gap="2rem" {...rest}>
@@ -43,21 +44,18 @@ export default function ServerPicker({query, ...rest}) {
             </Flex>
             <SimpleGrid columns={{base: 1, lg: 2, "2xl": 3}} gap={5}>
                 <QueryHolderSkeleton count={3} query={query}>
-                    <Servers filter={filter} guilds={query.data}/>
+                    <Servers includes={includes} guilds={query.data}/>
                 </QueryHolderSkeleton>
             </SimpleGrid>
         </Card>
     );
 }
 
-function Servers({filter, guilds}) {
+function Servers({includes, guilds}) {
     const neuFlat = useNeuFlat();
 
     return guilds
-        .filter(server => server.name
-            .toLowerCase()
-            .includes(filter.toLowerCase())
-        )
+        .filter(server => includes(server.name))
         .map((server) => {
             return (
                 <Server

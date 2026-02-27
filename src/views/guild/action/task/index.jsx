@@ -1,29 +1,39 @@
 import React, {useContext, useMemo} from "react";
 
 // Chakra imports
-import {Button, SimpleGrid, Stack, Text,} from "@chakra-ui/react";
+import {SimpleGrid, Stack, Text,} from "@chakra-ui/react";
 
 // Custom components
 import {usePageInfo} from "contexts/PageInfoContext";
 import {useActionInfo} from "contexts/actions/ActionDetailContext";
 import {ConfigGridSkeleton, MultiConfigPanel} from "components/fields/ConfigPanel";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {updateTask} from "api/internal";
 import {GuildContext} from "contexts/guild/GuildContext";
 import {useActionBanner} from "../components/ActionBanner";
-import {BiArrowBack} from "react-icons/bi";
 import {useTaskDetailQuery} from "../../../../contexts/actions/TaskDetailContext";
 import {useQueryClient} from "react-query";
 import {usePageState} from "../../../../utils/State";
 import {Locale, useLocale} from "../../../../utils/Language";
+import BackNavButton from "components/navigation/BackNavButton";
 
 export default function TaskBoard() {
-    const {name: action} = useActionInfo()
+    const {action: actionId} = useParams()
+    const {id: guild} = useContext(GuildContext)
+    const actionUrl = `/guild/${guild}/actions/${actionId}`
+    const {name: actionName} = useActionInfo()
     const locale = useLocale()
-    useActionBanner([<BackButton />])
+    useActionBanner([
+        <BackNavButton
+            to={actionUrl}
+            zh="返回動作"
+            en="Back to Action"
+            ariaLabel="Back to Action"
+        />,
+    ])
 
     usePageInfo(
-        [{zh: "動作", en: "Action"}, action].map(locale)
+        [{zh: "動作", en: "Action"}, actionName].map(locale)
     )
 
     return <Stack mt={10} gap={5}>
@@ -92,23 +102,5 @@ function ConfigPanel({savedName, onSaved, values}) {
             onSave={onSave}
             onSaved={onSaved}
         />
-    );
-}
-
-function BackButton() {
-    const {action} = useParams()
-    const {id: guild} = useContext(GuildContext)
-
-    const actionUrl = `/guild/${guild}/actions/${action}`
-
-    return (
-        <Link to={actionUrl}>
-            <Button
-                variant="white"
-                leftIcon={<BiArrowBack />}
-            >
-                <Locale zh="返回動作" en="Back" />
-            </Button>
-        </Link>
     );
 }
