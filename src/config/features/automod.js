@@ -6,7 +6,7 @@ export const AutoModFeature = {
     },
     description: (
         <Locale
-            en="Automatic message filtering — banned words, Discord invite blocking, link blocking, and anti-spam protection with configurable actions."
+            en="Automatic message filtering — banned words, Discord invite blocking, link blocking, and anti-spam protection with configurable actions. Note: Members with Manage Messages permission bypass auto-mod."
         />
     ),
     options: (values, { data }) => {
