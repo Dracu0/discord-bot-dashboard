@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useRef, useState} from "react";
 
 export const LayoutContext = createContext({
     banner: {
@@ -12,23 +12,25 @@ export const LayoutContext = createContext({
 
 export function useLayoutUpdate(props) {
     const {update} = useContext(LayoutContext)
+    const propsRef = useRef(props)
+    propsRef.current = props
+
     const title = props?.banner?.title
 
     useEffect(
-        () => update(props),
-        [title]
+        () => update(propsRef.current),
+        [update, title]
     )
 }
 
 export function LayoutProvider({initial = {}, children}) {
     const [context, setContext] = useState(initial)
+    const update = useCallback((next) => setContext(next), [])
 
     return <LayoutContext.Provider
         value={{
             ...context,
-            update(next) {
-                setContext(next)
-            }
+            update
         }}>
         {children}
     </LayoutContext.Provider>

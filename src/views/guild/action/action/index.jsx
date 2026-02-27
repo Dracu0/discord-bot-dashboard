@@ -15,14 +15,17 @@ import {Locale, useLocale} from "../../../../utils/Language";
 import {Task} from "../components/Task";
 import {useTextFilter} from "hooks/useTextFilter";
 
+import {useParams} from "react-router-dom";
+
 export default function ActionTasks() {
     const info = useActionInfo()
+    const {action} = useParams()
 
     if (info == null) {
         return <NotFound />
     }
 
-    return <TasksPanel />
+    return <TasksPanel key={action} />
 }
 
 function TasksPanel() {

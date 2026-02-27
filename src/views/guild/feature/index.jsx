@@ -23,7 +23,7 @@ export default function Feature() {
     if (config.features[feature] == null) {
         return <NotFound />
     } else {
-        return <FeaturePanel />
+        return <FeaturePanel key={feature} />
     }
 }
 
