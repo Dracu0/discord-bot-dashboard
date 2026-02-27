@@ -1,5 +1,6 @@
 import {useMutation, useQueryClient} from "react-query";
 import {fetchAuto} from "../utils";
+import logger from "utils/logger";
 
 export function hasLoggedIn() {
     return fetchAuto(
@@ -9,9 +10,10 @@ export function hasLoggedIn() {
             method: "HEAD",
             throwError: false
         }
-    ).then(res =>
-        res.ok
-    )
+    ).then(res => {
+        logger.info('auth_check', { loggedIn: res.ok })
+        return res.ok
+    })
 }
 
 export async function logout() {
@@ -27,7 +29,11 @@ export function useLogout() {
         () => logout(),
         {
             onSuccess() {
+                logger.info('logged_out')
                 return client.invalidateQueries("logged_in")
+            },
+            onError(error) {
+                logger.error('logout_failed', { error: error.message })
             }
         }
     )

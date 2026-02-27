@@ -26,6 +26,13 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
     return request.then(res => {
 
         if (res.ok || !throwError) {
+            logger.info('api_request_ok', {
+                requestId,
+                url,
+                method: options.method || 'GET',
+                status: res.status,
+                durationMs: Date.now() - startedAt,
+            })
 
             return mapper? mapper(res) : res
         } else {
@@ -66,6 +73,8 @@ export function useEnableFeatureMutation(serverId, featureId) {
         (enabled) => setFeatureEnabled(serverId, featureId, enabled),
         {
             onSuccess(_, enabled) {
+                logger.info('feature_toggled', { serverId, featureId, enabled })
+
                 const modify = (data) => {
                     if (enabled) {
                         return [...data.enabled, featureId]
@@ -81,6 +90,9 @@ export function useEnableFeatureMutation(serverId, featureId) {
                         enabled: modify(data)
                     } : data
                 )
+            },
+            onError(error) {
+                logger.error('feature_toggle_failed', { serverId, featureId, error: error.message })
             }
         }
     )

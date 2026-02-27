@@ -4,14 +4,19 @@ import { SaveAlert } from "components/alert/SaveAlert";
 import ErrorModal from "../modal/ErrorModal";
 import { useMutation } from "react-query";
 import { Flex, SimpleGrid, Skeleton, SlideFade } from "@chakra-ui/react";
+import logger from "utils/logger";
 
 function useConfigSaveState(save, onSaved, getInitialState) {
     const [changes, setChanges] = useState(getInitialState)
 
     const mutation = useMutation(save, {
         onSuccess(data) {
+            logger.info('config_saved', { fields: [...(data instanceof Map ? data.keys() : Object.keys(data || {}))] })
             setChanges(getInitialState())
             return onSaved && onSaved(data)
+        },
+        onError(error) {
+            logger.error('config_save_failed', { error: error.message })
         }
     })
 
