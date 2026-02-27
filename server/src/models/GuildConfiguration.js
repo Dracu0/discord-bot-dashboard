@@ -138,6 +138,81 @@ const guildConfigurationSchema = new Schema({
         default: [],
         validate: [v => v.length <= 10, 'Maximum 10 warn thresholds'],
     },
+    // Auto-moderation
+    automodEnabled: {
+        type: Boolean,
+        default: false,
+    },
+    automodBannedWords: {
+        type: [String],
+        default: [],
+        validate: [v => v.length <= 200, 'Maximum 200 banned words'],
+    },
+    automodBlockInvites: {
+        type: Boolean,
+        default: false,
+    },
+    automodBlockLinks: {
+        type: Boolean,
+        default: false,
+    },
+    automodAllowedLinkDomains: {
+        type: [String],
+        default: [],
+        validate: [v => v.length <= 50, 'Maximum 50 allowed domains'],
+    },
+    automodAntiSpamEnabled: {
+        type: Boolean,
+        default: false,
+    },
+    automodAntiSpamMaxMessages: {
+        type: Number,
+        default: 5,
+    },
+    automodAntiSpamInterval: {
+        type: Number,
+        default: 5000,
+    },
+    automodAction: {
+        type: String,
+        enum: ['delete', 'warn', 'timeout'],
+        default: 'delete',
+    },
+    automodTimeoutDuration: {
+        type: Number,
+        default: 60000,
+    },
+    automodExemptRoleIds: {
+        type: [String],
+        default: [],
+        validate: [v => v.length <= 25, 'Maximum 25 exempt roles'],
+    },
+    automodExemptChannelIds: {
+        type: [String],
+        default: [],
+        validate: [v => v.length <= 25, 'Maximum 25 exempt channels'],
+    },
+    automodLogChannelId: {
+        type: String,
+        default: '',
+    },
+    // Starboard
+    starboardEnabled: {
+        type: Boolean,
+        default: false,
+    },
+    starboardChannelId: {
+        type: String,
+        default: '',
+    },
+    starboardThreshold: {
+        type: Number,
+        default: 3,
+    },
+    starboardEmoji: {
+        type: String,
+        default: '⭐',
+    },
 });
 
 module.exports = model('GuildConfiguration', guildConfigurationSchema);

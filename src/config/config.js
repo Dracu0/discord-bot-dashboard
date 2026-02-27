@@ -5,6 +5,8 @@ import { SuggestionsFeature } from "./features/suggestions";
 import { MinecraftFeature } from "./features/minecraft";
 import { ModLogFeature } from "./features/modlog";
 import { ReactionRolesFeature } from "./features/reactionroles";
+import { AutoModFeature } from "./features/automod";
+import { StarboardFeature } from "./features/starboard";
 import { ManageSuggestionsAction } from "./actions/ManageSuggestions";
 import { ModHistoryAction } from "./actions/ModHistory";
 
@@ -54,6 +56,8 @@ export const config = {
         "minecraft": MinecraftFeature,
         "modlog": ModLogFeature,
         "reaction_roles": ReactionRolesFeature,
+        "automod": AutoModFeature,
+        "starboard": StarboardFeature,
     },
     tutorialUrl: "https://github.com/Dracu0/Discord-Bot-v0.3.4",
     serverUrl: process.env.NODE_ENV === 'production' ? "" : "http://localhost:8080",

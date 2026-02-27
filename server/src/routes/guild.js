@@ -186,6 +186,19 @@ const FEATURE_FIELDS = {
         enableCheck: (c) => (c.reactionRoles || []).length > 0,
         fields: ['reactionRoles'],
     },
+    automod: {
+        enableCheck: (c) => !!c.automodEnabled,
+        fields: [
+            'automodEnabled', 'automodBannedWords', 'automodBlockInvites', 'automodBlockLinks',
+            'automodAllowedLinkDomains', 'automodAntiSpamEnabled', 'automodAntiSpamMaxMessages',
+            'automodAntiSpamInterval', 'automodAction', 'automodTimeoutDuration',
+            'automodExemptRoleIds', 'automodExemptChannelIds', 'automodLogChannelId',
+        ],
+    },
+    starboard: {
+        enableCheck: (c) => !!c.starboardEnabled,
+        fields: ['starboardEnabled', 'starboardChannelId', 'starboardThreshold', 'starboardEmoji'],
+    },
 };
 
 // GET /guild/:id/features - List features and enabled status
@@ -264,6 +277,13 @@ router.patch('/:id/feature/:featureId/enabled', async (req, res) => {
                 break;
             case 'reaction_roles':
                 if (!enabled) config.reactionRoles = [];
+                break;
+            case 'automod':
+                config.automodEnabled = enabled;
+                break;
+            case 'starboard':
+                config.starboardEnabled = enabled;
+                if (!enabled) config.starboardChannelId = '';
                 break;
             default:
                 break;
@@ -436,12 +456,30 @@ router.patch('/:id/feature/:featureId', async (req, res) => {
                 config[key] = parseInt(value.replace('#', ''), 16);
             }
             // Array-of-string fields: validate each element is a snowflake
-            else if (Array.isArray(value) && ['suggestionChannelIds', 'xpIgnoredChannelIds', 'autoRoleIds'].includes(key)) {
+            else if (Array.isArray(value) && ['suggestionChannelIds', 'xpIgnoredChannelIds', 'autoRoleIds', 'automodExemptRoleIds', 'automodExemptChannelIds'].includes(key)) {
                 config[key] = value.filter(v => typeof v === 'string' && /^\d{17,20}$/.test(v));
             }
+            // Array-of-string fields: plain strings (no snowflake validation)
+            else if (Array.isArray(value) && ['automodBannedWords', 'automodAllowedLinkDomains'].includes(key)) {
+                const limit = key === 'automodBannedWords' ? 200 : 50;
+                if (value.length > limit) {
+                    return res.status(400).json({ error: `Maximum ${limit} entries for ${key}` });
+                }
+                config[key] = value.filter(v => typeof v === 'string' && v.length <= 100).map(v => v.trim()).filter(Boolean);
+            }
             // Boolean fields
-            else if (typeof value === 'boolean' && ['pingEnabled', 'welcomeEmbed', 'xpDisableLevelUpMessages'].includes(key)) {
+            else if (typeof value === 'boolean' && [
+                'pingEnabled', 'welcomeEmbed', 'xpDisableLevelUpMessages',
+                'automodEnabled', 'automodBlockInvites', 'automodBlockLinks', 'automodAntiSpamEnabled',
+                'starboardEnabled',
+            ].includes(key)) {
                 config[key] = value;
+            }
+            // Enum fields with specific allowed values
+            else if (key === 'automodAction' && typeof value === 'string') {
+                if (['delete', 'warn', 'timeout'].includes(value)) {
+                    config[key] = value;
+                }
             }
             // String fields (channel IDs, messages)
             else if (typeof value === 'string') {
