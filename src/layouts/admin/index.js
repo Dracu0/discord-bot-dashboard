@@ -19,7 +19,7 @@ export default function Dashboard() {
       overflow="auto"
       position="relative"
       maxWidth={{ base: "100%" }}
-      px={{ md: "80px", xl: "120px" }}
+      px={{ base: "16px", sm: "20px", md: "80px", xl: "120px" }}
     >
       <UserDataProvider>
         <Profile />

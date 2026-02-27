@@ -65,7 +65,7 @@ function ListItem({name, description, value, icon}) {
                     <Flex
                         direction='column'
                         w={{base: "70%", md: "100%"}}
-                        me={{base: "4px", md: "32px", xl: "10px", "3xl": "32px"}}>
+                        me={{base: "4px", md: "16px", xl: "24px", "3xl": "32px"}}>
                         <Text
                             color={textColor}
                             fontSize={{
@@ -87,7 +87,7 @@ function ListItem({name, description, value, icon}) {
                         </Text>
                     </Flex>
                     <Flex
-                        me={{base: "4px", md: "32px", xl: "10px", "3xl": "32px"}}
+                        me={{base: "4px", md: "16px", xl: "24px", "3xl": "32px"}}
                         align='center'>
                         <Icon as={icon} color={textColor} width='18px' me='7px'/>
                         <Text fontWeight='700' fontSize='md' color={textColor}>

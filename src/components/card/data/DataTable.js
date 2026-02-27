@@ -40,7 +40,7 @@ export default function DataTable({name, data, columns}) {
       px='0px'
       overflowX='auto'>
         <Text
-            ml="25px"
+            ml={{base: "16px", md: "25px"}}
             color={textColor}
             fontSize='22px'
             fontWeight='700'

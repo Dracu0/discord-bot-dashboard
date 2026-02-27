@@ -20,7 +20,7 @@ export default function Footer({children}) {
                 xl: "start",
             }}
             justifyContent='space-between'
-            px={{base: "30px", md: "50px"}}
+            px={{base: "16px", sm: "24px", md: "50px"}}
             pb='30px'>
             <Text
                 color={textColor}

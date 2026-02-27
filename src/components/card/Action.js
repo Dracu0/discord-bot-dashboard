@@ -17,7 +17,7 @@ export function Action({id, action}) {
 
     return (
         <Card
-            p="20px"
+            p={{base: "16px", md: "20px"}}
             transition="all 0.25s ease"
             border="1px solid"
             borderColor="transparent"
@@ -29,13 +29,13 @@ export function Action({id, action}) {
             <Flex direction="column" gap={3}>
                 {action.banner?
                     <Image
-                        h="5rem"
+                        h={{base: "4rem", md: "5rem"}}
                         objectFit="cover"
                         rounded="16px"
                         src={action.banner}
                     /> :
                     <Box
-                        h="5rem"
+                        h={{base: "4rem", md: "5rem"}}
                         rounded="16px"
                         bgGradient="linear(135deg, brand.600 0%, accent.pink 50%, accent.gold 100%)"
                     />

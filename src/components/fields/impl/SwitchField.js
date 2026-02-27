@@ -23,7 +23,7 @@ export default function Default(props) {
               _hover={{ cursor: "pointer" }}
               direction="column"
               mb="0px"
-              maxW="75%"
+              maxW={{base: "100%", md: "75%"}}
           >
             <Text align="start" color={labelColor} fontSize="md" fontWeight="500"
                   transition="color 0.2s ease">

@@ -13,4 +13,4 @@ export const contentWidth = {
 /**
  * Standardised page padding-top that accounts for the fixed navbar height.
  */
-export const PAGE_PT = { base: "100px", md: "80px" };
+export const PAGE_PT = { base: "90px", md: "80px" };

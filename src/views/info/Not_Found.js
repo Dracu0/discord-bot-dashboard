@@ -7,7 +7,7 @@ export default function NotFound() {
     const textColor = useColorModeValue("gray.700", "white");
     const detailColor = useColorModeValue("gray.500", "whiteAlpha.600");
 
-    return <Center h="100vh" position="relative">
+    return <Center h={{base: "calc(100vh - 90px)", md: "calc(100vh - 80px)"}} position="relative">
         <Box position="relative" textAlign="center">
             <Image width={350} mx="auto" src={not_found} alt="Not Found" opacity={0.8} />
             <Heading

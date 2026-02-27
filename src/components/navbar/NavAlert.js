@@ -39,7 +39,7 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
             borderStyle="solid"
             transition="box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease"
             alignItems={{xl: "center"}}
-            minH="75px"
+            minH="64px"
             justifyContent={{xl: "center"}}
             lineHeight="25.6px"
             mx="auto"
@@ -85,7 +85,7 @@ export default function NavAlert({rootText, childText, children, clip = true}) {
                     <Text
                         color={mainText}
                         fontWeight="bold"
-                        fontSize="34px"
+                        fontSize={{base: "24px", md: "34px"}}
                         fontFamily="'Space Grotesk', sans-serif"
                         letterSpacing="-0.02em"
                     >

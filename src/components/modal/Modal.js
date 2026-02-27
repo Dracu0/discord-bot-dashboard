@@ -26,7 +26,7 @@ export function EmptyModal({children, isOpen, onClose, ...props}) {
         />
         <ModalContent
             bg={modalBg}
-            rounded="24px"
+            rounded={{base: "16px", md: "24px"}}
             shadow={neuShadow}
             border="1px solid"
             borderColor={useColorModeValue(

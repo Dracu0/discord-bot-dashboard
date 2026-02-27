@@ -35,7 +35,7 @@ export function ConfigItemListAnimated({ options, changes, onChange }) {
 }
 
 export function ConfigGridSkeleton() {
-    return <SimpleGrid columns={{ base: 1, lg: 2 }} gap={5} mt={10}>
+    return <SimpleGrid columns={{ base: 1, lg: 2 }} gap={5} mt={{base: 5, md: 10}}>
         <Skeleton height="20rem" rounded="lg" />
         <Skeleton height="20rem" rounded="lg" />
         <Skeleton height="20rem" rounded="lg" />
@@ -44,7 +44,7 @@ export function ConfigGridSkeleton() {
 }
 
 export function ConfigGrid(props) {
-    return <SimpleGrid columns={{ base: 1, lg: 2 }} gap={5} mt={10}>
+    return <SimpleGrid columns={{ base: 1, lg: 2 }} gap={5} mt={{base: 5, md: 10}}>
         <ConfigPanel {...props} />
     </SimpleGrid>
 }

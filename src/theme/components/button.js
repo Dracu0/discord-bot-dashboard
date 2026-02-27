@@ -34,7 +34,7 @@ export const buttonStyles = {
           },
           fontWeight: "500",
           fontSize: "14px",
-          py: "20px",
+          py: "14px",
           px: "27",
         }),
         outline: () => ({

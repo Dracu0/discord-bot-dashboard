@@ -55,8 +55,8 @@ export function Notifications() {
             mt="22px"
             zIndex={1500}
             me={{base: "30px", md: "unset"}}
-            minW={{base: "80vw", md: "400px", xl: "450px"}}
-            maxW={{base: "360px", md: "unset"}}
+            minW={{base: "unset", md: "400px", xl: "450px"}}
+            maxW={{base: "90vw", md: "unset"}}
         >
             <Text w="100%" mb="20px" fontSize="md" fontWeight="600" color={textColor}>
                 <Locale zh="通知" en="Notifications" />

@@ -39,13 +39,13 @@ export default function Feature({banner, name, description, id: featureId, enabl
         >
             {banner?
                 <Image
-                    h={20}
+                    h={{base: 16, md: 20}}
                     src={banner}
                     bgSize="cover"
                     rounded="16px"
                 />:
                 <Box
-                    h={20}
+                    h={{base: 16, md: 20}}
                     bgGradient="linear(135deg, brand.500 0%, brand.300 50%, accent.cyan 100%)"
                     rounded="16px"
                 />

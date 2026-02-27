@@ -53,7 +53,7 @@ export function Task({task}) {
                 <Locale zh="刪除" en="Delete" />
             </Button>
         </Flex>
-        <Box w={{base: "full", "3sm": "fit-content"}}>
+        <Box w={{base: "full", md: "fit-content"}}>
             <Link to={configUrl}>
                 <Button w="full" px={10} variant="action">
                     <Locale zh="修改選項" en="Modify Options" />

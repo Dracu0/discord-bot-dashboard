@@ -11,7 +11,7 @@ export default function BackNavButton({ to, zh = "返回", en = "Back", ariaLabe
         size="sm"
         variant="white"
         leftIcon={<BiArrowBack />}
-        minH="40px"
+        minH={{base: "44px", md: "40px"}}
       >
         <Locale zh={zh} en={en} />
       </Button>

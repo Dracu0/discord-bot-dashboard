@@ -99,7 +99,7 @@ function SearchModal({isOpen, onClose, search }) {
 
     return <Modal
         isOpen={isOpen} onClose={onClose}
-        size="4xl" scrollBehavior="inside"
+        size={{base: "full", md: "4xl"}} scrollBehavior="inside"
         header={{
             zh: `搜索功能: ${all? "全部" : search}`,
             en: `Search Filter: ${all? "All" : search}`
