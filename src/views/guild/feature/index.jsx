@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from "react";
 
-import { Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 // Custom components
 import { updateFeatureOptions } from "api/internal";
@@ -14,7 +14,7 @@ import NotFound from "../../info/Not_Found";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { usePageState } from "utils/State";
-import { useLocale } from "utils/Language";
+import { useLocale, Locale } from "utils/Language";
 import useBanner from "./components/Banner";
 
 export default function Feature() {
@@ -31,6 +31,8 @@ function FeaturePanel() {
     const { id, name } = useFeatureInfo()
     const locale = useLocale()
     const query = useFeatureDetailQuery(id)
+    const featuresData = useContext(FeaturesContext)
+    const enabled = featuresData?.enabled?.includes(id)
     useBanner(locale(name))
 
     return (
@@ -38,18 +40,35 @@ function FeaturePanel() {
             flexDirection="column"
             mb="10"
         >
+            {!enabled && (
+                <Box
+                    bg="orange.500"
+                    color="white"
+                    px={4}
+                    py={3}
+                    borderRadius="12px"
+                    mb={4}
+                    fontSize="sm"
+                    fontWeight="600"
+                >
+                    <Locale
+                        zh="此功能已停用。啟用後設定才會生效。"
+                        en="This feature is currently disabled. Enable it using the toggle above for settings to take effect."
+                    />
+                </Box>
+            )}
             {query.isLoading ?
                 <ConfigGridSkeleton />
                 : query.error || !query.data ?
                 <Text color="red.400">Failed to load feature configuration.</Text>
                 :
-                <FeatureConfigPanel detail={query.data} />
+                <FeatureConfigPanel detail={query.data} enabled={enabled} />
             }
         </Flex>
     );
 }
 
-function FeatureConfigPanel({ detail }) {
+function FeatureConfigPanel({ detail, enabled }) {
     const { id: serverId } = useContext(GuildContext);
     const featuresData = useContext(FeaturesContext);
     const state = usePageState({ data: featuresData.data })
@@ -70,9 +89,13 @@ function FeatureConfigPanel({ detail }) {
         )
     }
 
-    return <ConfigGrid
-        onSave={onSave}
-        options={options}
-        onSaved={onSaved}
-    />
+    return (
+        <Box opacity={enabled ? 1 : 0.5} pointerEvents={enabled ? "auto" : "none"}>
+            <ConfigGrid
+                onSave={onSave}
+                options={options}
+                onSaved={onSaved}
+            />
+        </Box>
+    )
 }
