@@ -15,6 +15,7 @@ export const MinecraftFeature = {
     name: {
         en: "Minecraft Monitoring",
     },
+    canToggle: true,
     description: (
         <Locale
             en="Monitor Minecraft Java servers — configure server IPs, online/offline alerts, live status embeds, and alert channels."

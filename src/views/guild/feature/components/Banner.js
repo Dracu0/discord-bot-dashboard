@@ -9,14 +9,16 @@ import {GuildContext} from "contexts/guild/GuildContext";
 import {useLayoutUpdate} from "contexts/layouts/LayoutContext";
 import BackNavButton from "components/navigation/BackNavButton";
 import {useEnableFeatureMutation} from "api/utils";
-import {Locale} from "utils/Language";
+import {Locale, useLocale} from "utils/Language";
 
 function EnableToggle() {
     const { id: serverId } = useContext(GuildContext)
-    const { id: featureId } = useFeatureInfo()
+    const { id: featureId, name } = useFeatureInfo()
+    const locale = useLocale()
     const featuresData = useContext(FeaturesContext)
     const enabled = featuresData?.enabled?.includes(featureId)
     const mutation = useEnableFeatureMutation(serverId, featureId)
+    const featureName = locale(name)
 
     return (
         <Button
@@ -40,8 +42,8 @@ function EnableToggle() {
                 mr={2}
             />
             {enabled
-                ? <Locale zh="已啟用" en="Enabled" />
-                : <Locale zh="已停用" en="Disabled" />
+                ? <Locale zh={`${featureName} 已啟用`} en={`${featureName} Enabled`} />
+                : <Locale zh={`${featureName} 已停用`} en={`${featureName} Disabled`} />
             }
         </Button>
     )
@@ -49,14 +51,14 @@ function EnableToggle() {
 
 export default function useBanner(localeName) {
     const { id: serverId } = useContext(GuildContext)
-    const {description} = useFeatureInfo()
+    const {description, canToggle} = useFeatureInfo()
 
     useLayoutUpdate({
         banner: {
             title: localeName,
             description,
             buttons: [
-                <EnableToggle key="toggle" />,
+                ...(canToggle ? [<EnableToggle key="toggle" />] : []),
                 <BackNavButton
                     key="back"
                     to={`/guild/${serverId}/features`}

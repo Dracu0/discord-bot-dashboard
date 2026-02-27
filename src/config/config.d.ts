@@ -52,6 +52,7 @@ export type ConfigType = {
             banner?: any,
             name: MultiLang,
             description: TextElement,
+            canToggle?: boolean,
             options: (data: any, state: OptionState) => Option[]
         }
     },

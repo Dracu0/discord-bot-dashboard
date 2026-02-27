@@ -10,7 +10,7 @@ import {Locale, useLocale} from "../../utils/Language";
 import {useEnableFeatureMutation} from "../../api/utils";
 import {useDetailColor, useNeuHover, useTextColor} from "../../utils/colors";
 
-export default function Feature({banner, name, description, id: featureId, enabled}) {
+export default function Feature({banner, name, description, id: featureId, enabled, canToggle}) {
     const {id: serverId} = useContext(GuildContext);
     const configUrl = `/guild/${serverId}/features/${featureId}`
     const enableMutation = useEnableFeatureMutation(serverId, featureId)
@@ -54,7 +54,7 @@ export default function Feature({banner, name, description, id: featureId, enabl
             <Flex direction="column" justify="space-between" gap={3}>
                 <Flex direction="column">
                     <Flex align="center" gap={2}>
-                        <Box w="8px" h="8px" borderRadius="full" bg={statusColor} flexShrink={0} />
+                        {canToggle && <Box w="8px" h="8px" borderRadius="full" bg={statusColor} flexShrink={0} />}
                         <Heading
                             size="md"
                             color={textColor}
@@ -75,14 +75,15 @@ export default function Feature({banner, name, description, id: featureId, enabl
                     </Tooltip>
                 </Flex>
                 <ButtonGroup mt="5">
-                    {enabled && (
-                        <ConfigButton configUrl={configUrl}/>
+                    <ConfigButton configUrl={configUrl}/>
+                    {canToggle && (
+                        <EnableButton
+                            enabled={enabled}
+                            isLoading={enableMutation.isLoading}
+                            onChange={enableMutation.mutate}
+                            featureName={locale(name)}
+                        />
                     )}
-                    <EnableButton
-                        enabled={enabled}
-                        isLoading={enableMutation.isLoading}
-                        onChange={enableMutation.mutate}
-                    />
                 </ButtonGroup>
             </Flex>
         </Card>
@@ -107,7 +108,7 @@ function ConfigButton({configUrl}) {
     );
 }
 
-function EnableButton({enabled, isLoading, onChange}) {
+function EnableButton({enabled, isLoading, onChange, featureName}) {
     return (
         <Button
             onClick={() => onChange(!enabled)}
@@ -118,9 +119,9 @@ function EnableButton({enabled, isLoading, onChange}) {
             py="5px"
         >
             {enabled?
-                <Locale zh="禁用此功能" en="Disable"/>
+                <Locale zh={`禁用${featureName}`} en={`Disable ${featureName}`}/>
                  :
-                <Locale zh="啟用此功能" en="Enable"/>
+                <Locale zh={`啟用${featureName}`} en={`Enable ${featureName}`}/>
             }
         </Button>
     );

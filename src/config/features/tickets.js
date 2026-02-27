@@ -4,6 +4,7 @@ export const TicketsFeature = {
     name: {
         en: "Tickets",
     },
+    canToggle: true,
     description: (
         <Locale
             en="Private support ticket system — users open tickets via a panel button or command, creating a private channel for staff to help."

@@ -28,11 +28,11 @@ export default function Feature() {
 }
 
 function FeaturePanel() {
-    const { id, name } = useFeatureInfo()
+    const { id, name, canToggle } = useFeatureInfo()
     const locale = useLocale()
     const query = useFeatureDetailQuery(id)
     const featuresData = useContext(FeaturesContext)
-    const enabled = featuresData?.enabled?.includes(id)
+    const enabled = !canToggle || featuresData?.enabled?.includes(id)
     useBanner(locale(name))
 
     return (
@@ -40,7 +40,7 @@ function FeaturePanel() {
             flexDirection="column"
             mb="10"
         >
-            {!enabled && (
+            {canToggle && !enabled && (
                 <Box
                     bg="orange.500"
                     color="white"

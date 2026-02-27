@@ -4,6 +4,7 @@ export const XPFeature = {
     name: {
         en: "XP & Leveling",
     },
+    canToggle: true,
     description: (
         <Locale
             en="Configure the XP leveling system — ignored channels, level-up notifications, and role rewards for reaching specific levels."

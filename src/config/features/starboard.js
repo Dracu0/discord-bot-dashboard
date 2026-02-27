@@ -4,6 +4,7 @@ export const StarboardFeature = {
     name: {
         en: "Starboard",
     },
+    canToggle: true,
     description: (
         <Locale
             en="Highlight popular messages — when a message receives enough star reactions, it's automatically reposted to a designated starboard channel."
