@@ -14,11 +14,11 @@ function useDeleteMutation(guild, action, task) {
         {
             onSuccess() {
                 return client.setQueryData(
-                    ["action_detail", action],
-                    data => ({
+                    ["action_detail", guild, action],
+                    data => data ? ({
                         ...data,
                         tasks: data.tasks.filter(t => t.id !== task)
-                    })
+                    }) : data
                 )
             }
         }

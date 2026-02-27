@@ -48,7 +48,9 @@ export default function TaskBoard() {
 function TaskConfigPanel() {
     const query = useTaskDetailQuery()
 
-    return query.isLoading? <ConfigGridSkeleton/> : <Config detail={query.data} />
+    if (query.isLoading) return <ConfigGridSkeleton />
+    if (query.error || !query.data) return <Text color="red.400">Failed to load task details.</Text>
+    return <Config detail={query.data} />
 }
 
 export function Config({detail}) {
@@ -58,6 +60,7 @@ export function Config({detail}) {
     const client = useQueryClient()
 
     const onSaved = data => {
+        client.invalidateQueries(["action_detail", guild, action])
         return client.setQueryData(["task_detail", guild, action, task], data)
     }
 

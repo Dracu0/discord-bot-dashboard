@@ -76,10 +76,10 @@ export function useEnableFeatureMutation(serverId, featureId) {
 
                 return client.setQueryData(
                     ["features", serverId],
-                    data => ({
+                    data => data ? {
                         ...data,
                         enabled: modify(data)
-                    })
+                    } : data
                 )
             }
         }

@@ -11,7 +11,7 @@ export const ActionDetailContext = createContext({
 
 export function ActionDetailProvider({children}) {
     const {id: guild, action} = useParams();
-    const query = useQuery(["action_detail", action], () =>
+    const query = useQuery(["action_detail", guild, action], () =>
         getActionDetail(guild, action)
     )
 

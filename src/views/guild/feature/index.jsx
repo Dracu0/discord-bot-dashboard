@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from "react";
 
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 // Custom components
 import { updateFeatureOptions } from "api/internal";
@@ -40,6 +40,8 @@ function FeaturePanel() {
         >
             {query.isLoading ?
                 <ConfigGridSkeleton />
+                : query.error || !query.data ?
+                <Text color="red.400">Failed to load feature configuration.</Text>
                 :
                 <FeatureConfigPanel detail={query.data} />
             }
@@ -63,10 +65,8 @@ function FeatureConfigPanel({ detail }) {
     const onSave = (changes) => updateFeatureOptions(serverId, info.id, changes);
     const onSaved = (data) => {
 
-        return client.setQueryData(["feature_detail", serverId, info.id], current => ({
-            ...current,
-            values: data
-        })
+        return client.setQueryData(["feature_detail", serverId, info.id], current => 
+            current ? { ...current, values: data } : current
         )
     }
 

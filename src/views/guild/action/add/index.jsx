@@ -66,6 +66,7 @@ function ConfigPanel() {
                     ["task_detail", guild, action, data.id.toString()],
                     data
                 )
+                client.invalidateQueries(["action_detail", guild, action])
 
                 navigate(`/guild/${guild}/actions/${action}/task/${data.id}`)
             }
