@@ -10,9 +10,9 @@ export default function Banner({image, title, description, clip = true, children
             bgImage={image}
             bgGradient={!image && "linear(135deg, brand.600 0%, brand.500 40%, accent.cyan 100%)"}
             bgSize="cover"
-            py={{base: "30px", md: "56px"}}
-            px={{base: "30px", md: "64px"}}
-            borderRadius="20px"
+            py={{base: "16px", md: "24px"}}
+            px={{base: "20px", md: "32px"}}
+            borderRadius="16px"
             position="relative"
             overflow="hidden"
             _before={{
@@ -23,47 +23,47 @@ export default function Banner({image, title, description, clip = true, children
                 right: 0,
                 bottom: 0,
                 bg: image ? "blackAlpha.400" : "transparent",
-                borderRadius: "20px",
+                borderRadius: "16px",
                 zIndex: 0,
             }}
         >
-            <Text
-                fontSize={{ base: "24px", md: "34px" }}
-                color="white"
-                mb="14px"
-                maxW={clip && {
-                    base: "100%",
-                    md: "65%",
-                    xl: "50%",
-                }}
-                fontWeight="700"
-                fontFamily="'Space Grotesk', sans-serif"
-                letterSpacing="-0.02em"
-                lineHeight={{base: "32px", md: "42px"}}
-                position="relative"
-                zIndex={1}
-            >
-                {title}
-            </Text>
-            <Text
-                fontSize="md"
-                color="white"
-                opacity="0.85"
-                maxW={clip && {
-                    base: "100%",
-                    md: "60%",
-                    xl: "46%",
-                }}
-                fontWeight="500"
-                mb="40px"
-                lineHeight="28px"
-                position="relative"
-                zIndex={1}
-            >
-                {description}
-            </Text>
-            <Flex align="center" justify="start" gap={{ base: 3, md: 4 }} wrap="wrap" position="relative" zIndex={1}>
-                {children}
+            <Flex align="center" justify="space-between" wrap="wrap" gap={3} position="relative" zIndex={1}>
+                <Flex direction="column" flex="1" minW="0">
+                    <Text
+                        fontSize={{ base: "18px", md: "22px" }}
+                        color="white"
+                        maxW={clip && {
+                            base: "100%",
+                            md: "80%",
+                        }}
+                        fontWeight="700"
+                        fontFamily="'Space Grotesk', sans-serif"
+                        letterSpacing="-0.02em"
+                        lineHeight={{base: "24px", md: "28px"}}
+                    >
+                        {title}
+                    </Text>
+                    {description && (
+                        <Text
+                            fontSize="sm"
+                            color="white"
+                            opacity="0.85"
+                            maxW={clip && {
+                                base: "100%",
+                                md: "75%",
+                            }}
+                            fontWeight="500"
+                            mt="4px"
+                            lineHeight="20px"
+                            noOfLines={2}
+                        >
+                            {description}
+                        </Text>
+                    )}
+                </Flex>
+                <Flex align="center" gap={2} flexShrink={0}>
+                    {children}
+                </Flex>
             </Flex>
         </Flex>
   );
