@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Text, Transition } from "@mantine/core";
+import { Flex, Stack, Text, Transition } from "@mantine/core";
 
 import { Action } from "components/card/Action";
 import { config } from "config/config";
@@ -17,9 +17,9 @@ export default function ActionsList() {
             >
                 <Locale zh="動作列表" en="Actions List" />
             </Text>
-            <SimpleGrid cols={{ base: 1, md: 2, xl: 2, "2xl": 3 }} spacing={20}>
+            <Stack gap={12}>
                 <Actions />
-            </SimpleGrid>
+            </Stack>
         </Flex>
     );
 }

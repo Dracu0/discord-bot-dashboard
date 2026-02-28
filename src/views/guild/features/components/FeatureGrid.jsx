@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Text, Transition } from "@mantine/core";
+import { Flex, Stack, Text, Transition } from "@mantine/core";
 import Feature from "components/card/Feature";
 import { useContext } from "react";
 
@@ -19,9 +19,9 @@ export default function FeatureGrid() {
             >
                 <Locale zh="功能列表" en="Features List" />
             </Text>
-            <SimpleGrid cols={{ base: 1, md: 2, xl: 2, "2xl": 3 }} spacing={20}>
+            <Stack gap={12}>
                 <Features />
-            </SimpleGrid>
+            </Stack>
         </Flex>
     );
 }

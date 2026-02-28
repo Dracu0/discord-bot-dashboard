@@ -12,14 +12,15 @@ export const colorTokens = {
     '--surface-primary': '#ffffff',
     '--surface-secondary': '#f8f9fa',
     '--surface-elevated': '#ffffff',
+    '--surface-card': '#ffffff',
     '--surface-overlay': 'rgba(240, 236, 247, 0.6)',
 
-    '--text-primary': 'var(--mantine-color-navy-4)',
+    '--text-primary': '#1A1523',
     '--text-secondary': '#2D2150',
     '--text-muted': '#7E72A0',
 
-    '--border-default': 'var(--mantine-color-gray-3)',
-    '--border-subtle': 'var(--mantine-color-gray-2)',
+    '--border-default': '#D0D5DD',
+    '--border-subtle': '#E4E7EC',
 
     '--accent-primary': 'var(--mantine-color-brand-5)',
     '--accent-secondary': 'var(--mantine-color-brand-3)',
@@ -45,14 +46,15 @@ export const colorTokens = {
     '--surface-primary': 'var(--mantine-color-navy-7)',
     '--surface-secondary': 'var(--mantine-color-navy-8)',
     '--surface-elevated': 'var(--mantine-color-navy-6)',
+    '--surface-card': 'var(--mantine-color-navy-6)',
     '--surface-overlay': 'rgba(26, 18, 48, 0.6)',
 
     '--text-primary': 'var(--mantine-color-white)',
-    '--text-secondary': '#A89DC0',
-    '--text-muted': '#A89DC0',
+    '--text-secondary': '#C4B8DB',
+    '--text-muted': '#9B8FBB',
 
-    '--border-default': 'rgba(139, 92, 246, 0.12)',
-    '--border-subtle': 'rgba(139, 92, 246, 0.06)',
+    '--border-default': 'rgba(139, 92, 246, 0.20)',
+    '--border-subtle': 'rgba(139, 92, 246, 0.12)',
 
     '--accent-primary': 'var(--mantine-color-brand-4)',
     '--accent-secondary': 'var(--mantine-color-brand-6)',

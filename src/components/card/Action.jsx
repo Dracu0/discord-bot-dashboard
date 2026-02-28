@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Box, Button, Flex, Group, Image, Text } from "@mantine/core";
+import { Box, Button, Flex, Group, Text } from "@mantine/core";
 import Card from "components/card/Card";
 import { Link } from "react-router-dom";
 import { GuildContext } from "contexts/guild/GuildContext";
@@ -12,35 +12,41 @@ export function Action({ id, action }) {
   const locale = useLocale();
 
   return (
-    <Card component={Link} to={configUrl} p={0} style={{ overflow: "hidden", textDecoration: "none" }}>
-      {action.banner ? (
-        <Image h={{ base: 56, md: 72 }} fit="cover" src={action.banner} />
-      ) : (
-        <Box
-          h={{ base: 56, md: 72 }}
-          style={{
-            background: "linear-gradient(135deg, var(--mantine-color-brand-6) 0%, var(--mantine-color-pink-5) 50%, var(--mantine-color-yellow-5) 100%)",
-          }}
-        />
-      )}
-      <Flex direction="column" gap={8} p={16}>
-        <Text
-          c="var(--text-primary)"
-          fz="lg"
-          fw={600}
-          ff="'Space Grotesk', sans-serif"
-        >
-          {locale(action.name)}
-        </Text>
-        <Text c="var(--text-secondary)" fz="sm" lineClamp={2} lh={1.5}>
-          {action.description}
-        </Text>
-        <Group mt={4}>
+    <Card component={Link} to={configUrl} p={0} style={{ overflow: "hidden", textDecoration: "none", display: "flex", flexDirection: "row" }}>
+      <Box
+        w={4}
+        style={{
+          flexShrink: 0,
+          background: "linear-gradient(180deg, var(--mantine-color-brand-6), var(--mantine-color-pink-5))",
+          borderRadius: "var(--radius-lg) 0 0 var(--radius-lg)",
+        }}
+      />
+
+      <Flex align="center" justify="space-between" gap="md" p={16} style={{ flex: 1, minWidth: 0 }}>
+        <Flex direction="column" gap={4} style={{ flex: 1, minWidth: 0 }}>
+          <Text
+            c="var(--text-primary)"
+            fz="lg"
+            fw={600}
+            ff="'Space Grotesk', sans-serif"
+            truncate
+          >
+            {locale(action.name)}
+          </Text>
+          <Text c="var(--text-secondary)" fz="sm" lineClamp={1} lh={1.5}>
+            {action.description}
+          </Text>
+        </Flex>
+
+        <Group style={{ flexShrink: 0 }}>
           <Button
-            variant="light"
+            variant="filled"
             color="brand"
-            size="xs"
+            size="sm"
             radius="md"
+            h={36}
+            fz="sm"
+            fw={500}
             rightSection={<IconArrowRight size={14} />}
           >
             <Locale zh="打開" en="Open" />

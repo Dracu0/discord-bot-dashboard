@@ -1,6 +1,5 @@
 import { Avatar, Group, ActionIcon, Menu, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useMantineColorScheme } from "@mantine/core";
 import UserOptionMenu from "components/menu/UserOptionMenu";
 import { SearchBar } from "components/navbar/searchBar/SearchBar";
 import { SidebarResponsive } from "components/sidebar/Sidebar";
@@ -8,6 +7,7 @@ import React, { useContext } from "react";
 import { IconMoon, IconSun, IconSettings } from "@tabler/icons-react";
 import { UserDataContext } from "contexts/UserDataContext";
 import { PageInfoContext } from "contexts/PageInfoContext";
+import { SettingsContext } from "contexts/SettingsContext";
 import { avatarToUrl } from "api/discord/DiscordApi";
 import { SettingsModal } from "../modal/SettingsModal";
 import { Notifications } from "../menu/Notifications";
@@ -15,8 +15,9 @@ import { Notifications } from "../menu/Notifications";
 const ICON_BTN = 36;
 
 export default function HeaderLinks() {
-    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+    const { colorScheme, updateSettings } = useContext(SettingsContext);
     const { routes } = useContext(PageInfoContext);
+    const isDark = colorScheme === "dark";
 
     return (
         <>
@@ -29,11 +30,11 @@ export default function HeaderLinks() {
                     color="gray"
                     radius="xl"
                     size={ICON_BTN}
-                    onClick={toggleColorScheme}
+                    onClick={() => updateSettings({ colorScheme: isDark ? "light" : "dark" })}
                     aria-label="Toggle color scheme"
                     style={{ transition: "transform 0.2s ease" }}
                 >
-                    {colorScheme === "light" ? <IconMoon size={18} /> : <IconSun size={18} />}
+                    {isDark ? <IconSun size={18} /> : <IconMoon size={18} />}
                 </ActionIcon>
                 <SettingsMenu />
                 <UserMenu />

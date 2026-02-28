@@ -58,8 +58,8 @@ export const theme = createTheme({
       defaultProps: { radius: 'lg', padding: 'lg' },
       styles: {
         root: {
-          backgroundColor: 'var(--surface-primary)',
-          border: '1px solid var(--border-subtle)',
+          backgroundColor: 'var(--surface-card)',
+          border: '1px solid var(--border-default)',
           boxShadow: 'var(--shadow-sm)',
           transition: 'all 0.2s ease-out',
           '&:hover': {
@@ -72,8 +72,8 @@ export const theme = createTheme({
       defaultProps: { radius: 'lg', p: 'lg' },
       styles: {
         root: {
-          backgroundColor: 'var(--surface-primary)',
-          border: '1px solid var(--border-subtle)',
+          backgroundColor: 'var(--surface-card)',
+          border: '1px solid var(--border-default)',
           boxShadow: 'var(--shadow-sm)',
           transition: 'all 0.2s ease-out',
         },
@@ -149,8 +149,8 @@ export const theme = createTheme({
     Menu: {
       styles: {
         dropdown: {
-          backgroundColor: 'var(--surface-primary)',
-          border: '1px solid var(--border-subtle)',
+          backgroundColor: 'var(--surface-card)',
+          border: '1px solid var(--border-default)',
           boxShadow: 'var(--shadow-lg)',
         },
       },

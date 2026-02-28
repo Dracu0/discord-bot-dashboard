@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Group, Image, Switch, Text, Title, Tooltip } from "@mantine/core";
+import { Box, Button, Flex, Group, Switch, Text, Title, Tooltip } from "@mantine/core";
 import { Link } from "react-router-dom";
 import Card from "components/card/Card";
 import React, { useContext } from "react";
@@ -20,27 +20,35 @@ export default function Feature({ banner, name, description, id: featureId, enab
       style={{
         overflow: "hidden",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         textDecoration: "none",
         opacity: canToggle && !enabled ? 0.7 : 1,
       }}
     >
-      {banner ? (
-        <Image h={{ base: 56, md: 72 }} src={banner} fit="cover" />
-      ) : (
-        <Box
-          h={{ base: 56, md: 72 }}
-          style={{
-            background: "linear-gradient(135deg, var(--mantine-color-brand-5) 0%, var(--mantine-color-brand-3) 50%, var(--mantine-color-cyan-5) 100%)",
-          }}
-        />
-      )}
+      <Box
+        w={4}
+        style={{
+          flexShrink: 0,
+          background: enabled
+            ? "var(--mantine-color-green-5)"
+            : "linear-gradient(180deg, var(--mantine-color-brand-5), var(--mantine-color-brand-3))",
+          borderRadius: "var(--radius-lg) 0 0 var(--radius-lg)",
+        }}
+      />
 
-      <Flex direction="column" gap={8} p={16} style={{ flex: 1 }}>
-        <Flex align="center" justify="space-between" gap="xs">
-          <Title order={4} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" lh={1.3}>
+      <Flex align="center" justify="space-between" gap="md" p={16} style={{ flex: 1, minWidth: 0 }}>
+        <Flex direction="column" gap={4} style={{ flex: 1, minWidth: 0 }}>
+          <Title order={4} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" lh={1.3} truncate>
             {locale(name)}
           </Title>
+          <Tooltip label={description} position="top" openDelay={500}>
+            <Text c="var(--text-secondary)" fz="sm" fw={400} lineClamp={1} lh={1.5}>
+              {description}
+            </Text>
+          </Tooltip>
+        </Flex>
+
+        <Group gap="sm" style={{ flexShrink: 0 }}>
           {canToggle && (
             <Switch
               checked={enabled}
@@ -53,17 +61,9 @@ export default function Feature({ banner, name, description, id: featureId, enab
               disabled={enableMutation.isPending}
               size="sm"
               color="green"
-              style={{ flexShrink: 0 }}
             />
           )}
-        </Flex>
-        <Tooltip label={description} position="top" openDelay={500}>
-          <Text c="var(--text-secondary)" fz="sm" fw={400} lineClamp={2} lh={1.5}>
-            {description}
-          </Text>
-        </Tooltip>
-        <Group mt="auto" pt={8}>
-          <Button variant="light" color="brand" fz="xs" radius="md" size="xs" px={16}>
+          <Button variant="filled" color="brand" size="sm" radius="md" h={36} fz="sm" fw={500}>
             <Locale zh="配置" en="Configure" />
           </Button>
         </Group>

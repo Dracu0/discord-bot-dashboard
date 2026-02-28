@@ -44,7 +44,7 @@ export default function Server({ server, ...rest }) {
 
 function InviteButton() {
     return (
-        <Button component={Link} to="/invite" target="_blank" fw={500} variant="outline" fz="sm" radius="md" size="sm">
+        <Button component={Link} to="/invite" target="_blank" variant="outline" color="brand" size="sm" radius="md" h={36} fz="sm" fw={500}>
             <Locale zh="邀請到服務器" en="Invite to Server" />
         </Button>
     );
@@ -52,7 +52,7 @@ function InviteButton() {
 
 function ConfigButton({ server }) {
     return (
-        <Button component={Link} to={`/guild/${server.id}`} fw={500} variant="filled" color="brand" fz="sm" radius="md" size="sm">
+        <Button component={Link} to={`/guild/${server.id}`} variant="filled" color="brand" size="sm" radius="md" h={36} fz="sm" fw={500}>
             <Locale zh="配置服務器" en="Customize" />
         </Button>
     );

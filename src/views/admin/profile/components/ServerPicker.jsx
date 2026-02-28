@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Text } from "@mantine/core";
+import { Flex, Stack, Text } from "@mantine/core";
 import Card from "components/card/Card";
 import React from "react";
 import Server from "views/admin/profile/components/Server";
@@ -26,11 +26,11 @@ export default function ServerPicker({ query, ...rest }) {
 
                 <SearchInput value={filter} onChange={setFilter} groupStyle={{ mt: 5, maw: 900 }} />
             </Flex>
-            <SimpleGrid cols={{ base: 1, lg: 2, "2xl": 3 }} spacing={5}>
+            <Stack gap={12}>
                 <QueryHolderSkeleton count={3} query={query}>
                     <Servers includes={includes} guilds={query.data} />
                 </QueryHolderSkeleton>
-            </SimpleGrid>
+            </Stack>
         </Card>
     );
 }
