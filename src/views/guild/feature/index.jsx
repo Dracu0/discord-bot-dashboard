@@ -36,19 +36,19 @@ function FeaturePanel() {
 
     return (
         <Flex
-            flexDirection="column"
-            mb="10"
+            direction="column"
+            mb={10}
         >
             {canToggle && !enabled && (
                 <Box
-                    bg="orange.500"
-                    color="white"
+                    bg="orange.5"
+                    c="white"
                     px={4}
                     py={3}
-                    borderRadius="12px"
                     mb={4}
-                    fontSize="sm"
-                    fontWeight="600"
+                    fz="sm"
+                    fw={600}
+                    style={{ borderRadius: 12 }}
                 >
                     <Locale
                         zh="此功能已停用。啟用後設定才會生效。"
