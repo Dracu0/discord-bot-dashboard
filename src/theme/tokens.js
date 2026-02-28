@@ -115,12 +115,48 @@ export const radiusTokens = {
   '--radius-xl': '20px',
 };
 
+// ── Z-index scale ───────────────────────────────────────────────
+export const zIndexTokens = {
+  '--z-dropdown': '100',
+  '--z-sticky': '200',
+  '--z-overlay': '300',
+  '--z-modal': '400',
+  '--z-popover': '500',
+  '--z-toast': '600',
+};
+
+// ── Typography tokens ───────────────────────────────────────────
+export const typographyTokens = {
+  '--font-body': "'DM Sans', sans-serif",
+  '--font-heading': "'Space Grotesk', 'DM Sans', sans-serif",
+  '--font-mono': "'JetBrains Mono', 'Fira Code', monospace",
+  '--line-height-tight': '1.2',
+  '--line-height-normal': '1.5',
+  '--line-height-relaxed': '1.75',
+  '--letter-spacing-tight': '-0.02em',
+  '--letter-spacing-normal': '0',
+  '--letter-spacing-wide': '0.02em',
+};
+
+// ── Animation tokens ────────────────────────────────────────────
+export const animationTokens = {
+  '--transition-fast': '0.15s ease',
+  '--transition-normal': '0.25s cubic-bezier(.4,0,.2,1)',
+  '--transition-slow': '0.4s cubic-bezier(.4,0,.2,1)',
+};
+
 /**
- * Mantine cssVariablesResolver — merges semantic, shadow, spacing
- * and radius tokens per light/dark scheme.
+ * Mantine cssVariablesResolver — merges semantic, shadow, spacing,
+ * radius, z-index, typography and animation tokens per light/dark scheme.
  */
 export function cssVariablesResolver(theme) {
-  const shared = { ...spaceTokens, ...radiusTokens };
+  const shared = {
+    ...spaceTokens,
+    ...radiusTokens,
+    ...zIndexTokens,
+    ...typographyTokens,
+    ...animationTokens,
+  };
   return {
     variables: shared,
     light: { ...colorTokens.light, ...shadowTokens.light },

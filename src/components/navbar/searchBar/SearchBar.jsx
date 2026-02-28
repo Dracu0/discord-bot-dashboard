@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Skeleton, Stack, Text, Title } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { FeaturesContext } from "contexts/FeaturesContext";
 import Feature from "../../card/Feature";
 import { useLocation } from "react-router-dom";
@@ -20,6 +20,8 @@ export function SearchBar({ ...rest }) {
     const [search, setSearch] = useState("");
     const location = useLocation();
     useEffect(close, [location.pathname, close]);
+
+    useHotkeys([["mod+K", open]]);
 
     const groupStyle = {
         w: { base: "100%", md: "200px" },
@@ -50,7 +52,7 @@ function SearchList({ search }) {
         [search]
     );
 
-    const empty = features.length === 0 || actions.length === 0;
+    const empty = features.length === 0 && actions.length === 0;
 
     return (
         <Stack gap={20}>

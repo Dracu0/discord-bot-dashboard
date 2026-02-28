@@ -3,6 +3,8 @@ import Feature from "components/card/Feature";
 import { useContext } from "react";
 
 import { FeaturesContext } from "contexts/FeaturesContext";
+import { GuildContext } from "contexts/guild/GuildContext";
+import { useEnableFeatureMutation } from "api/utils";
 import { config } from "../../../../config/config";
 import { Locale } from "../../../../utils/Language";
 
@@ -26,6 +28,21 @@ export default function FeatureGrid() {
     );
 }
 
+function FeatureWithToggle({ id, feature, enabled }) {
+    const { id: serverId } = useContext(GuildContext);
+    const mutation = useEnableFeatureMutation(serverId, id);
+
+    return (
+        <Feature
+            {...feature}
+            id={id}
+            enabled={enabled}
+            onToggle={(val) => mutation.mutate(val)}
+            isToggling={mutation.isPending}
+        />
+    );
+}
+
 function Features() {
     const { enabled } = useContext(FeaturesContext);
 
@@ -34,7 +51,7 @@ function Features() {
             enterDelay={index * 60}>
             {(styles) => (
                 <div style={styles}>
-                    <Feature {...feature} id={id} enabled={enabled.includes(id)} />
+                    <FeatureWithToggle id={id} feature={feature} enabled={enabled.includes(id)} />
                 </div>
             )}
         </Transition>

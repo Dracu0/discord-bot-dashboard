@@ -40,12 +40,22 @@ function NotificationItem({ notification }) {
 
 export default function NotificationFeed() {
   const { id: serverId } = useContext(GuildContext);
-  const { data: notifications } = useQuery({
+  const { data: notifications, isError } = useQuery({
     queryKey: ["notifications", serverId],
     queryFn: () => getNotifications(serverId),
     staleTime: 60_000,
     refetchInterval: 60_000,
   });
+
+  if (isError) {
+    return (
+      <Box mb={24}>
+        <Text fz="sm" c="var(--status-error)" fw={500}>
+          Failed to load notifications.
+        </Text>
+      </Box>
+    );
+  }
 
   if (!notifications || notifications.length === 0) return null;
 

@@ -89,7 +89,11 @@ function FeatureConfigPanel({ detail, enabled }) {
     }
 
     return (
-        <Box opacity={enabled ? 1 : 0.5} pointerEvents={enabled ? "auto" : "none"}>
+        <Box
+            component="fieldset"
+            disabled={!enabled}
+            style={{ border: "none", padding: 0, margin: 0, opacity: enabled ? 1 : 0.5 }}
+        >
             <ConfigGrid
                 onSave={onSave}
                 options={options}

@@ -15,6 +15,8 @@ function BaseAlert({ isOpen, children }) {
                 <Alert
                     icon={<IconAlertTriangle size={20} />}
                     color="yellow"
+                    role="status"
+                    aria-live="polite"
                     style={{
                         ...styles,
                         position: "fixed",

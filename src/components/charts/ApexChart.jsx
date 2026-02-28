@@ -1,34 +1,17 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 
-class ApexChart extends React.Component {
-  constructor(props) {
-    super(props);
+export default function ApexChart({ chartData, chartOptions, chartType }) {
+  const series = useMemo(() => chartData, [chartData]);
+  const options = useMemo(() => chartOptions, [chartOptions]);
 
-    this.state = {
-      chartData: [],
-      chartOptions: {},
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
-      chartData: this.props.chartData,
-      chartOptions: this.props.chartOptions,
-    });
-  }
-
-  render() {
-    return (
-      <ReactApexChart
-        options={this.state.chartOptions}
-        series={this.state.chartData}
-        type={this.props.chartType}
-        width='100%'
-        height='100%'
-      />
-    );
-  }
+  return (
+    <ReactApexChart
+      options={options}
+      series={series}
+      type={chartType}
+      width='100%'
+      height='100%'
+    />
+  );
 }
-
-export default ApexChart;

@@ -1,5 +1,5 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {fetchAuto} from "../utils";
+import {fetchAuto, resetCsrfToken} from "../utils";
 import logger from "utils/logger";
 
 export function hasLoggedIn() {
@@ -29,6 +29,7 @@ export function useLogout() {
         mutationFn: () => logout(),
         onSuccess() {
             logger.info('logged_out')
+            resetCsrfToken()
             return client.invalidateQueries({ queryKey: ["logged_in"] })
         },
         onError(error) {

@@ -73,10 +73,10 @@ function EmojiPicker({ data, onChange }) {
   return (
     <Box
       style={{
-        "--rgb-background": bg,
-        "--rgb-accent": brand,
-        "--rgb-input": bg,
-        "--rgb-color": textColor,
+        "--rgb-background": "var(--surface-card)",
+        "--rgb-accent": "var(--accent-primary)",
+        "--rgb-input": "var(--surface-secondary)",
+        "--rgb-color": "var(--text-primary)",
       }}
     >
       <div ref={ref} style={{ width: "100%" }} />

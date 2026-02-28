@@ -3,18 +3,43 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {setFeatureEnabled} from "../internal";
 import logger from "utils/logger";
 
+// CSRF token management — fetched once, included in all state-changing requests
+let csrfToken = null;
+let csrfFetching = null;
+
+async function ensureCsrfToken() {
+    if (csrfToken) return csrfToken;
+    if (csrfFetching) return csrfFetching;
+    csrfFetching = fetch(`${config.serverUrl}/csrf-token`, { credentials: 'include' })
+        .then(r => r.json())
+        .then(data => { csrfToken = data.token; csrfFetching = null; return csrfToken; })
+        .catch(() => { csrfFetching = null; return null; });
+    return csrfFetching;
+}
+
+// Reset CSRF token on auth change (e.g. logout)
+export function resetCsrfToken() { csrfToken = null; }
+
 export function fetchAuto(url, {toJson = false, throwError = true, ...options} = {}) {
     const requestId = logger.createRequestId()
     const startedAt = Date.now()
-    const request = fetch(`${config.serverUrl}${url}`, {
+    const method = (options.method || 'GET').toUpperCase();
+    const needsCsrf = !['GET', 'HEAD', 'OPTIONS'].includes(method);
+
+    const doFetch = (token) => fetch(`${config.serverUrl}${url}`, {
         credentials: "include",
         headers: {
             'content-type': 'application/json',
             'x-request-id': requestId,
+            ...(token ? { 'x-csrf-token': token } : {}),
             ...(options.headers || {})
         },
         ...options
-    })
+    });
+
+    const request = needsCsrf
+        ? ensureCsrfToken().then(token => doFetch(token))
+        : doFetch(null);
     let mapper
 
     if (toJson) {

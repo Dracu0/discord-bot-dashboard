@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback, useSyncExternalStore } from 'react';
+import { config } from 'config/config';
 
 const WS_RECONNECT_DELAY = 3000;
 const WS_MAX_RECONNECT_DELAY = 30000;
@@ -10,14 +11,20 @@ let botStatus = null;
 let statusListeners = new Set();
 let reconnectTimer = null;
 let reconnectDelay = WS_RECONNECT_DELAY;
+let subscribedGuilds = new Set();
 
 function getWsUrl() {
     const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
     if (import.meta.env.PROD) {
         return `${proto}://${window.location.host}/ws`;
     }
-    // Development: dashboard server runs on port 8080
-    return `${proto}://${window.location.hostname}:8080/ws`;
+    // Development: derive from serverUrl config (handles custom ports/hosts)
+    try {
+        const serverOrigin = new URL(config.serverUrl, window.location.href);
+        return `${proto}://${serverOrigin.host}/ws`;
+    } catch {
+        return `${proto}://${window.location.hostname}:8080/ws`;
+    }
 }
 
 function connect() {
@@ -34,6 +41,10 @@ function connect() {
 
     ws.onopen = () => {
         reconnectDelay = WS_RECONNECT_DELAY;
+        // Re-subscribe to any guilds after reconnect
+        for (const guildId of subscribedGuilds) {
+            wsSend({ type: 'subscribe_guild', guildId });
+        }
     };
 
     ws.onmessage = (event) => {
@@ -55,8 +66,8 @@ function connect() {
         }
     };
 
-    ws.onerror = () => {
-        // onclose will fire after onerror
+    ws.onerror = (err) => {
+        console.warn('[WS] Connection error', err);
     };
 }
 
@@ -73,6 +84,23 @@ function ensureConnected() {
     if (!ws || ws.readyState > WebSocket.OPEN) {
         connect();
     }
+}
+
+function wsSend(payload) {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(payload));
+    }
+}
+
+/** Subscribe to config invalidation events for a guild (server-side filtering) */
+function subscribeGuild(guildId) {
+    subscribedGuilds.add(guildId);
+    wsSend({ type: 'subscribe_guild', guildId });
+}
+
+function unsubscribeGuild(guildId) {
+    subscribedGuilds.delete(guildId);
+    wsSend({ type: 'unsubscribe_guild', guildId });
 }
 
 /**
@@ -122,10 +150,17 @@ export function useBotStatus() {
 /**
  * Subscribe to config invalidation events for a specific guild.
  * Calls `onInvalidate` when the bot's config for `guildId` changes.
+ * Also subscribes on the server side so only relevant events are broadcast.
  */
 export function useConfigInvalidation(guildId, onInvalidate) {
     const cbRef = useRef(onInvalidate);
     cbRef.current = onInvalidate;
+
+    useEffect(() => {
+        if (!guildId) return;
+        subscribeGuild(guildId);
+        return () => unsubscribeGuild(guildId);
+    }, [guildId]);
 
     useWebSocket(useCallback((event) => {
         if (event.type === 'config:invalidate' && event.guildId === guildId) {

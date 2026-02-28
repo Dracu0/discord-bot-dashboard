@@ -1,61 +1,105 @@
 const { REST, Routes } = require('discord.js');
+const logger = require('./logger');
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
+
+// Cache for bot guild IDs — refreshed every 5 minutes
+let botGuildIdsCache = null;
+let botGuildIdsCacheTime = 0;
+const BOT_GUILD_CACHE_TTL = 5 * 60 * 1000;
 
 /**
  * Fetch guild info via the Discord Bot API
  */
 async function fetchGuild(guildId) {
-    return rest.get(Routes.guild(guildId), {
-        query: new URLSearchParams({ with_counts: 'true' }),
-    });
+    try {
+        return await rest.get(Routes.guild(guildId), {
+            query: new URLSearchParams({ with_counts: 'true' }),
+        });
+    } catch (err) {
+        logger.error('discord_api_fetch_guild_failed', { guildId, error: err.message, status: err.status });
+        throw err;
+    }
 }
 
 /**
  * Fetch guild channels via the Discord Bot API
  */
 async function fetchGuildChannels(guildId) {
-    return rest.get(Routes.guildChannels(guildId));
+    try {
+        return await rest.get(Routes.guildChannels(guildId));
+    } catch (err) {
+        logger.error('discord_api_fetch_channels_failed', { guildId, error: err.message, status: err.status });
+        return [];
+    }
 }
 
 /**
  * Fetch guild roles via the Discord Bot API
  */
 async function fetchGuildRoles(guildId) {
-    return rest.get(Routes.guildRoles(guildId));
+    try {
+        return await rest.get(Routes.guildRoles(guildId));
+    } catch (err) {
+        logger.error('discord_api_fetch_roles_failed', { guildId, error: err.message, status: err.status });
+        return [];
+    }
 }
 
 /**
- * Fetch all guild IDs the bot is in (paginated, single/few API calls instead of N).
+ * Fetch all guild IDs the bot is in (paginated), with 5-minute cache.
  */
 async function fetchBotGuildIds() {
-    const ids = new Set();
-    let after = '0';
-    while (true) {
-        const batch = await rest.get(Routes.userGuilds(), {
-            query: new URLSearchParams({ limit: '200', after }),
-        });
-        for (const g of batch) ids.add(g.id);
-        if (batch.length < 200) break;
-        after = batch[batch.length - 1].id;
+    const now = Date.now();
+    if (botGuildIdsCache && (now - botGuildIdsCacheTime) < BOT_GUILD_CACHE_TTL) {
+        return botGuildIdsCache;
     }
-    return ids;
+
+    try {
+        const ids = new Set();
+        let after = '0';
+        while (true) {
+            const batch = await rest.get(Routes.userGuilds(), {
+                query: new URLSearchParams({ limit: '200', after }),
+            });
+            for (const g of batch) ids.add(g.id);
+            if (batch.length < 200) break;
+            after = batch[batch.length - 1].id;
+        }
+        botGuildIdsCache = ids;
+        botGuildIdsCacheTime = now;
+        return ids;
+    } catch (err) {
+        logger.error('discord_api_fetch_bot_guilds_failed', { error: err.message });
+        // Return stale cache if available, otherwise empty set
+        return botGuildIdsCache || new Set();
+    }
 }
 
 /**
  * Fetch guild member via the Discord Bot API
  */
 async function fetchGuildMember(guildId, userId) {
-    return rest.get(Routes.guildMember(guildId, userId));
+    try {
+        return await rest.get(Routes.guildMember(guildId, userId));
+    } catch (err) {
+        logger.error('discord_api_fetch_member_failed', { guildId, userId, error: err.message, status: err.status });
+        return null;
+    }
 }
 
 /**
  * Fetch guild members (up to 1000)
  */
 async function fetchGuildMembers(guildId, limit = 100) {
-    return rest.get(Routes.guildMembers(guildId), {
-        query: new URLSearchParams({ limit: String(limit) }),
-    });
+    try {
+        return await rest.get(Routes.guildMembers(guildId), {
+            query: new URLSearchParams({ limit: String(limit) }),
+        });
+    } catch (err) {
+        logger.error('discord_api_fetch_members_failed', { guildId, error: err.message, status: err.status });
+        return [];
+    }
 }
 
 module.exports = {

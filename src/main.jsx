@@ -12,6 +12,7 @@ import 'assets/css/App.css';
 import { hasLoggedIn } from './api/internal';
 import { QueryHolder } from './contexts/components/AsyncContext';
 import { SettingsContext, SettingsProvider } from './contexts/SettingsContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { config } from './config/config';
 import { theme } from './theme/theme';
 import GuildBoard, { GuildRoutes } from 'layouts/guild';
@@ -103,13 +104,15 @@ function AppRouter() {
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <MantineProvider theme={theme} defaultColorScheme="auto">
-      <Notifications position="top-right" />
-      <QueryClientProvider client={queryClient}>
-        <SettingsProvider>
-          <AppRouter />
-        </SettingsProvider>
-      </QueryClientProvider>
-    </MantineProvider>
+    <ErrorBoundary>
+      <MantineProvider theme={theme} defaultColorScheme="auto">
+        <Notifications position="top-right" />
+        <QueryClientProvider client={queryClient}>
+          <SettingsProvider>
+            <AppRouter />
+          </SettingsProvider>
+        </QueryClientProvider>
+      </MantineProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

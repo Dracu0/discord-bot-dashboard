@@ -14,8 +14,8 @@ router.get('/', async (req, res) => {
             name: guild.name,
             icon: guild.icon,
             owner_id: guild.owner_id,
-            member_count: guild.approximate_member_count,
-            presence_count: guild.approximate_presence_count,
+            member_count: guild.approximate_member_count ?? 0,
+            presence_count: guild.approximate_presence_count ?? 0,
         });
     } catch (err) {
         req.log?.error('guild_fetch_failed', { guildId: req.params.id, error: err });

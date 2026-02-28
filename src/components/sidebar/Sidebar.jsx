@@ -41,6 +41,7 @@ function Sidebar({ routes }) {
               size="md"
               onClick={toggle}
               aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-expanded={!sidebarCollapsed}
             >
               {sidebarCollapsed ? <IconChevronsRight size={18} /> : <IconChevronsLeft size={18} />}
             </ActionIcon>

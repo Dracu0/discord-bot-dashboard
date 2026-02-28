@@ -4,12 +4,10 @@ import Card from "components/card/Card";
 import React, { useContext } from "react";
 import { GuildContext } from "../../contexts/guild/GuildContext";
 import { Locale, useLocale } from "../../utils/Language";
-import { useEnableFeatureMutation } from "../../api/utils";
 
-export default function Feature({ banner, name, description, id: featureId, enabled, canToggle }) {
+export default function Feature({ banner, name, description, id: featureId, enabled, canToggle, onToggle, isToggling }) {
   const { id: serverId } = useContext(GuildContext);
   const configUrl = `/guild/${serverId}/features/${featureId}`;
-  const enableMutation = useEnableFeatureMutation(serverId, featureId);
   const locale = useLocale();
 
   return (
@@ -55,10 +53,10 @@ export default function Feature({ banner, name, description, id: featureId, enab
               onChange={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                enableMutation.mutate(!enabled);
+                onToggle?.(!enabled);
               }}
               onClick={(e) => e.preventDefault()}
-              disabled={enableMutation.isPending}
+              disabled={isToggling}
               size="sm"
               color="green"
             />

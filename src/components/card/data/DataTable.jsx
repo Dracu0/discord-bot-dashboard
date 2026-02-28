@@ -1,13 +1,17 @@
-import { Center, Flex, Table, Text } from "@mantine/core";
+import { ActionIcon, Center, Flex, Group, Table, Text } from "@mantine/core";
 import React from "react";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { IconArrowUp, IconArrowDown } from "@tabler/icons-react";
+import { IconArrowUp, IconArrowDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
 import Card from "components/card/Card";
 
 export default function DataTable({ name, data, columns }) {
   const tableInstance = useTable(
-    { columns, data },
+    {
+      columns,
+      data,
+      initialState: { pageSize: 10 },
+    },
     useGlobalFilter,
     useSortBy,
     usePagination
@@ -19,9 +23,14 @@ export default function DataTable({ name, data, columns }) {
     headerGroups,
     page,
     prepareRow,
-    initialState,
+    canPreviousPage,
+    canNextPage,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    state: { pageIndex },
   } = tableInstance;
-  initialState.pageSize = 11;
 
   return (
     <Card w="100%" px={0} style={{ overflowX: "auto" }}>
@@ -105,6 +114,35 @@ export default function DataTable({ name, data, columns }) {
           )}
         </Table.Tbody>
       </Table>
+
+      {/* Pagination controls */}
+      {pageCount > 1 && (
+        <Flex justify="space-between" align="center" px={{ base: 16, md: 25 }} py={12}>
+          <Text fz="sm" c="var(--text-muted)">
+            Page {pageIndex + 1} of {pageCount}
+          </Text>
+          <Group gap={4}>
+            <ActionIcon
+              variant="subtle"
+              color="gray"
+              disabled={!canPreviousPage}
+              onClick={() => previousPage()}
+              aria-label="Previous page"
+            >
+              <IconChevronLeft size={16} />
+            </ActionIcon>
+            <ActionIcon
+              variant="subtle"
+              color="gray"
+              disabled={!canNextPage}
+              onClick={() => nextPage()}
+              aria-label="Next page"
+            >
+              <IconChevronRight size={16} />
+            </ActionIcon>
+          </Group>
+        </Flex>
+      )}
     </Card>
   );
 }

@@ -3,8 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteTask } from "api/internal";
 import Card from "components/card/Card";
 import { Box, Button, Flex, Group, Stack, Text } from "@mantine/core";
-import React from "react";
+import React, { useState } from "react";
 import { Locale } from "utils/Language";
+import Modal from "components/modal/Modal";
 
 function useDeleteMutation(guild, action, task) {
     const client = useQueryClient();
@@ -25,6 +26,7 @@ function useDeleteMutation(guild, action, task) {
 
 export function Task({ task }) {
     const { id: guild, action } = useParams();
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     const deleteMutation = useDeleteMutation(guild, action, task.id);
 
@@ -33,6 +35,37 @@ export function Task({ task }) {
 
     return (
         <Card p={5} gap={5}>
+            <Modal
+                isOpen={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+                size="sm"
+                header={{ zh: "確認刪除", en: "Confirm Delete" }}
+            >
+                <Stack gap="md">
+                    <Text fz="sm">
+                        <Locale
+                            zh={`確定要刪除任務「${task.name}」嗎？此操作無法撤銷。`}
+                            en={`Are you sure you want to delete task "${task.name}"? This action cannot be undone.`}
+                        />
+                    </Text>
+                    <Group justify="flex-end">
+                        <Button variant="default" onClick={() => setConfirmOpen(false)}>
+                            <Locale zh="取消" en="Cancel" />
+                        </Button>
+                        <Button
+                            color="red"
+                            onClick={() => {
+                                deleteMutation.mutate();
+                                setConfirmOpen(false);
+                            }}
+                            loading={deleteMutation.isPending}
+                        >
+                            <Locale zh="刪除" en="Delete" />
+                        </Button>
+                    </Group>
+                </Stack>
+            </Modal>
+
             <Flex direction="row" gap={5}>
                 <Stack align="flex-start" gap={0}>
                     <Text fz="lg" fw="bold">
@@ -50,7 +83,7 @@ export function Task({ task }) {
                     ml="auto"
                     variant="filled"
                     color="red"
-                    onClick={() => deleteMutation.mutate()}
+                    onClick={() => setConfirmOpen(true)}
                     loading={deleteMutation.isPending}
                 >
                     <Locale zh="刪除" en="Delete" />

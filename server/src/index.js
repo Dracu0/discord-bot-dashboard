@@ -1,4 +1,5 @@
 require('dotenv').config();
+const crypto = require('crypto');
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -10,6 +11,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const logger = require('./utils/logger');
 const { requestContext } = require('./middleware/requestContext');
+const { csrfProtection, generateCsrfToken } = require('./middleware/csrf');
 const { startWebSocketServer, stopWebSocketServer } = require('./utils/websocket');
 const { closeRedis } = require('./utils/redis');
 
@@ -60,16 +62,20 @@ if (IS_PRODUCTION) {
     app.set('trust proxy', 1);
 }
 
-// Security — in production, relax CSP to allow the React app's inline scripts/styles
+// Security — nonce-based CSP for inline styles (eliminates 'unsafe-inline')
+app.use((req, res, next) => {
+    res.locals.cspNonce = crypto.randomBytes(16).toString('base64');
+    next();
+});
 app.use(helmet({
     contentSecurityPolicy: IS_PRODUCTION ? {
         directives: {
             defaultSrc: ["'self'"],
             scriptSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            styleSrc: ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`, "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
             imgSrc: ["'self'", "data:", "https://cdn.discordapp.com"],
-            connectSrc: ["'self'"],
+            connectSrc: ["'self'", "wss:"],
         },
     } : false,
 }));
@@ -122,7 +128,7 @@ async function connectWithRetry() {
 connectWithRetry();
 
 // Session store in MongoDB
-app.use(session({
+const sessionMiddleware = session({
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -138,6 +144,9 @@ app.use(session({
         secure: IS_PRODUCTION,
     },
 }));
+app.use(sessionMiddleware);
+// Expose session middleware for WebSocket authentication
+app._sessionMiddleware = sessionMiddleware;
 
 // Passport (Discord OAuth2)
 configurePassport(passport, {
@@ -148,10 +157,13 @@ configurePassport(passport, {
 app.use(passport.initialize());
 app.use(passport.session());
 
-// API Routes
-app.use('/api/auth', authRoutes);
+// CSRF token endpoint — clients GET this before making state-changing requests
+app.get('/api/csrf-token', generateCsrfToken);
+
+// Apply CSRF protection to all state-changing API routes
+app.use('/api/auth', csrfProtection, authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/guild', guildRoutes);
+app.use('/api/guild', csrfProtection, guildRoutes);
 app.use('/api/guilds', userRoutes);
 
 // Health check
