@@ -104,15 +104,15 @@ function AppRouter() {
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <MantineProvider theme={theme} defaultColorScheme="auto">
+    <MantineProvider theme={theme} defaultColorScheme="auto">
+      <ErrorBoundary>
         <Notifications position="top-right" />
         <QueryClientProvider client={queryClient}>
           <SettingsProvider>
             <AppRouter />
           </SettingsProvider>
         </QueryClientProvider>
-      </MantineProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </MantineProvider>
   </React.StrictMode>
 );

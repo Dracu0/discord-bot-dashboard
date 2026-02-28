@@ -15,6 +15,7 @@ let subscribedGuilds = new Set();
 // Presence state
 let presenceByGuild = {}; // { [guildId]: [{userId, username, avatar, page}] }
 let presenceListeners = new Set();
+const EMPTY_PRESENCE = []; // Stable reference to avoid useSyncExternalStore infinite loops
 
 function getWsUrl() {
     const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
@@ -207,7 +208,7 @@ export function usePresence(guildId, page) {
     }, []);
 
     const getPresenceSnapshot = useCallback(
-        () => presenceByGuild[guildId] || [],
+        () => presenceByGuild[guildId] || EMPTY_PRESENCE,
         [guildId]
     );
 

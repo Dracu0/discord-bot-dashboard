@@ -34,9 +34,9 @@ function parseSession(httpServer, req) {
  * @param {import('http').Server} httpServer
  */
 function startWebSocketServer(httpServer) {
-    if (!process.env.REDIS_URL) {
-        logger.info('websocket_skipped', { reason: 'REDIS_URL not configured' });
-        return;
+    const hasRedis = !!process.env.REDIS_URL;
+    if (!hasRedis) {
+        logger.info('websocket_no_redis', { reason: 'REDIS_URL not configured — WS will work without pub/sub' });
     }
 
     wss = new WebSocketServer({
@@ -124,26 +124,28 @@ function startWebSocketServer(httpServer) {
 
     wss.on('close', () => clearInterval(heartbeat));
 
-    // Subscribe to Redis channels
-    const sub = getSubscriber();
-    if (sub) {
-        sub.subscribe('bot:status', 'config:invalidate', (err) => {
-            if (err) {
-                logger.warn('ws_redis_subscribe_failed', { error: err.message });
-                return;
-            }
-            logger.info('ws_redis_subscribed', { channels: ['bot:status', 'config:invalidate'] });
-        });
+    // Subscribe to Redis channels (only when Redis is available)
+    if (hasRedis) {
+        const sub = getSubscriber();
+        if (sub) {
+            sub.subscribe('bot:status', 'config:invalidate', (err) => {
+                if (err) {
+                    logger.warn('ws_redis_subscribe_failed', { error: err.message });
+                    return;
+                }
+                logger.info('ws_redis_subscribed', { channels: ['bot:status', 'config:invalidate'] });
+            });
 
-        sub.on('message', (channel, message) => {
-            if (channel === 'bot:status') {
-                // Bot status goes to all clients
-                broadcast({ type: 'bot:status', data: tryParse(message) });
-            } else if (channel === 'config:invalidate') {
-                // Config invalidation — only send to clients subscribed to this guild
-                broadcastToGuild(message, { type: 'config:invalidate', guildId: message });
-            }
-        });
+            sub.on('message', (channel, message) => {
+                if (channel === 'bot:status') {
+                    // Bot status goes to all clients
+                    broadcast({ type: 'bot:status', data: tryParse(message) });
+                } else if (channel === 'config:invalidate') {
+                    // Config invalidation — only send to clients subscribed to this guild
+                    broadcastToGuild(message, { type: 'config:invalidate', guildId: message });
+                }
+            });
+        }
     }
 
     logger.info('websocket_server_started', { path: '/ws' });
