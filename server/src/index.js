@@ -143,7 +143,7 @@ const sessionMiddleware = session({
         sameSite: 'lax',
         secure: IS_PRODUCTION,
     },
-}));
+});
 app.use(sessionMiddleware);
 // Expose session middleware for WebSocket authentication
 app._sessionMiddleware = sessionMiddleware;
