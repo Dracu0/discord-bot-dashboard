@@ -12,7 +12,9 @@ RUN npm ci
 # Copy frontend source and build
 COPY public/ public/
 COPY src/ src/
+COPY index.html ./
 COPY jsconfig.json ./
+COPY vite.config.js ./
 
 ENV NODE_ENV=production
 ENV INLINE_RUNTIME_CHUNK=false
