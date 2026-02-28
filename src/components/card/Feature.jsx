@@ -1,7 +1,9 @@
 import { Box, Button, Flex, Group, Switch, Text, Title, Tooltip } from "@mantine/core";
 import { Link } from "react-router-dom";
 import Card from "components/card/Card";
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { getFeatureDetail } from "api/internal";
 import { GuildContext } from "../../contexts/guild/GuildContext";
 import { Locale, useLocale } from "../../utils/Language";
 
@@ -9,10 +11,20 @@ export default function Feature({ banner, name, description, id: featureId, enab
   const { id: serverId } = useContext(GuildContext);
   const configUrl = `/guild/${serverId}/features/${featureId}`;
   const locale = useLocale();
+  const queryClient = useQueryClient();
+
+  const prefetch = useCallback(() => {
+    queryClient.prefetchQuery({
+      queryKey: ["feature_detail", serverId, featureId],
+      queryFn: () => getFeatureDetail(serverId, featureId),
+      staleTime: 30_000,
+    });
+  }, [queryClient, serverId, featureId]);
 
   return (
     <Card
       component={Link}
+      onMouseEnter={prefetch}
       to={configUrl}
       p={0}
       style={{

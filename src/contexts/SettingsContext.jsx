@@ -8,6 +8,7 @@ export const SettingsContext = createContext({
     language: "en",
     colorScheme: "auto",
     sidebarCollapsed: false,
+    accentColor: "brand",
 })
 
 export function SettingsProvider({children}) {
@@ -18,6 +19,7 @@ export function SettingsProvider({children}) {
         language: getItem("lang", "en"),
         colorScheme: getItem("colorScheme", "auto"),
         sidebarCollapsed: getItem("sidebarCollapsed", false),
+        accentColor: getItem("accentColor", "brand"),
         updateSettings: (v) => {
             setSetting(prev => ({
                 ...prev,
@@ -32,6 +34,7 @@ export function SettingsProvider({children}) {
             localStorage.setItem("fixedWidth", settings.fixedWidth)
             localStorage.setItem("colorScheme", JSON.stringify(settings.colorScheme))
             localStorage.setItem("sidebarCollapsed", JSON.stringify(settings.sidebarCollapsed))
+            localStorage.setItem("accentColor", JSON.stringify(settings.accentColor))
             setColorScheme(settings.colorScheme)
         },
         [settings, setColorScheme]

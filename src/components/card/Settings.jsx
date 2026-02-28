@@ -1,5 +1,5 @@
-import { Text, SegmentedControl, Stack, Group } from "@mantine/core";
-import { IconSun, IconMoon, IconDeviceDesktop } from "@tabler/icons-react";
+import { Text, SegmentedControl, Stack, Group, ColorSwatch, Button, Tooltip } from "@mantine/core";
+import { IconSun, IconMoon, IconDeviceDesktop, IconDownload } from "@tabler/icons-react";
 import Card from "components/card/Card";
 import SwitchField from "components/fields/impl/SwitchField";
 import { useContext } from "react";
@@ -7,8 +7,17 @@ import { SettingsContext } from "contexts/SettingsContext";
 import { SelectField } from "components/fields/SelectField";
 import { Languages, Locale, useLocale } from "utils/Language";
 
+const ACCENT_COLORS = [
+  { value: "brand", color: "#8B5CF6" },
+  { value: "blue", color: "#3B82F6" },
+  { value: "teal", color: "#14B8A6" },
+  { value: "green", color: "#10B981" },
+  { value: "orange", color: "#F59E0B" },
+  { value: "pink", color: "#EC4899" },
+];
+
 export default function Settings({ ...rest }) {
-  const { updateSettings, devMode, fixedWidth, language, colorScheme } = useContext(SettingsContext);
+  const { updateSettings, devMode, fixedWidth, language, colorScheme, accentColor } = useContext(SettingsContext);
   const locale = useLocale();
 
   const Switch = ({ label, isChecked, onChange, ...props }) => {
@@ -23,6 +32,17 @@ export default function Settings({ ...rest }) {
         {...props}
       />
     );
+  };
+
+  const handleExportSettings = () => {
+    const data = { language, fixedWidth, devMode, colorScheme, accentColor };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "dashboard-settings.json";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -58,6 +78,29 @@ export default function Settings({ ...rest }) {
             size="xs"
           />
         </Group>
+        <Group justify="space-between" align="center">
+          <Text fz="sm" c="var(--text-primary)" fw={500}>
+            <Locale zh="強調色" en="Accent Color" />
+          </Text>
+          <Group gap={6}>
+            {ACCENT_COLORS.map(({ value, color }) => (
+              <Tooltip key={value} label={value} position="top">
+                <ColorSwatch
+                  color={color}
+                  size={22}
+                  onClick={() => updateSettings({ accentColor: value })}
+                  style={{
+                    cursor: "pointer",
+                    outline: (accentColor || "brand") === value
+                      ? "2px solid var(--text-primary)"
+                      : "2px solid transparent",
+                    outlineOffset: 2,
+                  }}
+                />
+              </Tooltip>
+            ))}
+          </Group>
+        </Group>
       </Stack>
 
       {/* General */}
@@ -86,7 +129,7 @@ export default function Settings({ ...rest }) {
       </Stack>
 
       {/* Language */}
-      <Stack gap="sm">
+      <Stack gap="sm" mb={20}>
         <Text fz="sm" fw={600} c="var(--text-muted)" tt="uppercase" lts="0.5px">
           <Locale zh="語言" en="Language" />
         </Text>
@@ -99,6 +142,22 @@ export default function Settings({ ...rest }) {
             })
           }
         />
+      </Stack>
+
+      {/* Data */}
+      <Stack gap="sm">
+        <Text fz="sm" fw={600} c="var(--text-muted)" tt="uppercase" lts="0.5px">
+          <Locale zh="資料" en="Data" />
+        </Text>
+        <Button
+          variant="light"
+          color="gray"
+          size="sm"
+          leftSection={<IconDownload size={16} />}
+          onClick={handleExportSettings}
+        >
+          <Locale zh="匯出設定" en="Export Settings" />
+        </Button>
       </Stack>
     </Card>
   );

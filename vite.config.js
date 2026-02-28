@@ -43,5 +43,15 @@ export default defineConfig({
   build: {
     outDir: 'build',
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-mantine': ['@mantine/core', '@mantine/hooks'],
+          'vendor-charts': ['apexcharts', 'react-apexcharts'],
+          'vendor-emoji': ['emoji-mart'],
+          'vendor-query': ['@tanstack/react-query'],
+        },
+      },
+    },
   },
 });

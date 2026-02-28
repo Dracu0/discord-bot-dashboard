@@ -1,4 +1,4 @@
-import { Box, Divider, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Box, Divider, SimpleGrid, Stack, Text, Title, Group } from "@mantine/core";
 import React, { useContext, useMemo } from "react";
 import { usePageInfo } from "../../../contexts/PageInfoContext";
 import { GuildDetailContext, ServerDetailProvider } from "../../../contexts/guild/GuildDetailContext";
@@ -13,6 +13,8 @@ import { useLocale, Locale } from "utils/Language";
 import { PAGE_PT } from "utils/layout-tokens";
 import NotificationFeed from "components/card/NotificationFeed";
 import { UserDataContext } from "contexts/UserDataContext";
+import BotStatusIndicator from "components/card/BotStatusIndicator";
+import QuickActions from "components/card/QuickActions";
 
 export default function Dashboard() {
     const locale = useLocale()
@@ -40,17 +42,23 @@ export function UserReports() {
         <Box pt={PAGE_PT}>
             {user && (
                 <Box mb={24}>
-                    <Title order={2} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" fw={700}>
-                        <Locale
-                            zh={`歡迎回來, ${user.username}`}
-                            en={`Welcome back, ${user.username}`}
-                        />
-                    </Title>
-                    <Text c="var(--text-secondary)" fz="sm" mt={4}>
-                        <Locale zh="這是您伺服器的概覽" en="Here's an overview of your server" />
-                    </Text>
+                    <Group justify="space-between" align="flex-start" wrap="wrap" gap="sm">
+                        <Box>
+                            <Title order={2} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" fw={700}>
+                                <Locale
+                                    zh={`歡迎回來, ${user.username}`}
+                                    en={`Welcome back, ${user.username}`}
+                                />
+                            </Title>
+                            <Text c="var(--text-secondary)" fz="sm" mt={4}>
+                                <Locale zh="這是您伺服器的概覽" en="Here's an overview of your server" />
+                            </Text>
+                        </Box>
+                        <BotStatusIndicator />
+                    </Group>
                 </Box>
             )}
+            <QuickActions />
             <NotificationFeed />
             <Stack gap={32} align="stretch">
                 {data.map((row, key) => {

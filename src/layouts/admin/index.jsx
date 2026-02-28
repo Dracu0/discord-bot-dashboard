@@ -8,7 +8,7 @@ export default function Dashboard() {
   document.documentElement.dir = "ltr";
 
   return (
-    <Box mih="100vh" pos="relative" px={{ base: 16, sm: 20, md: 80, xl: 120 }}>
+    <Box mih="100vh" pos="relative" px={{ base: 16, sm: 20, md: 40, lg: 80, xl: 120 }}>
       <UserDataProvider>
         <Profile />
         <Box>
