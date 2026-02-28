@@ -103,3 +103,26 @@ export async function getNotifications(serverId) {
     toJson: true
   })
 }
+
+/**
+ * get Audit Log entries for a server
+ */
+export async function getAuditLog(serverId, { page = 1, category, action, actorId } = {}) {
+  const params = new URLSearchParams({ page: String(page) });
+  if (category) params.set('category', category);
+  if (action) params.set('action', action);
+  if (actorId) params.set('actorId', actorId);
+
+  return fetchAuto(`/guild/${serverId}/audit-log?${params}`, {
+    toJson: true
+  })
+}
+
+/**
+ * Get analytics data for a server
+ */
+export async function getAnalytics(serverId, days = 30) {
+  return fetchAuto(`/guild/${serverId}/analytics?days=${days}`, {
+    toJson: true
+  })
+}

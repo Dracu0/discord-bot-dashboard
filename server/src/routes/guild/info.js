@@ -3,6 +3,7 @@ const GuildConfiguration = require('../../models/GuildConfiguration');
 const Level = require('../../models/Level');
 const ModLog = require('../../models/ModLog');
 const Suggestion = require('../../models/Suggestion');
+const AuditLog = require('../../models/AuditLog');
 const { fetchGuild, fetchGuildChannels, fetchGuildRoles } = require('../../utils/discord');
 
 // GET /guild/:id
@@ -170,6 +171,153 @@ router.get('/leaderboard', async (req, res) => {
     } catch (err) {
         req.log?.error('guild_leaderboard_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch leaderboard' });
+    }
+});
+
+const Ticket = require('../../models/Ticket');
+
+// GET /guild/:id/analytics
+router.get('/analytics', async (req, res) => {
+    try {
+        const guildId = req.params.id;
+        const days = Math.min(90, Math.max(7, parseInt(req.query.days) || 30));
+        const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+        const [
+            modActionsByDay,
+            modActionsByType,
+            suggestionsByStatus,
+            xpDistribution,
+            ticketStats,
+            auditByCategory,
+        ] = await Promise.all([
+            // Mod actions grouped by day
+            ModLog.aggregate([
+                { $match: { guildId, createdAt: { $gte: since } } },
+                { $group: {
+                    _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+                    count: { $sum: 1 },
+                }},
+                { $sort: { _id: 1 } },
+            ]),
+            // Mod actions grouped by type
+            ModLog.aggregate([
+                { $match: { guildId, createdAt: { $gte: since } } },
+                { $group: { _id: '$action', count: { $sum: 1 } } },
+                { $sort: { count: -1 } },
+            ]),
+            // Suggestions by status
+            Suggestion.aggregate([
+                { $match: { guildId } },
+                { $group: { _id: '$status', count: { $sum: 1 } } },
+            ]),
+            // XP level distribution (buckets)
+            Level.aggregate([
+                { $match: { guildId } },
+                { $bucket: {
+                    groupBy: '$Level',
+                    boundaries: [0, 5, 10, 20, 30, 50, 100],
+                    default: '100+',
+                    output: { count: { $sum: 1 } },
+                }},
+            ]),
+            // Ticket stats
+            Promise.all([
+                Ticket.countDocuments({ guildId, status: 'open' }),
+                Ticket.countDocuments({ guildId, status: 'closed', closedAt: { $gte: since } }),
+                Ticket.aggregate([
+                    { $match: { guildId, status: 'closed', closedAt: { $ne: null } } },
+                    { $project: { resolutionTime: { $subtract: ['$closedAt', '$createdAt'] } } },
+                    { $group: { _id: null, avg: { $avg: '$resolutionTime' } } },
+                ]),
+            ]),
+            // Audit log by category
+            AuditLog.aggregate([
+                { $match: { guildId, createdAt: { $gte: since } } },
+                { $group: { _id: '$category', count: { $sum: 1 } } },
+                { $sort: { count: -1 } },
+            ]),
+        ]);
+
+        res.json({
+            period: { days, since: since.toISOString() },
+            moderation: {
+                byDay: modActionsByDay.map(d => ({ date: d._id, count: d.count })),
+                byType: modActionsByType.map(d => ({ action: d._id, count: d.count })),
+            },
+            suggestions: {
+                byStatus: suggestionsByStatus.map(d => ({ status: d._id, count: d.count })),
+            },
+            xp: {
+                levelDistribution: xpDistribution.map(d => ({
+                    range: d._id === '100+' ? '100+' : `${d._id}-${d._id < 100 ? [5, 10, 20, 30, 50, 100][[0, 5, 10, 20, 30, 50].indexOf(d._id)] - 1 : ''}`,
+                    count: d.count,
+                })),
+            },
+            tickets: {
+                open: ticketStats[0],
+                closedRecently: ticketStats[1],
+                avgResolutionMs: ticketStats[2][0]?.avg || null,
+            },
+            audit: {
+                byCategory: auditByCategory.map(d => ({ category: d._id, count: d.count })),
+            },
+        });
+    } catch (err) {
+        req.log?.error('guild_analytics_fetch_failed', { guildId: req.params.id, error: err });
+        res.status(500).json({ error: 'Failed to fetch analytics' });
+    }
+});
+
+// GET /guild/:id/audit-log
+router.get('/audit-log', async (req, res) => {
+    try {
+        const guildId = req.params.id;
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
+        const skip = (page - 1) * limit;
+
+        const filter = { guildId };
+
+        if (req.query.category) {
+            filter.category = String(req.query.category);
+        }
+        if (req.query.action) {
+            filter.action = String(req.query.action);
+        }
+        if (req.query.actorId) {
+            filter.actorId = String(req.query.actorId);
+        }
+
+        const [entries, total] = await Promise.all([
+            AuditLog.find(filter)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            AuditLog.countDocuments(filter),
+        ]);
+
+        res.json({
+            entries: entries.map(e => ({
+                id: e._id,
+                actorId: e.actorId,
+                actorTag: e.actorTag,
+                source: e.source,
+                category: e.category,
+                action: e.action,
+                target: e.target,
+                before: e.before,
+                after: e.after,
+                createdAt: e.createdAt,
+            })),
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+        });
+    } catch (err) {
+        req.log?.error('guild_audit_log_fetch_failed', { guildId: req.params.id, error: err });
+        res.status(500).json({ error: 'Failed to fetch audit log' });
     }
 });
 

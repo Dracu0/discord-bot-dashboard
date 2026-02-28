@@ -1,9 +1,9 @@
 import { Box, Divider, SimpleGrid, Stack, Text, Title, Group } from "@mantine/core";
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { usePageInfo } from "../../../contexts/PageInfoContext";
 import { GuildDetailContext, ServerDetailProvider } from "../../../contexts/guild/GuildDetailContext";
 import { useQuery } from "@tanstack/react-query";
-import { getServerAdvancedDetails } from "api/internal";
+import { getServerAdvancedDetails, getFeatures } from "api/internal";
 import { QueryHolderSkeleton } from "contexts/components/AsyncContext";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { DataList } from "components/card/data/DataCard";
@@ -15,6 +15,7 @@ import NotificationFeed from "components/card/NotificationFeed";
 import { UserDataContext } from "contexts/UserDataContext";
 import BotStatusIndicator from "components/card/BotStatusIndicator";
 import QuickActions from "components/card/QuickActions";
+import OnboardingWizard from "components/card/OnboardingWizard";
 
 export default function Dashboard() {
     const locale = useLocale()
@@ -31,12 +32,20 @@ export function UserReports() {
     const { id: serverId } = useContext(GuildContext)
     const user = useContext(UserDataContext)
     const data = config.data.dashboard
+    const [wizardDismissed, setWizardDismissed] = useState(false)
 
     const query = useQuery({
         queryKey: ["server_advanced_detail"],
         queryFn: () => getServerAdvancedDetails(serverId),
         enabled: data.some(row => row.advanced)
     })
+
+    const featuresQuery = useQuery({
+        queryKey: ["features", serverId],
+        queryFn: () => getFeatures(serverId),
+    })
+
+    const enabledFeatures = featuresQuery.data?.enabled || [];
 
     return (
         <Box pt={PAGE_PT}>
@@ -57,6 +66,12 @@ export function UserReports() {
                         <BotStatusIndicator />
                     </Group>
                 </Box>
+            )}
+            {!wizardDismissed && enabledFeatures.length === 0 && featuresQuery.data && (
+                <OnboardingWizard
+                    enabledFeatures={enabledFeatures}
+                    onDismiss={() => setWizardDismissed(true)}
+                />
             )}
             <QuickActions />
             <NotificationFeed />

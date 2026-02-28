@@ -1,6 +1,6 @@
 import React from "react";
 
-import {IconServer, IconPuzzle, IconSettings, IconHandStop} from "@tabler/icons-react";
+import {IconServer, IconPuzzle, IconSettings, IconHandStop, IconHistory, IconChartBar} from "@tabler/icons-react";
 import {FeaturesLayout} from "./layouts/guild/features";
 import {ActionsLayout} from "./layouts/guild/actions";
 import {config} from "./config/config";
@@ -13,6 +13,8 @@ const Feature = React.lazy(() => import("./views/guild/feature"));
 const ActionTasks = React.lazy(() => import("./views/guild/action/action"));
 const TaskConfigBoard = React.lazy(() => import("./views/guild/action/task"));
 const SubmitTaskBoard = React.lazy(() => import("./views/guild/action/add"));
+const AuditLog = React.lazy(() => import("./views/guild/audit-log"));
+const Analytics = React.lazy(() => import("./views/guild/analytics"));
 
 /**
  * Public Routes that can access on sidebar
@@ -90,6 +92,20 @@ const routes = [
                 component: <ActionsBoard/>,
             },
         ]
+    },
+    {
+        category: {zh: "管理", en: "Management"},
+        name: {zh: "審計日誌", en: "Audit Log"},
+        icon: <IconHistory size={20} />,
+        path: "audit-log",
+        component: <AuditLog />,
+    },
+    {
+        category: {zh: "管理", en: "Management"},
+        name: {zh: "數據分析", en: "Analytics"},
+        icon: <IconChartBar size={20} />,
+        path: "analytics",
+        component: <Analytics />,
     },
 ];
 

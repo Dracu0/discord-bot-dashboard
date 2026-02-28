@@ -1,5 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
 const GuildConfiguration = require('../../models/GuildConfiguration');
+const AuditLog = require('../../models/AuditLog');
 const { publishConfigInvalidation } = require('../../utils/redis');
 const CustomCommand = require('../../models/CustomCommand');
 const ScheduledMessage = require('../../models/ScheduledMessage');
@@ -165,6 +166,17 @@ router.patch('/:featureId/enabled', async (req, res) => {
 
         await config.save();
         publishConfigInvalidation(guildId);
+
+        AuditLog.create({
+            guildId,
+            actorId: req.user?.id || 'unknown',
+            actorTag: req.user?.username || '',
+            source: 'dashboard',
+            category: 'feature.toggle',
+            action: enabled ? 'enable' : 'disable',
+            target: featureId,
+        }).catch(() => {});
+
         req.log?.info('feature_toggle_updated', {
             guildId,
             featureId,
@@ -403,6 +415,17 @@ router.patch('/:featureId', async (req, res) => {
         for (const field of featureDef.fields) {
             values[field] = config[field];
         }
+
+        AuditLog.create({
+            guildId,
+            actorId: req.user?.id || 'unknown',
+            actorTag: req.user?.username || '',
+            source: 'dashboard',
+            category: `config.${featureId}`,
+            action: 'update',
+            target: Object.keys(updates).join(', '),
+            after: updates,
+        }).catch(() => {});
 
         req.log?.info('feature_config_updated', {
             guildId,

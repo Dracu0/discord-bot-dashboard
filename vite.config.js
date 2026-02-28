@@ -5,7 +5,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     react({
-      include: /\.(js|jsx)$/,
+      include: /\.(js|jsx|ts|tsx)$/,
     }),
   ],
   esbuild: {
@@ -15,6 +15,13 @@ export default defineConfig({
     esbuildOptions: {
       loader: { '.js': 'jsx' },
     },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    css: true,
+    include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   },
   resolve: {
     alias: {
