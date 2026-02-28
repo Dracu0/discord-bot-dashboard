@@ -1,18 +1,17 @@
 import React, { useContext, useMemo } from "react";
 
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@mantine/core";
 
-// Custom components
 import { updateFeatureOptions } from "api/internal";
 
-import { useFeatureDetailQuery, useFeatureInfo, } from "contexts/FeatureDetailContext";
+import { useFeatureDetailQuery, useFeatureInfo } from "contexts/FeatureDetailContext";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { FeaturesContext } from "contexts/FeaturesContext";
 import { ConfigGrid, ConfigGridSkeleton } from "components/fields/ConfigPanel";
 import { config } from "config/config";
 import NotFound from "../../info/Not_Found";
 import { useParams } from "react-router-dom";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { usePageState } from "utils/State";
 import { useLocale, Locale } from "utils/Language";
 import useBanner from "./components/Banner";
@@ -60,7 +59,7 @@ function FeaturePanel() {
             {query.isLoading ?
                 <ConfigGridSkeleton />
                 : query.error || !query.data ?
-                <Text color="red.400">Failed to load feature configuration.</Text>
+                <Text c="red.4">Failed to load feature configuration.</Text>
                 :
                 <FeatureConfigPanel detail={query.data} enabled={enabled} />
             }

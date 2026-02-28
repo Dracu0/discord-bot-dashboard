@@ -1,7 +1,7 @@
 import {createContext, useContext} from "react";
 import {GuildContext} from "./guild/GuildContext";
 import {getFeatureDetail} from "api/internal";
-import {useQuery} from "react-query";
+import {useQuery} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
 import {config} from "../config/config";
 
@@ -12,12 +12,11 @@ export const FeatureDetailContext = createContext({
 export function useFeatureDetailQuery(featureId) {
     const { id: serverId } = useContext(GuildContext);
 
-    return useQuery(["feature_detail", serverId, featureId],
-        () => getFeatureDetail(serverId, featureId),
-        {
-            retry: 0
-        }
-    )
+    return useQuery({
+        queryKey: ["feature_detail", serverId, featureId],
+        queryFn: () => getFeatureDetail(serverId, featureId),
+        retry: 0
+    })
 }
 
 export function useFeatureInfo() {

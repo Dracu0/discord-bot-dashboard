@@ -1,5 +1,5 @@
 import {fetchAuto} from "../utils";
-import {useQuery} from "react-query";
+import {useQuery} from "@tanstack/react-query";
 
 export async function getAccountInfo() {
   return await fetchAuto(`/users/@me`, {toJson: true})
@@ -25,21 +25,17 @@ export function iconToUrl(id, hash) {
 }
 
 export function useGuild(id) {
-  return useQuery(
-      ["guild", id],
-      () => getGuild(id),
-      {
-        refetchOnWindowFocus: false
-      }
-  )
+  return useQuery({
+      queryKey: ["guild", id],
+      queryFn: () => getGuild(id),
+      refetchOnWindowFocus: false
+  })
 }
 
 export function useGuilds() {
-  return useQuery(
-      "user_guilds",
-      () => getGuilds(),
-      {
-        refetchOnWindowFocus: false,
-      }
-  )
+  return useQuery({
+      queryKey: ["user_guilds"],
+      queryFn: () => getGuilds(),
+      refetchOnWindowFocus: false,
+  })
 }

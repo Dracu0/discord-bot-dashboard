@@ -26,7 +26,11 @@ type IOption = {
     /**
      * Help text for form control
      */
-    helper?: TextElement
+    helper?: TextElement,
+    /**
+     * Client-side validation. Return an error message string if invalid, or undefined/null if valid.
+     */
+    validate?: (value: any) => string | undefined | null
 }
 
 type BooleanOption = IOption & {

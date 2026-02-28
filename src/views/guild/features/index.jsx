@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 
-// Custom components
 import FeatureGrid from "./components/FeatureGrid";
 import { FeaturesContext } from "contexts/FeaturesContext";
 import { DataList } from "components/card/data/DataCard";
@@ -8,7 +7,7 @@ import { config } from "config/config";
 import { Locale, useLocale } from "utils/Language";
 import { useLayoutUpdate } from "contexts/layouts/LayoutContext";
 import { BannerButton } from "components/card/Banner";
-import { FaTripadvisor } from "react-icons/fa";
+import { IconCompass } from "@tabler/icons-react";
 
 export default function FeaturesBoard() {
 
@@ -43,7 +42,7 @@ function Content() {
 
 function TutorialButton() {
   return <BannerButton
-    leftIcon={<FaTripadvisor size={20} />}
+    leftIcon={<IconCompass size={20} />}
     url={config.tutorialUrl}
   >
     <Locale zh="發現它們" en="Discover" />

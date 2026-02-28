@@ -1,14 +1,12 @@
 import React, {useMemo, useState} from "react";
 
-// Chakra imports
-import {SimpleGrid, Stack, Text,} from "@chakra-ui/react";
+import {SimpleGrid, Stack, Text} from "@mantine/core";
 
-// Custom components
 import {usePageInfo} from "contexts/PageInfoContext";
 import {config} from "config/config";
 import {useBanner} from "./components/Banner";
 import {useActionInfo} from "contexts/actions/ActionDetailContext";
-import {useMutation, useQueryClient} from "react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import ErrorModal from "components/modal/ErrorModal";
 import {SubmitAlert} from "components/alert/SaveAlert";
 import {ConfigItemListAnimated} from "components/fields/ConfigPanel";
@@ -39,7 +37,7 @@ function SubmitTask() {
             <Locale zh="創建新任務" en="New Task" />
         </Text>
 
-        <SimpleGrid columns={{base: 1, lg: 2}} gap={5}>
+        <SimpleGrid cols={{base: 1, lg: 2}} spacing={5}>
             <ConfigPanel />
         </SimpleGrid>
     </Stack>
@@ -59,21 +57,21 @@ function ConfigPanel() {
     const [name, setName] = useState("New Task")
     const [changes, setChanges] = useState(new Map());
 
-    const mutation = useMutation(
-        () => addTask(guild, action, name, changes), {
-            onSuccess(data) {
-                client.setQueryData(
-                    ["task_detail", guild, action, data.id.toString()],
-                    data
-                )
-                client.invalidateQueries(["action_detail", guild, action])
+    const mutation = useMutation({
+        mutationFn: () => addTask(guild, action, name, changes),
+        onSuccess(data) {
+            client.setQueryData(
+                ["task_detail", guild, action, data.id.toString()],
+                data
+            )
+            client.invalidateQueries({ queryKey: ["action_detail", guild, action] })
 
-                navigate(`/guild/${guild}/actions/${action}/task/${data.id}`)
-            }
-        })
+            navigate(`/guild/${guild}/actions/${action}/task/${data.id}`)
+        }
+    })
 
     const onChange = (id, value) => {
-        if (mutation.isLoading) return;
+        if (mutation.isPending) return;
 
         setChanges(new Map(
             changes.set(id, value)
@@ -95,7 +93,7 @@ function ConfigPanel() {
             />
             <SubmitAlert
                 visible={name.length !== 0}
-                loading={mutation.isLoading}
+                loading={mutation.isPending}
                 onSubmit={mutation.mutate}
             />
         </>

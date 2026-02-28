@@ -1,5 +1,5 @@
 import {createContext, useContext} from "react";
-import {useQuery, useQueryClient} from "react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {useParams} from "react-router-dom";
 import {getTaskDetail} from "api/internal";
 import {GuildContext} from "../guild/GuildContext";
@@ -18,13 +18,12 @@ export function useTaskDetailQuery() {
 
     const key = ["task_detail", guild, action, task]
 
-    return useQuery(
-        key,
-        () => getTaskDetail(guild, action, task), {
-            initialData() {
-                return client.getQueryData(key)
-            },
-            refetchOnWindowFocus: false
-        }
-    )
+    return useQuery({
+        queryKey: key,
+        queryFn: () => getTaskDetail(guild, action, task),
+        initialData() {
+            return client.getQueryData(key)
+        },
+        refetchOnWindowFocus: false
+    })
 }

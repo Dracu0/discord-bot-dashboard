@@ -1,9 +1,7 @@
 import React, {useContext, useMemo} from "react";
 
-// Chakra imports
-import {SimpleGrid, Stack, Text,} from "@chakra-ui/react";
+import {SimpleGrid, Stack, Text} from "@mantine/core";
 
-// Custom components
 import {usePageInfo} from "contexts/PageInfoContext";
 import {useActionInfo} from "contexts/actions/ActionDetailContext";
 import {ConfigGridSkeleton, MultiConfigPanel} from "components/fields/ConfigPanel";
@@ -12,7 +10,7 @@ import {updateTask} from "api/internal";
 import {GuildContext} from "contexts/guild/GuildContext";
 import {useActionBanner} from "../components/ActionBanner";
 import {useTaskDetailQuery} from "../../../../contexts/actions/TaskDetailContext";
-import {useQueryClient} from "react-query";
+import {useQueryClient} from "@tanstack/react-query";
 import {usePageState} from "../../../../utils/State";
 import {Locale, useLocale} from "../../../../utils/Language";
 import BackNavButton from "components/navigation/BackNavButton";
@@ -49,7 +47,7 @@ function TaskConfigPanel() {
     const query = useTaskDetailQuery()
 
     if (query.isLoading) return <ConfigGridSkeleton />
-    if (query.error || !query.data) return <Text color="red.400">Failed to load task details.</Text>
+    if (query.error || !query.data) return <Text c="red.4">Failed to load task details.</Text>
     return <Config detail={query.data} />
 }
 
@@ -65,7 +63,7 @@ export function Config({detail}) {
     }
 
     return (
-        <SimpleGrid columns={{base: 1, lg: 2}} gap={5}>
+        <SimpleGrid cols={{base: 1, lg: 2}} spacing={5}>
             <ConfigPanel
                 savedName={name}
                 values={values}

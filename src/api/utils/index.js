@@ -1,5 +1,5 @@
 import {config} from "../../config/config";
-import {useMutation, useQueryClient} from "react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {setFeatureEnabled} from "../internal";
 import logger from "utils/logger";
 
@@ -69,31 +69,29 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
 export function useEnableFeatureMutation(serverId, featureId) {
     const client = useQueryClient()
 
-    return useMutation(
-        (enabled) => setFeatureEnabled(serverId, featureId, enabled),
-        {
-            onSuccess(_, enabled) {
-                logger.info('feature_toggled', { serverId, featureId, enabled })
+    return useMutation({
+        mutationFn: (enabled) => setFeatureEnabled(serverId, featureId, enabled),
+        onSuccess(_, enabled) {
+            logger.info('feature_toggled', { serverId, featureId, enabled })
 
-                const modify = (data) => {
-                    if (enabled) {
-                        return [...data.enabled, featureId]
-                    } else {
-                        return data.enabled.filter(id => featureId !== id)
-                    }
+            const modify = (data) => {
+                if (enabled) {
+                    return [...data.enabled, featureId]
+                } else {
+                    return data.enabled.filter(id => featureId !== id)
                 }
-
-                return client.setQueryData(
-                    ["features", serverId],
-                    data => data ? {
-                        ...data,
-                        enabled: modify(data)
-                    } : data
-                )
-            },
-            onError(error) {
-                logger.error('feature_toggle_failed', { serverId, featureId, error: error.message })
             }
+
+            return client.setQueryData(
+                ["features", serverId],
+                data => data ? {
+                    ...data,
+                    enabled: modify(data)
+                } : data
+            )
+        },
+        onError(error) {
+            logger.error('feature_toggle_failed', { serverId, featureId, error: error.message })
         }
-    )
+    })
 }

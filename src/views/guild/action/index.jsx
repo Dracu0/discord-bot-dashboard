@@ -10,7 +10,7 @@ import {Locale, useLocale} from "utils/Language";
 import {useLayoutUpdate} from "contexts/layouts/LayoutContext";
 import {BannerButton} from "components/card/Banner";
 
-import {BiPlay} from "react-icons/bi";
+import {IconPlayerPlay} from "@tabler/icons-react";
 
 export default function ActionsBoard() {
     const locale = useLocale()
@@ -41,7 +41,7 @@ export default function ActionsBoard() {
 
 function TutorialButton() {
     return <BannerButton
-        leftIcon={<BiPlay size={20} />}
+        leftIcon={<IconPlayerPlay size={20} />}
         url={config.tutorialUrl}
     >
         <Locale zh="觀看教程" en="Watch Tutorial" />

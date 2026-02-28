@@ -1,10 +1,8 @@
-// Chakra imports
-import { Box, Divider, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
-// Custom components
+import { Box, Divider, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import React, { useContext, useMemo } from "react";
 import { usePageInfo } from "../../../contexts/PageInfoContext";
 import { GuildDetailContext, ServerDetailProvider } from "../../../contexts/guild/GuildDetailContext";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getServerAdvancedDetails } from "api/internal";
 import { QueryHolderSkeleton } from "contexts/components/AsyncContext";
 import { GuildContext } from "contexts/guild/GuildContext";
@@ -31,18 +29,16 @@ export function UserReports() {
     const { id: serverId } = useContext(GuildContext)
     const data = config.data.dashboard
 
-    const query = useQuery(
-        "server_advanced_detail",
-        () => getServerAdvancedDetails(serverId),
-        {
-            enabled: data.some(row => row.advanced)
-        }
-    )
+    const query = useQuery({
+        queryKey: ["server_advanced_detail"],
+        queryFn: () => getServerAdvancedDetails(serverId),
+        enabled: data.some(row => row.advanced)
+    })
 
     return (
         <Box pt={PAGE_PT}>
             <NotificationFeed />
-            <VStack spacing="32px" align="stretch">
+            <Stack gap={32} align="stretch">
                 {data.map((row, key) => {
                     const count = row.count
 
@@ -50,8 +46,8 @@ export function UserReports() {
                         <Box key={key}>
                             {row.label && <SectionHeader label={row.label} />}
                             <SimpleGrid
-                                columns={{ base: 1, md: Math.min(2, count), "2xl": count }}
-                                gap="20px"
+                                cols={{ base: 1, md: Math.min(2, count), "2xl": count }}
+                                spacing={20}
                             >
                                 {row.advanced ? (
                                     <QueryHolderSkeleton query={query} height="400px" count={row.count}>
@@ -64,7 +60,7 @@ export function UserReports() {
                         </Box>
                     )
                 })}
-            </VStack>
+            </Stack>
         </Box>
     );
 }
@@ -74,17 +70,17 @@ function SectionHeader({ label }) {
     const borderColor = useDetailColor()
 
     return (
-        <Box mb="16px">
-            <Heading
-                size="md"
-                color={textColor}
-                mb="8px"
-                fontFamily="'Space Grotesk', sans-serif"
-                letterSpacing="-0.01em"
+        <Box mb={16}>
+            <Title
+                order={3}
+                c={textColor}
+                mb={8}
+                ff="'Space Grotesk', sans-serif"
+                lts="-0.01em"
             >
                 {label}
-            </Heading>
-            <Divider borderColor={borderColor} opacity={0.2} />
+            </Title>
+            <Divider color={borderColor} opacity={0.2} />
         </Box>
     )
 }

@@ -1,13 +1,13 @@
 import {useContext} from "react";
 import {SettingsContext} from "../contexts/SettingsContext";
-import {useColorMode} from "@chakra-ui/react";
+import {useComputedColorScheme} from "@mantine/core";
 
 export function usePageState(add) {
     const {language} = useContext(SettingsContext)
-    const {colorMode} = useColorMode()
+    const colorScheme = useComputedColorScheme('dark')
 
     return {
-        darkMode: colorMode === "dark",
+        darkMode: colorScheme === "dark",
         lang: language,
         ...add
     }

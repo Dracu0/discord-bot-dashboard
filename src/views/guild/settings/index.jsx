@@ -1,6 +1,6 @@
 import React, {useContext, useMemo, useState, useCallback} from "react";
 
-import {Box} from "@chakra-ui/react";
+import {Box} from "@mantine/core";
 
 import {usePageInfo} from "contexts/PageInfoContext";
 import {SettingsContext} from "../../../contexts/SettingsContext";

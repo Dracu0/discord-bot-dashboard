@@ -1,4 +1,4 @@
-import {useMutation, useQueryClient} from "react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {fetchAuto} from "../utils";
 import logger from "utils/logger";
 
@@ -25,16 +25,14 @@ export async function logout() {
 export function useLogout() {
     const client = useQueryClient()
 
-    return useMutation(
-        () => logout(),
-        {
-            onSuccess() {
-                logger.info('logged_out')
-                return client.invalidateQueries("logged_in")
-            },
-            onError(error) {
-                logger.error('logout_failed', { error: error.message })
-            }
+    return useMutation({
+        mutationFn: () => logout(),
+        onSuccess() {
+            logger.info('logged_out')
+            return client.invalidateQueries({ queryKey: ["logged_in"] })
+        },
+        onError(error) {
+            logger.error('logout_failed', { error: error.message })
         }
-    )
+    })
 }
