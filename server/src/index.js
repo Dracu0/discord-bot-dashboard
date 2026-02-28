@@ -10,6 +10,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const logger = require('./utils/logger');
 const { requestContext } = require('./middleware/requestContext');
+const { startWebSocketServer, stopWebSocketServer } = require('./utils/websocket');
+const { closeRedis } = require('./utils/redis');
 
 const configurePassport = require('./auth/passport');
 const authRoutes = require('./routes/auth');
@@ -182,6 +184,9 @@ const server = app.listen(PORT, '0.0.0.0', () => {
         port: Number(PORT),
         mode: IS_PRODUCTION ? 'production' : 'development',
     });
+
+    // Attach WebSocket server (no-op if REDIS_URL not set)
+    startWebSocketServer(server);
 });
 
 // Graceful shutdown
@@ -199,6 +204,8 @@ function shutdown(signal) {
 
     server.close(async () => {
         try {
+            stopWebSocketServer();
+            await closeRedis();
             await mongoose.connection.close();
         } catch (err) {
             logger.error('db_close_error', { error: err });

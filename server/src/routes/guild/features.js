@@ -1,5 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
 const GuildConfiguration = require('../../models/GuildConfiguration');
+const { publishConfigInvalidation } = require('../../utils/redis');
 const CustomCommand = require('../../models/CustomCommand');
 const ScheduledMessage = require('../../models/ScheduledMessage');
 const TempRole = require('../../models/TempRole');
@@ -163,6 +164,7 @@ router.patch('/:featureId/enabled', async (req, res) => {
         }
 
         await config.save();
+        publishConfigInvalidation(guildId);
         req.log?.info('feature_toggle_updated', {
             guildId,
             featureId,
@@ -395,6 +397,7 @@ router.patch('/:featureId', async (req, res) => {
         }
 
         await config.save();
+        publishConfigInvalidation(guildId);
 
         const values = {};
         for (const field of featureDef.fields) {

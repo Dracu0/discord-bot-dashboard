@@ -1,5 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
 const GuildConfiguration = require('../../models/GuildConfiguration');
+const { publishConfigInvalidation } = require('../../utils/redis');
 const { isObject, colorToHex } = require('./helpers');
 
 // GET /guild/:id/settings
@@ -79,6 +80,7 @@ router.patch('/', async (req, res) => {
         }
 
         await config.save();
+        publishConfigInvalidation(guildId);
 
         req.log?.info('settings_updated', {
             guildId,
