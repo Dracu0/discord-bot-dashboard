@@ -1,4 +1,4 @@
-import { Flex, Menu, Text, UnstyledButton } from "@mantine/core";
+import { Badge, Flex, Indicator, Menu, Text, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useContext } from "react";
 import { GuildContext } from "../../contexts/guild/GuildContext";
@@ -13,17 +13,36 @@ export function Notifications() {
     const [opened, { open, close }] = useDisclosure();
 
     const { id: serverId } = useContext(GuildContext);
+
+    // Prefetch count even when dropdown is closed
+    const countQuery = useQuery({
+        queryKey: ["notifications", serverId],
+        queryFn: () => getNotifications(serverId),
+        staleTime: 60_000,
+        refetchInterval: 60_000,
+    });
+
     const query = useQuery({
         queryKey: ["notifications", serverId],
         queryFn: () => getNotifications(serverId),
         enabled: opened,
     });
 
+    const count = countQuery.data?.length ?? 0;
+
     return (
         <Menu opened={opened} onClose={close} position="bottom-end" width={400} withinPortal>
             <Menu.Target>
                 <UnstyledButton onClick={open} p={0}>
-                    <IconBell size={20} color="var(--text-secondary)" />
+                    <Indicator
+                        size={16}
+                        label={count > 0 ? count : undefined}
+                        disabled={count === 0}
+                        color="red"
+                        offset={2}
+                    >
+                        <IconBell size={20} color="var(--text-secondary)" />
+                    </Indicator>
                 </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown
@@ -36,15 +55,24 @@ export function Notifications() {
             >
                 <Text w="100%" mb={20} fz="md" fw={600} c="var(--text-primary)">
                     <Locale zh="通知" en="Notifications" />
+                    {count > 0 && (
+                        <Badge ml="xs" size="sm" color="blue" variant="light" radius="xl">
+                            {count}
+                        </Badge>
+                    )}
                 </Text>
                 <Flex direction="column" gap={12}>
                     <QueryHolderSkeleton query={query} height="100px" count={2}>
                         {() =>
-                            query.data.map((item, key) => (
-                                <Menu.Item key={key} style={{ borderRadius: 8, padding: 0 }}>
-                                    <NotificationItem {...item} />
-                                </Menu.Item>
-                            ))
+                            query.data && query.data.length > 0
+                                ? query.data.map((item, key) => (
+                                    <Menu.Item key={key} style={{ borderRadius: 8, padding: 0 }}>
+                                        <NotificationItem {...item} />
+                                    </Menu.Item>
+                                ))
+                                : <Text fz="sm" c="var(--text-secondary)" ta="center" py="md">
+                                    <Locale zh="暫無通知" en="No notifications" />
+                                </Text>
                         }
                     </QueryHolderSkeleton>
                 </Flex>

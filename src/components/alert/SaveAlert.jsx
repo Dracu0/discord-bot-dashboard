@@ -1,5 +1,5 @@
-import { Alert, Button, Group, Transition } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { Alert, ActionIcon, Button, Group, Tooltip, Transition } from "@mantine/core";
+import { IconAlertTriangle, IconArrowBackUp, IconArrowForwardUp } from "@tabler/icons-react";
 import { Locale } from "../../utils/Language";
 import { useContext } from "react";
 import { SettingsContext } from "../../contexts/SettingsContext";
@@ -43,7 +43,7 @@ function BaseAlert({ isOpen, children }) {
     );
 }
 
-export function SaveAlert({ saving, visible, disabled, onSave, onDiscard }) {
+export function SaveAlert({ saving, visible, disabled, onSave, onDiscard, canUndo, canRedo, onUndo, onRedo }) {
     return (
         <BaseAlert isOpen={visible}>
             {disabled
@@ -51,7 +51,33 @@ export function SaveAlert({ saving, visible, disabled, onSave, onDiscard }) {
                 : <Locale zh="您有一些未保存的更改" en="You have some unsaved Changes" />
             }
 
-            <Group ml="auto">
+            <Group ml="auto" gap="xs">
+                {onUndo && (
+                    <Tooltip label="Undo (Ctrl+Z)" position="top">
+                        <ActionIcon
+                            variant="subtle"
+                            color="gray"
+                            disabled={!canUndo}
+                            onClick={onUndo}
+                            aria-label="Undo"
+                        >
+                            <IconArrowBackUp size={18} />
+                        </ActionIcon>
+                    </Tooltip>
+                )}
+                {onRedo && (
+                    <Tooltip label="Redo (Ctrl+Shift+Z)" position="top">
+                        <ActionIcon
+                            variant="subtle"
+                            color="gray"
+                            disabled={!canRedo}
+                            onClick={onRedo}
+                            aria-label="Redo"
+                        >
+                            <IconArrowForwardUp size={18} />
+                        </ActionIcon>
+                    </Tooltip>
+                )}
                 <Button style={{ backgroundColor: "var(--status-success)" }} loading={saving} disabled={disabled} onClick={onSave}>
                     <Locale zh="立即保存" en="Save Now" />
                 </Button>

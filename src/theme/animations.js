@@ -1,35 +1,8 @@
 /**
- * Reusable CSS animation keyframes and transition presets.
+ * Reusable CSS animation transition presets.
+ * Keyframes are defined in App.css — do NOT duplicate them here.
  * Import and spread into Mantine `style` props or CSS modules.
  */
-
-// ── Keyframe definitions (inject once via App.css or a global style) ──
-export const keyframes = `
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0;  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
-  50%      { box-shadow: 0 0 0 6px rgba(139, 92, 246, 0); }
-}
-`;
 
 // ── Transition presets (for inline styles) ────────────────────────
 export const transitions = {

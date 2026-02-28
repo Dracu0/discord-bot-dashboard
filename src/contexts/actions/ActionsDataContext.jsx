@@ -1,5 +1,5 @@
 import {createContext, useContext} from "react";
-import {QueryHolder} from "../components/AsyncContext";
+import {QueryHolderSkeleton} from "../components/AsyncContext";
 import {getActionsData} from "api/internal";
 import {GuildContext} from "../guild/GuildContext";
 import {useQuery} from "@tanstack/react-query";
@@ -13,9 +13,9 @@ export function ActionsDataProvider({children}) {
         queryFn: () => getActionsData(serverId)
     })
 
-    return <QueryHolder query={query}>
+    return <QueryHolderSkeleton query={query} height={200} count={2}>
         <ActionsDataContext.Provider value={query.data}>
             {children}
         </ActionsDataContext.Provider>
-    </QueryHolder>
+    </QueryHolderSkeleton>
 }
