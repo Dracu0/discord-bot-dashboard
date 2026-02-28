@@ -3,7 +3,6 @@ import { Badge, Box, Group, Stack, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "api/internal";
 import { GuildContext } from "contexts/guild/GuildContext";
-import { useTextColor, useDetailColor, useColorValue } from "utils/colors";
 import { IconAlertCircle, IconShield, IconCircleCheck } from "@tabler/icons-react";
 
 const TYPE_CONFIG = {
@@ -13,9 +12,6 @@ const TYPE_CONFIG = {
 };
 
 function NotificationItem({ notification }) {
-  const cardBg = useColorValue("var(--mantine-color-gray-1)", "var(--mantine-color-dark-6)");
-  const textColor = useTextColor();
-  const detailColor = useDetailColor();
   const cfg = TYPE_CONFIG[notification.type] || TYPE_CONFIG.info;
   const IconComp = cfg.icon;
 
@@ -24,14 +20,14 @@ function NotificationItem({ notification }) {
       p="12px 16px"
       gap="sm"
       align="center"
-      style={{ background: cardBg, borderRadius: 12 }}
+      style={{ background: "var(--surface-secondary)", borderRadius: "var(--radius-md)" }}
     >
       <IconComp size={18} color={`var(--mantine-color-${cfg.color}-4)`} />
-      <Text fz="sm" c={textColor} style={{ flex: 1 }} lineClamp={1}>
+      <Text fz="sm" c="var(--text-primary)" style={{ flex: 1 }} lineClamp={1}>
         {notification.message}
       </Text>
       {notification.time && (
-        <Text fz="xs" c={detailColor} style={{ whiteSpace: "nowrap" }}>
+        <Text fz="xs" c="var(--text-secondary)" style={{ whiteSpace: "nowrap" }}>
           {new Date(notification.time).toLocaleDateString()}
         </Text>
       )}
@@ -44,8 +40,6 @@ function NotificationItem({ notification }) {
 
 export default function NotificationFeed() {
   const { id: serverId } = useContext(GuildContext);
-  const textColor = useTextColor();
-
   const { data: notifications } = useQuery({
     queryKey: ["notifications", serverId],
     queryFn: () => getNotifications(serverId),
@@ -60,7 +54,7 @@ export default function NotificationFeed() {
       <Text
         fz="sm"
         fw={600}
-        c={textColor}
+        c="var(--text-primary)"
         mb={10}
         ff="'Space Grotesk', sans-serif"
         lts="-0.01em"

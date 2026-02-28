@@ -1,6 +1,4 @@
 import { Box, Group, Text, Title } from "@mantine/core";
-import { useColorValue } from "../../../utils/colors";
-
 const SAMPLE_PLACEHOLDERS = {
   "{user}": "@SampleUser",
   "{server}": "My Server",
@@ -17,10 +15,10 @@ function replacePlaceholders(text) {
 }
 
 export default function DiscordEmbedPreview({ message, color, isEmbed }) {
-  const bgPrimary = useColorValue("#ffffff", "#2b2d31");
-  const bgSecondary = useColorValue("#f2f3f5", "#1e1f22");
-  const textPrimary = useColorValue("#060607", "#dbdee1");
-  const textMuted = useColorValue("#5c5e66", "#949ba4");
+  const bgPrimary = "var(--discord-bg-primary, #2b2d31)";
+  const bgSecondary = "var(--discord-bg-secondary, #1e1f22)";
+  const textPrimary = "var(--discord-text-primary, #dbdee1)";
+  const textMuted = "var(--discord-text-muted, #949ba4)";
 
   const resolved = replacePlaceholders(message);
   const accentColor = color || "#00aa00";

@@ -15,8 +15,6 @@ import { Task } from "../components/Task";
 import { useTextFilter } from "hooks/useTextFilter";
 
 import { useParams } from "react-router-dom";
-import { useColorValue } from "../../../../utils/colors";
-
 export default function ActionTasks() {
     const info = useActionInfo()
     const {action} = useParams()
@@ -39,15 +37,13 @@ function TasksPanel() {
         name
     ].map(locale))
 
-    const inputBg = useColorValue("var(--mantine-color-gray-1)", "var(--mantine-color-dark-6)");
-
     return <Flex direction="column" gap={5} pt={10} px={{ base: 1, md: 3, lg: 10 }}>
         <Center style={{ flexDirection: "column", gap: 20 }} mb={5}>
             <Text fz={24} fw="bold">
                 <Locale zh="運行中" en="Tasks" />
             </Text>
 
-            <SearchInput value={filter} onChange={setFilter} bg={inputBg} groupStyle={{ maw: "20rem" }} />
+            <SearchInput value={filter} onChange={setFilter} bg="var(--surface-secondary)" groupStyle={{ maw: "20rem" }} />
         </Center>
         <ActionDetailProvider>
             <TasksContent includes={includes} />

@@ -6,8 +6,6 @@ import React, { useEffect, useRef, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { IconChevronDown } from "@tabler/icons-react";
 import { QueryHolderSkeleton } from "contexts/components/AsyncContext";
-import { useTextColor, useColorValue } from "../../../utils/colors";
-
 export default function EmojiField({ value, onChange: change }) {
   const query = useQuery({
     queryKey: ["emojis"],
@@ -59,9 +57,6 @@ export default function EmojiField({ value, onChange: change }) {
 
 function EmojiPicker({ data, onChange }) {
   const ref = useRef();
-  const bg = useColorValue("244, 247, 254", "11, 20, 55");
-  const textColor = useTextColor();
-  const brand = useColorValue("51, 17, 219", "117, 81, 255");
   const changeRef = useRef(onChange);
   changeRef.current = onChange;
 
@@ -72,9 +67,6 @@ function EmojiPicker({ data, onChange }) {
       onEmojiSelect: (e) => changeRef.current(e),
       data,
       ref,
-      style: {
-        "--rgb-background": bg,
-      },
     });
   }, []);
 

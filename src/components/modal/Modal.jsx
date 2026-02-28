@@ -1,10 +1,7 @@
 import { Modal as MantineModal, Button } from "@mantine/core";
 import { Locale, useLocale } from "utils/Language";
-import { useColorValue } from "../../utils/colors";
 
 export function EmptyModal({ children, isOpen, onClose, size, scrollBehavior, ...props }) {
-    const bg = useColorValue("var(--mantine-color-gray-1)", "var(--mantine-color-dark-7)");
-
     return (
         <MantineModal
             centered
@@ -13,10 +10,6 @@ export function EmptyModal({ children, isOpen, onClose, size, scrollBehavior, ..
             size={size}
             overlayProps={{ backgroundOpacity: 0.3, blur: 16 }}
             radius="lg"
-            styles={{
-                content: { backgroundColor: bg },
-                header: { backgroundColor: bg },
-            }}
             scrollAreaComponent={scrollBehavior === "inside" ? undefined : undefined}
             {...props}
         >

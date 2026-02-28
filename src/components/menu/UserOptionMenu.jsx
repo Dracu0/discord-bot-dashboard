@@ -4,11 +4,8 @@ import { UserDataContext } from "contexts/UserDataContext";
 import { Link } from "react-router-dom";
 import { useLogout } from "../../api/internal";
 import { Locale } from "../../utils/Language";
-import { useCardBg, useTextColor } from "../../utils/colors";
 
 export default function UserOptionMenu() {
-    const menuBg = useCardBg();
-    const textColor = useTextColor();
     const user = useContext(UserDataContext);
     const logout = useLogout();
 
@@ -16,8 +13,8 @@ export default function UserOptionMenu() {
         <Menu.Dropdown
             p={0}
             style={{
-                borderRadius: 20,
-                backgroundColor: menuBg,
+                borderRadius: "var(--radius-lg)",
+                backgroundColor: "var(--surface-primary)",
                 zIndex: 1500,
             }}
         >
@@ -27,10 +24,10 @@ export default function UserOptionMenu() {
                     pt={16}
                     pb={10}
                     w="100%"
-                    style={{ borderBottom: "1px solid var(--mantine-color-default-border)" }}
+                    style={{ borderBottom: "1px solid var(--border-subtle)" }}
                     fz="sm"
                     fw={700}
-                    c={textColor}
+                    c="var(--text-primary)"
                 >
                     👋&nbsp; <Locale zh="歡迎" en="Welcome" />, {user.username}
                 </Text>

@@ -4,7 +4,6 @@ import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table
 import { IconArrowUp, IconArrowDown } from "@tabler/icons-react";
 
 import Card from "components/card/Card";
-import { useTextColor, useColorValue } from "../../../utils/colors";
 
 export default function DataTable({ name, data, columns }) {
   const tableInstance = useTable(
@@ -24,16 +23,11 @@ export default function DataTable({ name, data, columns }) {
   } = tableInstance;
   initialState.pageSize = 11;
 
-  const textColor = useTextColor();
-  const borderColor = useColorValue("var(--mantine-color-gray-2)", "rgba(255,255,255,0.1)");
-  const headerBg = useColorValue("var(--mantine-color-gray-0)", "var(--mantine-color-dark-7)");
-  const stripeBg = useColorValue("var(--mantine-color-gray-0)", "rgba(255,255,255,0.03)");
-
   return (
     <Card w="100%" px={0} style={{ overflowX: "auto" }}>
       <Text
         ml={{ base: 16, md: 25 }}
-        c={textColor}
+        c="var(--text-primary)"
         fz={22}
         fw={700}
         lh={1}
@@ -50,8 +44,8 @@ export default function DataTable({ name, data, columns }) {
                   key={i}
                   style={{
                     paddingRight: 10,
-                    borderColor,
-                    background: headerBg,
+                    borderColor: "var(--border-subtle)",
+                    background: "var(--surface-secondary)",
                     cursor: "pointer",
                     userSelect: "none",
                   }}
@@ -88,13 +82,13 @@ export default function DataTable({ name, data, columns }) {
                 <Table.Tr
                   {...row.getRowProps()}
                   key={index}
-                  style={{ background: index % 2 === 1 ? stripeBg : "transparent" }}
+                  style={{ background: index % 2 === 1 ? "var(--surface-secondary)" : "transparent" }}
                 >
                   {row.cells.map((cell, i) => (
                     <Table.Td
                       {...cell.getCellProps()}
                       key={i}
-                      style={{ color: textColor, fontSize: 14, minWidth: 150, border: "none" }}
+                      style={{ color: "var(--text-primary)", fontSize: 14, minWidth: 150, border: "none" }}
                     >
                       {cell.column.wrapper ? (
                         cell.column.wrapper(cell.value)

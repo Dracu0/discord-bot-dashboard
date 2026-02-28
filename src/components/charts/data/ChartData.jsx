@@ -3,14 +3,7 @@ import { IconCalendar, IconChartBar, IconCircleCheck, IconAlertTriangle } from "
 import Card from "components/card/Card";
 import React from "react";
 import ApexChart from "components/charts/ApexChart";
-import { useColorValue, useIconColor, useNoteColor, useTextColor } from "../../../utils/colors";
-
 export default function ChartData({ name, description, value, time_unit, status, options, chartType }) {
-    const textColor = useTextColor();
-    const textColorSecondary = useNoteColor();
-    const boxBg = useColorValue("var(--mantine-color-gray-2)", "rgba(255,255,255,0.06)");
-    const iconColor = useIconColor();
-    const bgButton = useColorValue("var(--mantine-color-gray-2)", "rgba(255,255,255,0.06)");
 
     return (
         <Card
@@ -23,12 +16,12 @@ export default function ChartData({ name, description, value, time_unit, status,
                     {time_unit && (
                         <Button
                             variant="default"
-                            style={{ backgroundColor: boxBg }}
+                            style={{ backgroundColor: "var(--surface-secondary)" }}
                             fz="sm"
                             fw={500}
-                            c={textColor}
+                            c="var(--text-primary)"
                             radius={7}
-                            leftSection={<IconCalendar size={16} color={textColor} />}
+                            leftSection={<IconCalendar size={16} color="var(--text-primary)" />}
                         >
                             {time_unit}
                         </Button>
@@ -37,27 +30,27 @@ export default function ChartData({ name, description, value, time_unit, status,
                     <Button
                         ms="auto"
                         variant="default"
-                        style={{ backgroundColor: bgButton }}
+                        style={{ backgroundColor: "var(--surface-secondary)" }}
                         w={37}
                         h={37}
                         p={0}
                         radius={10}
                     >
-                        <IconChartBar size={24} color={iconColor} />
+                        <IconChartBar size={24} color="var(--accent-primary)" />
                     </Button>
                 </Flex>
             </Flex>
             <Flex w="100%" h="100%" direction={{ base: "column", "2xl": "row" }}>
                 <Stack align="flex-start" ta="start" me={20} mt={28} gap={0}>
                     <Text
-                        c={textColor}
+                        c="var(--text-primary)"
                         fz={name.length <= 5 ? 34 : 20}
                         fw={700}
                         lh={1}
                     >
                         {name}
                     </Text>
-                    <Text c={textColorSecondary} fz="sm" fw={500} mt={4} mb={30}>
+                    <Text c="var(--text-secondary)" fz="sm" fw={500} mt={4} mb={30}>
                         {description}
                     </Text>
 

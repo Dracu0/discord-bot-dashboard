@@ -1,12 +1,13 @@
 import { Alert, Button, Group, Transition } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
-import { useAlertBg, useSuccessBg, useTextColor } from "../../utils/colors";
 import { Locale } from "../../utils/Language";
-import { contentWidth } from "../../utils/layout-tokens";
+import { useContext } from "react";
+import { SettingsContext } from "../../contexts/SettingsContext";
+import { contentWidth, contentWidthCollapsed } from "../../utils/layout-tokens";
 
 function BaseAlert({ isOpen, children }) {
-    const alertBg = useAlertBg();
-    const mainText = useTextColor();
+    const { sidebarCollapsed } = useContext(SettingsContext);
+    const width = sidebarCollapsed ? contentWidthCollapsed : contentWidth;
 
     return (
         <Transition mounted={isOpen} transition="slide-up" duration={200}>
@@ -20,13 +21,13 @@ function BaseAlert({ isOpen, children }) {
                         bottom: 40,
                         left: "50%",
                         transform: "translateX(-50%)",
-                        width: contentWidth,
+                        width,
                         maxWidth: "95vw",
                         zIndex: 40,
                         backdropFilter: "blur(16px)",
-                        backgroundColor: alertBg,
-                        color: mainText,
-                        borderRadius: 20,
+                        backgroundColor: "var(--surface-overlay)",
+                        color: "var(--text-primary)",
+                        borderRadius: "var(--radius-lg)",
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
@@ -41,8 +42,6 @@ function BaseAlert({ isOpen, children }) {
 }
 
 export function SaveAlert({ saving, visible, disabled, onSave, onDiscard }) {
-    const brand = useSuccessBg();
-
     return (
         <BaseAlert isOpen={visible}>
             {disabled
@@ -51,7 +50,7 @@ export function SaveAlert({ saving, visible, disabled, onSave, onDiscard }) {
             }
 
             <Group ml="auto">
-                <Button style={{ backgroundColor: brand }} loading={saving} disabled={disabled} onClick={onSave}>
+                <Button style={{ backgroundColor: "var(--status-success)" }} loading={saving} disabled={disabled} onClick={onSave}>
                     <Locale zh="立即保存" en="Save Now" />
                 </Button>
                 <Button variant="default" onClick={onDiscard}>
@@ -63,13 +62,11 @@ export function SaveAlert({ saving, visible, disabled, onSave, onDiscard }) {
 }
 
 export function SubmitAlert({ loading, visible, onSubmit }) {
-    const brand = useSuccessBg();
-
     return (
         <BaseAlert isOpen={visible}>
             <Locale zh="您現在可以創建任務了" en="You can create the Task Now" />
 
-            <Button ml="auto" style={{ backgroundColor: brand }} loading={loading} onClick={onSubmit}>
+            <Button ml="auto" style={{ backgroundColor: "var(--status-success)" }} loading={loading} onClick={onSubmit}>
                 <Locale zh="發布任務" en="Publish" />
             </Button>
         </BaseAlert>

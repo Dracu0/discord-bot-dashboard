@@ -11,7 +11,8 @@ import { PageInfoContext } from "contexts/PageInfoContext";
 import { avatarToUrl } from "api/discord/DiscordApi";
 import { SettingsModal } from "../modal/SettingsModal";
 import { Notifications } from "../menu/Notifications";
-import { useTextColor } from "../../utils/colors";
+
+const ICON_BTN = 36;
 
 export default function HeaderLinks() {
     const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -21,14 +22,16 @@ export default function HeaderLinks() {
         <>
             <SearchBar me={10} />
             <SidebarResponsive routes={routes} />
-            <Group gap="xs">
+            <Group gap={6}>
                 <Notifications />
                 <ActionIcon
                     variant="subtle"
                     color="gray"
                     radius="xl"
+                    size={ICON_BTN}
                     onClick={toggleColorScheme}
-                    aria-label="Dark Mode"
+                    aria-label="Toggle color scheme"
+                    style={{ transition: "transform 0.2s ease" }}
                 >
                     {colorScheme === "light" ? <IconMoon size={18} /> : <IconSun size={18} />}
                 </ActionIcon>
@@ -42,37 +45,39 @@ export default function HeaderLinks() {
 function SettingsMenu() {
     const [opened, { close, open }] = useDisclosure(false);
 
-    return <>
-        <ActionIcon
-            variant="subtle"
-            color="gray"
-            radius="xl"
-            aria-label="Settings"
-            onClick={open}
-        >
-            <IconSettings size={18} />
-        </ActionIcon>
-        <SettingsModal isOpen={opened} onClose={close} />
-    </>
+    return (
+        <>
+            <ActionIcon
+                variant="subtle"
+                color="gray"
+                radius="xl"
+                size={ICON_BTN}
+                aria-label="Settings"
+                onClick={open}
+            >
+                <IconSettings size={18} />
+            </ActionIcon>
+            <SettingsModal isOpen={opened} onClose={close} />
+        </>
+    );
 }
 
 function UserMenu() {
     const { username, avatar, id } = useContext(UserDataContext);
-    const textColor = useTextColor();
 
     return (
         <Menu shadow="md" width={200}>
             <Menu.Target>
-                <Group gap="xs" style={{ cursor: 'pointer' }}>
+                <Group gap="xs" style={{ cursor: "pointer" }}>
                     <Avatar
                         name={username}
                         src={avatarToUrl(id, avatar)}
                         color="brand"
                         size="sm"
                         radius="xl"
-                        style={{ border: '2px solid var(--mantine-color-brand-4)' }}
+                        style={{ border: "2px solid var(--accent-primary)" }}
                     />
-                    <Text visibleFrom="lg" c={textColor} fz="sm" fw={600}>
+                    <Text visibleFrom="lg" c="var(--text-primary)" fz="sm" fw={600}>
                         {username}
                     </Text>
                 </Group>

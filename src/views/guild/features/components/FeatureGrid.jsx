@@ -5,15 +5,12 @@ import { useContext } from "react";
 import { FeaturesContext } from "contexts/FeaturesContext";
 import { config } from "../../../../config/config";
 import { Locale } from "../../../../utils/Language";
-import { useTextColor } from "../../../../utils/colors";
 
 export default function FeatureGrid() {
-    const textColor = useTextColor();
-
     return (
         <Flex direction="column" gap={20}>
             <Text
-                c={textColor}
+                c="var(--text-primary)"
                 fz="2xl"
                 fw={700}
                 ff="'Space Grotesk', sans-serif"

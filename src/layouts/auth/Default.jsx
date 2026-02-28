@@ -1,13 +1,10 @@
 import { Box, Flex } from "@mantine/core";
 import React from "react";
 import FixedPlugin from "components/fixedPlugin/FixedPlugin";
-import { useColorValue } from "../../utils/colors";
 
 function AuthIllustration({ children }) {
-  const bgColor = useColorValue('#F9FAFB', '#0F0A1A');
-
   return (
-    <Flex pos="relative" mih="100vh" bg={bgColor} style={{ overflow: 'hidden' }}>
+    <Flex pos="relative" mih="100vh" bg="var(--surface-primary)" style={{ overflow: 'hidden' }}>
       {/* Decorative glow orbs */}
       <Box
         pos="absolute"

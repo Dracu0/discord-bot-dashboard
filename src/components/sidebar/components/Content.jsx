@@ -1,38 +1,44 @@
-import { Box, Flex, Group, ActionIcon, Stack, Text } from "@mantine/core";
+import { Box, Flex, Group, ActionIcon, Stack, Text, Tooltip } from "@mantine/core";
 import Brand from "components/sidebar/components/Brand";
 import Links from "components/sidebar/components/Links";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { IconArrowLeft } from "@tabler/icons-react";
-import { useTextColor, useColorValue } from "../../../utils/colors";
 import { Locale } from "../../../utils/Language";
 
-function SidebarContent({ routes, width }) {
+function SidebarContent({ routes, collapsed, onNavigate }) {
   const navigate = useNavigate();
-  const textColor = useTextColor();
-  const hoverBg = useColorValue('var(--mantine-color-gray-1)', 'var(--mantine-color-navy-6)');
+
+  const handleBack = () => {
+    navigate("/admin");
+    onNavigate?.();
+  };
 
   return (
-    <Flex w={width} direction="column" h="100%" pt={16} style={{ borderRadius: 30 }}>
-      <Group px={20} mb={8}>
-        <ActionIcon
-          variant="subtle"
-          color="gray"
-          radius="xl"
-          size="sm"
-          onClick={() => navigate("/admin")}
-          aria-label="Back to servers"
-        >
-          <IconArrowLeft size={18} />
-        </ActionIcon>
-        <Text fz="xs" c={textColor} fw={600} opacity={0.5}>
-          <Locale zh="返回" en="Back" />
-        </Text>
+    <Flex direction="column" h="100%" pt={16}>
+      <Group px={collapsed ? 0 : 20} mb={8} justify={collapsed ? "center" : "flex-start"}>
+        <Tooltip label="Back to servers" position="right" disabled={!collapsed}>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            radius="xl"
+            size="sm"
+            onClick={handleBack}
+            aria-label="Back to servers"
+          >
+            <IconArrowLeft size={18} />
+          </ActionIcon>
+        </Tooltip>
+        {!collapsed && (
+          <Text fz="xs" c="var(--text-muted)" fw={600}>
+            <Locale zh="返回" en="Back" />
+          </Text>
+        )}
       </Group>
-      <Brand />
+      <Brand collapsed={collapsed} />
       <Stack mt={8} mb="auto">
-        <Box ps={16} pe={12}>
-          <Links routes={routes} />
+        <Box ps={collapsed ? 8 : 16} pe={collapsed ? 8 : 12}>
+          <Links routes={routes} collapsed={collapsed} onNavigate={onNavigate} />
         </Box>
       </Stack>
     </Flex>

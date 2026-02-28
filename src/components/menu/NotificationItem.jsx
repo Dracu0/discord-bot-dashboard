@@ -1,10 +1,8 @@
 import { Box, Center, Flex, Image, Text } from "@mantine/core";
 import { IconArrowUp } from "@tabler/icons-react";
 import React from "react";
-import { useTextColor } from "../../utils/colors";
 
 export function NotificationItem({ title, description, image }) {
-    const textColor = useTextColor();
     return (
         <>
             <Box
@@ -17,11 +15,11 @@ export function NotificationItem({ title, description, image }) {
             </Box>
 
             <Flex direction="column">
-                <Text mb={5} fw="bold" c={textColor} fz="md">
+                <Text mb={5} fw="bold" c="var(--text-primary)" fz="md">
                     {title}
                 </Text>
                 <Flex align="center">
-                    <Text fz="sm" lh={1} c={textColor}>
+                    <Text fz="sm" lh={1} c="var(--text-secondary)">
                         {description}
                     </Text>
                 </Flex>

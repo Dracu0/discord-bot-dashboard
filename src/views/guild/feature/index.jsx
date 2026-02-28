@@ -41,14 +41,14 @@ function FeaturePanel() {
         >
             {canToggle && !enabled && (
                 <Box
-                    bg="orange.5"
-                    c="white"
-                    px={4}
-                    py={3}
-                    mb={4}
+                    bg="var(--status-warning-bg)"
+                    c="var(--status-warning)"
+                    px={16}
+                    py={12}
+                    mb={16}
                     fz="sm"
                     fw={600}
-                    style={{ borderRadius: 12 }}
+                    style={{ borderRadius: "var(--radius-md)", border: "1px solid var(--status-warning)" }}
                 >
                     <Locale
                         zh="此功能已停用。啟用後設定才會生效。"

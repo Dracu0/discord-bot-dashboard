@@ -93,7 +93,7 @@ export const AutoModFeature = {
             {
                 id: "automodAction",
                 name: "Violation Action",
-                description: "Action to take when auto-mod is triggered (delete only, warn, or timeout)",
+                description: "Delete: remove message silently · Warn: keep message and reply with a visible warning · Timeout: remove message and timeout the user",
                 type: "enum",
                 choices: ["delete", "warn", "timeout"],
                 value: values.automodAction || "delete",

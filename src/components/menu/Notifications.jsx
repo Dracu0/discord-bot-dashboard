@@ -8,12 +8,8 @@ import { IconBell } from "@tabler/icons-react";
 import { Locale } from "../../utils/Language";
 import { QueryHolderSkeleton } from "../../contexts/components/AsyncContext";
 import { NotificationItem } from "./NotificationItem";
-import { useCardBg, useColorValue, useTextColor } from "../../utils/colors";
 
 export function Notifications() {
-    const navbarIcon = useColorValue("gray", "white");
-    const textColor = useTextColor();
-    const menuBg = useCardBg();
     const [opened, { open, close }] = useDisclosure();
 
     const { id: serverId } = useContext(GuildContext);
@@ -27,18 +23,18 @@ export function Notifications() {
         <Menu opened={opened} onClose={close} position="bottom-end" width={400} withinPortal>
             <Menu.Target>
                 <UnstyledButton onClick={open} p={0}>
-                    <IconBell size={20} color={navbarIcon} />
+                    <IconBell size={20} color="var(--text-secondary)" />
                 </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown
                 p={20}
                 style={{
-                    borderRadius: 20,
-                    backgroundColor: menuBg,
+                    borderRadius: "var(--radius-lg)",
+                    backgroundColor: "var(--surface-primary)",
                     zIndex: 1500,
                 }}
             >
-                <Text w="100%" mb={20} fz="md" fw={600} c={textColor}>
+                <Text w="100%" mb={20} fz="md" fw={600} c="var(--text-primary)">
                     <Locale zh="通知" en="Notifications" />
                 </Text>
                 <Flex direction="column" gap={12}>

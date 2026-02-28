@@ -8,7 +8,6 @@ import DataTable from "./DataTable";
 import PieChartData from "../../charts/data/PieChartData";
 import { List } from "./List";
 import InformationMap from "./InformationMap";
-import { useIconColor, useColorValue } from "../../../utils/colors";
 
 export function DataList({items}) {
     return items.map((item, key) => {
@@ -101,15 +100,12 @@ function getChartType(type) {
 }
 
 function BaseIcon({icon: IconComp}) {
-    const iconColor = useIconColor()
-    const boxBg = useColorValue("var(--mantine-color-gray-2)", "rgba(255,255,255,0.1)");
-
     return <IconBox
         w={56}
         h={56}
-        style={{ background: boxBg }}
+        style={{ background: "var(--surface-secondary)" }}
         icon={
-            <IconComp size={32} color={iconColor}/>
+            <IconComp size={32} color="var(--accent-primary)"/>
         }
     />
 }

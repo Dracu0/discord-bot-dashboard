@@ -1,55 +1,79 @@
 import React, { useContext } from "react";
-import { Avatar, Flex, Group, Skeleton, Text, Divider } from "@mantine/core";
+import { Avatar, Flex, Group, Skeleton, Text, Divider, Tooltip } from "@mantine/core";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { iconToUrl, useGuild } from "api/discord/DiscordApi";
 import { config } from "../../../config/config";
-import { useTextColor, useBrandBg, useColorValue } from "../../../utils/colors";
 
-export function SidebarBrand() {
-  const logoColor = useTextColor();
-  const brandColor = useBrandBg();
+export function SidebarBrand({ collapsed }) {
   const { id } = useContext(GuildContext);
 
   return (
     <Flex align="center" direction="column" gap="md">
       {id != null ? (
-        <GuildHeader id={id} logoColor={logoColor} />
+        <GuildHeader id={id} collapsed={collapsed} />
       ) : (
         <Flex align="center" direction="column" gap="xs" my={20}>
-          <Text
-            fw={800}
-            fz="xl"
-            c={brandColor}
-            ff="'Space Grotesk', 'DM Sans', sans-serif"
-            style={{ letterSpacing: '-0.5px' }}
-          >
-            {config.name}
-          </Text>
-          <Text fz="xs" c={logoColor} fw={500} opacity={0.6}>
-            Dashboard
-          </Text>
+          {collapsed ? (
+            <Tooltip label={config.name} position="right">
+              <Text
+                fw={800}
+                fz="lg"
+                c="var(--accent-primary)"
+                ff="'Space Grotesk', 'DM Sans', sans-serif"
+              >
+                {config.name.charAt(0)}
+              </Text>
+            </Tooltip>
+          ) : (
+            <>
+              <Text
+                fw={800}
+                fz="xl"
+                c="var(--accent-primary)"
+                ff="'Space Grotesk', 'DM Sans', sans-serif"
+                style={{ letterSpacing: "-0.5px" }}
+              >
+                {config.name}
+              </Text>
+              <Text fz="xs" c="var(--text-muted)" fw={500}>
+                Dashboard
+              </Text>
+            </>
+          )}
         </Flex>
       )}
-      <Divider w="80%" mb={20} />
+      {!collapsed && <Divider w="80%" mb={20} color="var(--sidebar-border)" />}
     </Flex>
   );
 }
 
-function GuildHeader({ id, logoColor }) {
+function GuildHeader({ id, collapsed }) {
   const query = useGuild(id);
-  const brandColor = useBrandBg();
-  const subtleBg = useColorValue('var(--mantine-color-gray-1)', 'var(--mantine-color-navy-6)');
 
-  return query.isLoading ? (
-    <Skeleton w="80%" h={80} radius="xl" />
-  ) : (
+  if (query.isLoading) {
+    return <Skeleton w={collapsed ? 40 : "80%"} h={collapsed ? 40 : 80} radius="xl" />;
+  }
+
+  const icon = iconToUrl(query.data.id, query.data.icon);
+
+  if (collapsed) {
+    return (
+      <Flex direction="column" align="center" gap={4} mt="xs">
+        <Tooltip label={query.data.name} position="right">
+          <Avatar name={query.data.name} src={icon} size="sm" radius="xl" />
+        </Tooltip>
+      </Flex>
+    );
+  }
+
+  return (
     <Flex direction="column" align="center" gap="xs" mt="xs">
       <Text
         fw={800}
         fz="xs"
-        c={brandColor}
+        c="var(--accent-primary)"
         ff="'Space Grotesk', 'DM Sans', sans-serif"
-        style={{ letterSpacing: '1px', textTransform: 'uppercase' }}
+        style={{ letterSpacing: "1px", textTransform: "uppercase" }}
       >
         {config.name}
       </Text>
@@ -57,15 +81,10 @@ function GuildHeader({ id, logoColor }) {
         align="center"
         px="md"
         py="xs"
-        style={{ borderRadius: 16, background: subtleBg }}
+        style={{ borderRadius: 16, background: "var(--surface-secondary)" }}
       >
-        <Avatar
-          name={query.data.name}
-          src={iconToUrl(query.data.id, query.data.icon)}
-          size="sm"
-          radius="xl"
-        />
-        <Text fw="bold" fz="lg" c={logoColor}>
+        <Avatar name={query.data.name} src={icon} size="sm" radius="xl" />
+        <Text fw="bold" fz="lg" c="var(--text-primary)">
           {query.data.name}
         </Text>
       </Group>

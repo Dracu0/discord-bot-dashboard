@@ -1,17 +1,11 @@
 import { SimpleGrid, Text } from "@mantine/core";
 import Card from "components/card/Card";
-import { useDetailColor, useNoteColor, useTextColor, useColorValue } from "utils/colors";
 
 export default function InformationMap({name, description, value, ...rest}) {
-    // Chakra Color Mode
-    const textColorPrimary = useTextColor();
-    const textColorSecondary = useNoteColor();
-
-
     return (
         <Card {...rest}>
             <Text
-                c={textColorPrimary}
+                c="var(--text-primary)"
                 fw="bold"
                 fz="xl"
                 mt={10}
@@ -19,7 +13,7 @@ export default function InformationMap({name, description, value, ...rest}) {
             >
                 {name}
             </Text>
-            <Text c={textColorSecondary} fz="md" me={26} mb={40}>
+            <Text c="var(--text-muted)" fz="md" me={26} mb={40}>
                 {description}
             </Text>
 
@@ -39,17 +33,13 @@ export default function InformationMap({name, description, value, ...rest}) {
 
 function Information(props) {
     const { title, value, ...rest } = props;
-    // Chakra Color Mode
-    const textColorPrimary = useTextColor();
-    const textColorSecondary = useDetailColor();
-    const bg = useColorValue("var(--mantine-color-gray-0)", "var(--mantine-color-dark-7)");
 
     return (
-        <Card style={{ background: bg }} p={12} {...rest}>
-            <Text fw={500} c={textColorSecondary} fz="sm">
+        <Card style={{ background: "var(--surface-secondary)" }} p={12} {...rest}>
+            <Text fw={500} c="var(--text-secondary)" fz="sm">
                 {title}
             </Text>
-            <Text c={textColorPrimary} fw={500} fz="md">
+            <Text c="var(--text-primary)" fw={500} fz="md">
                 {value}
             </Text>
         </Card>

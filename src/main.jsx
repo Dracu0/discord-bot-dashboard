@@ -103,7 +103,7 @@ function AppRouter() {
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <MantineProvider theme={theme} defaultColorScheme="dark">
+    <MantineProvider theme={theme} defaultColorScheme="auto">
       <Notifications position="top-right" />
       <QueryClientProvider client={queryClient}>
         <SettingsProvider>

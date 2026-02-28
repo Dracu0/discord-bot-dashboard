@@ -3,15 +3,12 @@ import { Flex, SimpleGrid, Text, Transition } from "@mantine/core";
 import { Action } from "components/card/Action";
 import { config } from "config/config";
 import { Locale } from "utils/Language";
-import { useTextColor } from "../../../../utils/colors";
 
 export default function ActionsList() {
-    const textColor = useTextColor();
-
     return (
         <Flex direction="column" gap={20}>
             <Text
-                c={textColor}
+                c="var(--text-primary)"
                 fz="2xl"
                 fw={700}
                 ff="'Space Grotesk', sans-serif"

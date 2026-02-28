@@ -1,17 +1,23 @@
 import {createContext, useEffect, useState} from "react";
+import {useMantineColorScheme} from "@mantine/core";
 
 export const SettingsContext = createContext({
     updateSettings: (settings) => {},
     devMode: null,
     fixedWidth: null,
-    language: "en"
+    language: "en",
+    colorScheme: "auto",
+    sidebarCollapsed: false,
 })
 
 export function SettingsProvider({children}) {
+    const { setColorScheme } = useMantineColorScheme();
     const [settings, setSetting] = useState(() => ({
         devMode: getItem("dev_mode", false),
         fixedWidth: getItem("fixedWidth", true),
         language: getItem("lang", "en"),
+        colorScheme: getItem("colorScheme", "auto"),
+        sidebarCollapsed: getItem("sidebarCollapsed", false),
         updateSettings: (v) => {
             setSetting(prev => ({
                 ...prev,
@@ -24,8 +30,11 @@ export function SettingsProvider({children}) {
             localStorage.setItem("lang", settings.language)
             localStorage.setItem("dev_mode", settings.devMode)
             localStorage.setItem("fixedWidth", settings.fixedWidth)
+            localStorage.setItem("colorScheme", JSON.stringify(settings.colorScheme))
+            localStorage.setItem("sidebarCollapsed", JSON.stringify(settings.sidebarCollapsed))
+            setColorScheme(settings.colorScheme)
         },
-        [settings]
+        [settings, setColorScheme]
     )
 
     return <SettingsContext.Provider value={settings}>

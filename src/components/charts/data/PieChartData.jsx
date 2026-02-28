@@ -2,15 +2,12 @@ import { Box, Flex, SimpleGrid, Text } from "@mantine/core";
 import Card from "components/card/Card";
 import PieChart from "components/charts/PieChart";
 import React from "react";
-import { useNoteColor, useTextColor } from "utils/colors";
-
 export default function PieChartData({ name, data, options, unit }) {
-    const textColor = useTextColor();
 
     return (
         <Card p={20} style={{ alignItems: "center", flexDirection: "column" }} w="100%">
             <Flex mb="3rem">
-                <Text c={textColor} fz="lg" fw="bold" mt={4}>
+                <Text c="var(--text-primary)" fz="lg" fw="bold" mt={4}>
                     {name}
                 </Text>
             </Flex>
@@ -40,8 +37,6 @@ export default function PieChartData({ name, data, options, unit }) {
 }
 
 function FooterItem({ label, value, unit }) {
-    const textColor = useTextColor();
-    const detailColor = useNoteColor();
 
     return (
         <Flex align="center" justify="center" direction="column" py={5}>
@@ -52,11 +47,11 @@ function FooterItem({ label, value, unit }) {
                     style={{ backgroundColor: "var(--mantine-color-brand-5)", borderRadius: "50%" }}
                     me={4}
                 />
-                <Text fz="xs" c={detailColor} fw={700} mb={5}>
+                <Text fz="xs" c="var(--text-secondary)" fw={700} mb={5}>
                     {label}
                 </Text>
             </Flex>
-            <Text ta="start" fz="lg" c={textColor} fw={700}>
+            <Text ta="start" fz="lg" c="var(--text-primary)" fw={700}>
                 {value}{unit}
             </Text>
         </Flex>

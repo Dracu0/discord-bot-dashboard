@@ -3,11 +3,8 @@ import { Anchor, Flex, Text } from "@mantine/core";
 import { homepage } from "variables/links";
 import { config } from "config/config";
 import { Locale } from "../../utils/Language";
-import { useTextColor } from "../../utils/colors";
 
 export default function Footer({ children }) {
-    const textColor = useTextColor();
-
     return (
         <Flex
             style={{ zIndex: 1 }}
@@ -18,11 +15,10 @@ export default function Footer({ children }) {
             pb={30}
         >
             <Text
-                c={textColor}
+                c="var(--text-secondary)"
                 ta={{ base: "center", xl: "start" }}
                 mb={{ base: 20, xl: 0 }}
                 fz="sm"
-                style={{ opacity: 0.7 }}
             >
                 &copy; {new Date().getFullYear()}
                 <Text span fw={500} ms={4}>

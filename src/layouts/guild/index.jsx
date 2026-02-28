@@ -3,11 +3,13 @@ import AdminFooter from "components/footer/FooterAdmin";
 import Navbar from "components/navbar/NavbarAdmin";
 import Sidebar from "components/sidebar/Sidebar";
 import { PageInfoProvider } from "contexts/PageInfoContext";
-import React from "react";
+import React, { useContext } from "react";
 import { Navigate, Outlet, Route, useParams } from "react-router-dom";
 import { UserDataProvider } from "contexts/UserDataContext";
+import { SettingsContext } from "contexts/SettingsContext";
 import routes from "../../routes";
 import { GuildContext } from "contexts/guild/GuildContext";
+import { SIDEBAR_FULL, SIDEBAR_COLLAPSED } from "../../utils/layout-tokens";
 
 function getRoutes(routes) {
     return routes.map((route, key) => {
@@ -18,6 +20,9 @@ function getRoutes(routes) {
 }
 
 function RouteWrapper({ children }) {
+    const { sidebarCollapsed } = useContext(SettingsContext);
+    const sidebarW = sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL;
+
     return (
         <Box>
             <PageInfoProvider>
@@ -27,13 +32,13 @@ function RouteWrapper({ children }) {
                         float: 'right',
                         minHeight: '100vh',
                         position: 'relative',
-                        transition: 'all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)',
+                        transition: 'all 0.25s cubic-bezier(.4,0,.2,1)',
                         overflow: 'visible',
                     }}
-                    w={{ base: '100%', xl: 'calc(100% - 290px)' }}
-                    maw={{ base: '100%', xl: 'calc(100% - 290px)' }}
+                    w={{ base: '100%', xl: `calc(100% - ${sidebarW}px)` }}
+                    maw={{ base: '100%', xl: `calc(100% - ${sidebarW}px)` }}
                 >
-                    <Box pos="fixed" style={{ zIndex: 100 }} w={{ base: '100%', xl: 'calc(100% - 290px)' }}>
+                    <Box pos="fixed" style={{ zIndex: 100 }} w={{ base: '100%', xl: `calc(100% - ${sidebarW}px)` }}>
                         <Navbar />
                     </Box>
 
@@ -45,6 +50,9 @@ function RouteWrapper({ children }) {
                         pt={50}
                         id="main-content"
                         component="main"
+                        style={{
+                            animation: "fadeSlideUp 0.3s ease both",
+                        }}
                     >
                         {children}
                     </Box>

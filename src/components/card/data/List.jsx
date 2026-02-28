@@ -1,18 +1,15 @@
 import { Flex, Text } from "@mantine/core";
 import Card from "components/card/Card";
 import React from "react";
-import { useTextColor, useColorValue } from "../../../utils/colors";
 
 export function List({ title, description, icon, items }) {
-  const textColor = useTextColor();
-
   return (
     <Card p={0}>
       <Flex direction="column" w="100%" px={22} py={18}>
-        <Text c={textColor} fz="xl" fw={600}>
+        <Text c="var(--text-primary)" fz="xl" fw={600}>
           {title}
         </Text>
-        <Text c={textColor}>{description}</Text>
+        <Text c="var(--text-secondary)">{description}</Text>
       </Flex>
       {items.map((item, key) => (
         <ListItem key={key} icon={icon} {...item} />
@@ -22,8 +19,6 @@ export function List({ title, description, icon, items }) {
 }
 
 function ListItem({ name, description, value, icon: IconComp }) {
-  const textColor = useColorValue("var(--mantine-color-dark-9)", "white");
-
   return (
     <Card
       p={0}
@@ -36,16 +31,16 @@ function ListItem({ name, description, value, icon: IconComp }) {
       <Flex direction="column" justify="center">
         <Flex pos="relative" align="center">
           <Flex direction="column" w={{ base: "70%", md: "100%" }} me={{ base: 4, md: 16, xl: 24 }}>
-            <Text c={textColor} fz="md" mb={5} fw="bold" me={14}>
+            <Text c="var(--text-primary)" fz="md" mb={5} fw="bold" me={14}>
               {name}
             </Text>
-            <Text c="dimmed" fz="sm" fw={400} me={14}>
+            <Text c="var(--text-muted)" fz="sm" fw={400} me={14}>
               {description}
             </Text>
           </Flex>
           <Flex me={{ base: 4, md: 16, xl: 24 }} align="center">
-            {IconComp && <IconComp size={18} color={textColor} style={{ marginRight: 7 }} />}
-            <Text fw={700} fz="md" c={textColor}>
+            {IconComp && <IconComp size={18} color="var(--text-primary)" style={{ marginRight: 7 }} />}
+            <Text fw={700} fz="md" c="var(--text-primary)">
               {value}
             </Text>
           </Flex>

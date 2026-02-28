@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mantine/core";
+import { Box, Grid, Text, Title } from "@mantine/core";
 
 // Custom components
 import Banner from "views/admin/profile/components/Banner";
@@ -9,6 +9,7 @@ import ServerPicker from "views/admin/profile/components/ServerPicker";
 import React, { useContext } from "react";
 import { UserDataContext } from "contexts/UserDataContext";
 import { avatarToUrl, bannerToUrl, useGuilds } from "api/discord/DiscordApi";
+import { Locale } from "utils/Language";
 
 export default function Overview() {
     const user = useContext(UserDataContext);
@@ -20,7 +21,7 @@ export default function Overview() {
 
     return (
         <Box pt={{ base: 30, md: 80 }}>
-            <Grid>
+            <Grid gutter={20}>
                 <Grid.Col span={{ base: 12, lg: 7 }}>
                     <Banner
                         banner={banner && bannerToUrl(id, banner)}

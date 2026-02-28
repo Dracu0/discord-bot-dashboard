@@ -1,24 +1,21 @@
-/* eslint-disable */
 import React from "react";
-import {NavLink, useLocation} from "react-router-dom";
-import {Box, Flex, Group, Text, UnstyledButton} from "@mantine/core";
-import {useBrandBg, useNoteColor, useTextColor, useColorValue} from "utils/colors";
-import {useLocale} from "utils/Language";
-import {IconCircle} from "@tabler/icons-react";
+import { NavLink, useLocation } from "react-router-dom";
+import { Box, Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { useLocale } from "utils/Language";
+import { IconCircle } from "@tabler/icons-react";
 
 function hasSegment(pathname, segment) {
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
   return segments.includes(segment);
 }
 
 function endsWithSegment(pathname, segment) {
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
   return segments[segments.length - 1] === segment;
 }
 
-export function SidebarLinks({ routes }) {
+export function SidebarLinks({ routes, collapsed, onNavigate }) {
   const locale = useLocale();
-  const categoryColor = useNoteColor();
 
   const grouped = [];
   let lastCategory = null;
@@ -34,104 +31,150 @@ export function SidebarLinks({ routes }) {
 
   return grouped.map((item) => {
     if (item.type === "category") {
+      if (collapsed) return null;
       return (
         <Box key={item.key} mt={18} mb={8} px={4}>
           <Text
-            fz="xs"
+            fz={11}
             fw={700}
             ff="'Space Grotesk', 'DM Sans', sans-serif"
-            c={categoryColor}
+            c="var(--text-muted)"
             tt="uppercase"
-            style={{ letterSpacing: '1.5px' }}
+            style={{ letterSpacing: "1.5px" }}
           >
             {item.label}
           </Text>
         </Box>
       );
     }
-    return <RouteItem key={item.key} route={item.route} />;
+    return (
+      <RouteItem
+        key={item.key}
+        route={item.route}
+        collapsed={collapsed}
+        onNavigate={onNavigate}
+      />
+    );
   });
 }
 
-function RouteItem({route}) {
+function RouteItem({ route, collapsed, onNavigate }) {
   const location = useLocation();
   const active = endsWithSegment(location.pathname, route.path);
   const includes = hasSegment(location.pathname, route.path);
 
   return (
-      <>
-        <Item name={route.name} path={route.path} active={active} icon={<Box me="xs">{route.icon}</Box>} />
+    <>
+      <Item
+        name={route.name}
+        path={route.path}
+        active={active}
+        icon={route.icon}
+        collapsed={collapsed}
+        onNavigate={onNavigate}
+      />
 
+      {!collapsed && (
         <Flex direction="column" pl="xl">
-          {includes && route.items && route.items.map((item, key) => {
-            const path = `${route.path}/${item.path}`
-
-            return <Item
-                key={key}
-                path={path}
-                active={hasSegment(location.pathname, item.path)}
-                name={item.name}
-                icon={<IconCircle size={12} />}
-            />
-          })}
+          {includes &&
+            route.items &&
+            route.items.map((item, key) => {
+              const path = `${route.path}/${item.path}`;
+              return (
+                <Item
+                  key={key}
+                  path={path}
+                  active={hasSegment(location.pathname, item.path)}
+                  name={item.name}
+                  icon={<IconCircle size={8} />}
+                  collapsed={false}
+                  onNavigate={onNavigate}
+                />
+              );
+            })}
         </Flex>
-      </>
+      )}
+    </>
   );
 }
 
-function Item({active, name, path, icon}) {
-  const activeColor = useTextColor();
-  const inactiveColor = useNoteColor();
-  const brandColor = useBrandBg();
-  const activeBg = useColorValue('var(--mantine-color-gray-1)', 'var(--mantine-color-navy-6)');
-  const hoverBg = useColorValue('var(--mantine-color-gray-0)', 'var(--mantine-color-navy-5)');
+function Item({ active, name, path, icon, collapsed, onNavigate }) {
   const locale = useLocale();
+  const label = locale(name);
 
-  return (
-      <NavLink to={path} style={{ textDecoration: 'none' }}>
-        <UnstyledButton
-          py={5}
-          px={4}
-          my={2}
-          w="100%"
+  const button = (
+    <UnstyledButton
+      py={collapsed ? 10 : 6}
+      px={collapsed ? 0 : 10}
+      my={2}
+      w="100%"
+      onClick={onNavigate}
+      style={{
+        borderRadius: "var(--radius-md)",
+        background: active ? "var(--sidebar-active)" : "transparent",
+        transition: "all 0.2s ease",
+        display: "flex",
+        justifyContent: collapsed ? "center" : "flex-start",
+        alignItems: "center",
+      }}
+      styles={{
+        root: {
+          "&:hover": {
+            background: active ? "var(--sidebar-active)" : "var(--sidebar-hover)",
+          },
+        },
+      }}
+    >
+      <Flex align="center" gap={collapsed ? 0 : 10} justify={collapsed ? "center" : "flex-start"} w="100%">
+        <Box
+          c={active ? "var(--accent-primary)" : "var(--text-muted)"}
           style={{
-            borderRadius: 14,
-            background: active ? activeBg : 'transparent',
-            transition: 'all 0.2s ease',
-          }}
-          styles={{
-            root: {
-              '&:hover': {
-                background: active ? activeBg : hoverBg,
-                transform: active ? 'none' : 'translateX(2px)',
-              },
-            },
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            width: collapsed ? 24 : 20,
           }}
         >
-          <Group gap={active ? 22 : 26} wrap="nowrap">
-            <Flex w="100%" align="center" justify="center">
-              <Box c={active ? brandColor : inactiveColor} me="xs">
-                {icon}
-              </Box>
-              <Text
-                  style={{ flex: 1 }}
-                  c={active ? activeColor : inactiveColor}
-                  fw={active ? 'bold' : 'normal'}
-                  ff="'Space Grotesk', 'DM Sans', sans-serif"
-                  fz="sm"
-              >
-                {locale(name)}
-              </Text>
-            </Flex>
-            <Box
-                h={36}
-                w={4}
-                bg={active ? brandColor : 'transparent'}
-                style={{ borderRadius: 5, transition: 'all 0.2s ease' }}
-            />
-          </Group>
-        </UnstyledButton>
-      </NavLink>
+          {icon}
+        </Box>
+        {!collapsed && (
+          <Text
+            style={{ flex: 1 }}
+            c={active ? "var(--text-primary)" : "var(--text-secondary)"}
+            fw={active ? 600 : 400}
+            ff="'Space Grotesk', 'DM Sans', sans-serif"
+            fz="sm"
+            truncate
+          >
+            {label}
+          </Text>
+        )}
+        {!collapsed && active && (
+          <Box
+            w={4}
+            h={20}
+            style={{
+              borderRadius: 4,
+              background: "var(--accent-primary)",
+              flexShrink: 0,
+            }}
+          />
+        )}
+      </Flex>
+    </UnstyledButton>
+  );
+
+  return (
+    <NavLink to={path} style={{ textDecoration: "none" }}>
+      {collapsed ? (
+        <Tooltip label={label} position="right" withArrow>
+          {button}
+        </Tooltip>
+      ) : (
+        button
+      )}
+    </NavLink>
   );
 }
 

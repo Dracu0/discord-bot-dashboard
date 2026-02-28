@@ -9,10 +9,10 @@ import { GuildContext } from "contexts/guild/GuildContext";
 import { DataList } from "components/card/data/DataCard";
 import { config } from "config/config";
 import { usePageState } from "utils/State";
-import { useLocale } from "utils/Language";
-import { useDetailColor, useTextColor } from "utils/colors";
+import { useLocale, Locale } from "utils/Language";
 import { PAGE_PT } from "utils/layout-tokens";
 import NotificationFeed from "components/card/NotificationFeed";
+import { UserDataContext } from "contexts/UserDataContext";
 
 export default function Dashboard() {
     const locale = useLocale()
@@ -27,6 +27,7 @@ export default function Dashboard() {
 export function UserReports() {
     const { detail } = useContext(GuildDetailContext)
     const { id: serverId } = useContext(GuildContext)
+    const user = useContext(UserDataContext)
     const data = config.data.dashboard
 
     const query = useQuery({
@@ -37,6 +38,19 @@ export function UserReports() {
 
     return (
         <Box pt={PAGE_PT}>
+            {user && (
+                <Box mb={24}>
+                    <Title order={2} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" fw={700}>
+                        <Locale
+                            zh={`歡迎回來, ${user.username}`}
+                            en={`Welcome back, ${user.username}`}
+                        />
+                    </Title>
+                    <Text c="var(--text-secondary)" fz="sm" mt={4}>
+                        <Locale zh="這是您伺服器的概覽" en="Here's an overview of your server" />
+                    </Text>
+                </Box>
+            )}
             <NotificationFeed />
             <Stack gap={32} align="stretch">
                 {data.map((row, key) => {
@@ -66,21 +80,18 @@ export function UserReports() {
 }
 
 function SectionHeader({ label }) {
-    const textColor = useTextColor()
-    const borderColor = useDetailColor()
-
     return (
         <Box mb={16}>
             <Title
                 order={3}
-                c={textColor}
+                c="var(--text-primary)"
                 mb={8}
                 ff="'Space Grotesk', sans-serif"
                 lts="-0.01em"
             >
                 {label}
             </Title>
-            <Divider color={borderColor} opacity={0.2} />
+            <Divider color="var(--border-subtle)" opacity={0.4} />
         </Box>
     )
 }
