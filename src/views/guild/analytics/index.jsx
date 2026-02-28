@@ -8,7 +8,7 @@ import { IconChartBar, IconTrendingUp, IconTrendingDown } from "@tabler/icons-re
 import { GuildContext } from "contexts/guild/GuildContext";
 import { getAnalytics } from "api/internal";
 import { usePageInfo } from "contexts/PageInfoContext";
-import { Locale } from "utils/Language";
+import { Locale, useLocale } from "utils/Language";
 import { PAGE_PT } from "utils/layout-tokens";
 import Card from "components/card/Card";
 import ApexChart from "components/charts/ApexChart";
@@ -180,7 +180,8 @@ function formatDuration(ms) {
 }
 
 export default function Analytics() {
-    usePageInfo({ zh: "數據分析", en: "Analytics" });
+    const locale = useLocale();
+    usePageInfo(locale({ zh: "數據分析", en: "Analytics" }));
     const { id: serverId } = useContext(GuildContext);
     const [days, setDays] = useState("30");
 

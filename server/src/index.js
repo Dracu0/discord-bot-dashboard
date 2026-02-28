@@ -140,8 +140,6 @@ const sessionMiddleware = session({
     },
 });
 app.use(sessionMiddleware);
-// Expose session middleware for WebSocket authentication
-app._sessionMiddleware = sessionMiddleware;
 
 // Passport (Discord OAuth2)
 configurePassport(passport, {
@@ -192,8 +190,8 @@ const server = app.listen(PORT, '0.0.0.0', () => {
         mode: IS_PRODUCTION ? 'production' : 'development',
     });
 
-    // Attach WebSocket server (no-op if REDIS_URL not set)
-    startWebSocketServer(server);
+    // Attach WebSocket server
+    startWebSocketServer(server, sessionMiddleware);
 });
 
 // Graceful shutdown

@@ -10,17 +10,17 @@ const guildPresence = new Map();
  * Parse the session from the HTTP upgrade request using the same
  * session middleware the Express app uses. Returns the session or null.
  */
-function parseSession(httpServer, req) {
+let _sessionMiddleware = null;
+
+function parseSession(req) {
     return new Promise((resolve) => {
-        // The Express session middleware is stored on the app
-        const app = httpServer._app;
-        if (!app || !app._sessionMiddleware) {
+        if (!_sessionMiddleware) {
             resolve(null);
             return;
         }
         // Create a minimal response object for the middleware
         const res = { setHeader() {}, end() {} };
-        app._sessionMiddleware(req, res, () => {
+        _sessionMiddleware(req, res, () => {
             resolve(req.session || null);
         });
     });
@@ -33,7 +33,8 @@ function parseSession(httpServer, req) {
  *
  * @param {import('http').Server} httpServer
  */
-function startWebSocketServer(httpServer) {
+function startWebSocketServer(httpServer, sessionMiddleware) {
+    _sessionMiddleware = sessionMiddleware || null;
     const hasRedis = !!process.env.REDIS_URL;
     if (!hasRedis) {
         logger.info('websocket_no_redis', { reason: 'REDIS_URL not configured — WS will work without pub/sub' });
@@ -45,7 +46,7 @@ function startWebSocketServer(httpServer) {
         // Authenticate on upgrade — reject unauthenticated connections
         verifyClient: async ({ req }, done) => {
             try {
-                const session = await parseSession(httpServer, req);
+                const session = await parseSession(req);
                 if (session?.passport?.user) {
                     done(true);
                 } else {

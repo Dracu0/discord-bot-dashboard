@@ -7,12 +7,13 @@ import { IconTrophy } from "@tabler/icons-react";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { getLeaderboard } from "api/internal";
 import { usePageInfo } from "contexts/PageInfoContext";
-import { useTranslation } from "utils/Language";
+import { useLocale, useTranslation } from "utils/Language";
 import { PAGE_PT } from "utils/layout-tokens";
 import Card from "components/card/Card";
 
 export default function Leaderboard() {
-    usePageInfo({ zh: "排行榜", en: "Leaderboard" });
+    const locale = useLocale();
+    usePageInfo(locale({ zh: "排行榜", en: "Leaderboard" }));
     const { id: serverId } = useContext(GuildContext);
     const [page, setPage] = useState(1);
     const { t } = useTranslation();
