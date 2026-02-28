@@ -1,0 +1,129 @@
+export default {
+    // Common
+    "common.loading": "Loading...",
+    "common.error": "An error occurred",
+    "common.save": "Save",
+    "common.cancel": "Cancel",
+    "common.delete": "Delete",
+    "common.confirm": "Confirm",
+    "common.back": "Back",
+    "common.next": "Next",
+    "common.search": "Search",
+    "common.noData": "No data available",
+    "common.users": "users",
+    "common.enabled": "Enabled",
+    "common.disabled": "Disabled",
+
+    // Navigation & Sidebar
+    "nav.overview": "Overview",
+    "nav.configuration": "Configuration",
+    "nav.management": "Management",
+    "nav.dashboard": "Dashboard",
+    "nav.features": "Bot Features",
+    "nav.settings": "Server Settings",
+    "nav.actions": "Actions",
+    "nav.auditLog": "Audit Log",
+    "nav.analytics": "Analytics",
+    "nav.leaderboard": "Leaderboard",
+
+    // Dashboard
+    "dashboard.welcome": "Welcome back, {username}",
+    "dashboard.overview": "Here's an overview of your server",
+    "dashboard.totalMembers": "Total Members",
+    "dashboard.onlineMembers": "Online Members",
+    "dashboard.serverOverview": "Server Overview",
+    "dashboard.configStatus": "Current server configuration status",
+    "dashboard.xpTracked": "XP Tracked Users",
+    "dashboard.totalSuggestions": "Total Suggestions",
+    "dashboard.pendingSuggestions": "Pending Suggestions",
+    "dashboard.totalModActions": "Total Mod Actions",
+    "dashboard.xpLeaderboard": "XP Leaderboard",
+    "dashboard.recentModActions": "Recent Mod Actions",
+    "dashboard.detailedReports": "Detailed Reports",
+
+    // Features
+    "features.title": "Bot Features",
+    "features.enable": "Enable",
+    "features.disable": "Disable",
+    "features.configSaved": "Configuration saved",
+    "features.saveFailed": "Failed to save configuration",
+
+    // Actions
+    "actions.title": "Server Actions",
+    "actions.description": "Review suggestions, view moderation history, and manage server tasks",
+    "actions.list": "Actions List",
+    "actions.tasks": "Tasks",
+    "actions.noTasks": "No Tasks running",
+    "actions.deleteConfirm": "Are you sure you want to delete this task?",
+    "actions.watchTutorial": "Watch Tutorial",
+
+    // Onboarding
+    "onboarding.welcome": "Welcome to {name}!",
+    "onboarding.welcomeDesc": "Let's set up your server. Choose which features you'd like to enable.",
+    "onboarding.chooseFeatures": "Choose Features",
+    "onboarding.letsGo": "Let's Go!",
+    "onboarding.finish": "You're All Set!",
+    "onboarding.finishDesc": "You can always change these later in the Features panel.",
+    "onboarding.goToFeatures": "Go to Features",
+    "onboarding.skip": "Skip Setup",
+    "onboarding.recommended": "Recommended",
+
+    // Audit Log
+    "auditLog.title": "Audit Log",
+    "auditLog.filters": "Filters",
+    "auditLog.time": "Time",
+    "auditLog.actor": "Actor",
+    "auditLog.source": "Source",
+    "auditLog.category": "Category",
+    "auditLog.action": "Action",
+    "auditLog.target": "Target",
+    "auditLog.noEntries": "No audit log entries found",
+
+    // Analytics
+    "analytics.title": "Analytics",
+    "analytics.modActions": "Mod Actions",
+    "analytics.modTrend": "Moderation Trend",
+    "analytics.actionBreakdown": "Action Type Breakdown",
+    "analytics.levelDist": "Level Distribution",
+    "analytics.suggestionStatus": "Suggestion Status",
+    "analytics.openTickets": "Open Tickets",
+    "analytics.avgResolution": "Avg Resolution",
+    "analytics.tickets": "Tickets",
+    "analytics.dashboardActivity": "Dashboard Activity",
+    "analytics.noModActions": "No moderation actions in this period",
+    "analytics.noSuggestions": "No suggestion data",
+    "analytics.lastDays": "Last {days} days",
+    "analytics.totalSuggestions": "{count} total suggestions",
+    "analytics.loadFailed": "Failed to load analytics data",
+
+    // Leaderboard
+    "leaderboard.title": "XP Leaderboard",
+    "leaderboard.loadFailed": "Failed to load leaderboard",
+    "leaderboard.noData": "No leaderboard data",
+
+    // Settings
+    "settings.title": "Server Settings",
+    "settings.accentColor": "Accent Color",
+    "settings.exportSettings": "Export Settings",
+    "settings.language": "Language",
+    "settings.theme": "Theme",
+
+    // Notifications
+    "notifications.title": "Notifications",
+    "notifications.markAllRead": "Mark all as read",
+    "notifications.noNotifications": "No notifications",
+    "notifications.all": "All",
+    "notifications.unread": "Unread",
+
+    // Errors
+    "error.boundary.title": "Something went wrong",
+    "error.boundary.description": "An unexpected error occurred. Please try refreshing the page.",
+    "error.boundary.retry": "Retry",
+    "error.notFound": "Page not found",
+    "error.serverError": "Server error",
+
+    // Auth
+    "auth.login": "Login with Discord",
+    "auth.logout": "Logout",
+    "auth.selectServer": "Select a Server",
+}

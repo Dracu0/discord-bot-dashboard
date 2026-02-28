@@ -1,5 +1,8 @@
-import {useContext} from "react";
+import {useCallback, useContext} from "react";
 import {SettingsContext} from "../contexts/SettingsContext";
+import { en, zh } from "../locales";
+
+const locales = { en, zh };
 
 export const Languages = [
     { label: "Chinese", value: "zh"},
@@ -38,4 +41,28 @@ export function Locale(props) {
     const {language} = useContext(SettingsContext)
 
     return props[language] || props["en"]
+}
+
+/**
+ * Translation hook that reads from centralized locale files.
+ * Supports parameter interpolation: t("dashboard.welcome", { username: "John" })
+ *
+ * @return {{ t: (key: string, params?: Record<string, string|number>) => string, language: string }}
+ */
+export function useTranslation() {
+    const {language} = useContext(SettingsContext)
+    const messages = locales[language] || locales.en;
+    const fallback = locales.en;
+
+    const t = useCallback((key, params) => {
+        let text = messages[key] ?? fallback[key] ?? key;
+        if (params) {
+            for (const [k, v] of Object.entries(params)) {
+                text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+            }
+        }
+        return text;
+    }, [messages, fallback]);
+
+    return { t, language };
 }

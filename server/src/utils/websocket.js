@@ -3,6 +3,8 @@ const logger = require('./logger');
 const { getSubscriber } = require('./redis');
 
 let wss = null;
+// Track active presence: Map<guildId, Map<sessionId, { userId, username, avatar, page, lastSeen }>>
+const guildPresence = new Map();
 
 /**
  * Parse the session from the HTTP upgrade request using the same
@@ -59,13 +61,26 @@ function startWebSocketServer(httpServer) {
 
     wss.on('connection', (ws, req) => {
         ws.isAlive = true;
-        ws.subscribedGuilds = new Set(); // Track which guilds this client cares about
+        ws.subscribedGuilds = new Set();
+        ws.sessionId = req.session?.id || null;
+        ws.userId = req.session?.passport?.user?.id || null;
+        ws.username = req.session?.passport?.user?.username || null;
+        ws.avatar = req.session?.passport?.user?.avatar || null;
+
         ws.on('pong', () => { ws.isAlive = true; });
         ws.on('error', (err) => {
             logger.warn('ws_client_error', { error: err.message });
         });
 
-        // Handle client messages (e.g. guild subscription)
+        ws.on('close', () => {
+            // Clean up presence on disconnect
+            for (const guildId of ws.subscribedGuilds) {
+                removePresence(guildId, ws.sessionId);
+                broadcastPresence(guildId);
+            }
+        });
+
+        // Handle client messages
         ws.on('message', (raw) => {
             try {
                 const msg = JSON.parse(raw);
@@ -73,6 +88,18 @@ function startWebSocketServer(httpServer) {
                     ws.subscribedGuilds.add(msg.guildId);
                 } else if (msg.type === 'unsubscribe_guild' && typeof msg.guildId === 'string') {
                     ws.subscribedGuilds.delete(msg.guildId);
+                    removePresence(msg.guildId, ws.sessionId);
+                    broadcastPresence(msg.guildId);
+                } else if (msg.type === 'presence' && typeof msg.guildId === 'string' && ws.subscribedGuilds.has(msg.guildId)) {
+                    // User is announcing their presence on a page
+                    setPresence(msg.guildId, ws.sessionId, {
+                        userId: ws.userId,
+                        username: ws.username,
+                        avatar: ws.avatar,
+                        page: typeof msg.page === 'string' ? msg.page.slice(0, 100) : 'dashboard',
+                        lastSeen: Date.now(),
+                    });
+                    broadcastPresence(msg.guildId);
                 }
             } catch {
                 // Ignore invalid messages
@@ -152,6 +179,57 @@ function safeSend(ws, payload) {
 
 function tryParse(str) {
     try { return JSON.parse(str); } catch { return str; }
+}
+
+// --- Presence management ---
+function setPresence(guildId, sessionId, info) {
+    if (!sessionId) return;
+    if (!guildPresence.has(guildId)) {
+        guildPresence.set(guildId, new Map());
+    }
+    guildPresence.get(guildId).set(sessionId, info);
+}
+
+function removePresence(guildId, sessionId) {
+    if (!sessionId) return;
+    const guild = guildPresence.get(guildId);
+    if (guild) {
+        guild.delete(sessionId);
+        if (guild.size === 0) guildPresence.delete(guildId);
+    }
+}
+
+function getPresenceList(guildId) {
+    const guild = guildPresence.get(guildId);
+    if (!guild) return [];
+    const now = Date.now();
+    const results = [];
+    // Deduplicate by userId — keep the most recent entry
+    const seen = new Map();
+    for (const [, info] of guild) {
+        if (now - info.lastSeen > 120_000) continue; // stale > 2 min
+        const existing = seen.get(info.userId);
+        if (!existing || info.lastSeen > existing.lastSeen) {
+            seen.set(info.userId, info);
+        }
+    }
+    for (const info of seen.values()) {
+        results.push({
+            userId: info.userId,
+            username: info.username,
+            avatar: info.avatar,
+            page: info.page,
+        });
+    }
+    return results;
+}
+
+function broadcastPresence(guildId) {
+    broadcastToGuild(guildId, {
+        type: 'presence:update',
+        guildId,
+        users: getPresenceList(guildId),
+    });
 }
 
 function stopWebSocketServer() {

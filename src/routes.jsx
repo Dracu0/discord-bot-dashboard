@@ -1,6 +1,6 @@
 import React from "react";
 
-import {IconServer, IconPuzzle, IconSettings, IconHandStop, IconHistory, IconChartBar} from "@tabler/icons-react";
+import {IconServer, IconPuzzle, IconSettings, IconHandStop, IconHistory, IconChartBar, IconTrophy} from "@tabler/icons-react";
 import {FeaturesLayout} from "./layouts/guild/features";
 import {ActionsLayout} from "./layouts/guild/actions";
 import {config} from "./config/config";
@@ -15,6 +15,7 @@ const TaskConfigBoard = React.lazy(() => import("./views/guild/action/task"));
 const SubmitTaskBoard = React.lazy(() => import("./views/guild/action/add"));
 const AuditLog = React.lazy(() => import("./views/guild/audit-log"));
 const Analytics = React.lazy(() => import("./views/guild/analytics"));
+const Leaderboard = React.lazy(() => import("./views/guild/leaderboard"));
 
 /**
  * Public Routes that can access on sidebar
@@ -106,6 +107,13 @@ const routes = [
         icon: <IconChartBar size={20} />,
         path: "analytics",
         component: <Analytics />,
+    },
+    {
+        category: {zh: "管理", en: "Management"},
+        name: {zh: "排行榜", en: "Leaderboard"},
+        icon: <IconTrophy size={20} />,
+        path: "leaderboard",
+        component: <Leaderboard />,
     },
 ];
 

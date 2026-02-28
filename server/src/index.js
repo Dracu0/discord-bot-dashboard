@@ -1,5 +1,4 @@
 require('dotenv').config();
-const crypto = require('crypto');
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -62,17 +61,13 @@ if (IS_PRODUCTION) {
     app.set('trust proxy', 1);
 }
 
-// Security — nonce-based CSP for inline styles (eliminates 'unsafe-inline')
-app.use((req, res, next) => {
-    res.locals.cspNonce = crypto.randomBytes(16).toString('base64');
-    next();
-});
+// Security — CSP headers (unsafe-inline required for style-src because Mantine v7 injects inline styles at runtime)
 app.use(helmet({
     contentSecurityPolicy: IS_PRODUCTION ? {
         directives: {
             defaultSrc: ["'self'"],
             scriptSrc: ["'self'"],
-            styleSrc: ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`, "https://fonts.googleapis.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
             imgSrc: ["'self'", "data:", "https://cdn.discordapp.com"],
             connectSrc: ["'self'", "wss:"],

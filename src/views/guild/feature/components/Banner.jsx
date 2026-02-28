@@ -9,6 +9,7 @@ import { useLayoutUpdate } from "contexts/layouts/LayoutContext";
 import BackNavButton from "components/navigation/BackNavButton";
 import { useEnableFeatureMutation } from "api/utils";
 import { Locale, useLocale } from "utils/Language";
+import ActiveUsers from "components/card/ActiveUsers";
 
 function EnableToggle() {
     const { id: serverId } = useContext(GuildContext);
@@ -57,6 +58,7 @@ export default function useBanner(localeName) {
             title: localeName,
             description,
             buttons: [
+                <ActiveUsers key="presence" guildId={serverId} page={localeName} />,
                 ...(canToggle ? [<EnableToggle key="toggle" />] : []),
                 <BackNavButton
                     key="back"

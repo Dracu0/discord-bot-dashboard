@@ -12,6 +12,9 @@ let statusListeners = new Set();
 let reconnectTimer = null;
 let reconnectDelay = WS_RECONNECT_DELAY;
 let subscribedGuilds = new Set();
+// Presence state
+let presenceByGuild = {}; // { [guildId]: [{userId, username, avatar, page}] }
+let presenceListeners = new Set();
 
 function getWsUrl() {
     const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
@@ -54,6 +57,11 @@ function connect() {
         if (data.type === 'bot:status') {
             botStatus = data.data;
             for (const fn of statusListeners) fn();
+        }
+
+        if (data.type === 'presence:update' && data.guildId) {
+            presenceByGuild = { ...presenceByGuild, [data.guildId]: data.users || [] };
+            for (const fn of presenceListeners) fn();
         }
 
         for (const fn of listeners) fn(data);
@@ -167,4 +175,41 @@ export function useConfigInvalidation(guildId, onInvalidate) {
             cbRef.current();
         }
     }, [guildId]));
+}
+
+// --- Presence ---
+
+const PRESENCE_INTERVAL = 30_000; // Send presence heartbeat every 30s
+
+/**
+ * Announce presence on a page and subscribe to presence updates for a guild.
+ * Returns the list of active users for that guild.
+ *
+ * @param {string} guildId
+ * @param {string} page - current page/route name
+ * @returns {Array<{userId: string, username: string, avatar: string|null, page: string}>}
+ */
+export function usePresence(guildId, page) {
+    // Send presence announcements
+    useEffect(() => {
+        if (!guildId) return;
+        const send = () => wsSend({ type: 'presence', guildId, page });
+        send(); // send immediately
+        const interval = setInterval(send, PRESENCE_INTERVAL);
+        return () => clearInterval(interval);
+    }, [guildId, page]);
+
+    // Subscribe to presence updates via external store
+    const subscribe = useCallback((onStoreChange) => {
+        presenceListeners.add(onStoreChange);
+        ensureConnected();
+        return () => { presenceListeners.delete(onStoreChange); };
+    }, []);
+
+    const getPresenceSnapshot = useCallback(
+        () => presenceByGuild[guildId] || [],
+        [guildId]
+    );
+
+    return useSyncExternalStore(subscribe, getPresenceSnapshot, getPresenceSnapshot);
 }

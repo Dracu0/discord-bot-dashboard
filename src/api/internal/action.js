@@ -12,10 +12,10 @@ export async function getActionsData(serverId) {
 }
 
 /**
- * @returns {Promise<{tasks: Array<{createdAt: Date, id: number, status: string}>}>} an object contains an array of tasks
+ * @returns {Promise<{tasks: Array<{createdAt: Date, id: number, status: string}>, total: number, page: number, totalPages: number}>} paginated tasks
  */
-export function getActionDetail(serverId, actionId) {
-    return fetchAuto(`/guild/${serverId}/action/${actionId}`,
+export function getActionDetail(serverId, actionId, page = 1) {
+    return fetchAuto(`/guild/${serverId}/action/${actionId}?page=${page}`,
         { toJson: true }
     )
 }

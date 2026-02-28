@@ -16,6 +16,7 @@ import { UserDataContext } from "contexts/UserDataContext";
 import BotStatusIndicator from "components/card/BotStatusIndicator";
 import QuickActions from "components/card/QuickActions";
 import OnboardingWizard from "components/card/OnboardingWizard";
+import ActiveUsers from "components/card/ActiveUsers";
 
 export default function Dashboard() {
     const locale = useLocale()
@@ -63,7 +64,10 @@ export function UserReports() {
                                 <Locale zh="這是您伺服器的概覽" en="Here's an overview of your server" />
                             </Text>
                         </Box>
-                        <BotStatusIndicator />
+                        <Group gap="md">
+                            <ActiveUsers guildId={serverId} page="Dashboard" />
+                            <BotStatusIndicator />
+                        </Group>
                     </Group>
                 </Box>
             )}

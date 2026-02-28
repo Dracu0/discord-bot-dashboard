@@ -126,3 +126,12 @@ export async function getAnalytics(serverId, days = 30) {
     toJson: true
   })
 }
+
+/**
+ * Get paginated XP leaderboard
+ */
+export async function getLeaderboard(serverId, page = 1) {
+  return fetchAuto(`/guild/${serverId}/leaderboard?page=${page}`, {
+    toJson: true
+  })
+}

@@ -8,9 +8,15 @@ const { isObject, isValidObjectId, VALID_SUGGESTION_STATUSES } = require('./help
 router.get('/', async (req, res) => {
     try {
         const guildId = req.params.id;
-        const [modLogs, suggestions] = await Promise.all([
-            ModLog.find({ guildId }).sort({ createdAt: -1 }).limit(50).lean(),
-            Suggestion.find({ guildId }).sort({ createdAt: -1 }).limit(50).lean(),
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
+        const skip = (page - 1) * limit;
+
+        const [modLogs, totalModLogs, suggestions, totalSuggestions] = await Promise.all([
+            ModLog.find({ guildId }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+            ModLog.countDocuments({ guildId }),
+            Suggestion.find({ guildId }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+            Suggestion.countDocuments({ guildId }),
         ]);
 
         res.json({
@@ -32,6 +38,10 @@ router.get('/', async (req, res) => {
                 downvotes: s.downvotes.length,
                 createdAt: s.createdAt,
             })),
+            page,
+            totalModLogs,
+            totalSuggestions,
+            totalPages: Math.ceil(Math.max(totalModLogs, totalSuggestions) / limit),
         });
     } catch (err) {
         req.log?.error('actions_fetch_failed', { guildId: req.params.id, error: err });
@@ -43,10 +53,16 @@ router.get('/', async (req, res) => {
 router.get('/:actionId', async (req, res) => {
     try {
         const { id: guildId, actionId } = req.params;
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
+        const skip = (page - 1) * limit;
 
         if (actionId === 'manage_suggestions') {
-            const suggestions = await Suggestion.find({ guildId })
-                .sort({ createdAt: -1 }).limit(50).lean();
+            const [suggestions, total] = await Promise.all([
+                Suggestion.find({ guildId })
+                    .sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+                Suggestion.countDocuments({ guildId }),
+            ]);
 
             res.json({
                 tasks: suggestions.map(s => ({
@@ -55,10 +71,16 @@ router.get('/:actionId', async (req, res) => {
                     status: s.status,
                     createdAt: s.createdAt,
                 })),
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             });
         } else if (actionId === 'mod_history') {
-            const logs = await ModLog.find({ guildId })
-                .sort({ createdAt: -1 }).limit(50).lean();
+            const [logs, total] = await Promise.all([
+                ModLog.find({ guildId })
+                    .sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+                ModLog.countDocuments({ guildId }),
+            ]);
 
             res.json({
                 tasks: logs.map(l => ({
@@ -67,6 +89,9 @@ router.get('/:actionId', async (req, res) => {
                     status: l.action,
                     createdAt: l.createdAt,
                 })),
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
             });
         } else {
             res.status(404).json({ error: 'Unknown action' });

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import { Box, Center, Flex, SimpleGrid, Stack, Text, Transition } from "@mantine/core";
+import { Box, Center, Flex, Pagination, SimpleGrid, Stack, Text, Transition } from "@mantine/core";
 
 import { usePageInfo } from "contexts/PageInfoContext";
 import { ActionDetailContext, ActionDetailProvider, useActionInfo } from "contexts/actions/ActionDetailContext";
@@ -52,7 +52,7 @@ function TasksPanel() {
 }
 
 function TasksContent({includes}) {
-    const {tasks} = useContext(ActionDetailContext)
+    const {tasks, page, totalPages, setPage} = useContext(ActionDetailContext)
 
     return tasks.length === 0 ? (
         <Box style={{ backgroundImage: `url(${not_found})`, backgroundSize: "cover" }} h="50vh">
@@ -74,6 +74,11 @@ function TasksContent({includes}) {
                                 <Task key={task.id} task={task} />
                             ))}
                     </SimpleGrid>
+                    {totalPages > 1 && (
+                        <Center mt={16}>
+                            <Pagination total={totalPages} value={page} onChange={setPage} />
+                        </Center>
+                    )}
                 </div>
             )}
         </Transition>
