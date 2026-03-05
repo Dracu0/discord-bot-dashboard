@@ -43,6 +43,8 @@ export default function Leaderboard() {
     }
 
     const data = query.data;
+    if (!data) return null;
+    const users = data.users || [];
 
     return (
         <div style={{ paddingTop: "80px" }}>
@@ -78,7 +80,7 @@ export default function Leaderboard() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data.users.length === 0 ? (
+                        {users.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={4} className="border-none">
                                     <div className="flex items-center justify-center py-8">
@@ -87,7 +89,7 @@ export default function Leaderboard() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            data.users.map((user, i) => (
+                            users.map((user, i) => (
                                 <TableRow
                                     key={user.userId}
                                     className={i % 2 === 1 ? "bg-[var(--surface-secondary)]" : "bg-transparent"}

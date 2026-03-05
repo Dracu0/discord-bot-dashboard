@@ -43,7 +43,7 @@ function StatCard({ label, value, sublabel, color = "brand" }) {
     );
 }
 
-function ModerationTimeline({ data }) {
+function ModerationTimeline({ data = [] }) {
     const series = useMemo(() => [{
         name: "Actions",
         data: data.map(d => ({ x: d.date, y: d.count })),
@@ -83,7 +83,7 @@ function ModerationTimeline({ data }) {
     return <ApexChart options={options} series={series} type="area" height={280} />;
 }
 
-function ActionBreakdown({ data }) {
+function ActionBreakdown({ data = [] }) {
     const series = useMemo(() => data.map(d => d.count), [data]);
     const labels = useMemo(() => data.map(d => d.action || "unknown"), [data]);
     const colors = [CHART_COLORS.primary, "#339AF0", "#20C997", "#FF6B6B", "#FCC419", "#FF922B"];
@@ -102,7 +102,7 @@ function ActionBreakdown({ data }) {
     return <ApexChart options={options} series={series} type="donut" height={260} />;
 }
 
-function LevelDistribution({ data }) {
+function LevelDistribution({ data = [] }) {
     const series = useMemo(() => [{
         name: "Users",
         data: data.map(d => d.count),
@@ -135,7 +135,7 @@ function LevelDistribution({ data }) {
     return <ApexChart options={options} series={series} type="bar" height={260} />;
 }
 
-function SuggestionFunnel({ data }) {
+function SuggestionFunnel({ data = [] }) {
     const statusVariants = {
         pending: "yellow",
         approved: "green",
@@ -215,6 +215,7 @@ export default function Analytics() {
     }
 
     const data = query.data;
+    if (!data) return null;
 
     return (
         <div style={{ paddingTop: "80px" }}>
@@ -240,20 +241,20 @@ export default function Analytics() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <StatCard
                     label={<Locale zh="\u5be9\u6838\u64cd\u4f5c" en="Mod Actions" />}
-                    value={data.moderation.byDay.reduce((s, d) => s + d.count, 0)}
+                    value={(data.moderation?.byDay || []).reduce((s, d) => s + d.count, 0)}
                     sublabel={<Locale zh={`\u904e\u53bb ${days} \u5929`} en={`Last ${days} days`} />}
                 />
                 <StatCard
                     label={<Locale zh="\u5f85\u8655\u7406\u5efa\u8b70" en="Pending Suggestions" />}
-                    value={data.suggestions.byStatus.find(d => d.status === "pending")?.count ?? 0}
+                    value={(data.suggestions?.byStatus || []).find(d => d.status === "pending")?.count ?? 0}
                 />
                 <StatCard
                     label={<Locale zh="\u672a\u7d50\u5ba2\u670d\u55ae" en="Open Tickets" />}
-                    value={data.tickets.open}
+                    value={data.tickets?.open}
                 />
                 <StatCard
                     label={<Locale zh="\u5e73\u5747\u89e3\u6c7a\u6642\u9593" en="Avg Resolution" />}
-                    value={formatDuration(data.tickets.avgResolutionMs)}
+                    value={formatDuration(data.tickets?.avgResolutionMs)}
                     sublabel={<Locale zh="\u5ba2\u670d\u55ae" en="Tickets" />}
                 />
             </div>
@@ -264,14 +265,14 @@ export default function Analytics() {
                     <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
                         <Locale zh="\u5be9\u6838\u8da8\u52e2" en="Moderation Trend" />
                     </span>
-                    <ModerationTimeline data={data.moderation.byDay} />
+                    <ModerationTimeline data={data.moderation?.byDay} />
                 </Card>
 
                 <Card className="flex flex-col p-5">
                     <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
                         <Locale zh="\u64cd\u4f5c\u985e\u578b\u5206\u4f48" en="Action Type Breakdown" />
                     </span>
-                    <ActionBreakdown data={data.moderation.byType} />
+                    <ActionBreakdown data={data.moderation?.byType} />
                 </Card>
             </div>
 
@@ -281,25 +282,25 @@ export default function Analytics() {
                     <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
                         <Locale zh="\u7b49\u7d1a\u5206\u4f48" en="Level Distribution" />
                     </span>
-                    <LevelDistribution data={data.xp.levelDistribution} />
+                    <LevelDistribution data={data.xp?.levelDistribution} />
                 </Card>
 
                 <Card className="flex flex-col p-5">
                     <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
                         <Locale zh="\u5efa\u8b70\u72c0\u614b" en="Suggestion Status" />
                     </span>
-                    <SuggestionFunnel data={data.suggestions.byStatus} />
+                    <SuggestionFunnel data={data.suggestions?.byStatus} />
                 </Card>
             </div>
 
             {/* Audit Activity */}
-            {data.audit.byCategory.length > 0 && (
+            {(data.audit?.byCategory || []).length > 0 && (
                 <Card className="flex flex-col p-5">
                     <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
                         <Locale zh="\u5100\u8868\u677f\u64cd\u4f5c\u8a18\u9304" en="Dashboard Activity" />
                     </span>
                     <div className="flex items-center gap-4 flex-wrap">
-                        {data.audit.byCategory.map(d => (
+                        {(data.audit?.byCategory || []).map(d => (
                             <div key={d.category} className="flex items-center gap-1.5">
                                 <Badge variant="secondary" className="text-base">{d.category}</Badge>
                                 <span className="text-lg font-bold text-[var(--text-primary)]">{d.count}</span>
