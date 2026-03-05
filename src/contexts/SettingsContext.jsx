@@ -29,12 +29,16 @@ export function SettingsProvider({children}) {
     }))
 
     useEffect(() => {
-            localStorage.setItem("lang", settings.language)
-            localStorage.setItem("dev_mode", settings.devMode)
-            localStorage.setItem("fixedWidth", settings.fixedWidth)
-            localStorage.setItem("colorScheme", JSON.stringify(settings.colorScheme))
-            localStorage.setItem("sidebarCollapsed", JSON.stringify(settings.sidebarCollapsed))
-            localStorage.setItem("accentColor", JSON.stringify(settings.accentColor))
+            try {
+                localStorage.setItem("lang", settings.language)
+                localStorage.setItem("dev_mode", settings.devMode)
+                localStorage.setItem("fixedWidth", settings.fixedWidth)
+                localStorage.setItem("colorScheme", JSON.stringify(settings.colorScheme))
+                localStorage.setItem("sidebarCollapsed", JSON.stringify(settings.sidebarCollapsed))
+                localStorage.setItem("accentColor", JSON.stringify(settings.accentColor))
+            } catch {
+                // localStorage quota exceeded — settings will not persist this session
+            }
             setColorScheme(settings.colorScheme)
         },
         [settings, setColorScheme]
@@ -46,7 +50,12 @@ export function SettingsProvider({children}) {
 }
 
 function getItem(key, initial) {
-    const result = localStorage.getItem(key)
+    let result;
+    try {
+        result = localStorage.getItem(key)
+    } catch {
+        return initial
+    }
 
     if (result == null) {
         return initial
