@@ -1,5 +1,4 @@
 import React from "react";
-import { Anchor, Flex } from "@mantine/core";
 import { config } from "config/config";
 import Footer from "./Footer";
 import { useLocale } from "utils/Language";
@@ -9,13 +8,18 @@ export default function AdminFooter() {
 
     return (
         <Footer>
-            <Flex gap={{ base: 20, md: 44 }}>
+            <div className="flex gap-5 md:gap-11">
                 {config.footer.map((item, i) => (
-                    <Anchor key={i} fw={500} c="var(--text-secondary)" href={item.url}>
+                    <a
+                        key={i}
+                        className="font-medium"
+                        style={{ color: "var(--text-secondary)" }}
+                        href={item.url}
+                    >
                         {locale(item.name)}
-                    </Anchor>
+                    </a>
                 ))}
-            </Flex>
+            </div>
         </Footer>
     );
 }

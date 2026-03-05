@@ -1,7 +1,5 @@
 import React, { useContext, useMemo } from "react";
 
-import { Box, Flex, Text } from "@mantine/core";
-
 import { updateFeatureOptions } from "api/internal";
 
 import { useFeatureDetailQuery, useFeatureInfo } from "contexts/FeatureDetailContext";
@@ -35,35 +33,30 @@ function FeaturePanel() {
     useBanner(locale(name))
 
     return (
-        <Flex
-            direction="column"
-            mb={10}
-        >
+        <div className="flex flex-col mb-2.5">
             {canToggle && !enabled && (
-                <Box
-                    bg="var(--status-warning-bg)"
-                    c="var(--status-warning)"
-                    px={16}
-                    py={12}
-                    mb={16}
-                    fz="sm"
-                    fw={600}
-                    style={{ borderRadius: "var(--radius-md)", border: "1px solid var(--status-warning)" }}
+                <div
+                    className="px-4 py-3 mb-4 text-sm font-semibold rounded-[var(--radius-md)] border"
+                    style={{
+                        backgroundColor: "var(--status-warning-bg)",
+                        color: "var(--status-warning)",
+                        borderColor: "var(--status-warning)",
+                    }}
                 >
                     <Locale
-                        zh="此功能已停用。啟用後設定才會生效。"
+                        zh="\u6b64\u529f\u80fd\u5df2\u505c\u7528\u3002\u555f\u7528\u5f8c\u8a2d\u5b9a\u624d\u6703\u751f\u6548\u3002"
                         en="This feature is currently disabled. Enable it using the toggle above for settings to take effect."
                     />
-                </Box>
+                </div>
             )}
             {query.isLoading ?
                 <ConfigGridSkeleton />
                 : query.error || !query.data ?
-                <Text c="red.4">Failed to load feature configuration.</Text>
+                <span className="text-red-400">Failed to load feature configuration.</span>
                 :
                 <FeatureConfigPanel detail={query.data} enabled={enabled} />
             }
-        </Flex>
+        </div>
     );
 }
 
@@ -83,14 +76,13 @@ function FeatureConfigPanel({ detail, enabled }) {
     const onSave = (changes) => updateFeatureOptions(serverId, info.id, changes);
     const onSaved = (data) => {
 
-        return client.setQueryData(["feature_detail", serverId, info.id], current => 
+        return client.setQueryData(["feature_detail", serverId, info.id], current =>
             current ? { ...current, values: data } : current
         )
     }
 
     return (
-        <Box
-            component="fieldset"
+        <fieldset
             disabled={!enabled}
             style={{ border: "none", padding: 0, margin: 0, opacity: enabled ? 1 : 0.5 }}
         >
@@ -99,6 +91,6 @@ function FeatureConfigPanel({ detail, enabled }) {
                 options={options}
                 onSaved={onSaved}
             />
-        </Box>
+        </fieldset>
     )
 }

@@ -1,23 +1,16 @@
-import { SimpleGrid, Text } from "@mantine/core";
 import Card from "components/card/Card";
 
 export default function InformationMap({name, description, value, ...rest}) {
     return (
         <Card {...rest}>
-            <Text
-                c="var(--text-primary)"
-                fw="bold"
-                fz="xl"
-                mt={10}
-                mb={4}
-            >
+            <span className="block text-[var(--text-primary)] font-bold text-xl mt-2.5 mb-1">
                 {name}
-            </Text>
-            <Text c="var(--text-muted)" fz="md" me={26} mb={40}>
+            </span>
+            <span className="block text-[var(--text-muted)] text-base me-[26px] mb-10">
                 {description}
-            </Text>
+            </span>
 
-            <SimpleGrid cols={{ base: 1, md: 2 }} spacing={20}>{
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">{
                 value.map((item, key) =>
                     <Information
                         key={key}
@@ -26,7 +19,7 @@ export default function InformationMap({name, description, value, ...rest}) {
                     />
                 )
             }
-            </SimpleGrid>
+            </div>
         </Card>
     );
 }
@@ -35,13 +28,13 @@ function Information(props) {
     const { title, value, ...rest } = props;
 
     return (
-        <Card style={{ background: "var(--surface-secondary)" }} p={12} {...rest}>
-            <Text fw={500} c="var(--text-secondary)" fz="sm">
+        <Card className="p-3" style={{ background: "var(--surface-secondary)" }} {...rest}>
+            <span className="block font-medium text-[var(--text-secondary)] text-sm">
                 {title}
-            </Text>
-            <Text c="var(--text-primary)" fw={500} fz="md">
+            </span>
+            <span className="block text-[var(--text-primary)] font-medium text-base">
                 {value}
-            </Text>
+            </span>
         </Card>
     );
 }

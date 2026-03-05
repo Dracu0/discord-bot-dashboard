@@ -1,5 +1,6 @@
 import React from "react";
-import { Badge, Group, Text, Tooltip } from "@mantine/core";
+import { Badge } from "components/ui/badge";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 import { useBotStatus } from "hooks/useWebSocket";
 import { Locale } from "utils/Language";
 
@@ -10,6 +11,13 @@ const STATUS_MAP = {
   offline: { color: "gray", label: { zh: "離線", en: "Offline" } },
 };
 
+const STATUS_DOT_CLASSES = {
+  green: "bg-green-500",
+  yellow: "bg-yellow-500",
+  red: "bg-red-500",
+  gray: "bg-gray-500",
+};
+
 export default function BotStatusIndicator() {
   const botStatus = useBotStatus();
   const status = botStatus?.status || "offline";
@@ -17,23 +25,25 @@ export default function BotStatusIndicator() {
   const ping = botStatus?.ping;
 
   return (
-    <Group gap={8} align="center">
-      <Tooltip
-        label={ping != null ? `Ping: ${ping}ms` : "No data yet"}
-        position="bottom"
-      >
-        <Badge
-          color={cfg.color}
-          variant="dot"
-          size="lg"
-          radius="md"
-          styles={{ root: { cursor: "default", textTransform: "none" } }}
-        >
-          <Text component="span" fz="xs" fw={600}>
-            <Locale {...cfg.label} />
-          </Text>
-        </Badge>
-      </Tooltip>
-    </Group>
+    <div className="flex items-center gap-2">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge
+              variant="outline"
+              className="cursor-default normal-case rounded-md text-xs font-semibold px-2.5 py-1 flex items-center gap-1.5"
+            >
+              <span className={`h-2 w-2 rounded-full ${STATUS_DOT_CLASSES[cfg.color] || "bg-gray-500"}`} />
+              <span>
+                <Locale {...cfg.label} />
+              </span>
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            {ping != null ? `Ping: ${ping}ms` : "No data yet"}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
   );
 }

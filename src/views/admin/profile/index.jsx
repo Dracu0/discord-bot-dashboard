@@ -1,5 +1,3 @@
-import { Box, Grid, Text, Title } from "@mantine/core";
-
 // Custom components
 import Banner from "views/admin/profile/components/Banner";
 import Settings from "components/card/Settings";
@@ -20,9 +18,9 @@ export default function Overview() {
     const guilds = guildsQuery.data;
 
     return (
-        <Box pt={{ base: 30, md: 80 }}>
-            <Grid gutter={20}>
-                <Grid.Col span={{ base: 12, lg: 7 }}>
+        <div className="pt-[30px] md:pt-20">
+            <div className="grid grid-cols-12 gap-5">
+                <div className="col-span-12 lg:col-span-7">
                     <Banner
                         banner={banner && bannerToUrl(id, banner)}
                         avatar={avatarToUrl(id, avatar)}
@@ -30,12 +28,12 @@ export default function Overview() {
                         joinedServers={guilds && guilds.filter((g) => g.exist).length}
                         servers={guilds && guilds.length}
                     />
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, lg: 5 }}>
+                </div>
+                <div className="col-span-12 lg:col-span-5">
                     <Settings />
-                </Grid.Col>
-            </Grid>
+                </div>
+            </div>
             <ServerPicker query={guildsQuery} />
-        </Box>
+        </div>
     );
 }

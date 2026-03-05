@@ -1,40 +1,36 @@
-import { Box, Center, Flex, Image, Text } from "@mantine/core";
-import { IconArrowUp } from "@tabler/icons-react";
+import { ArrowUp } from "lucide-react";
 import React from "react";
 
 export function NotificationItem({ title, description, image }) {
     return (
         <>
-            <Box
-                style={{ borderRadius: 8, overflow: "hidden" }}
-                me={14}
-                h={{ base: 60, md: 70 }}
-                w={{ base: 60, md: 70 }}
+            <div
+                className="rounded-lg overflow-hidden me-3.5 h-[60px] w-[60px] md:h-[70px] md:w-[70px] shrink-0"
             >
-                {image ? <Image src={image} /> : <ItemIcon />}
-            </Box>
+                {image ? <img src={image} className="w-full h-full object-cover" alt="" /> : <ItemIcon />}
+            </div>
 
-            <Flex direction="column">
-                <Text mb={5} fw="bold" c="var(--text-primary)" fz="md">
+            <div className="flex flex-col">
+                <span className="mb-1.5 font-bold text-[var(--text-primary)] text-base">
                     {title}
-                </Text>
-                <Flex align="center">
-                    <Text fz="sm" lh={1} c="var(--text-secondary)">
+                </span>
+                <div className="flex items-center">
+                    <span className="text-sm leading-none text-[var(--text-secondary)]">
                         {description}
-                    </Text>
-                </Flex>
-            </Flex>
+                    </span>
+                </div>
+            </div>
         </>
     );
 }
 
 function ItemIcon() {
     return (
-        <Center
-            h="100%"
-            style={{ background: "linear-gradient(135deg, #868CFF 0%, #4318FF 100%)" }}
+        <div
+            className="flex items-center justify-center h-full"
+            style={{ background: "linear-gradient(135deg, #60A5FA 0%, #0EA5E9 100%)" }}
         >
-            <IconArrowUp size={28} color="white" />
-        </Center>
+            <ArrowUp size={28} className="text-white" />
+        </div>
     );
 }

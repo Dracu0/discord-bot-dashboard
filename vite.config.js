@@ -1,9 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     react({
       include: /\.(js|jsx|ts|tsx)$/,
     }),
@@ -32,6 +34,7 @@ export default defineConfig({
       contexts: path.resolve(__dirname, 'src/contexts'),
       hooks: path.resolve(__dirname, 'src/hooks'),
       layouts: path.resolve(__dirname, 'src/layouts'),
+      lib: path.resolve(__dirname, 'src/lib'),
       theme: path.resolve(__dirname, 'src/theme'),
       utils: path.resolve(__dirname, 'src/utils'),
       variables: path.resolve(__dirname, 'src/variables'),
@@ -53,7 +56,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-mantine': ['@mantine/core', '@mantine/hooks'],
+          'vendor-radix': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-select',
+          ],
           'vendor-charts': ['apexcharts', 'react-apexcharts'],
           'vendor-emoji': ['emoji-mart'],
           'vendor-query': ['@tanstack/react-query'],

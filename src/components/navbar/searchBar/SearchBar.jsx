@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Skeleton, Stack, Text, Title } from "@mantine/core";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDisclosure } from "hooks/useDisclosure";
 import { FeaturesContext } from "contexts/FeaturesContext";
 import Feature from "../../card/Feature";
 import { useLocation } from "react-router-dom";
@@ -14,14 +13,23 @@ import { Action } from "../../card/Action";
 import { Locale, useLocale } from "../../../utils/Language";
 import Modal from "../../modal/Modal";
 
-export function SearchBar({ ...rest }) {
+export function SearchBar({ className, ...rest }) {
     const [opened, { open, close }] = useDisclosure();
 
     const [search, setSearch] = useState("");
     const location = useLocation();
     useEffect(close, [location.pathname, close]);
 
-    useHotkeys([["mod+K", open]]);
+    useEffect(() => {
+        const handler = (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+                e.preventDefault();
+                open();
+            }
+        };
+        document.addEventListener("keydown", handler);
+        return () => document.removeEventListener("keydown", handler);
+    }, [open]);
 
     const groupStyle = {
         w: { base: "100%", md: "200px" },
@@ -55,15 +63,15 @@ function SearchList({ search }) {
     const empty = features.length === 0 && actions.length === 0;
 
     return (
-        <Stack gap={20}>
+        <div className="flex flex-col gap-5">
             {empty ? (
-                <Text>
-                    <Locale zh="沒有找到結果" en="No Result Found" />
-                </Text>
+                <p>
+                    <Locale zh="\u6c92\u6709\u627e\u5230\u7d50\u679c" en="No Result Found" />
+                </p>
             ) : (
                 <Content features={features} actions={actions} />
             )}
-        </Stack>
+        </div>
     );
 }
 
@@ -72,15 +80,15 @@ function Content({ features, actions }) {
 
     return (
         <>
-            <Title order={4}>
-                <Locale zh="功能" en="Features" />
-            </Title>
+            <h4 className="text-lg font-semibold">
+                <Locale zh="\u529f\u80fd" en="Features" />
+            </h4>
             {features.map(([id, feature]) => (
                 <Feature key={id} id={id} {...feature} enabled={enabled.includes(id)} />
             ))}
-            <Title order={4}>
-                <Locale zh="動作" en="Actions" />
-            </Title>
+            <h4 className="text-lg font-semibold">
+                <Locale zh="\u52d5\u4f5c" en="Actions" />
+            </h4>
             {actions.map(([id, action]) => (
                 <Action key={id} action={{ id, ...action }} />
             ))}
@@ -98,7 +106,7 @@ function SearchModal({ isOpen, onClose, search }) {
             size="xl"
             scrollBehavior="inside"
             header={{
-                zh: `搜索功能: ${all ? "全部" : search}`,
+                zh: `\u641c\u7d22\u529f\u80fd: ${all ? "\u5168\u90e8" : search}`,
                 en: `Search Filter: ${all ? "All" : search}`,
             }}
         >
@@ -122,10 +130,10 @@ function DataProvider({ children }) {
         <Query
             query={features}
             placeholder={
-                <Stack>
-                    <Skeleton radius="lg" height={100} />
-                    <Skeleton radius="lg" height={100} />
-                </Stack>
+                <div className="flex flex-col gap-4">
+                    <div className="animate-pulse rounded-lg bg-muted h-[100px]" />
+                    <div className="animate-pulse rounded-lg bg-muted h-[100px]" />
+                </div>
             }
         >
             <FeaturesContext.Provider value={features.data}>

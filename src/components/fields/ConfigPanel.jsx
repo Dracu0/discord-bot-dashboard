@@ -3,8 +3,8 @@ import { OptionPanel } from "./OptionPanel";
 import { SaveAlert } from "components/alert/SaveAlert";
 import ErrorModal from "../modal/ErrorModal";
 import { useMutation } from "@tanstack/react-query";
-import { Flex, SimpleGrid, Skeleton, Transition } from "@mantine/core";
-import { useHotkeys } from "@mantine/hooks";
+import { Skeleton } from "components/ui/skeleton";
+import { useHotkeys } from "hooks/useHotkeys";
 import logger from "utils/logger";
 
 const ConfigValuesContext = createContext(null);
@@ -100,36 +100,36 @@ function useConfigSaveState(save, onSaved, getInitialState) {
 
 export function ConfigItemListAnimated({ options, changes, errors, onChange }) {
     return options.map((option) => (
-        <Transition key={option.id} mounted={true} transition="slide-up" duration={200}>
-            {(styles) => (
-                <Flex w="100%" h="100%" style={styles}>
-                    <OptionPanel
-                        option={option}
-                        value={
-                            changes && changes.has(option.id) ? changes.get(option.id) : option.value
-                        }
-                        error={errors && errors.get(option.id)}
-                        onChange={(v) => onChange(option.id, v)}
-                    />
-                </Flex>
-            )}
-        </Transition>
+        <div key={option.id} className="w-full h-full">
+            <OptionPanel
+                option={option}
+                value={
+                    changes && changes.has(option.id) ? changes.get(option.id) : option.value
+                }
+                error={errors && errors.get(option.id)}
+                onChange={(v) => onChange(option.id, v)}
+            />
+        </div>
     ))
 }
 
 export function ConfigGridSkeleton() {
-    return <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={5} mt={{ base: 5, md: 10 }}>
-        <Skeleton height="20rem" radius="lg" />
-        <Skeleton height="20rem" radius="lg" />
-        <Skeleton height="20rem" radius="lg" />
-        <Skeleton height="20rem" radius="lg" />
-    </SimpleGrid>
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-[5px] md:mt-[10px]">
+            <Skeleton className="h-80 rounded-lg" />
+            <Skeleton className="h-80 rounded-lg" />
+            <Skeleton className="h-80 rounded-lg" />
+            <Skeleton className="h-80 rounded-lg" />
+        </div>
+    );
 }
 
 export function ConfigGrid(props) {
-    return <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={5} mt={{ base: 5, md: 10 }}>
-        <ConfigPanel {...props} />
-    </SimpleGrid>
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-[5px] md:mt-[10px]">
+            <ConfigPanel {...props} />
+        </div>
+    );
 }
 
 export function MultiConfigPanel({ groups, onSave: save, onSaved }) {

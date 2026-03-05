@@ -1,15 +1,13 @@
 import React from "react";
-import { Center } from "@mantine/core";
+import { cn } from "lib/utils";
 
-export default function IconBox(props) {
-    const { icon, ...rest } = props;
-
+export default function IconBox({ icon, className, ...rest }) {
     return (
-        <Center
-            style={{ borderRadius: "50%" }}
+        <div
+            className={cn("flex items-center justify-center rounded-full", className)}
             {...rest}
         >
             {icon}
-        </Center>
+        </div>
     );
 }

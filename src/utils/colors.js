@@ -1,4 +1,4 @@
-import { useComputedColorScheme } from '@mantine/core';
+import { useTheme } from 'next-themes';
 
 /**
  * Returns light or dark value based on the current color scheme.
@@ -6,6 +6,6 @@ import { useComputedColorScheme } from '@mantine/core';
  * Use this only when you need runtime-conditional values (e.g. third-party lib theming).
  */
 export function useColorValue(light, dark) {
-  const scheme = useComputedColorScheme('dark');
-  return scheme === 'dark' ? dark : light;
+  const { resolvedTheme } = useTheme();
+  return resolvedTheme === 'dark' ? dark : light;
 }

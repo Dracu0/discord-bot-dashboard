@@ -1,7 +1,14 @@
 import React, { useContext } from "react";
-import { Box, Drawer, Flex, ActionIcon, Tooltip } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconMenu2, IconChevronsLeft, IconChevronsRight } from "@tabler/icons-react";
+import { useDisclosure } from "hooks/useDisclosure";
+import { Menu, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Button } from "components/ui/button";
+import { Sheet, SheetContent } from "components/ui/sheet";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "components/ui/tooltip";
 import Content from "components/sidebar/components/Content";
 import { SettingsContext } from "../../contexts/SettingsContext";
 import { SIDEBAR_FULL, SIDEBAR_COLLAPSED } from "../../utils/layout-tokens";
@@ -13,42 +20,53 @@ function Sidebar({ routes }) {
   const toggle = () => updateSettings({ sidebarCollapsed: !sidebarCollapsed });
 
   return (
-    <Box visibleFrom="xl" pos="fixed" mih="100%" style={{ zIndex: 20 }}>
-      <Box
-        w={width}
-        h="100vh"
-        mih="100%"
+    <div className="hidden xl:block fixed min-h-full" style={{ zIndex: 20 }}>
+      <div
+        className="h-screen min-h-full overflow-x-hidden flex flex-col"
         style={{
-          overflowX: "hidden",
+          width,
           background: "var(--sidebar-bg)",
           borderRight: "1px solid var(--sidebar-border)",
           transition: "width 0.25s cubic-bezier(.4,0,.2,1)",
-          display: "flex",
-          flexDirection: "column",
         }}
       >
-        <Box style={{ overflowY: "auto", flex: 1 }}>
+        <div className="overflow-y-auto flex-1">
           <Content routes={routes} collapsed={sidebarCollapsed} />
-        </Box>
+        </div>
 
         {/* Collapse toggle */}
-        <Flex justify="center" py="sm" style={{ borderTop: "1px solid var(--sidebar-border)" }}>
-          <Tooltip label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"} position="right">
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              radius="xl"
-              size="md"
-              onClick={toggle}
-              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-              aria-expanded={!sidebarCollapsed}
-            >
-              {sidebarCollapsed ? <IconChevronsRight size={18} /> : <IconChevronsLeft size={18} />}
-            </ActionIcon>
-          </Tooltip>
-        </Flex>
-      </Box>
-    </Box>
+        <div
+          className="flex justify-center py-2"
+          style={{ borderTop: "1px solid var(--sidebar-border)" }}
+        >
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full h-8 w-8 text-[var(--text-muted)]"
+                  onClick={toggle}
+                  aria-label={
+                    sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+                  }
+                  aria-expanded={!sidebarCollapsed}
+                >
+                  {sidebarCollapsed ? (
+                    <ChevronsRight size={18} />
+                  ) : (
+                    <ChevronsLeft size={18} />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                {sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -56,25 +74,21 @@ export function SidebarResponsive({ routes }) {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
-    <Flex hiddenFrom="xl" align="center">
-      <ActionIcon variant="subtle" color="gray" onClick={open} size="lg">
-        <IconMenu2 size={20} />
-      </ActionIcon>
+    <div className="flex items-center xl:hidden">
+      <Button variant="ghost" size="icon" className="h-10 w-10 text-[var(--text-muted)]" onClick={open}>
+        <Menu size={20} />
+      </Button>
 
-      <Drawer
-        opened={opened}
-        onClose={close}
-        position="left"
-        size={SIDEBAR_FULL}
-        styles={{
-          body: { padding: 0, background: "var(--sidebar-bg)" },
-          header: { background: "var(--sidebar-bg)" },
-        }}
-        withCloseButton
-      >
-        <Content routes={routes} collapsed={false} onNavigate={close} />
-      </Drawer>
-    </Flex>
+      <Sheet open={opened} onOpenChange={(isOpen) => !isOpen && close()}>
+        <SheetContent
+          side="left"
+          className="p-0"
+          style={{ width: SIDEBAR_FULL, background: "var(--sidebar-bg)" }}
+        >
+          <Content routes={routes} collapsed={false} onNavigate={close} />
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }
 

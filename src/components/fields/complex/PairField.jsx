@@ -1,25 +1,24 @@
-import { Box, Flex } from "@mantine/core";
 import { OptionField } from "../OptionPanel";
 
 export default function PairField({ element, value, onChange }) {
   const [first, second] = value || [];
 
   return (
-    <Flex direction={{ base: "column", sm: "row" }} gap="sm">
-      <Box w="fit-content">
+    <div className="flex flex-col sm:flex-row gap-3">
+      <div className="w-fit">
         <OptionField
           option={element.first}
           value={first}
           onChange={(v) => onChange([v, second])}
         />
-      </Box>
-      <Box w="100%">
+      </div>
+      <div className="w-full">
         <OptionField
           option={element.second}
           value={second}
           onChange={(v) => onChange([first, v])}
         />
-      </Box>
-    </Flex>
+      </div>
+    </div>
   );
 }

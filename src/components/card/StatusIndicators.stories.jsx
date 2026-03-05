@@ -1,47 +1,81 @@
 import React from "react";
-import { Avatar, Tooltip, Group, Text, Badge } from "@mantine/core";
+import { Avatar, AvatarImage, AvatarFallback } from "components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
+import { Badge } from "components/ui/badge";
+import { cn } from "lib/utils";
 
 // ── Presentational wrappers for Storybook (no hooks) ──
 
 function ActiveUsersPresentation({ users }) {
     if (!users || users.length === 0) return null;
     return (
-        <Group gap={4} align="center">
-            <Text fz="xs" c="dimmed" mr={4}>Online</Text>
-            <Avatar.Group spacing="sm">
-                {users.slice(0, 5).map((u) => (
-                    <Tooltip key={u.userId} label={`${u.username} — ${u.page || "?"}`} withArrow>
-                        <Avatar src={null} alt={u.username} size={28} radius="xl" color="blue">
-                            {u.username?.[0]?.toUpperCase()}
-                        </Avatar>
-                    </Tooltip>
-                ))}
-                {users.length > 5 && (
-                    <Tooltip label={users.slice(5).map((u) => u.username).join(", ")} withArrow>
-                        <Avatar size={28} radius="xl" color="gray">+{users.length - 5}</Avatar>
-                    </Tooltip>
-                )}
-            </Avatar.Group>
-        </Group>
+        <div className="flex items-center gap-1">
+            <span className="text-xs text-[var(--text-secondary)] mr-1">Online</span>
+            <TooltipProvider>
+                <div className="flex -space-x-2">
+                    {users.slice(0, 5).map((u) => (
+                        <Tooltip key={u.userId}>
+                            <TooltipTrigger asChild>
+                                <Avatar className="h-7 w-7 border-2 border-[var(--surface-primary)]">
+                                    <AvatarImage src={null} alt={u.username} />
+                                    <AvatarFallback className="text-xs bg-blue-500 text-white">
+                                        {u.username?.[0]?.toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </TooltipTrigger>
+                            <TooltipContent>{`${u.username} — ${u.page || "?"}`}</TooltipContent>
+                        </Tooltip>
+                    ))}
+                    {users.length > 5 && (
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Avatar className="h-7 w-7 border-2 border-[var(--surface-primary)]">
+                                    <AvatarFallback className="text-xs bg-gray-500 text-white">
+                                        +{users.length - 5}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                {users.slice(5).map((u) => u.username).join(", ")}
+                            </TooltipContent>
+                        </Tooltip>
+                    )}
+                </div>
+            </TooltipProvider>
+        </div>
     );
 }
 
 function BotStatusPresentation({ status, ping }) {
     const STATUS_MAP = {
-        online: { color: "green", label: "Online" },
-        idle: { color: "yellow", label: "Idle" },
-        dnd: { color: "red", label: "Busy" },
-        offline: { color: "gray", label: "Offline" },
+        online: { variant: "green", label: "Online" },
+        idle: { variant: "yellow", label: "Idle" },
+        dnd: { variant: "red", label: "Busy" },
+        offline: { variant: "secondary", label: "Offline" },
     };
     const cfg = STATUS_MAP[status] || STATUS_MAP.offline;
     return (
-        <Group gap={8} align="center">
-            <Tooltip label={ping != null ? `Ping: ${ping}ms` : "No data yet"} position="bottom">
-                <Badge color={cfg.color} variant="dot" size="lg" radius="md" styles={{ root: { cursor: "default", textTransform: "none" } }}>
-                    <Text component="span" fz="xs" fw={600}>{cfg.label}</Text>
-                </Badge>
-            </Tooltip>
-        </Group>
+        <div className="flex items-center gap-2">
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Badge variant={cfg.variant} className="cursor-default normal-case rounded-md text-xs font-semibold">
+                            <span className={cn(
+                                "w-1.5 h-1.5 rounded-full mr-1.5 inline-block",
+                                status === "online" && "bg-emerald-500",
+                                status === "idle" && "bg-amber-500",
+                                status === "dnd" && "bg-red-500",
+                                (!status || status === "offline") && "bg-gray-500",
+                            )} />
+                            {cfg.label}
+                        </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                        {ping != null ? `Ping: ${ping}ms` : "No data yet"}
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        </div>
     );
 }
 

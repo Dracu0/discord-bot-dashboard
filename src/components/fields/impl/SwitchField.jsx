@@ -1,36 +1,38 @@
-import { Box, Flex, Switch, Text } from "@mantine/core";
+import { Switch } from "components/ui/switch";
+import { cn } from "lib/utils";
 import React from "react";
 
 export default function Default(props) {
-  const { id, label, isChecked, onChange, reversed, ...rest } = props;
+  const { id, label, isChecked, onChange, reversed, className, ...rest } = props;
 
   return (
-    <Box w="100%" fw={500} {...rest}>
-      <Flex
-        direction={reversed ? "row-reverse" : "row"}
-        align="center"
-        justify={reversed ? "start" : "space-between"}
-        gap="md"
+    <div className={cn("w-full font-medium", className)} {...rest}>
+      <div
+        className={cn(
+          "flex items-center gap-4",
+          reversed ? "flex-row-reverse justify-start" : "flex-row justify-between"
+        )}
       >
-        <label htmlFor={id} style={{ cursor: "pointer", maxWidth: "75%", marginBottom: 0 }}>
-          <Text
-            ta="start"
-            c={isChecked ? "var(--accent-primary)" : "var(--text-primary)"}
-            fz="md"
-            fw={500}
-            style={{ transition: "color 0.2s ease" }}
+        <label htmlFor={id} className="cursor-pointer max-w-[75%] mb-0">
+          <span
+            className={cn(
+              "text-start text-base font-medium transition-colors duration-200",
+              isChecked ? "text-[var(--accent-primary)]" : "text-[var(--text-primary)]"
+            )}
           >
             {label}
-          </Text>
+          </span>
         </label>
         <Switch
           checked={isChecked}
           id={id}
-          size="md"
-          onChange={onChange}
-          color="brand"
+          onCheckedChange={(checked) => {
+            if (onChange) {
+              onChange({ target: { checked } });
+            }
+          }}
         />
-      </Flex>
-    </Box>
+      </div>
+    </div>
   );
 }

@@ -1,38 +1,37 @@
 import React from "react";
-import { Anchor, Flex, Text } from "@mantine/core";
 import { homepage } from "variables/links";
 import { config } from "config/config";
 import { Locale } from "../../utils/Language";
 
 export default function Footer({ children }) {
     return (
-        <Flex
+        <div
+            className="flex flex-col xl:flex-row items-center xl:items-start justify-between px-4 sm:px-6 md:px-[50px] pb-[30px]"
             style={{ zIndex: 1 }}
-            direction={{ base: "column", xl: "row" }}
-            align={{ base: "center", xl: "flex-start" }}
-            justify="space-between"
-            px={{ base: 16, sm: 24, md: 50 }}
-            pb={30}
         >
-            <Text
-                c="var(--text-secondary)"
-                ta={{ base: "center", xl: "start" }}
-                mb={{ base: 20, xl: 0 }}
-                fz="sm"
+            <p
+                className="text-sm text-center xl:text-start mb-5 xl:mb-0"
+                style={{ color: "var(--text-secondary)" }}
             >
                 &copy; {new Date().getFullYear()}
-                <Text span fw={500} ms={4}>
+                <span className="font-medium ms-1">
                     {config.name} Dashboard.
                     <Locale
-                        zh=" 版權所有。基於"
+                        zh=" \u7248\u6b0a\u6240\u6709\u3002\u57fa\u65bc"
                         en=" All Rights Reserved. Built with"
                     />
-                    <Anchor mx={3} c="brand.4" href={homepage} target="_blank" fw={600}>
+                    <a
+                        className="mx-1 font-semibold"
+                        style={{ color: "var(--accent-primary)" }}
+                        href={homepage}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         Discord Dashboard
-                    </Anchor>
-                </Text>
-            </Text>
+                    </a>
+                </span>
+            </p>
             {children}
-        </Flex>
+        </div>
     );
 }

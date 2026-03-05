@@ -1,12 +1,10 @@
 import React, { Suspense, useContext, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { MantineProvider, Center, Loader, Stack, Text } from '@mantine/core';
-import { Notifications } from '@mantine/notifications';
+import { ThemeProvider } from 'next-themes';
+import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 
-import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
 import 'assets/css/App.css';
 
 import { hasLoggedIn } from './api/internal';
@@ -14,7 +12,6 @@ import { QueryHolder } from './contexts/components/AsyncContext';
 import { SettingsContext, SettingsProvider } from './contexts/SettingsContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { config } from './config/config';
-import { theme } from './theme/theme';
 import GuildBoard, { GuildRoutes } from 'layouts/guild';
 
 const AuthLayout = React.lazy(() => import('layouts/auth'));
@@ -22,12 +19,12 @@ const AdminLayout = React.lazy(() => import('layouts/admin'));
 
 function LazyFallback() {
   return (
-    <Center h="100vh">
-      <Stack align="center" gap="sm">
-        <Loader size="lg" />
-        <Text>Loading...</Text>
-      </Stack>
-    </Center>
+    <div className="flex h-screen items-center justify-center">
+      <div className="flex flex-col items-center gap-2">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent-primary)] border-t-transparent" />
+        <p className="text-sm text-[var(--text-secondary)]">Loading...</p>
+      </div>
+    </div>
   );
 }
 
@@ -69,12 +66,11 @@ function AppRouter() {
   const { fixedWidth } = useContext(SettingsContext);
   const loggedIn = loginQuery.data;
 
-  // Show a loading spinner while the auth check (HEAD /auth) is pending
   if (loginQuery.isLoading) {
     return (
-      <Center h="100vh">
-        <Loader size="lg" />
-      </Center>
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent-primary)] border-t-transparent" />
+      </div>
     );
   }
 
@@ -113,15 +109,15 @@ function AppRouter() {
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <MantineProvider theme={theme} defaultColorScheme="auto">
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <ErrorBoundary>
-        <Notifications position="top-right" />
+        <Toaster position="top-right" richColors />
         <QueryClientProvider client={queryClient}>
           <SettingsProvider>
             <AppRouter />
           </SettingsProvider>
         </QueryClientProvider>
       </ErrorBoundary>
-    </MantineProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

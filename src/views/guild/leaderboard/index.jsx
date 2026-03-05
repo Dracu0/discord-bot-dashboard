@@ -1,19 +1,21 @@
 import React, { useContext, useState } from "react";
-import {
-    Box, Center, Group, Loader, Pagination, Table, Text, Title,
-} from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { IconTrophy } from "@tabler/icons-react";
+import { Trophy } from "lucide-react";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { getLeaderboard } from "api/internal";
 import { usePageInfo } from "contexts/PageInfoContext";
 import { useLocale, useTranslation } from "utils/Language";
-import { PAGE_PT } from "utils/layout-tokens";
 import Card from "components/card/Card";
+import { Spinner } from "components/ui/spinner";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "components/ui/table";
+import {
+    Pagination, PaginationContent, PaginationItem, PaginationLink,
+    PaginationPrevious, PaginationNext,
+} from "components/ui/pagination";
 
 export default function Leaderboard() {
     const locale = useLocale();
-    usePageInfo(locale({ zh: "排行榜", en: "Leaderboard" }));
+    usePageInfo(locale({ zh: "\u6392\u884c\u699c", en: "Leaderboard" }));
     const { id: serverId } = useContext(GuildContext);
     const [page, setPage] = useState(1);
     const { t } = useTranslation();
@@ -26,93 +28,124 @@ export default function Leaderboard() {
 
     if (query.isLoading && !query.data) {
         return (
-            <Center pt={PAGE_PT} h={400}>
-                <Loader size="lg" />
-            </Center>
+            <div className="flex items-center justify-center h-[400px]" style={{ paddingTop: "80px" }}>
+                <Spinner size="lg" />
+            </div>
         );
     }
 
     if (query.isError) {
         return (
-            <Box pt={PAGE_PT}>
-                <Text c="red">{t("leaderboard.loadFailed")}</Text>
-            </Box>
+            <div style={{ paddingTop: "80px" }}>
+                <span className="text-red-500">{t("leaderboard.loadFailed")}</span>
+            </div>
         );
     }
 
     const data = query.data;
 
     return (
-        <Box pt={PAGE_PT}>
-            <Group gap="sm" mb={24}>
-                <IconTrophy size={28} color="var(--accent-primary)" />
-                <Title order={2} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" fw={700}>
+        <div style={{ paddingTop: "80px" }}>
+            <div className="flex items-center gap-2 mb-6">
+                <Trophy size={28} className="text-[var(--accent-primary)]" />
+                <h2
+                    className="text-2xl font-bold text-[var(--text-primary)]"
+                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                >
                     {t("leaderboard.title")}
-                </Title>
-                <Text c="var(--text-secondary)" fz="sm">
+                </h2>
+                <span className="text-[var(--text-secondary)] text-sm">
                     ({data.total} {t("common.users")})
-                </Text>
-            </Group>
+                </span>
+            </div>
 
-            <Card px={0} style={{ overflowX: "auto" }}>
+            <Card className="px-0 overflow-x-auto">
                 <Table>
-                    <Table.Thead>
-                        <Table.Tr>
-                            <Table.Th style={{ background: "var(--surface-secondary)", borderColor: "var(--border-subtle)" }}>
-                                <Text fz="xs" c="gray.4" fw={700}>Rank</Text>
-                            </Table.Th>
-                            <Table.Th style={{ background: "var(--surface-secondary)", borderColor: "var(--border-subtle)" }}>
-                                <Text fz="xs" c="gray.4" fw={700}>User</Text>
-                            </Table.Th>
-                            <Table.Th style={{ background: "var(--surface-secondary)", borderColor: "var(--border-subtle)" }}>
-                                <Text fz="xs" c="gray.4" fw={700}>Level</Text>
-                            </Table.Th>
-                            <Table.Th style={{ background: "var(--surface-secondary)", borderColor: "var(--border-subtle)" }}>
-                                <Text fz="xs" c="gray.4" fw={700}>XP</Text>
-                            </Table.Th>
-                        </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="bg-[var(--surface-secondary)] border-[var(--border-subtle)]">
+                                <span className="text-xs text-gray-400 font-bold">Rank</span>
+                            </TableHead>
+                            <TableHead className="bg-[var(--surface-secondary)] border-[var(--border-subtle)]">
+                                <span className="text-xs text-gray-400 font-bold">User</span>
+                            </TableHead>
+                            <TableHead className="bg-[var(--surface-secondary)] border-[var(--border-subtle)]">
+                                <span className="text-xs text-gray-400 font-bold">Level</span>
+                            </TableHead>
+                            <TableHead className="bg-[var(--surface-secondary)] border-[var(--border-subtle)]">
+                                <span className="text-xs text-gray-400 font-bold">XP</span>
+                            </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
                         {data.users.length === 0 ? (
-                            <Table.Tr>
-                                <Table.Td colSpan={4} style={{ border: "none" }}>
-                                    <Center py={32}>
-                                        <Text c="dimmed">{t("leaderboard.noData")}</Text>
-                                    </Center>
-                                </Table.Td>
-                            </Table.Tr>
+                            <TableRow>
+                                <TableCell colSpan={4} className="border-none">
+                                    <div className="flex items-center justify-center py-8">
+                                        <span className="text-[var(--text-muted)]">{t("leaderboard.noData")}</span>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
                         ) : (
                             data.users.map((user, i) => (
-                                <Table.Tr
+                                <TableRow
                                     key={user.userId}
-                                    style={{ background: i % 2 === 1 ? "var(--surface-secondary)" : "transparent" }}
+                                    className={i % 2 === 1 ? "bg-[var(--surface-secondary)]" : "bg-transparent"}
                                 >
-                                    <Table.Td style={{ border: "none" }}>
-                                        <Text fz="md" fw={700} c={user.rank <= 3 ? "var(--accent-primary)" : "var(--text-primary)"}>
+                                    <TableCell className="border-none">
+                                        <span className={`text-base font-bold ${user.rank <= 3 ? "text-[var(--accent-primary)]" : "text-[var(--text-primary)]"}`}>
                                             #{user.rank}
-                                        </Text>
-                                    </Table.Td>
-                                    <Table.Td style={{ border: "none" }}>
-                                        <Text fz="md" fw={700} c="var(--text-primary)">{user.userName}</Text>
-                                    </Table.Td>
-                                    <Table.Td style={{ border: "none" }}>
-                                        <Text fz="md" fw={700} c="var(--text-primary)">{user.level}</Text>
-                                    </Table.Td>
-                                    <Table.Td style={{ border: "none" }}>
-                                        <Text fz="md" c="var(--text-primary)">{user.xp.toLocaleString()}</Text>
-                                    </Table.Td>
-                                </Table.Tr>
+                                        </span>
+                                    </TableCell>
+                                    <TableCell className="border-none">
+                                        <span className="text-base font-bold text-[var(--text-primary)]">{user.userName}</span>
+                                    </TableCell>
+                                    <TableCell className="border-none">
+                                        <span className="text-base font-bold text-[var(--text-primary)]">{user.level}</span>
+                                    </TableCell>
+                                    <TableCell className="border-none">
+                                        <span className="text-base text-[var(--text-primary)]">{user.xp.toLocaleString()}</span>
+                                    </TableCell>
+                                </TableRow>
                             ))
                         )}
-                    </Table.Tbody>
+                    </TableBody>
                 </Table>
 
                 {data.totalPages > 1 && (
-                    <Center py={16}>
-                        <Pagination total={data.totalPages} value={page} onChange={setPage} />
-                    </Center>
+                    <div className="flex justify-center py-4">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        onClick={() => setPage(p => Math.max(1, p - 1))}
+                                        disabled={page <= 1}
+                                    />
+                                </PaginationItem>
+                                {Array.from({ length: Math.min(data.totalPages, 5) }, (_, i) => {
+                                    const pageNum = i + 1;
+                                    return (
+                                        <PaginationItem key={pageNum}>
+                                            <PaginationLink
+                                                isActive={page === pageNum}
+                                                onClick={() => setPage(pageNum)}
+                                            >
+                                                {pageNum}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    );
+                                })}
+                                <PaginationItem>
+                                    <PaginationNext
+                                        onClick={() => setPage(p => Math.min(data.totalPages, p + 1))}
+                                        disabled={page >= data.totalPages}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
                 )}
             </Card>
-        </Box>
+        </div>
     );
 }

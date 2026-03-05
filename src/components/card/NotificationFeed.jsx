@@ -1,15 +1,24 @@
 import React, { useContext, useMemo, useState } from "react";
-import { ActionIcon, Badge, Box, Button, Group, SegmentedControl, Stack, Text, Tooltip } from "@mantine/core";
+import { Badge } from "components/ui/badge";
+import { Button } from "components/ui/button";
+import { SegmentedControl } from "components/ui/segmented-control";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "api/internal";
 import { GuildContext } from "contexts/guild/GuildContext";
-import { IconAlertCircle, IconShield, IconCircleCheck, IconCheck, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { AlertCircle, Shield, CircleCheck, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Locale, useLocale } from "utils/Language";
 
 const TYPE_CONFIG = {
-  info: { icon: IconAlertCircle, color: "blue", label: "Info" },
-  moderation: { icon: IconShield, color: "orange", label: "Mod" },
-  success: { icon: IconCircleCheck, color: "green", label: "OK" },
+  info: { icon: AlertCircle, color: "blue", dotClass: "text-blue-400", label: "Info" },
+  moderation: { icon: Shield, color: "orange", dotClass: "text-orange-400", label: "Mod" },
+  success: { icon: CircleCheck, color: "green", dotClass: "text-green-400", label: "OK" },
+};
+
+const BADGE_COLOR_CLASSES = {
+  blue: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  orange: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+  green: "bg-green-500/20 text-green-400 border-green-500/30",
 };
 
 const COLLAPSED_COUNT = 5;
@@ -47,37 +56,45 @@ function NotificationItem({ notification, isRead, onMarkRead }) {
   const IconComp = cfg.icon;
 
   return (
-    <Group
-      p="12px 16px"
-      gap="sm"
-      align="center"
+    <div
+      className="flex items-center gap-2 px-4 py-3 rounded-md transition-opacity duration-200"
       style={{
         background: "var(--surface-secondary)",
-        borderRadius: "var(--radius-md)",
         opacity: isRead ? 0.6 : 1,
-        transition: "opacity 0.2s ease",
       }}
     >
-      <IconComp size={18} color={`var(--mantine-color-${cfg.color}-4)`} />
-      <Text fz="sm" c="var(--text-primary)" style={{ flex: 1 }} lineClamp={1}>
+      <IconComp className={`h-[18px] w-[18px] shrink-0 ${cfg.dotClass}`} />
+      <span className="text-sm text-[var(--text-primary)] flex-1 line-clamp-1">
         {notification.message}
-      </Text>
+      </span>
       {notification.time && (
-        <Text fz="xs" c="var(--text-secondary)" style={{ whiteSpace: "nowrap" }}>
+        <span className="text-xs text-[var(--text-secondary)] whitespace-nowrap">
           {new Date(notification.time).toLocaleDateString()}
-        </Text>
+        </span>
       )}
-      <Badge color={cfg.color} fz={10} radius="sm" px={6}>
+      <Badge
+        variant="outline"
+        className={`text-[10px] px-1.5 rounded-sm ${BADGE_COLOR_CLASSES[cfg.color] || ""}`}
+      >
         {cfg.label}
       </Badge>
       {!isRead && (
-        <Tooltip label="Mark as read">
-          <ActionIcon variant="subtle" size="sm" color="gray" onClick={onMarkRead} aria-label="Mark as read">
-            <IconCheck size={14} />
-          </ActionIcon>
-        </Tooltip>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                className="inline-flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                onClick={onMarkRead}
+                aria-label="Mark as read"
+              >
+                <Check className="h-3.5 w-3.5" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Mark as read</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
-    </Group>
+    </div>
   );
 }
 
@@ -111,60 +128,55 @@ export default function NotificationFeed() {
 
   if (isError) {
     return (
-      <Box mb={24}>
-        <Text fz="sm" c="var(--status-error)" fw={500}>
+      <div className="mb-6">
+        <span className="text-sm text-[var(--status-error)] font-medium">
           <Locale zh="無法加載通知" en="Failed to load notifications." />
-        </Text>
-      </Box>
+        </span>
+      </div>
     );
   }
 
   if (!notifications || notifications.length === 0) return null;
 
   return (
-    <Box mb={24}>
-      <Group justify="space-between" align="center" mb={10}>
-        <Group gap="xs">
-          <Text
-            fz="sm"
-            fw={600}
-            c="var(--text-primary)"
-            ff="'Space Grotesk', sans-serif"
-            lts="-0.01em"
-          >
+    <div className="mb-6">
+      <div className="flex items-center justify-between mb-2.5">
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm font-semibold text-[var(--text-primary)] font-['Space_Grotesk'] tracking-tight">
             <Locale zh="通知" en="Notifications" />
-          </Text>
+          </span>
           {unreadCount > 0 && (
-            <Badge size="sm" color="blue" variant="filled" radius="xl">
+            <Badge className="rounded-full text-xs px-2">
               {unreadCount}
             </Badge>
           )}
-        </Group>
+        </div>
         {unreadCount > 0 && (
           <Button
-            variant="subtle"
-            size="compact-xs"
+            variant="ghost"
+            size="sm"
+            className="h-6 px-2 text-xs"
             onClick={() => markAllRead(notifications.map((n, i) => n.id ?? i))}
           >
             <Locale zh="全部已讀" en="Mark all read" />
           </Button>
         )}
-      </Group>
+      </div>
 
       <SegmentedControl
-        size="xs"
-        mb={10}
         value={filter}
-        onChange={setFilter}
-        data={[
+        onValueChange={setFilter}
+        items={[
           { value: "all", label: locale({ zh: "全部", en: "All" }) },
           { value: "info", label: "Info" },
           { value: "moderation", label: "Mod" },
           { value: "success", label: "OK" },
         ]}
+        size="sm"
+        className="mb-2.5"
       />
 
-      <Stack gap={8}>
+      <div className="flex flex-col gap-2">
         {displayed.map((n, i) => {
           const nId = n.id ?? i;
           return (
@@ -176,23 +188,22 @@ export default function NotificationFeed() {
             />
           );
         })}
-      </Stack>
+      </div>
 
       {hasMore && (
         <Button
-          variant="subtle"
-          size="compact-sm"
-          mt={8}
-          fullWidth
+          variant="ghost"
+          size="sm"
+          className="w-full mt-2"
           onClick={() => setExpanded(prev => !prev)}
-          rightSection={expanded ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
         >
           {expanded
             ? locale({ zh: "收起", en: "Show less" })
             : locale({ zh: `顯示全部 (${filtered.length})`, en: `Show all (${filtered.length})` })
           }
+          {expanded ? <ChevronUp className="ml-1 h-3.5 w-3.5" /> : <ChevronDown className="ml-1 h-3.5 w-3.5" />}
         </Button>
       )}
-    </Box>
+    </div>
   );
 }

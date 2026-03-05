@@ -1,5 +1,5 @@
-import { Switch, Text } from "@mantine/core";
-import Card from "components/card/Card";
+import { Switch } from "components/ui/switch";
+import { Card } from "components/ui/card";
 import { SelectField } from "components/fields/SelectField";
 import { InputField } from "./impl/InputField";
 import MessageBuildCard from "./complex/MessageBuildCard";
@@ -25,22 +25,24 @@ export function OptionPanel({ value, onChange, option, error }) {
   const inline = option.type === OptionTypes.Boolean;
 
   return (
-    <Card style={{ flexDirection: inline ? "row-reverse" : "column", display: "flex", gap: 20 }}>
-      <div style={{ height: "100%" }}>
-        <Text fz="lg" fw="bold" mb={4}>
+    <Card className={inline ? "flex flex-row-reverse gap-5" : "flex flex-col gap-5"}>
+      <div className="h-full">
+        <p className="text-lg font-bold mb-1 text-[var(--text-primary)]">
           {option.name}
-        </Text>
-        {option.description && <Text mb="md">{option.description}</Text>}
+        </p>
+        {option.description && (
+          <p className="mb-4 text-[var(--text-primary)]">{option.description}</p>
+        )}
         {input}
         {option.helper && (
-          <Text fz="xs" c="dimmed" mt={4}>
+          <p className="text-xs text-[var(--text-muted)] mt-1">
             {option.helper}
-          </Text>
+          </p>
         )}
         {error && (
-          <Text fz="xs" c="red" mt={4}>
+          <p className="text-xs text-[var(--status-error)] mt-1">
             {error}
-          </Text>
+          </p>
         )}
       </div>
     </Card>
@@ -83,10 +85,8 @@ export function getInput(value, onChange, option, error) {
         case OptionTypes.Boolean:
             return (
                 <Switch
-                    color="brand"
-                    size="md"
                     checked={value}
-                    onChange={({ target }) => onChange(target.checked)}
+                    onCheckedChange={(checked) => onChange(checked)}
                 />
             );
         case OptionTypes.MultiLine_Text:

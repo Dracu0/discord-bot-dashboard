@@ -1,15 +1,14 @@
-import { Paper } from "@mantine/core";
+import { Card as ShadcnCard } from "components/ui/card";
+import { cn } from "lib/utils";
 
-function Card({ children, ...rest }) {
+function Card({ children, className, ...rest }) {
   return (
-    <Paper
-      radius="lg"
-      p="20px"
-      withBorder
+    <ShadcnCard
+      className={cn("rounded-2xl p-5 border", className)}
       {...rest}
     >
       {children}
-    </Paper>
+    </ShadcnCard>
   );
 }
 

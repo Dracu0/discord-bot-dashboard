@@ -1,25 +1,26 @@
 import React, { useContext } from "react";
-import { Box, Button, Group, Text, Tooltip } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { IconPuzzle, IconSettings, IconHandStop } from "@tabler/icons-react";
+import { Puzzle, Hand, Settings } from "lucide-react";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { Locale } from "utils/Language";
+import { Button } from "components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 
 const actions = [
   {
-    icon: IconPuzzle,
+    icon: Puzzle,
     label: { zh: "管理功能", en: "Manage Features" },
     path: "features",
     color: "brand",
   },
   {
-    icon: IconHandStop,
+    icon: Hand,
     label: { zh: "管理動作", en: "Manage Actions" },
     path: "actions",
     color: "brand",
   },
   {
-    icon: IconSettings,
+    icon: Settings,
     label: { zh: "伺服器設定", en: "Server Settings" },
     path: "settings",
     color: "gray",
@@ -30,34 +31,34 @@ export default function QuickActions() {
   const { id: serverId } = useContext(GuildContext);
 
   return (
-    <Box mb={24}>
-      <Text
-        fz="sm"
-        fw={600}
-        c="var(--text-primary)"
-        mb={10}
-        ff="'Space Grotesk', sans-serif"
-        lts="-0.01em"
-      >
+    <div className="mb-6">
+      <span className="block text-sm font-semibold text-[var(--text-primary)] mb-2.5 font-['Space_Grotesk'] tracking-tight">
         <Locale zh="快捷操作" en="Quick Actions" />
-      </Text>
-      <Group gap={10}>
-        {actions.map(({ icon: Icon, label, path, color }) => (
-          <Tooltip key={path} label={<Locale {...label} />} position="bottom">
-            <Button
-              component={Link}
-              to={`/guild/${serverId}/${path}`}
-              variant="light"
-              color={color}
-              size="sm"
-              radius="md"
-              leftSection={<Icon size={16} />}
-            >
-              <Locale {...label} />
-            </Button>
-          </Tooltip>
-        ))}
-      </Group>
-    </Box>
+      </span>
+      <TooltipProvider>
+        <div className="flex items-center gap-2.5">
+          {actions.map(({ icon: Icon, label, path, color }) => (
+            <Tooltip key={path}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={color === "gray" ? "secondary" : "default"}
+                  size="sm"
+                  className="rounded-md"
+                  asChild
+                >
+                  <Link to={`/guild/${serverId}/${path}`}>
+                    <Icon className="h-4 w-4 mr-1.5" />
+                    <Locale {...label} />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <Locale {...label} />
+              </TooltipContent>
+            </Tooltip>
+          ))}
+        </div>
+      </TooltipProvider>
+    </div>
   );
 }

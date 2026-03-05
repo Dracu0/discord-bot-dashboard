@@ -1,21 +1,19 @@
 import React, { useContext, useState, useMemo } from "react";
-import {
-    Box, Group, Loader, Paper, SegmentedControl, SimpleGrid,
-    Stack, Text, Title, RingProgress, Badge, Center,
-} from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { IconChartBar, IconTrendingUp, IconTrendingDown } from "@tabler/icons-react";
+import { BarChart3 } from "lucide-react";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { getAnalytics } from "api/internal";
 import { usePageInfo } from "contexts/PageInfoContext";
 import { Locale, useLocale } from "utils/Language";
-import { PAGE_PT } from "utils/layout-tokens";
 import Card from "components/card/Card";
 import ApexChart from "components/charts/ApexChart";
+import { Badge } from "components/ui/badge";
+import { Spinner } from "components/ui/spinner";
+import { SegmentedControl } from "components/ui/segmented-control";
 
-// TODO: These colors should use theme tokens instead of hardcoded hex values.
+// Updated chart colors: blue/cyan theme instead of purple
 const CHART_COLORS = {
-    primary: '#845EF7',
+    primary: '#0EA5E9',
     secondary: '#A3AED0',
     muted: '#CBD5E0',
 };
@@ -29,17 +27,17 @@ const PERIOD_OPTIONS = [
 
 function StatCard({ label, value, sublabel, color = "brand" }) {
     return (
-        <Card p="lg" style={{ flexDirection: "column" }}>
-            <Text fz="xs" tt="uppercase" fw={700} c="var(--text-secondary)">
+        <Card className="flex flex-col p-5">
+            <span className="text-xs uppercase font-bold text-[var(--text-secondary)]">
                 {label}
-            </Text>
-            <Title order={2} c="var(--text-primary)" mt={4}>
-                {value ?? "—"}
-            </Title>
+            </span>
+            <h2 className="text-2xl font-bold text-[var(--text-primary)] mt-1">
+                {value ?? "\u2014"}
+            </h2>
             {sublabel && (
-                <Text fz="xs" c="var(--text-secondary)" mt={4}>
+                <span className="text-xs text-[var(--text-secondary)] mt-1">
                     {sublabel}
-                </Text>
+                </span>
             )}
         </Card>
     );
@@ -74,11 +72,11 @@ function ModerationTimeline({ data }) {
 
     if (data.length === 0) {
         return (
-            <Center py={40}>
-                <Text c="var(--text-secondary)" fz="sm">
-                    <Locale zh="此時段無審核記錄" en="No moderation actions in this period" />
-                </Text>
-            </Center>
+            <div className="flex items-center justify-center py-10">
+                <span className="text-[var(--text-secondary)] text-sm">
+                    <Locale zh="\u6b64\u6642\u6bb5\u7121\u5be9\u6838\u8a18\u9304" en="No moderation actions in this period" />
+                </span>
+            </div>
         );
     }
 
@@ -138,7 +136,7 @@ function LevelDistribution({ data }) {
 }
 
 function SuggestionFunnel({ data }) {
-    const statusColors = {
+    const statusVariants = {
         pending: "yellow",
         approved: "green",
         rejected: "red",
@@ -148,38 +146,38 @@ function SuggestionFunnel({ data }) {
 
     if (total === 0) {
         return (
-            <Center py={40}>
-                <Text c="var(--text-secondary)" fz="sm">
-                    <Locale zh="無建議資料" en="No suggestion data" />
-                </Text>
-            </Center>
+            <div className="flex items-center justify-center py-10">
+                <span className="text-[var(--text-secondary)] text-sm">
+                    <Locale zh="\u7121\u5efa\u8b70\u8cc7\u6599" en="No suggestion data" />
+                </span>
+            </div>
         );
     }
 
     return (
-        <Stack gap="sm">
+        <div className="flex flex-col gap-2">
             {data.map(d => (
-                <Group key={d.status} justify="space-between">
-                    <Group gap="xs">
-                        <Badge color={statusColors[d.status] || "gray"} variant="light" size="sm">
+                <div key={d.status} className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                        <Badge variant={statusVariants[d.status] || "secondary"} className="text-xs">
                             {d.status}
                         </Badge>
-                        <Text fz="sm" c="var(--text-primary)">{d.count}</Text>
-                    </Group>
-                    <Text fz="xs" c="var(--text-secondary)">
+                        <span className="text-sm text-[var(--text-primary)]">{d.count}</span>
+                    </div>
+                    <span className="text-xs text-[var(--text-secondary)]">
                         {((d.count / total) * 100).toFixed(1)}%
-                    </Text>
-                </Group>
+                    </span>
+                </div>
             ))}
-            <Text fz="xs" c="var(--text-secondary)" ta="center" mt="xs">
-                <Locale zh={`共 ${total} 筆建議`} en={`${total} total suggestions`} />
-            </Text>
-        </Stack>
+            <span className="text-xs text-[var(--text-secondary)] text-center mt-1.5">
+                <Locale zh={`\u5171 ${total} \u7b46\u5efa\u8b70`} en={`${total} total suggestions`} />
+            </span>
+        </div>
     );
 }
 
 function formatDuration(ms) {
-    if (!ms) return "—";
+    if (!ms) return "\u2014";
     const hours = Math.floor(ms / (1000 * 60 * 60));
     if (hours < 24) return `${hours}h`;
     const days = Math.floor(hours / 24);
@@ -188,7 +186,7 @@ function formatDuration(ms) {
 
 export default function Analytics() {
     const locale = useLocale();
-    usePageInfo(locale({ zh: "數據分析", en: "Analytics" }));
+    usePageInfo(locale({ zh: "\u6578\u64da\u5206\u6790", en: "Analytics" }));
     const { id: serverId } = useContext(GuildContext);
     const [days, setDays] = useState("30");
 
@@ -200,113 +198,116 @@ export default function Analytics() {
 
     if (query.isLoading) {
         return (
-            <Center pt={PAGE_PT} h={400}>
-                <Loader size="lg" />
-            </Center>
+            <div className="flex items-center justify-center h-[400px]" style={{ paddingTop: "80px" }}>
+                <Spinner size="lg" />
+            </div>
         );
     }
 
     if (query.isError) {
         return (
-            <Box pt={PAGE_PT}>
-                <Text c="red">
-                    <Locale zh="無法載入分析資料" en="Failed to load analytics data" />
-                </Text>
-            </Box>
+            <div style={{ paddingTop: "80px" }}>
+                <span className="text-red-500">
+                    <Locale zh="\u7121\u6cd5\u8f09\u5165\u5206\u6790\u8cc7\u6599" en="Failed to load analytics data" />
+                </span>
+            </div>
         );
     }
 
     const data = query.data;
 
     return (
-        <Box pt={PAGE_PT}>
-            <Group justify="space-between" mb={24} wrap="wrap" gap="sm">
-                <Group gap="sm">
-                    <IconChartBar size={28} color="var(--accent-primary)" />
-                    <Title order={2} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" fw={700}>
-                        <Locale zh="數據分析" en="Analytics" />
-                    </Title>
-                </Group>
+        <div style={{ paddingTop: "80px" }}>
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                    <BarChart3 size={28} className="text-[var(--accent-primary)]" />
+                    <h2
+                        className="text-2xl font-bold text-[var(--text-primary)]"
+                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                        <Locale zh="\u6578\u64da\u5206\u6790" en="Analytics" />
+                    </h2>
+                </div>
                 <SegmentedControl
                     data={PERIOD_OPTIONS}
                     value={days}
                     onChange={setDays}
                     size="sm"
                 />
-            </Group>
+            </div>
 
             {/* Summary Stats */}
-            <SimpleGrid cols={{ base: 2, md: 4 }} spacing={16} mb={24}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <StatCard
-                    label={<Locale zh="審核操作" en="Mod Actions" />}
+                    label={<Locale zh="\u5be9\u6838\u64cd\u4f5c" en="Mod Actions" />}
                     value={data.moderation.byDay.reduce((s, d) => s + d.count, 0)}
-                    sublabel={<Locale zh={`過去 ${days} 天`} en={`Last ${days} days`} />}
+                    sublabel={<Locale zh={`\u904e\u53bb ${days} \u5929`} en={`Last ${days} days`} />}
                 />
                 <StatCard
-                    label={<Locale zh="待處理建議" en="Pending Suggestions" />}
+                    label={<Locale zh="\u5f85\u8655\u7406\u5efa\u8b70" en="Pending Suggestions" />}
                     value={data.suggestions.byStatus.find(d => d.status === "pending")?.count ?? 0}
                 />
                 <StatCard
-                    label={<Locale zh="未結客服單" en="Open Tickets" />}
+                    label={<Locale zh="\u672a\u7d50\u5ba2\u670d\u55ae" en="Open Tickets" />}
                     value={data.tickets.open}
                 />
                 <StatCard
-                    label={<Locale zh="平均解決時間" en="Avg Resolution" />}
+                    label={<Locale zh="\u5e73\u5747\u89e3\u6c7a\u6642\u9593" en="Avg Resolution" />}
                     value={formatDuration(data.tickets.avgResolutionMs)}
-                    sublabel={<Locale zh="客服單" en="Tickets" />}
+                    sublabel={<Locale zh="\u5ba2\u670d\u55ae" en="Tickets" />}
                 />
-            </SimpleGrid>
+            </div>
 
             {/* Charts Row 1 */}
-            <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={20} mb={20}>
-                <Card p="lg" style={{ flexDirection: "column" }}>
-                    <Text fz="lg" fw={700} c="var(--text-primary)" mb="md">
-                        <Locale zh="審核趨勢" en="Moderation Trend" />
-                    </Text>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+                <Card className="flex flex-col p-5">
+                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                        <Locale zh="\u5be9\u6838\u8da8\u52e2" en="Moderation Trend" />
+                    </span>
                     <ModerationTimeline data={data.moderation.byDay} />
                 </Card>
 
-                <Card p="lg" style={{ flexDirection: "column" }}>
-                    <Text fz="lg" fw={700} c="var(--text-primary)" mb="md">
-                        <Locale zh="操作類型分佈" en="Action Type Breakdown" />
-                    </Text>
+                <Card className="flex flex-col p-5">
+                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                        <Locale zh="\u64cd\u4f5c\u985e\u578b\u5206\u4f48" en="Action Type Breakdown" />
+                    </span>
                     <ActionBreakdown data={data.moderation.byType} />
                 </Card>
-            </SimpleGrid>
+            </div>
 
             {/* Charts Row 2 */}
-            <SimpleGrid cols={{ base: 1, lg: 2 }} spacing={20} mb={20}>
-                <Card p="lg" style={{ flexDirection: "column" }}>
-                    <Text fz="lg" fw={700} c="var(--text-primary)" mb="md">
-                        <Locale zh="等級分佈" en="Level Distribution" />
-                    </Text>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+                <Card className="flex flex-col p-5">
+                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                        <Locale zh="\u7b49\u7d1a\u5206\u4f48" en="Level Distribution" />
+                    </span>
                     <LevelDistribution data={data.xp.levelDistribution} />
                 </Card>
 
-                <Card p="lg" style={{ flexDirection: "column" }}>
-                    <Text fz="lg" fw={700} c="var(--text-primary)" mb="md">
-                        <Locale zh="建議狀態" en="Suggestion Status" />
-                    </Text>
+                <Card className="flex flex-col p-5">
+                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                        <Locale zh="\u5efa\u8b70\u72c0\u614b" en="Suggestion Status" />
+                    </span>
                     <SuggestionFunnel data={data.suggestions.byStatus} />
                 </Card>
-            </SimpleGrid>
+            </div>
 
             {/* Audit Activity */}
             {data.audit.byCategory.length > 0 && (
-                <Card p="lg" style={{ flexDirection: "column" }}>
-                    <Text fz="lg" fw={700} c="var(--text-primary)" mb="md">
-                        <Locale zh="儀表板操作記錄" en="Dashboard Activity" />
-                    </Text>
-                    <Group gap="lg" wrap="wrap">
+                <Card className="flex flex-col p-5">
+                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                        <Locale zh="\u5100\u8868\u677f\u64cd\u4f5c\u8a18\u9304" en="Dashboard Activity" />
+                    </span>
+                    <div className="flex items-center gap-4 flex-wrap">
                         {data.audit.byCategory.map(d => (
-                            <Group key={d.category} gap="xs">
-                                <Badge variant="light" size="lg">{d.category}</Badge>
-                                <Text fz="lg" fw={700} c="var(--text-primary)">{d.count}</Text>
-                            </Group>
+                            <div key={d.category} className="flex items-center gap-1.5">
+                                <Badge variant="secondary" className="text-base">{d.category}</Badge>
+                                <span className="text-lg font-bold text-[var(--text-primary)]">{d.count}</span>
+                            </div>
                         ))}
-                    </Group>
+                    </div>
                 </Card>
             )}
-        </Box>
+        </div>
     );
 }

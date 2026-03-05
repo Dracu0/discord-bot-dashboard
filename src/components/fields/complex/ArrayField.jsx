@@ -1,6 +1,7 @@
 import React from "react";
 import { OptionField } from "../OptionPanel";
-import { Box, Button, Divider, Flex, Text } from "@mantine/core";
+import { Button } from "components/ui/button";
+import { Separator } from "components/ui/separator";
 
 export default function ArrayField({ element, value: valueRaw, onChange }) {
   const value = valueRaw || [];
@@ -22,22 +23,24 @@ export default function ArrayField({ element, value: valueRaw, onChange }) {
 
         return (
           <React.Fragment key={i}>
-            {i !== 0 && <Divider my="sm" />}
-            <Flex direction="row" gap="md">
+            {i !== 0 && <Separator className="my-3" />}
+            <div className="flex flex-row gap-4">
               <OptionField option={option} value={val} onChange={(v) => change(i, v)} />
-              <Button variant="filled" color="brand" onClick={removeItem}>
+              <Button variant="default" onClick={removeItem}>
                 Remove
               </Button>
-            </Flex>
+            </div>
           </React.Fragment>
         );
       })}
 
-      {value.length === 0 && <Text c="dimmed">No items yet</Text>}
+      {value.length === 0 && (
+        <p className="text-[var(--text-muted)]">No items yet</p>
+      )}
 
-      <Box mt="xs">
+      <div className="mt-2">
         <Button onClick={() => onChange([...value, element.holder])}>Add New</Button>
-      </Box>
+      </div>
     </>
   );
 }

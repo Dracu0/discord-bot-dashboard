@@ -1,12 +1,22 @@
-import { Textarea } from "@mantine/core";
+import { Textarea } from "components/ui/textarea";
+import { cn } from "lib/utils";
 
-export default function TextArea(props) {
+export default function TextArea({ error, className, ...props }) {
   return (
-    <Textarea
-      placeholder="Enter text"
-      autosize
-      minRows={3}
-      {...props}
-    />
+    <div>
+      <Textarea
+        placeholder="Enter text"
+        rows={3}
+        className={cn(
+          "min-h-[80px] resize-y",
+          error && "border-[var(--status-error)]",
+          className
+        )}
+        {...props}
+      />
+      {error && (
+        <p className="text-xs text-[var(--status-error)] mt-1">{error}</p>
+      )}
+    </div>
   );
 }

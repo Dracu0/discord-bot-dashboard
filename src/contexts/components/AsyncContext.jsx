@@ -1,6 +1,8 @@
-import { Button, Center, Skeleton, Loader, Stack, Text } from "@mantine/core";
 import React from "react";
 import { Locale } from "../../utils/Language";
+import { Button } from "components/ui/button";
+import { Spinner } from "components/ui/spinner";
+import { Skeleton } from "components/ui/skeleton";
 
 export function QueryHolder({ query, children, nullable }) {
   const { error, isLoading, refetch } = query;
@@ -11,14 +13,14 @@ export function QueryHolder({ query, children, nullable }) {
 
   if (isLoading) {
     return (
-      <Center h="100vh">
-        <Stack align="center" gap="sm">
-          <Loader size="lg" />
-          <Text>
-            <Locale zh="正在加載..." en="Loading..." />
-          </Text>
-        </Stack>
-      </Center>
+      <div className="flex items-center justify-center h-screen">
+        <div className="flex flex-col items-center gap-2">
+          <Spinner size="lg" />
+          <span>
+            <Locale zh="\u6b63\u5728\u52a0\u8f09..." en="Loading..." />
+          </span>
+        </div>
+      </div>
     );
   }
 
@@ -56,7 +58,7 @@ export function QueryHolderSkeleton({ query, height = 200, children, count = 1, 
 
   if (isLoading) {
     return [...Array(count)].map((_, i) => (
-      <Skeleton key={i} height={height} radius="lg" />
+      <Skeleton key={i} style={{ height }} className="rounded-[var(--radius-lg)]" />
     ));
   }
 
@@ -73,15 +75,15 @@ function parseChildren(children) {
 
 export function ErrorPanel({ error, onRetry }) {
   return (
-    <Center mih={200}>
-      <Stack align="center" gap="sm">
-        <Text>
-          <Locale zh="加載失敗" en="Failed to load" />
-        </Text>
+    <div className="flex items-center justify-center min-h-[200px]">
+      <div className="flex flex-col items-center gap-2">
+        <span>
+          <Locale zh="\u52a0\u8f09\u5931\u6557" en="Failed to load" />
+        </span>
         <Button onClick={onRetry}>
-          <Locale zh="再試一次" en="Try Again" />
+          <Locale zh="\u518d\u8a66\u4e00\u6b21" en="Try Again" />
         </Button>
-      </Stack>
-    </Center>
+      </div>
+    </div>
   );
 }

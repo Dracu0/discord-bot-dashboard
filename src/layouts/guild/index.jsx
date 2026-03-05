@@ -1,4 +1,3 @@
-import { Box } from "@mantine/core";
 import AdminFooter from "components/footer/FooterAdmin";
 import Navbar from "components/navbar/NavbarAdmin";
 import Sidebar from "components/sidebar/Sidebar";
@@ -24,44 +23,56 @@ function RouteWrapper({ children }) {
     const sidebarW = sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL;
 
     return (
-        <Box>
+        <div>
             <PageInfoProvider>
                 <Sidebar routes={routes} />
-                <Box
+                <div
+                    className="min-h-screen relative overflow-visible"
                     style={{
-                        float: 'right',
-                        minHeight: '100vh',
-                        position: 'relative',
-                        transition: 'all 0.25s cubic-bezier(.4,0,.2,1)',
-                        overflow: 'visible',
+                        float: "right",
+                        transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
+                        width: `calc(100% - ${sidebarW}px)`,
+                        maxWidth: `calc(100% - ${sidebarW}px)`,
                     }}
-                    w={{ base: '100%', xl: `calc(100% - ${sidebarW}px)` }}
-                    maw={{ base: '100%', xl: `calc(100% - ${sidebarW}px)` }}
                 >
-                    <Box pos="fixed" style={{ zIndex: 100 }} w={{ base: '100%', xl: `calc(100% - ${sidebarW}px)` }}>
-                        <Navbar />
-                    </Box>
+                    {/* On screens below xl, take full width */}
+                    <style>{`
+                        @media (max-width: 1279px) {
+                            [data-guild-content] {
+                                width: 100% !important;
+                                max-width: 100% !important;
+                            }
+                            [data-guild-navbar] {
+                                width: 100% !important;
+                            }
+                        }
+                    `}</style>
 
-                    <Box
-                        mx="auto"
-                        p={{ base: 20, md: 30 }}
-                        pe={20}
-                        mih="100vh"
-                        pt={50}
+                    <div
+                        className="fixed z-[100]"
+                        data-guild-navbar
+                        style={{ width: `calc(100% - ${sidebarW}px)` }}
+                    >
+                        <Navbar />
+                    </div>
+
+                    <main
                         id="main-content"
-                        component="main"
+                        className="mx-auto min-h-screen p-5 md:p-[30px] pe-5"
+                        data-guild-content
                         style={{
+                            paddingTop: 50,
                             animation: "fadeSlideUp 0.3s ease both",
                         }}
                     >
                         {children}
-                    </Box>
-                    <Box>
+                    </main>
+                    <div>
                         <AdminFooter />
-                    </Box>
-                </Box>
+                    </div>
+                </div>
             </PageInfoProvider>
-        </Box>
+        </div>
     );
 }
 

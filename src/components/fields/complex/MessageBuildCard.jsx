@@ -1,4 +1,5 @@
-import { Divider, Flex, Stack, Tabs, Text } from "@mantine/core";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "components/ui/tabs";
+import { Separator } from "components/ui/separator";
 import { OptionField, OptionHandlerContext } from "../OptionPanel";
 import { InputField } from "../impl/InputField";
 
@@ -30,17 +31,17 @@ export default function MessageBuildCard({ value, onChange }) {
 
   return (
     <Tabs defaultValue={data.type === "message" ? "message" : "embed"}>
-      <Tabs.List>
-        <Tabs.Tab value="message">Message</Tabs.Tab>
-        <Tabs.Tab value="embed">Embed</Tabs.Tab>
-      </Tabs.List>
+      <TabsList>
+        <TabsTrigger value="message">Message</TabsTrigger>
+        <TabsTrigger value="embed">Embed</TabsTrigger>
+      </TabsList>
 
-      <Tabs.Panel value="message" pt="sm">
+      <TabsContent value="message">
         <MessagePanel data={data} onChange={onChange} />
-      </Tabs.Panel>
-      <Tabs.Panel value="embed" pt="sm">
+      </TabsContent>
+      <TabsContent value="embed">
         <EmbedPanel data={data} onChange={onChange} />
-      </Tabs.Panel>
+      </TabsContent>
     </Tabs>
   );
 }
@@ -59,9 +60,9 @@ function MessagePanel({ data, onChange }) {
         value={data.message}
         onChange={(event) => onType(event.target.value)}
       />
-      <Text fz="xs" c="dimmed" mt={4}>
+      <p className="text-xs text-[var(--text-muted)] mt-1">
         Content cannot be empty
-      </Text>
+      </p>
     </div>
   );
 }
@@ -146,22 +147,25 @@ function EmbedPanel({ data, onChange }) {
 
 function Category({ isFirst, name, fields, mapper }) {
   return (
-    <Stack>
-      {!isFirst && <Divider my="md" />}
-      <Text fz="xl" fw="bold" my="sm">
+    <div className="flex flex-col">
+      {!isFirst && <Separator className="my-4" />}
+      <p className="text-xl font-bold my-3 text-[var(--text-primary)]">
         {name}
-      </Text>
-      <Stack gap="sm">{fields.map(mapper)}</Stack>
-    </Stack>
+      </p>
+      <div className="flex flex-col gap-3">{fields.map(mapper)}</div>
+    </div>
   );
 }
 
 function Field({ option, value, onChange, head }) {
   return (
     <>
-      <Text style={{ wordBreak: "keep-all" }} fz={head ? "lg" : undefined} fw={head ? "bold" : undefined}>
+      <span
+        className={head ? "text-lg font-bold text-[var(--text-primary)]" : "text-[var(--text-primary)]"}
+        style={{ wordBreak: "keep-all" }}
+      >
         {option.name}
-      </Text>
+      </span>
       <OptionField value={value} onChange={onChange} option={option} />
     </>
   );
@@ -173,16 +177,16 @@ function EmbedField({ value, onChange }) {
   };
 
   return (
-    <Flex w="100%" direction={{ base: "column", md: "row" }} align={{ md: "baseline" }} gap="sm">
+    <div className="w-full flex flex-col md:flex-row md:items-baseline gap-3">
       <Field option={{ name: "Name", type: "string" }} value={value.name} onChange={(v) => change("name", v)} />
       <Field option={{ name: "Value", type: "string" }} value={value.value} onChange={(v) => change("value", v)} />
-      <Flex w="100%" direction="row-reverse" align="baseline">
+      <div className="w-full flex flex-row-reverse items-baseline">
         <Field
           option={{ name: "Inline", type: "boolean" }}
           value={value.inline}
           onChange={(v) => change("inline", v)}
         />
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 }

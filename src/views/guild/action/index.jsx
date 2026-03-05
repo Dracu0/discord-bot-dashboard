@@ -10,7 +10,7 @@ import {Locale, useLocale} from "utils/Language";
 import {useLayoutUpdate} from "contexts/layouts/LayoutContext";
 import {BannerButton} from "components/card/Banner";
 
-import {IconPlayerPlay} from "@tabler/icons-react";
+import {Play} from "lucide-react";
 
 export default function ActionsBoard() {
     const locale = useLocale()
@@ -18,11 +18,11 @@ export default function ActionsBoard() {
     useLayoutUpdate({
         banner: {
             title: locale({
-                zh: "伺服器動作",
+                zh: "\u4f3a\u670d\u5668\u52d5\u4f5c",
                 en: "Server Actions"
             }),
             description: locale({
-                zh: "審核建議、查看審核歷史並管理伺服器任務",
+                zh: "\u5be9\u6838\u5efa\u8b70\u3001\u67e5\u770b\u5be9\u6838\u6b77\u53f2\u4e26\u7ba1\u7406\u4f3a\u670d\u5668\u4efb\u52d9",
                 en: "Review suggestions, view moderation history, and manage server tasks"
             }),
             buttons: [config.tutorialUrl && <TutorialButton />]
@@ -33,7 +33,7 @@ export default function ActionsBoard() {
     })
 
     usePageInfo(
-        locale({zh: "動作面板", en: "Actions"})
+        locale({zh: "\u52d5\u4f5c\u9762\u677f", en: "Actions"})
     );
 
     return <ActionsList />
@@ -41,10 +41,10 @@ export default function ActionsBoard() {
 
 function TutorialButton() {
     return <BannerButton
-        leftIcon={<IconPlayerPlay size={20} />}
+        leftIcon={<Play size={20} />}
         url={config.tutorialUrl}
     >
-        <Locale zh="觀看教程" en="Watch Tutorial" />
+        <Locale zh="\u89c0\u770b\u6559\u7a0b" en="Watch Tutorial" />
     </BannerButton>
 }
 

@@ -1,16 +1,22 @@
 import React, { useContext, useState, useMemo } from "react";
-import {
-    Box, Badge, Button, Code, Group, Loader, Pagination,
-    Select, Stack, Table, Text, Title, Tooltip, Collapse,
-    ActionIcon, Paper,
-} from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { IconChevronDown, IconChevronUp, IconFilter, IconHistory } from "@tabler/icons-react";
+import { ChevronDown, ChevronUp, Filter, History } from "lucide-react";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { getAuditLog } from "api/internal";
 import { usePageInfo } from "contexts/PageInfoContext";
 import { useLocale, Locale } from "utils/Language";
-import { PAGE_PT } from "utils/layout-tokens";
+import { Badge } from "components/ui/badge";
+import { Button } from "components/ui/button";
+import { Spinner } from "components/ui/spinner";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "components/ui/table";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
+import { Collapsible, CollapsibleContent } from "components/ui/collapsible";
+import { Card } from "components/ui/card";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "components/ui/select";
+import {
+    Pagination, PaginationContent, PaginationItem, PaginationLink,
+    PaginationPrevious, PaginationNext,
+} from "components/ui/pagination";
 
 const ACTION_COLORS = {
     update: "blue",
@@ -29,18 +35,18 @@ function DiffView({ before, after }) {
     if (before == null && after == null) return null;
 
     return (
-        <Group gap="xs" mt={4}>
+        <div className="flex items-center gap-1.5 mt-1">
             {before != null && (
-                <Code color="red" fz="xs" style={{ maxWidth: "45%", wordBreak: "break-all" }}>
+                <code className="rounded bg-red-500/10 text-red-400 px-1.5 py-0.5 text-xs font-mono max-w-[45%] break-all">
                     - {typeof before === "object" ? JSON.stringify(before) : String(before)}
-                </Code>
+                </code>
             )}
             {after != null && (
-                <Code color="green" fz="xs" style={{ maxWidth: "45%", wordBreak: "break-all" }}>
+                <code className="rounded bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 text-xs font-mono max-w-[45%] break-all">
                     + {typeof after === "object" ? JSON.stringify(after) : String(after)}
-                </Code>
+                </code>
             )}
-        </Group>
+        </div>
     );
 }
 
@@ -50,61 +56,64 @@ function AuditLogRow({ entry }) {
 
     return (
         <>
-            <Table.Tr
+            <TableRow
                 style={{ cursor: hasDiff ? "pointer" : "default" }}
                 onClick={() => hasDiff && setExpanded(p => !p)}
             >
-                <Table.Td>
-                    <Text fz="xs" c="var(--text-secondary)">
+                <TableCell>
+                    <span className="text-xs text-[var(--text-secondary)]">
                         {new Date(entry.createdAt).toLocaleString()}
-                    </Text>
-                </Table.Td>
-                <Table.Td>
-                    <Tooltip label={entry.actorId}>
-                        <Text fz="sm" c="var(--text-primary)" fw={500}>
-                            {entry.actorTag || entry.actorId}
-                        </Text>
-                    </Tooltip>
-                </Table.Td>
-                <Table.Td>
-                    <Badge color={SOURCE_COLORS[entry.source] || "gray"} size="sm" variant="light">
+                    </span>
+                </TableCell>
+                <TableCell>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <span className="text-sm text-[var(--text-primary)] font-medium">
+                                    {entry.actorTag || entry.actorId}
+                                </span>
+                            </TooltipTrigger>
+                            <TooltipContent>{entry.actorId}</TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </TableCell>
+                <TableCell>
+                    <Badge variant={SOURCE_COLORS[entry.source] || "secondary"}>
                         {entry.source}
                     </Badge>
-                </Table.Td>
-                <Table.Td>
-                    <Text fz="sm" c="var(--text-primary)">{entry.category}</Text>
-                </Table.Td>
-                <Table.Td>
-                    <Badge color={ACTION_COLORS[entry.action] || "gray"} size="sm">
+                </TableCell>
+                <TableCell>
+                    <span className="text-sm text-[var(--text-primary)]">{entry.category}</span>
+                </TableCell>
+                <TableCell>
+                    <Badge variant={ACTION_COLORS[entry.action] || "secondary"}>
                         {entry.action}
                     </Badge>
-                </Table.Td>
-                <Table.Td>
-                    <Text fz="sm" c="var(--text-secondary)" lineClamp={1}>
-                        {entry.target || "—"}
-                    </Text>
-                </Table.Td>
-                <Table.Td>
+                </TableCell>
+                <TableCell>
+                    <span className="text-sm text-[var(--text-secondary)] line-clamp-1">
+                        {entry.target || "\u2014"}
+                    </span>
+                </TableCell>
+                <TableCell>
                     {hasDiff && (
-                        <ActionIcon variant="subtle" size="sm" color="gray">
-                            {expanded ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-                        </ActionIcon>
+                        <Button variant="ghost" size="icon" className="h-7 w-7">
+                            {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </Button>
                     )}
-                </Table.Td>
-            </Table.Tr>
-            {hasDiff && (
-                <Table.Tr>
-                    <Table.Td colSpan={7} p={0} style={{ border: "none" }}>
-                        <Collapse in={expanded}>
-                            <Box p="sm" style={{ background: "var(--surface-secondary)", borderRadius: "var(--radius-sm)" }}>
-                                <Text fz="xs" fw={600} c="var(--text-secondary)" mb={4}>
-                                    <Locale zh="變更詳情" en="Change Details" />
-                                </Text>
-                                <DiffView before={entry.before} after={entry.after} />
-                            </Box>
-                        </Collapse>
-                    </Table.Td>
-                </Table.Tr>
+                </TableCell>
+            </TableRow>
+            {hasDiff && expanded && (
+                <TableRow>
+                    <TableCell colSpan={7} className="p-0 border-none">
+                        <div className="p-3 bg-[var(--surface-secondary)] rounded-[var(--radius-sm)]">
+                            <span className="text-xs font-semibold text-[var(--text-secondary)] mb-1 block">
+                                <Locale zh="\u8b8a\u66f4\u8a73\u60c5" en="Change Details" />
+                            </span>
+                            <DiffView before={entry.before} after={entry.after} />
+                        </div>
+                    </TableCell>
+                </TableRow>
             )}
         </>
     );
@@ -112,7 +121,7 @@ function AuditLogRow({ entry }) {
 
 export default function AuditLogPage() {
     const locale = useLocale();
-    usePageInfo(locale({ zh: "審計日誌", en: "Audit Log" }));
+    usePageInfo(locale({ zh: "\u5be9\u8a08\u65e5\u8a8c", en: "Audit Log" }));
 
     const { id: serverId } = useContext(GuildContext);
     const [page, setPage] = useState(1);
@@ -129,7 +138,7 @@ export default function AuditLogPage() {
     const { entries = [], total = 0, totalPages = 0 } = query.data || {};
 
     const categoryOptions = useMemo(() => [
-        { value: "", label: locale({ zh: "全部分類", en: "All Categories" }) },
+        { value: "__all__", label: locale({ zh: "\u5168\u90e8\u5206\u985e", en: "All Categories" }) },
         { value: "config.welcome", label: "Welcome" },
         { value: "config.xp", label: "XP" },
         { value: "config.automod", label: "AutoMod" },
@@ -138,12 +147,12 @@ export default function AuditLogPage() {
         { value: "config.starboard", label: "Starboard" },
         { value: "config.tickets", label: "Tickets" },
         { value: "config.minecraft", label: "Minecraft" },
-        { value: "feature.toggle", label: locale({ zh: "功能切換", en: "Feature Toggle" }) },
-        { value: "settings", label: locale({ zh: "設置", en: "Settings" }) },
+        { value: "feature.toggle", label: locale({ zh: "\u529f\u80fd\u5207\u63db", en: "Feature Toggle" }) },
+        { value: "settings", label: locale({ zh: "\u8a2d\u7f6e", en: "Settings" }) },
     ], [locale]);
 
     const actionOptions = useMemo(() => [
-        { value: "", label: locale({ zh: "全部操作", en: "All Actions" }) },
+        { value: "__all__", label: locale({ zh: "\u5168\u90e8\u64cd\u4f5c", en: "All Actions" }) },
         { value: "update", label: "Update" },
         { value: "enable", label: "Enable" },
         { value: "disable", label: "Disable" },
@@ -152,109 +161,140 @@ export default function AuditLogPage() {
     ], [locale]);
 
     return (
-        <Box pt={PAGE_PT}>
-            <Group justify="space-between" align="center" mb="lg">
-                <Group gap="sm">
-                    <IconHistory size={24} color="var(--accent-primary)" />
-                    <Title order={3} c="var(--text-primary)" ff="'Space Grotesk', sans-serif">
-                        <Locale zh="審計日誌" en="Audit Log" />
-                    </Title>
+        <div style={{ paddingTop: "80px" }}>
+            <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2">
+                    <History size={24} className="text-[var(--accent-primary)]" />
+                    <h3
+                        className="text-[var(--text-primary)] font-semibold text-xl"
+                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                        <Locale zh="\u5be9\u8a08\u65e5\u8a8c" en="Audit Log" />
+                    </h3>
                     {total > 0 && (
-                        <Badge size="sm" color="gray" variant="light">
-                            {total}
-                        </Badge>
+                        <Badge variant="secondary">{total}</Badge>
                     )}
-                </Group>
+                </div>
                 <Button
-                    variant="subtle"
-                    size="compact-sm"
-                    leftSection={<IconFilter size={14} />}
+                    variant="ghost"
+                    size="sm"
                     onClick={() => setShowFilters(p => !p)}
                 >
-                    <Locale zh="篩選" en="Filters" />
+                    <Filter size={14} className="mr-1" />
+                    <Locale zh="\u7be9\u9078" en="Filters" />
                 </Button>
-            </Group>
+            </div>
 
-            <Collapse in={showFilters}>
-                <Paper p="md" mb="md" radius="md" style={{ background: "var(--surface-card)" }}>
-                    <Group gap="md">
-                        <Select
-                            size="sm"
-                            placeholder={locale({ zh: "分類", en: "Category" })}
-                            data={categoryOptions}
-                            value={category || ""}
-                            onChange={(val) => { setCategory(val || null); setPage(1); }}
-                            clearable
-                            w={200}
-                        />
-                        <Select
-                            size="sm"
-                            placeholder={locale({ zh: "操作", en: "Action" })}
-                            data={actionOptions}
-                            value={action || ""}
-                            onChange={(val) => { setAction(val || null); setPage(1); }}
-                            clearable
-                            w={160}
-                        />
-                    </Group>
-                </Paper>
-            </Collapse>
+            <Collapsible open={showFilters}>
+                <CollapsibleContent>
+                    <Card className="p-4 mb-4 bg-[var(--surface-card)]">
+                        <div className="flex items-center gap-3">
+                            <Select
+                                value={category || "__all__"}
+                                onValueChange={(val) => { setCategory(val === "__all__" ? null : val); setPage(1); }}
+                            >
+                                <SelectTrigger className="w-[200px]">
+                                    <SelectValue placeholder={locale({ zh: "\u5206\u985e", en: "Category" })} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {categoryOptions.map(opt => (
+                                        <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <Select
+                                value={action || "__all__"}
+                                onValueChange={(val) => { setAction(val === "__all__" ? null : val); setPage(1); }}
+                            >
+                                <SelectTrigger className="w-[160px]">
+                                    <SelectValue placeholder={locale({ zh: "\u64cd\u4f5c", en: "Action" })} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {actionOptions.map(opt => (
+                                        <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </Card>
+                </CollapsibleContent>
+            </Collapsible>
 
             {query.isLoading && (
-                <Stack align="center" py="xl">
-                    <Loader size="md" />
-                </Stack>
+                <div className="flex flex-col items-center py-10">
+                    <Spinner size="md" />
+                </div>
             )}
 
             {!query.isLoading && entries.length === 0 && (
-                <Stack align="center" py="xl">
-                    <IconHistory size={48} color="var(--text-secondary)" opacity={0.4} />
-                    <Text c="var(--text-secondary)" fz="sm">
-                        <Locale zh="暫無審計日誌" en="No audit log entries found" />
-                    </Text>
-                </Stack>
+                <div className="flex flex-col items-center py-10">
+                    <History size={48} className="text-[var(--text-secondary)] opacity-40" />
+                    <span className="text-[var(--text-secondary)] text-sm mt-2">
+                        <Locale zh="\u66ab\u7121\u5be9\u8a08\u65e5\u8a8c" en="No audit log entries found" />
+                    </span>
+                </div>
             )}
 
             {entries.length > 0 && (
                 <>
-                    <Table.ScrollContainer minWidth={700}>
+                    <div className="min-w-[700px] overflow-x-auto">
                         <Table
-                            striped
-                            highlightOnHover
-                            withTableBorder
-                            style={{ borderRadius: "var(--radius-md)", overflow: "hidden" }}
+                            className="rounded-[var(--radius-md)] overflow-hidden border border-[var(--border-subtle)]"
                         >
-                            <Table.Thead>
-                                <Table.Tr>
-                                    <Table.Th><Locale zh="時間" en="Time" /></Table.Th>
-                                    <Table.Th><Locale zh="操作者" en="Actor" /></Table.Th>
-                                    <Table.Th><Locale zh="來源" en="Source" /></Table.Th>
-                                    <Table.Th><Locale zh="分類" en="Category" /></Table.Th>
-                                    <Table.Th><Locale zh="操作" en="Action" /></Table.Th>
-                                    <Table.Th><Locale zh="目標" en="Target" /></Table.Th>
-                                    <Table.Th w={40} />
-                                </Table.Tr>
-                            </Table.Thead>
-                            <Table.Tbody>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead><Locale zh="\u6642\u9593" en="Time" /></TableHead>
+                                    <TableHead><Locale zh="\u64cd\u4f5c\u8005" en="Actor" /></TableHead>
+                                    <TableHead><Locale zh="\u4f86\u6e90" en="Source" /></TableHead>
+                                    <TableHead><Locale zh="\u5206\u985e" en="Category" /></TableHead>
+                                    <TableHead><Locale zh="\u64cd\u4f5c" en="Action" /></TableHead>
+                                    <TableHead><Locale zh="\u76ee\u6a19" en="Target" /></TableHead>
+                                    <TableHead className="w-10" />
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
                                 {entries.map(entry => (
                                     <AuditLogRow key={entry.id} entry={entry} />
                                 ))}
-                            </Table.Tbody>
+                            </TableBody>
                         </Table>
-                    </Table.ScrollContainer>
+                    </div>
 
                     {totalPages > 1 && (
-                        <Group justify="center" mt="md">
-                            <Pagination
-                                value={page}
-                                onChange={setPage}
-                                total={totalPages}
-                                size="sm"
-                            />
-                        </Group>
+                        <div className="flex justify-center mt-4">
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious
+                                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                                            disabled={page <= 1}
+                                        />
+                                    </PaginationItem>
+                                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                                        const pageNum = i + 1;
+                                        return (
+                                            <PaginationItem key={pageNum}>
+                                                <PaginationLink
+                                                    isActive={page === pageNum}
+                                                    onClick={() => setPage(pageNum)}
+                                                >
+                                                    {pageNum}
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                        );
+                                    })}
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                            disabled={page >= totalPages}
+                                        />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+                        </div>
                     )}
                 </>
             )}
-        </Box>
+        </div>
     );
 }

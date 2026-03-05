@@ -1,4 +1,3 @@
-import { Box, Flex, Grid } from "@mantine/core";
 import React, { Fragment, useContext } from "react";
 import { usePageInfo } from "../../contexts/PageInfoContext";
 import { useLocale } from "../../utils/Language";
@@ -16,9 +15,9 @@ export function ActionsLayout() {
     );
 
     return <LayoutProvider>
-        <Box pt={PAGE_PT}>
+        <div style={{ paddingTop: PAGE_PT }}>
             <Content />
-        </Box>
+        </div>
     </LayoutProvider>
 }
 
@@ -43,24 +42,24 @@ function Content() {
 
     if (dataList) {
         return (
-            <Grid mb={20} gutter={20}>
-                <Grid.Col span={{ base: 12, xl: 8 }}>
-                    <Flex direction="column" mb={10}>
+            <div className="grid grid-cols-12 gap-5 mb-5">
+                <div className="col-span-12 xl:col-span-8">
+                    <div className="flex flex-col mb-2.5">
                         <BannerWrapper banner={banner} />
                         <Outlet />
-                    </Flex>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, xl: 4 }}>
-                    <Flex direction="column">
+                    </div>
+                </div>
+                <div className="col-span-12 xl:col-span-4">
+                    <div className="flex flex-col">
                         {dataList}
-                    </Flex>
-                </Grid.Col>
-            </Grid>
+                    </div>
+                </div>
+            </div>
         );
     } else {
-        return <Flex direction="column" mb={30}>
+        return <div className="flex flex-col mb-[30px]">
             <BannerWrapper banner={banner} />
             <Outlet />
-        </Flex>
+        </div>
     }
 }

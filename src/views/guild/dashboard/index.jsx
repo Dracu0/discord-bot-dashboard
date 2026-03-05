@@ -1,4 +1,3 @@
-import { Box, Divider, SimpleGrid, Stack, Text, Title, Group } from "@mantine/core";
 import React, { useContext, useMemo, useState } from "react";
 import { usePageInfo } from "../../../contexts/PageInfoContext";
 import { GuildDetailContext, ServerDetailProvider } from "../../../contexts/guild/GuildDetailContext";
@@ -10,18 +9,18 @@ import { DataList } from "components/card/data/DataCard";
 import { config } from "config/config";
 import { usePageState } from "utils/State";
 import { useLocale, Locale } from "utils/Language";
-import { PAGE_PT } from "utils/layout-tokens";
 import NotificationFeed from "components/card/NotificationFeed";
 import { UserDataContext } from "contexts/UserDataContext";
 import BotStatusIndicator from "components/card/BotStatusIndicator";
 import QuickActions from "components/card/QuickActions";
 import OnboardingWizard from "components/card/OnboardingWizard";
 import ActiveUsers from "components/card/ActiveUsers";
+import { Separator } from "components/ui/separator";
 
 export default function Dashboard() {
     const locale = useLocale()
 
-    usePageInfo(locale({ zh: "儀表板", en: "Dashboard" }))
+    usePageInfo(locale({ zh: "\u5100\u8868\u677f", en: "Dashboard" }))
 
     return <ServerDetailProvider>
         <UserReports />
@@ -49,27 +48,30 @@ export function UserReports() {
     const enabledFeatures = featuresQuery.data?.enabled || [];
 
     return (
-        <Box pt={PAGE_PT}>
+        <div style={{ paddingTop: "80px" }}>
             {user && (
-                <Box mb={24}>
-                    <Group justify="space-between" align="flex-start" wrap="wrap" gap="sm">
-                        <Box>
-                            <Title order={2} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" fw={700}>
+                <div className="mb-6">
+                    <div className="flex justify-between items-start flex-wrap gap-2">
+                        <div>
+                            <h2
+                                className="text-[var(--text-primary)] font-bold text-2xl"
+                                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                            >
                                 <Locale
-                                    zh={`歡迎回來, ${user.username}`}
+                                    zh={`\u6b61\u8fce\u56de\u4f86, ${user.username}`}
                                     en={`Welcome back, ${user.username}`}
                                 />
-                            </Title>
-                            <Text c="var(--text-secondary)" fz="sm" mt={4}>
-                                <Locale zh="這是您伺服器的概覽" en="Here's an overview of your server" />
-                            </Text>
-                        </Box>
-                        <Group gap="md">
+                            </h2>
+                            <span className="text-[var(--text-secondary)] text-sm mt-1 block">
+                                <Locale zh="\u9019\u662f\u60a8\u4f3a\u670d\u5668\u7684\u6982\u89bd" en="Here's an overview of your server" />
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-4">
                             <ActiveUsers guildId={serverId} page="Dashboard" />
                             <BotStatusIndicator />
-                        </Group>
-                    </Group>
-                </Box>
+                        </div>
+                    </div>
+                </div>
             )}
             {!wizardDismissed && enabledFeatures.length === 0 && featuresQuery.data && (
                 <OnboardingWizard
@@ -79,17 +81,32 @@ export function UserReports() {
             )}
             <QuickActions />
             <NotificationFeed />
-            <Stack gap={32} align="stretch">
+            <div className="flex flex-col gap-8">
                 {data.map((row, key) => {
                     const count = row.count
 
                     return (
-                        <Box key={key}>
+                        <div key={key}>
                             {row.label && <SectionHeader label={row.label} />}
-                            <SimpleGrid
-                                cols={{ base: 1, md: Math.min(2, count), "2xl": count }}
-                                spacing={20}
+                            <div
+                                className="grid gap-5"
+                                style={{
+                                    gridTemplateColumns: `repeat(1, minmax(0, 1fr))`,
+                                }}
+                                data-count={count}
                             >
+                                <style>{`
+                                    @media (min-width: 768px) {
+                                        [data-count="${count}"] {
+                                            grid-template-columns: repeat(${Math.min(2, count)}, minmax(0, 1fr));
+                                        }
+                                    }
+                                    @media (min-width: 1536px) {
+                                        [data-count="${count}"] {
+                                            grid-template-columns: repeat(${count}, minmax(0, 1fr));
+                                        }
+                                    }
+                                `}</style>
                                 {row.advanced ? (
                                     <QueryHolderSkeleton query={query} height="400px" count={row.count}>
                                         {() => <Data row={row} detail={query.data} />}
@@ -97,29 +114,29 @@ export function UserReports() {
                                 ) : (
                                     <Data row={row} detail={detail} />
                                 )}
-                            </SimpleGrid>
-                        </Box>
+                            </div>
+                        </div>
                     )
                 })}
-            </Stack>
-        </Box>
+            </div>
+        </div>
     );
 }
 
 function SectionHeader({ label }) {
     return (
-        <Box mb={16}>
-            <Title
-                order={3}
-                c="var(--text-primary)"
-                mb={8}
-                ff="'Space Grotesk', sans-serif"
-                lts="-0.01em"
+        <div className="mb-4">
+            <h3
+                className="text-[var(--text-primary)] mb-2"
+                style={{
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    letterSpacing: "-0.01em",
+                }}
             >
                 {label}
-            </Title>
-            <Divider color="var(--border-subtle)" opacity={0.4} />
-        </Box>
+            </h3>
+            <Separator className="opacity-40 bg-[var(--border-subtle)]" />
+        </div>
     )
 }
 

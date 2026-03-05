@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { Button, Box } from "@mantine/core";
+import { Button } from "components/ui/button";
+import { Spinner } from "components/ui/spinner";
 
 import { useFeatureInfo } from "contexts/FeatureDetailContext";
 import { FeaturesContext } from "contexts/FeaturesContext";
@@ -23,24 +24,19 @@ function EnableToggle() {
     return (
         <Button
             onClick={() => mutation.mutate(!enabled)}
-            loading={mutation.isPending}
+            disabled={mutation.isPending}
             size="sm"
-            miw={0}
-            h={40}
-            fz="sm"
-            radius={70}
-            px={24}
-            color={enabled ? "green" : "gray"}
-            variant={enabled ? "filled" : "light"}
-            styles={{ label: { color: "white" } }}
+            className="h-10 text-sm rounded-full px-6 min-w-0"
+            variant={enabled ? "success" : "ghost"}
         >
-            <Box
-                component="span"
-                w={8}
-                h={8}
-                style={{ borderRadius: "50%", backgroundColor: enabled ? "white" : "var(--mantine-color-red-3)" }}
-                mr={8}
-            />
+            {mutation.isPending ? (
+                <Spinner size="sm" />
+            ) : (
+                <span
+                    className="w-2 h-2 rounded-full mr-2 inline-block"
+                    style={{ backgroundColor: enabled ? "white" : "var(--status-error)" }}
+                />
+            )}
             {enabled
                 ? <Locale zh={`${featureName} 已啟用`} en={`${featureName} Enabled`} />
                 : <Locale zh={`${featureName} 已停用`} en={`${featureName} Disabled`} />

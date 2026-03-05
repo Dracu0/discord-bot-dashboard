@@ -7,21 +7,17 @@ export const SIDEBAR_FULL = 280;
 export const SIDEBAR_COLLAPSED = 72;
 export const SIDEBAR_HIDDEN = 0;
 
-export function contentWidthFor(sidebarWidth) {
-    return {
-        base: "calc(100vw - 6%)",
-        md: "calc(100vw - 8%)",
-        lg: "calc(100vw - 6%)",
-        xl: `calc(100vw - ${sidebarWidth + 70}px)`,
-        "2xl": `calc(100vw - ${sidebarWidth + 85}px)`,
-    };
+/**
+ * Returns the content width CSS calc string for a given sidebar width.
+ * Used in inline styles where dynamic sidebar width needs to be accounted for.
+ */
+export function contentWidthCalc(sidebarWidth, extraPx = 70) {
+    return `calc(100vw - ${sidebarWidth + extraPx}px)`;
 }
-
-export const contentWidth = contentWidthFor(SIDEBAR_FULL);
-
-export const contentWidthCollapsed = contentWidthFor(SIDEBAR_COLLAPSED);
 
 /**
  * Standardised page padding-top that accounts for the fixed navbar height.
  */
-export const PAGE_PT = { base: "90px", md: "80px" };
+export const PAGE_PT_BASE = "90px";
+export const PAGE_PT_MD = "80px";
+export const PAGE_PT = PAGE_PT_MD;

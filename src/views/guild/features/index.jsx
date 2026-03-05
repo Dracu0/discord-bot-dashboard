@@ -7,7 +7,7 @@ import { config } from "config/config";
 import { Locale, useLocale } from "utils/Language";
 import { useLayoutUpdate } from "contexts/layouts/LayoutContext";
 import { BannerButton } from "components/card/Banner";
-import { IconCompass } from "@tabler/icons-react";
+import { Compass } from "lucide-react";
 
 export default function FeaturesBoard() {
 
@@ -23,11 +23,11 @@ function Content() {
   useLayoutUpdate({
     banner: {
       title: locale({
-        zh: "機器人功能",
+        zh: "\u6a5f\u5668\u4eba\u529f\u80fd",
         en: "Bot Features"
       }),
       description: locale({
-        zh: `啟用並配置${config.name}在此伺服器的功能`,
+        zh: `\u555f\u7528\u4e26\u914d\u7f6e${config.name}\u5728\u6b64\u4f3a\u670d\u5668\u7684\u529f\u80fd`,
         en: `Enable and configure ${config.name}'s features for this server`
       }),
       buttons: [
@@ -42,9 +42,9 @@ function Content() {
 
 function TutorialButton() {
   return <BannerButton
-    leftIcon={<IconCompass size={20} />}
+    leftIcon={<Compass size={20} />}
     url={config.tutorialUrl}
   >
-    <Locale zh="發現它們" en="Discover" />
+    <Locale zh="\u767c\u73fe\u5b83\u5011" en="Discover" />
   </BannerButton>
 }

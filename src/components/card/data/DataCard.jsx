@@ -1,7 +1,6 @@
 import { DataTypes } from "../../../variables/type";
 import MiniStatistics from "./MiniStatistics";
 import React from "react";
-import { SimpleGrid } from "@mantine/core";
 import IconBox from "../../icons/IconBox";
 import ChartData from "../../charts/data/ChartData";
 import DataTable from "./DataTable";
@@ -68,9 +67,9 @@ export default function DataCard({name, value, type, ...optional}) {
             }
 
             case DataTypes.Group: {
-                return <SimpleGrid cols={{base: 1, xl: value.length}} spacing={20}>
+                return <div className={`grid grid-cols-1 xl:grid-cols-${value.length} gap-5`}>
                     {value.map((item, key) => <DataCard key={key} {...item} />)}
-                </SimpleGrid>
+                </div>
             }
 
             case DataTypes.List: {

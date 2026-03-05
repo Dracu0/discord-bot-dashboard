@@ -1,11 +1,13 @@
-import { Text, SegmentedControl, Stack, Group, ColorSwatch, Button, Tooltip } from "@mantine/core";
-import { IconSun, IconMoon, IconDeviceDesktop, IconDownload } from "@tabler/icons-react";
+import { Sun, Moon, Monitor, Download } from "lucide-react";
 import Card from "components/card/Card";
 import SwitchField from "components/fields/impl/SwitchField";
 import { useContext } from "react";
 import { SettingsContext } from "contexts/SettingsContext";
 import { SelectField } from "components/fields/SelectField";
 import { Languages, Locale, useLocale } from "utils/Language";
+import { SegmentedControl } from "components/ui/segmented-control";
+import { Button } from "components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 
 const ACCENT_COLORS = [
   { value: "brand", color: "#8B5CF6" },
@@ -20,7 +22,7 @@ export default function Settings({ ...rest }) {
   const { updateSettings, devMode, fixedWidth, language, colorScheme, accentColor } = useContext(SettingsContext);
   const locale = useLocale();
 
-  const Switch = ({ label, isChecked, onChange, ...props }) => {
+  const SwitchRow = ({ label, isChecked, onChange, ...props }) => {
     return (
       <SwitchField
         reversed={true}
@@ -46,69 +48,66 @@ export default function Settings({ ...rest }) {
   };
 
   return (
-    <Card mb={20} {...rest}>
-      <Text
-        w="100%"
-        c="var(--text-primary)"
-        fw="bold"
-        fz="xl"
-        ff="'Space Grotesk', sans-serif"
-        mb={30}
-      >
+    <Card className="mb-5" {...rest}>
+      <span className="block w-full text-[var(--text-primary)] font-bold text-xl font-['Space_Grotesk'] mb-[30px]">
         <Locale zh="用戶設置" en="Settings" />
-      </Text>
+      </span>
 
       {/* Appearance */}
-      <Stack gap="sm" mb={20}>
-        <Text fz="sm" fw={600} c="var(--text-muted)" tt="uppercase" lts="0.5px">
+      <div className="flex flex-col gap-2 mb-5">
+        <span className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-[0.5px]">
           <Locale zh="外觀" en="Appearance" />
-        </Text>
-        <Group justify="space-between" align="center">
-          <Text fz="sm" c="var(--text-primary)" fw={500}>
+        </span>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-[var(--text-primary)] font-medium">
             <Locale zh="主題" en="Theme" />
-          </Text>
+          </span>
           <SegmentedControl
             value={colorScheme}
-            onChange={(v) => updateSettings({ colorScheme: v })}
-            data={[
-              { value: 'light', label: <IconSun size={16} /> },
-              { value: 'auto', label: <IconDeviceDesktop size={16} /> },
-              { value: 'dark', label: <IconMoon size={16} /> },
+            onValueChange={(v) => updateSettings({ colorScheme: v })}
+            items={[
+              { value: 'light', label: <Sun className="h-4 w-4" /> },
+              { value: 'auto', label: <Monitor className="h-4 w-4" /> },
+              { value: 'dark', label: <Moon className="h-4 w-4" /> },
             ]}
-            size="xs"
+            size="sm"
           />
-        </Group>
-        <Group justify="space-between" align="center">
-          <Text fz="sm" c="var(--text-primary)" fw={500}>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-[var(--text-primary)] font-medium">
             <Locale zh="強調色" en="Accent Color" />
-          </Text>
-          <Group gap={6}>
-            {ACCENT_COLORS.map(({ value, color }) => (
-              <Tooltip key={value} label={value} position="top">
-                <ColorSwatch
-                  color={color}
-                  size={22}
-                  onClick={() => updateSettings({ accentColor: value })}
-                  style={{
-                    cursor: "pointer",
-                    outline: (accentColor || "brand") === value
-                      ? "2px solid var(--text-primary)"
-                      : "2px solid transparent",
-                    outlineOffset: 2,
-                  }}
-                />
-              </Tooltip>
-            ))}
-          </Group>
-        </Group>
-      </Stack>
+          </span>
+          <TooltipProvider>
+            <div className="flex items-center gap-1.5">
+              {ACCENT_COLORS.map(({ value, color }) => (
+                <Tooltip key={value}>
+                  <TooltipTrigger asChild>
+                    <div
+                      className="h-[22px] w-[22px] rounded-full cursor-pointer"
+                      style={{
+                        backgroundColor: color,
+                        outline: (accentColor || "brand") === value
+                          ? "2px solid var(--text-primary)"
+                          : "2px solid transparent",
+                        outlineOffset: 2,
+                      }}
+                      onClick={() => updateSettings({ accentColor: value })}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent side="top">{value}</TooltipContent>
+                </Tooltip>
+              ))}
+            </div>
+          </TooltipProvider>
+        </div>
+      </div>
 
       {/* General */}
-      <Stack gap="sm" mb={20}>
-        <Text fz="sm" fw={600} c="var(--text-muted)" tt="uppercase" lts="0.5px">
+      <div className="flex flex-col gap-2 mb-5">
+        <span className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-[0.5px]">
           <Locale zh="一般" en="General" />
-        </Text>
-        <Switch
+        </span>
+        <SwitchRow
           label={{ zh: "固定屏幕最小寬度", en: "Fixed Screen Min-Width" }}
           isChecked={fixedWidth}
           onChange={(v) =>
@@ -117,7 +116,7 @@ export default function Settings({ ...rest }) {
             })
           }
         />
-        <Switch
+        <SwitchRow
           label={{ zh: "開發者模式", en: "Developer Mode" }}
           isChecked={devMode}
           onChange={(e) =>
@@ -126,13 +125,13 @@ export default function Settings({ ...rest }) {
             })
           }
         />
-      </Stack>
+      </div>
 
       {/* Language */}
-      <Stack gap="sm" mb={20}>
-        <Text fz="sm" fw={600} c="var(--text-muted)" tt="uppercase" lts="0.5px">
+      <div className="flex flex-col gap-2 mb-5">
+        <span className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-[0.5px]">
           <Locale zh="語言" en="Language" />
-        </Text>
+        </span>
         <SelectField
           value={language}
           options={Languages}
@@ -142,23 +141,22 @@ export default function Settings({ ...rest }) {
             })
           }
         />
-      </Stack>
+      </div>
 
       {/* Data */}
-      <Stack gap="sm">
-        <Text fz="sm" fw={600} c="var(--text-muted)" tt="uppercase" lts="0.5px">
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-[0.5px]">
           <Locale zh="資料" en="Data" />
-        </Text>
+        </span>
         <Button
-          variant="light"
-          color="gray"
+          variant="secondary"
           size="sm"
-          leftSection={<IconDownload size={16} />}
           onClick={handleExportSettings}
         >
+          <Download className="h-4 w-4 mr-2" />
           <Locale zh="匯出設定" en="Export Settings" />
         </Button>
-      </Stack>
+      </div>
     </Card>
   );
 }

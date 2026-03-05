@@ -1,23 +1,23 @@
 import {createContext, useEffect, useState} from "react";
-import {useMantineColorScheme} from "@mantine/core";
+import {useTheme} from "next-themes";
 
 export const SettingsContext = createContext({
     updateSettings: (settings) => {},
     devMode: null,
     fixedWidth: null,
     language: "en",
-    colorScheme: "auto",
+    colorScheme: "system",
     sidebarCollapsed: false,
     accentColor: "brand",
 })
 
 export function SettingsProvider({children}) {
-    const { setColorScheme } = useMantineColorScheme();
+    const { setTheme } = useTheme();
     const [settings, setSetting] = useState(() => ({
         devMode: getItem("dev_mode", false),
         fixedWidth: getItem("fixedWidth", true),
         language: getItem("lang", "en"),
-        colorScheme: getItem("colorScheme", "auto"),
+        colorScheme: getItem("colorScheme", "system"),
         sidebarCollapsed: getItem("sidebarCollapsed", false),
         accentColor: getItem("accentColor", "brand"),
         updateSettings: (v) => {
@@ -39,9 +39,11 @@ export function SettingsProvider({children}) {
             } catch {
                 // localStorage quota exceeded — settings will not persist this session
             }
-            setColorScheme(settings.colorScheme)
+            // Map "auto" to "system" for next-themes compatibility
+            const themeValue = settings.colorScheme === "auto" ? "system" : settings.colorScheme;
+            setTheme(themeValue)
         },
-        [settings, setColorScheme]
+        [settings, setTheme]
     )
 
     return <SettingsContext.Provider value={settings}>

@@ -1,5 +1,5 @@
-import { Avatar, Box, Flex, Text } from "@mantine/core";
-import Card from "components/card/Card";
+import { Avatar, AvatarImage, AvatarFallback } from "components/ui/avatar";
+import { Card } from "components/ui/card";
 import React from "react";
 import { config } from "../../../../config/config";
 import { Locale } from "../../../../utils/Language";
@@ -8,58 +8,60 @@ export default function Banner(props) {
     const { banner, avatar, name, joinedServers, servers } = props;
 
     return (
-        <Card mb={{ base: 0, lg: 20 }} style={{ alignItems: "center" }}>
-            <Box
-                w="100%"
-                h={140}
+        <Card className="mb-0 lg:mb-5 items-center">
+            <div
+                className="w-full h-[140px]"
                 style={{
                     borderRadius: "var(--radius-lg)",
                     backgroundImage: banner ? `url(${banner})` : undefined,
                     background: !banner
-                        ? "linear-gradient(135deg, var(--mantine-color-brand-5) 0%, var(--mantine-color-brand-4) 50%, #22D3EE 100%)"
+                        ? "linear-gradient(135deg, var(--color-brand-500) 0%, var(--color-brand-400) 50%, var(--color-accent-400) 100%)"
                         : undefined,
                     backgroundPosition: "center",
                     backgroundSize: "cover",
                 }}
             />
-            <Avatar
-                mx="auto"
-                src={avatar}
-                size={90}
-                mt={-45}
-                style={{
-                    border: "4px solid var(--surface-primary)",
-                    boxShadow: "var(--shadow-lg)",
-                }}
-            />
-            <Text c="var(--text-primary)" fw="bold" fz="xl" mt={12} ff="'Space Grotesk', sans-serif">
+            <Avatar className="mx-auto w-[90px] h-[90px] -mt-[45px] border-4 border-[var(--surface-primary)] shadow-[var(--shadow-lg)]">
+                <AvatarImage src={avatar} alt={name} />
+                <AvatarFallback>{name?.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <p
+                className="text-[var(--text-primary)] font-bold text-xl mt-3 text-center"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
                 {name}
-            </Text>
-            <Text c="var(--text-secondary)" fz="sm">
+            </p>
+            <p className="text-[var(--text-secondary)] text-sm text-center">
                 <Locale zh="歡迎回到" en="Welcome back to" /> {config.name}
-            </Text>
-            <Flex w="max-content" mx="auto" mt={26} wrap="wrap" gap={32}>
+            </p>
+            <div className="flex w-max mx-auto mt-[26px] flex-wrap gap-8">
                 {joinedServers && (
-                    <Flex align="center" direction="column">
-                        <Text c="brand.4" fz="2xl" fw={700} ff="'Space Grotesk', sans-serif">
+                    <div className="flex items-center flex-col">
+                        <span
+                            className="text-[var(--accent-primary)] text-2xl font-bold"
+                            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                        >
                             {joinedServers}
-                        </Text>
-                        <Text c="var(--text-secondary)" fz="sm" fw={400}>
+                        </span>
+                        <span className="text-[var(--text-secondary)] text-sm font-normal">
                             <Locale zh="已加入的服務器" en="Joined Servers" />
-                        </Text>
-                    </Flex>
+                        </span>
+                    </div>
                 )}
                 {servers && (
-                    <Flex align="center" direction="column">
-                        <Text c="brand.4" fz="2xl" fw={700} ff="'Space Grotesk', sans-serif">
+                    <div className="flex items-center flex-col">
+                        <span
+                            className="text-[var(--accent-primary)] text-2xl font-bold"
+                            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                        >
                             {servers}
-                        </Text>
-                        <Text c="var(--text-secondary)" fz="sm" fw={400}>
+                        </span>
+                        <span className="text-[var(--text-secondary)] text-sm font-normal">
                             <Locale zh="您擁有的服務器" en="Total Servers" />
-                        </Text>
-                    </Flex>
+                        </span>
+                    </div>
                 )}
-            </Flex>
+            </div>
         </Card>
     );
 }

@@ -1,4 +1,3 @@
-import { Box } from "@mantine/core";
 import AdminFooter from "components/footer/FooterAdmin";
 import Profile from "views/admin/profile";
 import { UserDataProvider } from "contexts/UserDataContext";
@@ -8,14 +7,14 @@ export default function Dashboard() {
   document.documentElement.dir = "ltr";
 
   return (
-    <Box mih="100vh" pos="relative" px={{ base: 16, sm: 20, md: 40, lg: 80, xl: 120 }}>
+    <div className="min-h-screen relative px-4 sm:px-5 md:px-10 lg:px-20 xl:px-[120px]">
       <UserDataProvider>
         <Profile />
-        <Box>
+        <div>
           <AdminFooter />
-        </Box>
+        </div>
       </UserDataProvider>
       <Outlet />
-    </Box>
+    </div>
   );
 }

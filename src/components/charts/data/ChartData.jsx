@@ -1,87 +1,76 @@
-import { Box, Button, Flex, Stack, Text } from "@mantine/core";
-import { IconCalendar, IconChartBar, IconCircleCheck, IconAlertTriangle } from "@tabler/icons-react";
+import { cn } from "lib/utils";
+import { Calendar, BarChart3, CircleCheck, AlertTriangle } from "lucide-react";
+import { Button } from "components/ui/button";
 import Card from "components/card/Card";
 import React from "react";
 import ApexChart from "components/charts/ApexChart";
-export default function ChartData({ name, description, value, time_unit, status, options, chartType }) {
 
+export default function ChartData({ name, description, value, time_unit, status, options, chartType }) {
     return (
-        <Card
-            style={{ flexDirection: "column" }}
-            w="100%"
-            mb={0}
-        >
-            <Flex justify="space-between" ps={0} pe={20} pt={5}>
-                <Flex align="center" w="100%">
+        <Card className="flex flex-col w-full mb-0">
+            <div className="flex justify-between ps-0 pe-5 pt-1">
+                <div className="flex items-center w-full">
                     {time_unit && (
                         <Button
-                            variant="default"
-                            style={{ backgroundColor: "var(--surface-secondary)" }}
-                            fz="sm"
-                            fw={500}
-                            c="var(--text-primary)"
-                            radius={7}
-                            leftSection={<IconCalendar size={16} color="var(--text-primary)" />}
+                            variant="secondary"
+                            className="bg-[var(--surface-secondary)] text-sm font-medium text-[var(--text-primary)] rounded-[7px]"
                         >
+                            <Calendar size={16} className="text-[var(--text-primary)]" />
                             {time_unit}
                         </Button>
                     )}
 
                     <Button
-                        ms="auto"
-                        variant="default"
-                        style={{ backgroundColor: "var(--surface-secondary)" }}
-                        w={37}
-                        h={37}
-                        p={0}
-                        radius={10}
+                        variant="secondary"
+                        size="icon"
+                        className="ms-auto bg-[var(--surface-secondary)] w-[37px] h-[37px] p-0 rounded-[10px]"
                     >
-                        <IconChartBar size={24} color="var(--accent-primary)" />
+                        <BarChart3 size={24} className="text-[var(--accent-primary)]" />
                     </Button>
-                </Flex>
-            </Flex>
-            <Flex w="100%" h="100%" direction={{ base: "column", "2xl": "row" }}>
-                <Stack align="flex-start" ta="start" me={20} mt={28} gap={0}>
-                    <Text
-                        c="var(--text-primary)"
-                        fz={name.length <= 5 ? 34 : 20}
-                        fw={700}
-                        lh={1}
+                </div>
+            </div>
+            <div className="flex flex-col 2xl:flex-row w-full h-full">
+                <div className="flex flex-col items-start text-start me-5 mt-7 gap-0">
+                    <span
+                        className={cn(
+                            "text-[var(--text-primary)] font-bold leading-none",
+                            name.length <= 5 ? "text-[34px]" : "text-xl"
+                        )}
                     >
                         {name}
-                    </Text>
-                    <Text c="var(--text-secondary)" fz="sm" fw={500} mt={4} mb={30}>
+                    </span>
+                    <span className="text-[var(--text-secondary)] text-sm font-medium mt-1 mb-8">
                         {description}
-                    </Text>
+                    </span>
 
                     {status && (
-                        <Flex align="center">
+                        <div className="flex items-center">
                             {status.success ? (
                                 <>
-                                    <IconCircleCheck size={18} color="var(--mantine-color-green-5)" style={{ marginRight: 4 }} />
-                                    <Text c="green.5" fz="md" fw={700}>
+                                    <CircleCheck size={18} className="text-green-500 mr-1" />
+                                    <span className="text-green-500 text-base font-bold">
                                         {status.text}
-                                    </Text>
+                                    </span>
                                 </>
                             ) : (
                                 <>
-                                    <IconAlertTriangle size={18} color="var(--mantine-color-red-5)" style={{ marginRight: 4 }} />
-                                    <Text c="red.5" fz="md" fw={700}>
+                                    <AlertTriangle size={18} className="text-red-500 mr-1" />
+                                    <span className="text-red-500 text-base font-bold">
                                         {status.text}
-                                    </Text>
+                                    </span>
                                 </>
                             )}
-                        </Flex>
+                        </div>
                     )}
-                </Stack>
-                <Box mih={260} miw="75%" mt="auto">
+                </div>
+                <div className="min-h-[260px] min-w-[75%] mt-auto">
                     <ApexChart
                         chartOptions={options}
                         chartData={value}
                         chartType={chartType}
                     />
-                </Box>
-            </Flex>
+                </div>
+            </div>
         </Card>
     );
 }

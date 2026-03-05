@@ -1,24 +1,21 @@
 import React, {useContext, useMemo, useState, useCallback} from "react";
 
-import {Box} from "@mantine/core";
-
 import {usePageInfo} from "contexts/PageInfoContext";
 import {SettingsContext} from "../../../contexts/SettingsContext";
 import {ConfigGrid} from "components/fields/ConfigPanel";
 import {config} from "config/config";
 import {useLocale} from "utils/Language";
-import {PAGE_PT} from "utils/layout-tokens";
 
 export default function SettingsPanel() {
     const locale = useLocale()
     usePageInfo(
-        locale({zh: "設置", en: "Settings"})
+        locale({zh: "\u8a2d\u7f6e", en: "Settings"})
     )
 
     return (
-        <Box pt={PAGE_PT}>
+        <div style={{ paddingTop: "80px" }}>
             <SettingsConfigPanel />
-        </Box>
+        </div>
     );
 }
 

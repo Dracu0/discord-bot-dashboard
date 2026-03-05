@@ -1,10 +1,16 @@
-import { Avatar, Group, ActionIcon, Menu, Text } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import React, { useContext } from "react";
+import { Button } from "components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+} from "components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "components/ui/avatar";
+import { useDisclosure } from "hooks/useDisclosure";
 import UserOptionMenu from "components/menu/UserOptionMenu";
 import { SearchBar } from "components/navbar/searchBar/SearchBar";
 import { SidebarResponsive } from "components/sidebar/Sidebar";
-import React, { useContext } from "react";
-import { IconMoon, IconSun, IconSettings } from "@tabler/icons-react";
+import { Moon, Sun, Settings } from "lucide-react";
 import { UserDataContext } from "contexts/UserDataContext";
 import { PageInfoContext } from "contexts/PageInfoContext";
 import { SettingsContext } from "contexts/SettingsContext";
@@ -21,24 +27,23 @@ export default function HeaderLinks() {
 
     return (
         <>
-            <SearchBar me={10} />
+            <SearchBar className="me-2.5" />
             <SidebarResponsive routes={routes} />
-            <Group gap={6}>
+            <div className="flex items-center gap-1.5">
                 <Notifications />
-                <ActionIcon
-                    variant="subtle"
-                    color="gray"
-                    radius="xl"
-                    size={ICON_BTN}
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full"
+                    style={{ width: ICON_BTN, height: ICON_BTN, transition: "transform 0.2s ease" }}
                     onClick={() => updateSettings({ colorScheme: isDark ? "light" : "dark" })}
                     aria-label="Toggle color scheme"
-                    style={{ transition: "transform 0.2s ease" }}
                 >
-                    {isDark ? <IconSun size={18} /> : <IconMoon size={18} />}
-                </ActionIcon>
+                    {isDark ? <Sun size={18} /> : <Moon size={18} />}
+                </Button>
                 <SettingsMenu />
                 <UserMenu />
-            </Group>
+            </div>
         </>
     );
 }
@@ -48,16 +53,16 @@ function SettingsMenu() {
 
     return (
         <>
-            <ActionIcon
-                variant="subtle"
-                color="gray"
-                radius="xl"
-                size={ICON_BTN}
+            <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+                style={{ width: ICON_BTN, height: ICON_BTN }}
                 aria-label="Settings"
                 onClick={open}
             >
-                <IconSettings size={18} />
-            </ActionIcon>
+                <Settings size={18} />
+            </Button>
             <SettingsModal isOpen={opened} onClose={close} />
         </>
     );
@@ -67,23 +72,27 @@ function UserMenu() {
     const { username, avatar, id } = useContext(UserDataContext);
 
     return (
-        <Menu shadow="md" width={200}>
-            <Menu.Target>
-                <Group gap="xs" style={{ cursor: "pointer" }}>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-1.5 cursor-pointer">
                     <Avatar
-                        name={username}
-                        src={avatarToUrl(id, avatar)}
-                        color="brand"
-                        size="sm"
-                        radius="xl"
+                        className="h-8 w-8"
                         style={{ border: "2px solid var(--accent-primary)" }}
-                    />
-                    <Text visibleFrom="lg" c="var(--text-primary)" fz="sm" fw={600}>
+                    >
+                        <AvatarImage src={avatarToUrl(id, avatar)} alt={username} />
+                        <AvatarFallback>{username?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <span
+                        className="hidden lg:inline text-sm font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                    >
                         {username}
-                    </Text>
-                </Group>
-            </Menu.Target>
-            <UserOptionMenu />
-        </Menu>
+                    </span>
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px]">
+                <UserOptionMenu />
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }

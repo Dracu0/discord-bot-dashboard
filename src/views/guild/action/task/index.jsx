@@ -1,7 +1,5 @@
 import React, {useContext, useMemo} from "react";
 
-import {SimpleGrid, Stack, Text} from "@mantine/core";
-
 import {usePageInfo} from "contexts/PageInfoContext";
 import {useActionInfo} from "contexts/actions/ActionDetailContext";
 import {ConfigGridSkeleton, MultiConfigPanel} from "components/fields/ConfigPanel";
@@ -24,30 +22,30 @@ export default function TaskBoard() {
     useActionBanner([
         <BackNavButton
             to={actionUrl}
-            zh="返回動作"
+            zh="\u8fd4\u56de\u52d5\u4f5c"
             en="Back to Action"
             ariaLabel="Back to Action"
         />,
     ])
 
     usePageInfo(
-        [{zh: "動作", en: "Action"}, actionName].map(locale)
+        [{zh: "\u52d5\u4f5c", en: "Action"}, actionName].map(locale)
     )
 
-    return <Stack mt={10} gap={5}>
-        <Text fontSize={25} fontWeight="bold">
-            <Locale zh="修改任務" en="Modify Task" />
-        </Text>
+    return <div className="flex flex-col mt-2.5 gap-1.5">
+        <span className="text-[25px] font-bold">
+            <Locale zh="\u4fee\u6539\u4efb\u52d9" en="Modify Task" />
+        </span>
 
         <TaskConfigPanel />
-    </Stack>
+    </div>
 }
 
 function TaskConfigPanel() {
     const query = useTaskDetailQuery()
 
     if (query.isLoading) return <ConfigGridSkeleton />
-    if (query.error || !query.data) return <Text c="red.4">Failed to load task details.</Text>
+    if (query.error || !query.data) return <span className="text-red-400">Failed to load task details.</span>
     return <Config detail={query.data} />
 }
 
@@ -63,13 +61,13 @@ export function Config({detail}) {
     }
 
     return (
-        <SimpleGrid cols={{base: 1, lg: 2}} spacing={5}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-1.5">
             <ConfigPanel
                 savedName={name}
                 values={values}
                 onSaved={onSaved}
             />
-        </SimpleGrid>
+        </div>
     );
 }
 
@@ -90,7 +88,7 @@ function ConfigPanel({savedName, onSaved, values}) {
     const nameOption = {
         id: "name",
         type: "string",
-        name: <Locale zh="任務名稱" en="Task Name" />,
+        name: <Locale zh="\u4efb\u52d9\u540d\u7a31" en="Task Name" />,
         value: savedName,
         required: true
     }

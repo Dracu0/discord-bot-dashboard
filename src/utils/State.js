@@ -1,13 +1,13 @@
 import {useContext} from "react";
 import {SettingsContext} from "../contexts/SettingsContext";
-import {useComputedColorScheme} from "@mantine/core";
+import {useTheme} from "next-themes";
 
 export function usePageState(add) {
     const {language} = useContext(SettingsContext)
-    const colorScheme = useComputedColorScheme('dark')
+    const {resolvedTheme} = useTheme()
 
     return {
-        darkMode: colorScheme === "dark",
+        darkMode: resolvedTheme === "dark",
         lang: language,
         ...add
     }

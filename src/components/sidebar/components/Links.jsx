@@ -1,8 +1,14 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Box, Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { useLocale } from "utils/Language";
-import { IconCircle } from "@tabler/icons-react";
+import { Circle } from "lucide-react";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "components/ui/tooltip";
+import { cn } from "lib/utils";
 
 function hasSegment(pathname, segment) {
   const segments = pathname.split("/").filter(Boolean);
@@ -33,18 +39,18 @@ export function SidebarLinks({ routes, collapsed, onNavigate }) {
     if (item.type === "category") {
       if (collapsed) return null;
       return (
-        <Box key={item.key} mt={18} mb={8} px={4}>
-          <Text
-            fz={11}
-            fw={700}
-            ff="'Space Grotesk', 'DM Sans', sans-serif"
-            c="var(--text-muted)"
-            tt="uppercase"
-            style={{ letterSpacing: "1.5px" }}
+        <div key={item.key} className="mt-[18px] mb-2 px-1">
+          <span
+            className="text-[11px] font-bold uppercase"
+            style={{
+              color: "var(--text-muted)",
+              fontFamily: "'Space Grotesk', 'DM Sans', sans-serif",
+              letterSpacing: "1.5px",
+            }}
           >
             {item.label}
-          </Text>
-        </Box>
+          </span>
+        </div>
       );
     }
     return (
@@ -75,7 +81,7 @@ function RouteItem({ route, collapsed, onNavigate }) {
       />
 
       {!collapsed && (
-        <Flex direction="column" pl="xl">
+        <div className="flex flex-col pl-6">
           {includes &&
             route.items &&
             route.items.map((item, key) => {
@@ -86,13 +92,13 @@ function RouteItem({ route, collapsed, onNavigate }) {
                   path={path}
                   active={hasSegment(location.pathname, item.path)}
                   name={item.name}
-                  icon={<IconCircle size={8} />}
+                  icon={<Circle size={8} />}
                   collapsed={false}
                   onNavigate={onNavigate}
                 />
               );
             })}
-        </Flex>
+        </div>
       )}
     </>
   );
@@ -103,74 +109,80 @@ function Item({ active, name, path, icon, collapsed, onNavigate }) {
   const label = locale(name);
 
   const button = (
-    <UnstyledButton
-      py={collapsed ? 10 : 6}
-      px={collapsed ? 0 : 10}
-      my={2}
-      w="100%"
+    <button
+      type="button"
       onClick={onNavigate}
+      className={cn(
+        "w-full my-0.5 flex items-center border-0 cursor-pointer transition-all duration-200",
+        collapsed
+          ? "py-2.5 px-0 justify-center"
+          : "py-1.5 px-2.5 justify-start"
+      )}
       style={{
         borderRadius: "var(--radius-md)",
         background: active ? "var(--sidebar-active)" : "transparent",
-        transition: "all 0.2s ease",
-        display: "flex",
-        justifyContent: collapsed ? "center" : "flex-start",
-        alignItems: "center",
       }}
-      styles={{
-        root: {
-          "&:hover": {
-            background: active ? "var(--sidebar-active)" : "var(--sidebar-hover)",
-          },
-        },
+      onMouseEnter={(e) => {
+        if (!active)
+          e.currentTarget.style.background = "var(--sidebar-hover)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = active
+          ? "var(--sidebar-active)"
+          : "transparent";
       }}
     >
-      <Flex align="center" gap={collapsed ? 0 : 10} justify={collapsed ? "center" : "flex-start"} w="100%">
-        <Box
-          c={active ? "var(--accent-primary)" : "var(--text-muted)"}
+      <div
+        className={cn(
+          "flex items-center w-full",
+          collapsed ? "gap-0 justify-center" : "gap-2.5 justify-start"
+        )}
+      >
+        <div
+          className="flex items-center justify-center shrink-0"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
+            color: active ? "var(--accent-primary)" : "var(--text-muted)",
             width: collapsed ? 24 : 20,
           }}
         >
           {icon}
-        </Box>
+        </div>
         {!collapsed && (
-          <Text
-            style={{ flex: 1 }}
-            c={active ? "var(--text-primary)" : "var(--text-secondary)"}
-            fw={active ? 600 : 400}
-            ff="'Space Grotesk', 'DM Sans', sans-serif"
-            fz="sm"
-            truncate
+          <span
+            className="flex-1 text-sm truncate text-left"
+            style={{
+              color: active ? "var(--text-primary)" : "var(--text-secondary)",
+              fontWeight: active ? 600 : 400,
+              fontFamily: "'Space Grotesk', 'DM Sans', sans-serif",
+            }}
           >
             {label}
-          </Text>
+          </span>
         )}
         {!collapsed && active && (
-          <Box
-            w={4}
-            h={20}
+          <div
+            className="shrink-0"
             style={{
+              width: 4,
+              height: 20,
               borderRadius: 4,
               background: "var(--accent-primary)",
-              flexShrink: 0,
             }}
           />
         )}
-      </Flex>
-    </UnstyledButton>
+      </div>
+    </button>
   );
 
   return (
     <NavLink to={path} style={{ textDecoration: "none" }}>
       {collapsed ? (
-        <Tooltip label={label} position="right" withArrow>
-          {button}
-        </Tooltip>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>{button}</TooltipTrigger>
+            <TooltipContent side="right">{label}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       ) : (
         button
       )}

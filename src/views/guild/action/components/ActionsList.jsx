@@ -1,4 +1,4 @@
-import { Flex, Stack, Text, Transition } from "@mantine/core";
+import { cn } from "lib/utils";
 
 import { Action } from "components/card/Action";
 import { config } from "config/config";
@@ -6,33 +6,31 @@ import { Locale } from "utils/Language";
 
 export default function ActionsList() {
     return (
-        <Flex direction="column" gap={20}>
-            <Text
-                c="var(--text-primary)"
-                fz="2xl"
-                fw={700}
-                ff="'Space Grotesk', sans-serif"
-                ms={24}
-                mt={45}
+        <div className="flex flex-col gap-5">
+            <span
+                className="text-[var(--text-primary)] text-2xl font-bold ms-6 mt-11"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
             >
                 <Locale zh="動作列表" en="Actions List" />
-            </Text>
-            <Stack gap={12}>
+            </span>
+            <div className="flex flex-col gap-3">
                 <Actions />
-            </Stack>
-        </Flex>
+            </div>
+        </div>
     );
 }
 
 function Actions() {
     return Object.entries(config.actions).map(([id, action], index) => (
-        <Transition key={id} mounted={true} transition="scale" duration={300} timingFunction="ease"
-            enterDelay={index * 60}>
-            {(styles) => (
-                <div style={styles}>
-                    <Action id={id} action={action} />
-                </div>
+        <div
+            key={id}
+            className={cn(
+                "transition-all duration-300 ease-out",
+                "animate-in zoom-in-95 fade-in"
             )}
-        </Transition>
+            style={{ animationDelay: `${index * 60}ms`, animationFillMode: "backwards" }}
+        >
+            <Action id={id} action={action} />
+        </div>
     ));
 }

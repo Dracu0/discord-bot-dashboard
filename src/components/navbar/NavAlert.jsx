@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Breadcrumbs, Flex, Text } from "@mantine/core";
+import { cn } from "lib/utils";
 import { SettingsContext } from "../../contexts/SettingsContext";
-import { contentWidth, contentWidthCollapsed } from "../../utils/layout-tokens";
+import { contentWidthCalc, SIDEBAR_FULL, SIDEBAR_COLLAPSED } from "../../utils/layout-tokens";
 
 export default function NavAlert({ rootText, childText, children, clip = true }) {
     const { sidebarCollapsed } = useContext(SettingsContext);
-    const width = sidebarCollapsed ? contentWidthCollapsed : contentWidth;
+    const width = contentWidthCalc(sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL);
     const margin = "5vw";
-    const clipMargin = { base: 12, md: 30, lg: 30, xl: 30 };
+    const clipMargin = { base: 12, md: 30 };
 
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
@@ -18,76 +18,67 @@ export default function NavAlert({ rootText, childText, children, clip = true })
 
     const breadcrumbItems = [];
     breadcrumbItems.push(
-        <Text key="root" c="var(--accent-primary)" fw={600} fz="sm">
+        <span key="root" className="text-sm font-semibold" style={{ color: "var(--accent-primary)" }}>
             {rootText}
-        </Text>
+        </span>
     );
     if (Array.isArray(childText)) {
         childText.forEach((text, i) =>
             breadcrumbItems.push(
-                <Text key={i} c="var(--text-secondary)" fz="sm">
+                <span key={i} className="text-sm" style={{ color: "var(--text-secondary)" }}>
                     {text}
-                </Text>
+                </span>
             )
         );
     } else {
         breadcrumbItems.push(
-            <Text key="child" c="var(--text-secondary)" fz="sm">
+            <span key="child" className="text-sm" style={{ color: "var(--text-secondary)" }}>
                 {childText}
-            </Text>
+            </span>
         );
     }
 
     return (
-        <Box
+        <div
+            className="fixed z-30 mx-auto pb-2 pt-2 px-[15px] md:px-[10px] xl:ps-3 min-h-[64px] top-3 md:top-4"
             style={{
-                zIndex: 30,
-                position: "fixed",
                 backdropFilter: "blur(20px) saturate(180%)",
                 borderRadius: "var(--radius-lg)",
                 border: `1px solid ${scrolled ? "var(--navbar-border)" : "transparent"}`,
                 transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
                 lineHeight: "25.6px",
+                background: "var(--navbar-bg)",
+                left: clip ? undefined : margin,
+                right: clip ? undefined : margin,
+                width: clip ? width : undefined,
             }}
-            bg="var(--navbar-bg)"
-            mih={64}
-            mx="auto"
-            pb={8}
-            px={{ base: 15, md: 10 }}
-            ps={{ xl: 12 }}
-            pt={8}
-            left={clip ? undefined : margin}
-            right={clip ? clipMargin : margin}
-            top={{ base: 12, md: 16 }}
-            w={clip ? width : undefined}
         >
-            <Flex
-                w="100%"
-                direction={{ base: "column", md: "row" }}
-                align={{ xl: "center" }}
-            >
-                <Box mb={{ base: 8, md: 0 }}>
-                    <Breadcrumbs separator="/" fz="sm" mb={5}>
-                        {breadcrumbItems}
-                    </Breadcrumbs>
-                    <Text
-                        c="var(--text-primary)"
-                        fw="bold"
-                        fz={{ base: 24, md: 34 }}
-                        ff="'Space Grotesk', sans-serif"
-                        style={{ letterSpacing: "-0.02em" }}
+            <div className="flex w-full flex-col md:flex-row xl:items-center">
+                <div className="mb-2 md:mb-0">
+                    {/* Breadcrumbs */}
+                    <div className="flex items-center gap-1 text-sm mb-[5px]">
+                        {breadcrumbItems.map((item, i) => (
+                            <React.Fragment key={i}>
+                                {i > 0 && <span className="text-sm" style={{ color: "var(--text-secondary)" }}>/</span>}
+                                {item}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                    <p
+                        className="font-bold text-2xl md:text-[34px]"
+                        style={{
+                            color: "var(--text-primary)",
+                            fontFamily: "'Space Grotesk', sans-serif",
+                            letterSpacing: "-0.02em",
+                        }}
                     >
                         {Array.isArray(childText)
                             ? childText[childText.length - 1]
                             : childText}
-                    </Text>
-                </Box>
-                <Flex
-                    ms="auto"
-                    w={{ base: "100%", md: "auto" }}
-                    align="center"
-                    direction="row"
-                    p={10}
+                    </p>
+                </div>
+                <div
+                    className="flex items-center flex-row ms-auto w-full md:w-auto p-2.5"
                     style={{
                         borderRadius: "var(--radius-lg)",
                         background: "var(--surface-primary)",
@@ -96,8 +87,8 @@ export default function NavAlert({ rootText, childText, children, clip = true })
                     }}
                 >
                     {children}
-                </Flex>
-            </Flex>
-        </Box>
+                </div>
+            </div>
+        </div>
     );
 }

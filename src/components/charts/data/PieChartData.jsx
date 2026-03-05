@@ -1,59 +1,54 @@
-import { Box, Flex, SimpleGrid, Text } from "@mantine/core";
+import { cn } from "lib/utils";
 import Card from "components/card/Card";
 import PieChart from "components/charts/PieChart";
 import React from "react";
+
 export default function PieChartData({ name, data, options, unit }) {
-
     return (
-        <Card p={20} style={{ alignItems: "center", flexDirection: "column" }} w="100%">
-            <Flex mb="3rem">
-                <Text c="var(--text-primary)" fz="lg" fw="bold" mt={4}>
+        <Card className="flex items-center flex-col p-5 w-full">
+            <div className="flex mb-12">
+                <span className="text-[var(--text-primary)] text-lg font-bold mt-1">
                     {name}
-                </Text>
-            </Flex>
+                </span>
+            </div>
 
-            <Box maw={{ xl: "20rem" }} mx="auto">
+            <div className="mx-auto max-w-full xl:max-w-[20rem]">
                 <PieChart chartData={data} chartOptions={options} />
-            </Box>
+            </div>
 
-            <SimpleGrid
-                cols={{
-                    base: Math.min(data.length, 2),
-                    md: Math.min(data.length, 3),
-                    "2xl": Math.min(data.length, 4),
-                }}
-                style={{ borderRadius: 8 }}
-                w="100%"
-                py={15}
-                px={20}
-                mt={15}
+            <div
+                className={cn(
+                    "grid gap-4 w-full py-4 px-5 mt-4 rounded-lg",
+                    data.length >= 4
+                        ? "grid-cols-2 md:grid-cols-3 2xl:grid-cols-4"
+                        : data.length >= 3
+                            ? "grid-cols-2 md:grid-cols-3"
+                            : `grid-cols-${Math.min(data.length, 2)}`
+                )}
             >
                 {data.map((v, i) => (
                     <FooterItem key={i} label={options.labels[i]} value={v} unit={unit} />
                 ))}
-            </SimpleGrid>
+            </div>
         </Card>
     );
 }
 
 function FooterItem({ label, value, unit }) {
-
     return (
-        <Flex align="center" justify="center" direction="column" py={5}>
-            <Flex>
-                <Box
-                    h={8}
-                    w={8}
-                    style={{ backgroundColor: "var(--mantine-color-brand-5)", borderRadius: "50%" }}
-                    me={4}
+        <div className="flex items-center justify-center flex-col py-1">
+            <div className="flex items-center">
+                <div
+                    className="h-2 w-2 rounded-full me-1"
+                    style={{ backgroundColor: "var(--accent-primary)" }}
                 />
-                <Text fz="xs" c="var(--text-secondary)" fw={700} mb={5}>
+                <span className="text-xs text-[var(--text-secondary)] font-bold mb-1">
                     {label}
-                </Text>
-            </Flex>
-            <Text ta="start" fz="lg" c="var(--text-primary)" fw={700}>
+                </span>
+            </div>
+            <span className="text-start text-lg text-[var(--text-primary)] font-bold">
                 {value}{unit}
-            </Text>
-        </Flex>
+            </span>
+        </div>
     );
 }

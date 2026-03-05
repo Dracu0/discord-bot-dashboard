@@ -1,4 +1,3 @@
-import { Box, Group, Text, Title } from "@mantine/core";
 const SAMPLE_PLACEHOLDERS = {
   "{user}": "@SampleUser",
   "{server}": "My Server",
@@ -26,104 +25,101 @@ export default function DiscordEmbedPreview({ message, color, isEmbed }) {
   if (!isEmbed) {
     return (
       <PreviewWrapper bg={bgSecondary} textColor={textMuted}>
-        <Box
+        <div
+          className="rounded-lg"
           style={{
             padding: "8px 16px",
             backgroundColor: bgPrimary,
-            borderRadius: 8,
           }}
         >
-          <Group gap={8} align="center" mb={4}>
-            <Box
+          <div className="flex items-center gap-2 mb-1">
+            <div
+              className="w-6 h-6 rounded-full shrink-0"
               style={{
-                width: 24,
-                height: 24,
-                borderRadius: "50%",
                 background: "linear-gradient(135deg, #5865f2, #eb459e)",
-                flexShrink: 0,
               }}
             />
-            <Text fz="sm" fw={500} c={textPrimary}>
+            <span className="text-sm font-medium" style={{ color: textPrimary }}>
               Mocotron
-            </Text>
-            <Text fz="xs" c={textMuted}>
+            </span>
+            <span className="text-xs" style={{ color: textMuted }}>
               BOT
-            </Text>
-            <Text fz="xs" c={textMuted}>
+            </span>
+            <span className="text-xs" style={{ color: textMuted }}>
               Today at 12:00 PM
-            </Text>
-          </Group>
-          <Text fz="sm" c={textPrimary} style={{ whiteSpace: "pre-wrap" }}>
+            </span>
+          </div>
+          <p className="text-sm whitespace-pre-wrap" style={{ color: textPrimary }}>
             {resolved || "No message content"}
-          </Text>
-        </Box>
+          </p>
+        </div>
       </PreviewWrapper>
     );
   }
 
   return (
     <PreviewWrapper bg={bgSecondary} textColor={textMuted}>
-      <Box
+      <div
+        className="rounded-lg"
         style={{
           padding: "8px 16px",
           backgroundColor: bgPrimary,
-          borderRadius: 8,
         }}
       >
-        <Group gap={8} align="center" mb={4}>
-          <Box
+        <div className="flex items-center gap-2 mb-1">
+          <div
+            className="w-6 h-6 rounded-full shrink-0"
             style={{
-              width: 24,
-              height: 24,
-              borderRadius: "50%",
               background: "linear-gradient(135deg, #5865f2, #eb459e)",
-              flexShrink: 0,
             }}
           />
-          <Text fz="sm" fw={500} c={textPrimary}>
+          <span className="text-sm font-medium" style={{ color: textPrimary }}>
             Mocotron
-          </Text>
-          <Text fz="xs" c={textMuted}>
+          </span>
+          <span className="text-xs" style={{ color: textMuted }}>
             BOT
-          </Text>
-          <Text fz="xs" c={textMuted}>
+          </span>
+          <span className="text-xs" style={{ color: textMuted }}>
             Today at 12:00 PM
-          </Text>
-        </Group>
+          </span>
+        </div>
 
-        <Box
+        <div
+          className="rounded"
           style={{
             borderLeft: `4px solid ${accentColor}`,
-            borderRadius: 4,
             padding: "8px 16px 8px 12px",
             backgroundColor: bgSecondary,
             maxWidth: 520,
           }}
         >
-          <Text fz="sm" c={textPrimary} style={{ whiteSpace: "pre-wrap" }}>
+          <p className="text-sm whitespace-pre-wrap" style={{ color: textPrimary }}>
             {resolved || "No embed content"}
-          </Text>
-        </Box>
-      </Box>
+          </p>
+        </div>
+      </div>
     </PreviewWrapper>
   );
 }
 
 function PreviewWrapper({ bg, textColor, children }) {
   return (
-    <Box style={{ borderRadius: 8, overflow: "hidden" }}>
-      <Box
+    <div className="rounded-lg overflow-hidden">
+      <div
         style={{
           backgroundColor: bg,
           padding: "8px 12px",
           borderBottom: "1px solid rgba(128,128,128,0.15)",
         }}
       >
-        <Text fz="xs" fw={600} c={textColor} tt="uppercase" lts={0.5}>
+        <span
+          className="text-xs font-semibold uppercase tracking-wide"
+          style={{ color: textColor }}
+        >
           Preview
-        </Text>
-      </Box>
-      <Box style={{ backgroundColor: bg, padding: 8 }}>{children}</Box>
-    </Box>
+        </span>
+      </div>
+      <div style={{ backgroundColor: bg, padding: 8 }}>{children}</div>
+    </div>
   );
 }

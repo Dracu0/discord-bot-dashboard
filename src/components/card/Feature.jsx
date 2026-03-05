@@ -1,4 +1,3 @@
-import { Box, Button, Flex, Group, Switch, Text, Title, Tooltip } from "@mantine/core";
 import { Link } from "react-router-dom";
 import Card from "components/card/Card";
 import React, { useCallback, useContext } from "react";
@@ -6,6 +5,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getFeatureDetail } from "api/internal";
 import { GuildContext } from "../../contexts/guild/GuildContext";
 import { Locale, useLocale } from "../../utils/Language";
+import { Button } from "components/ui/button";
+import { Switch } from "components/ui/switch";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 
 export default function Feature({ banner, name, description, id: featureId, enabled, canToggle, onToggle, isToggling }) {
   const { id: serverId } = useContext(GuildContext);
@@ -23,61 +25,66 @@ export default function Feature({ banner, name, description, id: featureId, enab
 
   return (
     <Card
-      component={Link}
-      onMouseEnter={prefetch}
-      to={configUrl}
-      p={0}
+      className="!p-0 overflow-hidden flex flex-row no-underline"
       style={{
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "row",
-        textDecoration: "none",
         opacity: canToggle && !enabled ? 0.7 : 1,
       }}
+      asChild
     >
-      <Box
-        w={4}
-        style={{
-          flexShrink: 0,
-          background: enabled
-            ? "var(--mantine-color-green-5)"
-            : "linear-gradient(180deg, var(--mantine-color-brand-5), var(--mantine-color-brand-3))",
-          borderRadius: "var(--radius-lg) 0 0 var(--radius-lg)",
-        }}
-      />
+      <Link to={configUrl} onMouseEnter={prefetch}>
+        <div
+          className="w-1 shrink-0"
+          style={{
+            background: enabled
+              ? "var(--status-success)"
+              : "linear-gradient(180deg, var(--color-brand-500), var(--color-brand-300))",
+            borderRadius: "var(--radius-lg) 0 0 var(--radius-lg)",
+          }}
+        />
 
-      <Flex align="center" justify="space-between" gap="md" p={16} style={{ flex: 1, minWidth: 0 }}>
-        <Flex direction="column" gap={4} style={{ flex: 1, minWidth: 0 }}>
-          <Title order={4} c="var(--text-primary)" ff="'Space Grotesk', sans-serif" lh={1.3} truncate>
-            {locale(name)}
-          </Title>
-          <Tooltip label={description} position="top" openDelay={500}>
-            <Text c="var(--text-secondary)" fz="sm" fw={400} lineClamp={1} lh={1.5}>
-              {description}
-            </Text>
-          </Tooltip>
-        </Flex>
+        <div className="flex items-center justify-between gap-4 p-4 flex-1 min-w-0">
+          <div className="flex flex-col gap-1 flex-1 min-w-0">
+            <h4
+              className="text-[var(--text-primary)] font-['Space_Grotesk'] leading-[1.3] truncate m-0 text-base font-semibold"
+            >
+              {locale(name)}
+            </h4>
+            <TooltipProvider>
+              <Tooltip delayDuration={500}>
+                <TooltipTrigger asChild>
+                  <p className="text-[var(--text-secondary)] text-sm font-normal leading-[1.5] line-clamp-1 m-0">
+                    {description}
+                  </p>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  {description}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
 
-        <Group gap="sm" style={{ flexShrink: 0 }}>
-          {canToggle && (
-            <Switch
-              checked={enabled}
-              onChange={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onToggle?.(!enabled);
-              }}
-              onClick={(e) => e.preventDefault()}
-              disabled={isToggling}
-              size="sm"
-              color="green"
-            />
-          )}
-          <Button variant="filled" color="brand" size="sm" radius="md" h={36} fz="sm" fw={500}>
-            <Locale zh="配置" en="Configure" />
-          </Button>
-        </Group>
-      </Flex>
+          <div className="flex items-center gap-2 shrink-0">
+            {canToggle && (
+              <Switch
+                checked={enabled}
+                onCheckedChange={(checked) => {
+                  onToggle?.(!enabled);
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onToggle?.(!enabled);
+                }}
+                disabled={isToggling}
+                className="scale-90"
+              />
+            )}
+            <Button size="sm" className="h-9 text-sm font-medium rounded-md">
+              <Locale zh="配置" en="Configure" />
+            </Button>
+          </div>
+        </div>
+      </Link>
     </Card>
   );
 }

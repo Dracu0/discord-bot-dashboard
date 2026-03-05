@@ -2,7 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteTask } from "api/internal";
 import Card from "components/card/Card";
-import { Box, Button, Flex, Group, Stack, Text } from "@mantine/core";
+import { Button } from "components/ui/button";
+import { Spinner } from "components/ui/spinner";
 import React, { useState } from "react";
 import { Locale } from "utils/Language";
 import Modal from "components/modal/Modal";
@@ -34,66 +35,69 @@ export function Task({ task }) {
     const createdAt = new Date(Date.parse(task.createdAt));
 
     return (
-        <Card p={5} gap={5}>
+        <Card className="p-1 gap-1">
             <Modal
                 isOpen={confirmOpen}
                 onClose={() => setConfirmOpen(false)}
                 size="sm"
                 header={{ zh: "確認刪除", en: "Confirm Delete" }}
             >
-                <Stack gap="md">
-                    <Text fz="sm">
+                <div className="flex flex-col gap-4">
+                    <span className="text-sm">
                         <Locale
                             zh={`確定要刪除任務「${task.name}」嗎？此操作無法撤銷。`}
                             en={`Are you sure you want to delete task "${task.name}"? This action cannot be undone.`}
                         />
-                    </Text>
-                    <Group justify="flex-end">
-                        <Button variant="default" onClick={() => setConfirmOpen(false)}>
+                    </span>
+                    <div className="flex items-center gap-2 justify-end">
+                        <Button variant="outline" onClick={() => setConfirmOpen(false)}>
                             <Locale zh="取消" en="Cancel" />
                         </Button>
                         <Button
-                            color="red"
+                            variant="destructive"
                             onClick={() => {
                                 deleteMutation.mutate();
                                 setConfirmOpen(false);
                             }}
-                            loading={deleteMutation.isPending}
+                            disabled={deleteMutation.isPending}
                         >
+                            {deleteMutation.isPending && <Spinner size="sm" />}
                             <Locale zh="刪除" en="Delete" />
                         </Button>
-                    </Group>
-                </Stack>
+                    </div>
+                </div>
             </Modal>
 
-            <Flex direction="row" gap={5}>
-                <Stack align="flex-start" gap={0}>
-                    <Text fz="lg" fw="bold">
+            <div className="flex flex-row gap-1">
+                <div className="flex flex-col items-start gap-0">
+                    <span className="text-lg font-bold">
                         {task.name}
-                    </Text>
-                    <Group>
-                        <Text miw="fit-content" fw="bold">
+                    </span>
+                    <div className="flex items-center gap-2">
+                        <span className="min-w-fit font-bold">
                             <Locale zh="創建於: " en="Created At: " />
-                        </Text>
-                        <Text>{createdAt.toLocaleString()}</Text>
-                    </Group>
-                </Stack>
+                        </span>
+                        <span>{createdAt.toLocaleString()}</span>
+                    </div>
+                </div>
 
                 <Button
-                    ml="auto"
-                    variant="filled"
-                    color="red"
+                    className="ml-auto"
+                    variant="destructive"
                     onClick={() => setConfirmOpen(true)}
-                    loading={deleteMutation.isPending}
+                    disabled={deleteMutation.isPending}
                 >
+                    {deleteMutation.isPending && <Spinner size="sm" />}
                     <Locale zh="刪除" en="Delete" />
                 </Button>
-            </Flex>
-            <Box w={{ base: "100%", md: "fit-content" }}>
-                <Button component={Link} to={configUrl} w="100%" px={10} variant="light">
-                    <Locale zh="修改選項" en="Modify Options" />
+            </div>
+            <div className="w-full md:w-fit">
+                <Button variant="secondary" className="w-full px-2.5" asChild>
+                    <Link to={configUrl}>
+                        <Locale zh="修改選項" en="Modify Options" />
+                    </Link>
                 </Button>
-            </Box>
+            </div>
         </Card>
     );
 }

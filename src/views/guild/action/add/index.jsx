@@ -1,7 +1,5 @@
 import React, {useMemo, useState} from "react";
 
-import {SimpleGrid, Stack, Text} from "@mantine/core";
-
 import {usePageInfo} from "contexts/PageInfoContext";
 import {config} from "config/config";
 import {useBanner} from "./components/Banner";
@@ -27,20 +25,20 @@ function SubmitTask() {
     const locale = useLocale()
 
     usePageInfo([
-        {zh: "動作", en: "Action"},
+        {zh: "\u52d5\u4f5c", en: "Action"},
         name,
-        {zh: "新任務", en: "New Task"}
+        {zh: "\u65b0\u4efb\u52d9", en: "New Task"}
     ].map(locale))
 
-    return <Stack mt={10} gap={5}>
-        <Text fontSize={25} fontWeight="bold">
-            <Locale zh="創建新任務" en="New Task" />
-        </Text>
+    return <div className="flex flex-col mt-2.5 gap-1.5">
+        <span className="text-[25px] font-bold">
+            <Locale zh="\u5275\u5efa\u65b0\u4efb\u52d9" en="New Task" />
+        </span>
 
-        <SimpleGrid cols={{base: 1, lg: 2}} spacing={5}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-1.5">
             <ConfigPanel />
-        </SimpleGrid>
-    </Stack>
+        </div>
+    </div>
 }
 
 function ConfigPanel() {
@@ -81,7 +79,7 @@ function ConfigPanel() {
     return (
         <>
             <ErrorModal
-                header={{zh: "未能創建任務", en: "Failed to Create Task"}}
+                header={{zh: "\u672a\u80fd\u5275\u5efa\u4efb\u52d9", en: "Failed to Create Task"}}
                 error={mutation.error && mutation.error.toString()}
                 onClose={mutation.reset}
             />

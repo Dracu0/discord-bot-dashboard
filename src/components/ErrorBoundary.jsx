@@ -1,6 +1,6 @@
 import React from 'react';
-import { Center, Stack, Title, Text, Button } from '@mantine/core';
-import { IconAlertTriangle } from '@tabler/icons-react';
+import { Button } from 'components/ui/button';
+import { AlertTriangle } from 'lucide-react';
 
 export class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -35,35 +35,32 @@ export class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <Center h="100vh" p="xl">
-          <Stack align="center" gap="md" maw={480}>
-            <IconAlertTriangle size={48} color="var(--mantine-color-red-5)" />
-            <Title order={2} ta="center">Something went wrong</Title>
-            <Text c="dimmed" ta="center" fz="md">
+        <div className="flex items-center justify-center h-screen p-6">
+          <div className="flex flex-col items-center gap-4 max-w-[480px]">
+            <AlertTriangle size={48} className="text-red-500" />
+            <h2 className="text-2xl font-bold text-center">Something went wrong</h2>
+            <p className="text-center text-sm" style={{ color: "var(--text-secondary)" }}>
               An unexpected error occurred. Please try refreshing the page.
-            </Text>
+            </p>
             {this.state.error?.message && (
-              <Text
-                c="red.4"
-                fz="sm"
-                ta="center"
-                p="sm"
-                bg="var(--status-error-bg)"
-                style={{ borderRadius: 'var(--radius-md)', width: '100%', wordBreak: 'break-word' }}
+              <p
+                className="text-sm text-center p-3 w-full break-words text-red-400"
+                style={{
+                  backgroundColor: "var(--status-error-bg)",
+                  borderRadius: "var(--radius-md)",
+                }}
               >
                 {this.state.error.message}
-              </Text>
+              </p>
             )}
             <Button
               onClick={() => window.location.reload()}
-              variant="filled"
-              color="brand"
-              size="md"
+              size="lg"
             >
               Refresh Page
             </Button>
-          </Stack>
-        </Center>
+          </div>
+        </div>
       );
     }
 

@@ -1,4 +1,3 @@
-import { Box, Flex, Text } from "@mantine/core";
 import Card from "components/card/Card";
 import React from "react";
 
@@ -6,27 +5,22 @@ export default function Default(props) {
   const { startContent, endContent, name, value } = props;
 
   return (
-    <Card py={15}>
-      <Flex
-        my="auto"
-        h="100%"
-        align={{ base: "center", xl: "start" }}
-        justify={{ base: "center", xl: "center" }}
-      >
+    <Card className="py-[15px]">
+      <div className="flex my-auto h-full items-center xl:items-start justify-center">
         {startContent}
 
-        <Box my="auto" ms={startContent ? 18 : 0}>
-          <Text lh={1} c="var(--text-secondary)" fz="sm" fw={500}>
+        <div className="my-auto" style={{ marginInlineStart: startContent ? 18 : 0 }}>
+          <span className="leading-none text-[var(--text-secondary)] text-sm font-medium block">
             {name}
-          </Text>
-          <Text c="var(--text-primary)" fz="2xl" ff="'Space Grotesk', sans-serif" fw={700}>
+          </span>
+          <span className="text-[var(--text-primary)] text-2xl font-['Space_Grotesk'] font-bold block">
             {value}
-          </Text>
-        </Box>
-        <Flex ms="auto" w="max-content">
+          </span>
+        </div>
+        <div className="ms-auto w-max flex">
           {endContent}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </Card>
   );
 }

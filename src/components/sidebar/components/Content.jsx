@@ -1,9 +1,15 @@
-import { Box, Flex, Group, ActionIcon, Stack, Text, Tooltip } from "@mantine/core";
-import Brand from "components/sidebar/components/Brand";
-import Links from "components/sidebar/components/Links";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "components/ui/button";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "components/ui/tooltip";
+import Brand from "components/sidebar/components/Brand";
+import Links from "components/sidebar/components/Links";
 import { Locale } from "../../../utils/Language";
 
 function SidebarContent({ routes, collapsed, onNavigate }) {
@@ -15,33 +21,51 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
   };
 
   return (
-    <Flex direction="column" h="100%" pt={16}>
-      <Group px={collapsed ? 0 : 20} mb={8} justify={collapsed ? "center" : "flex-start"}>
-        <Tooltip label="Back to servers" position="right" disabled={!collapsed}>
-          <ActionIcon
-            variant="subtle"
-            color="gray"
-            radius="xl"
-            size="sm"
-            onClick={handleBack}
-            aria-label="Back to servers"
-          >
-            <IconArrowLeft size={18} />
-          </ActionIcon>
-        </Tooltip>
+    <div className="flex flex-col h-full pt-4">
+      <div
+        className={`flex items-center gap-2 mb-2 ${
+          collapsed ? "px-0 justify-center" : "px-5 justify-start"
+        }`}
+      >
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full h-7 w-7 text-[var(--text-muted)]"
+                onClick={handleBack}
+                aria-label="Back to servers"
+              >
+                <ArrowLeft size={18} />
+              </Button>
+            </TooltipTrigger>
+            {collapsed && (
+              <TooltipContent side="right">Back to servers</TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
         {!collapsed && (
-          <Text fz="xs" c="var(--text-muted)" fw={600}>
-            <Locale zh="返回" en="Back" />
-          </Text>
+          <span
+            className="text-xs font-semibold"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <Locale zh="\u8FD4\u56DE" en="Back" />
+          </span>
         )}
-      </Group>
+      </div>
       <Brand collapsed={collapsed} />
-      <Stack mt={8} mb="auto">
-        <Box ps={collapsed ? 8 : 16} pe={collapsed ? 8 : 12}>
+      <div className="mt-2 mb-auto">
+        <div
+          style={{
+            paddingInlineStart: collapsed ? 8 : 16,
+            paddingInlineEnd: collapsed ? 8 : 12,
+          }}
+        >
           <Links routes={routes} collapsed={collapsed} onNavigate={onNavigate} />
-        </Box>
-      </Stack>
-    </Flex>
+        </div>
+      </div>
+    </div>
   );
 }
 
