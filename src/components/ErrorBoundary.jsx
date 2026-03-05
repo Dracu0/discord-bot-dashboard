@@ -16,6 +16,22 @@ export class ErrorBoundary extends React.Component {
     console.error('[ErrorBoundary]', error, errorInfo);
   }
 
+  componentDidMount() {
+    this._onError = (event) => {
+      console.error('[Global Error]', event);
+    };
+    this._onRejection = (event) => {
+      console.error('[Unhandled Rejection]', event);
+    };
+    window.addEventListener('error', this._onError);
+    window.addEventListener('unhandledrejection', this._onRejection);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('error', this._onError);
+    window.removeEventListener('unhandledrejection', this._onRejection);
+  }
+
   render() {
     if (this.state.hasError) {
       return (

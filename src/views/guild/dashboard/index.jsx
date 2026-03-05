@@ -36,7 +36,7 @@ export function UserReports() {
     const [wizardDismissed, setWizardDismissed] = useState(false)
 
     const query = useQuery({
-        queryKey: ["server_advanced_detail"],
+        queryKey: ["server_advanced_detail", serverId],
         queryFn: () => getServerAdvancedDetails(serverId),
         enabled: data.some(row => row.advanced)
     })
@@ -128,7 +128,7 @@ function Data({ row, detail }) {
 
     const items = useMemo(
         () => row.items(detail, state),
-        [detail, ...Object.values(state)]
+        [detail, state]
     )
 
     return <DataList items={items} />

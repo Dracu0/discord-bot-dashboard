@@ -17,7 +17,6 @@ COPY jsconfig.json ./
 COPY vite.config.js ./
 
 ENV NODE_ENV=production
-ENV INLINE_RUNTIME_CHUNK=false
 RUN npm run build
 
 # Stage 2: Production server

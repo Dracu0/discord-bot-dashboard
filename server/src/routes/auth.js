@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const crypto = require('crypto');
 const passport = require('passport');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
@@ -18,20 +19,27 @@ router.head('/', (req, res) => {
 // Start Discord OAuth2 flow
 router.get('/discord', (req, res, next) => {
     req.log?.info('oauth_discord_started');
-    return passport.authenticate('discord')(req, res, next);
+    const state = crypto.randomBytes(16).toString('hex');
+    req.session.oauthState = state;
+    return passport.authenticate('discord', { state })(req, res, next);
 });
 
 // Discord OAuth2 callback
-router.get('/discord/callback',
+router.get('/discord/callback', (req, res, next) => {
+    // Validate OAuth2 state parameter to prevent CSRF
+    if (!req.query.state || req.query.state !== req.session.oauthState) {
+        req.log?.warn('oauth_state_mismatch');
+        return res.redirect(`${DASHBOARD_URL}/signin?error=invalid_state`);
+    }
+    delete req.session.oauthState;
+
     passport.authenticate('discord', {
         failureRedirect: `${DASHBOARD_URL}/signin`,
-    }),
-    (req, res) => {
+    })(req, res, () => {
         req.log?.info('oauth_discord_callback_success', { userId: req.user?.id || null });
-        // Successful auth, redirect to dashboard
         res.redirect(`${DASHBOARD_URL}/admin`);
-    }
-);
+    });
+});
 
 // Sign out
 router.post('/signout', (req, res) => {

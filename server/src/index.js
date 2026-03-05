@@ -21,6 +21,14 @@ const userRoutes = require('./routes/users');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
+process.on('unhandledRejection', (reason) => {
+    logger.error('unhandled_rejection', { error: reason });
+});
+process.on('uncaughtException', (error) => {
+    logger.error('uncaught_exception', { error });
+    setTimeout(() => process.exit(1), 1000).unref();
+});
+
 const {
     DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET,
@@ -75,16 +83,13 @@ app.use(helmet({
     } : false,
 }));
 
-const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 100,
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-app.use('/api/auth', limiter);
-app.use('/api/guild', limiter);
-app.use('/api/guilds', limiter);
-app.use('/api/users', limiter);
+const authLimiter = rateLimit({ windowMs: 60000, max: 20, standardHeaders: true, legacyHeaders: false });
+const guildLimiter = rateLimit({ windowMs: 60000, max: 60, standardHeaders: true, legacyHeaders: false });
+const userLimiter = rateLimit({ windowMs: 60000, max: 30, standardHeaders: true, legacyHeaders: false });
+app.use('/api/auth', authLimiter);
+app.use('/api/guild', guildLimiter);
+app.use('/api/guilds', userLimiter);
+app.use('/api/users', userLimiter);
 
 // CORS — only needed in development (separate origins)
 if (!IS_PRODUCTION) {
@@ -94,7 +99,7 @@ if (!IS_PRODUCTION) {
     }));
 }
 
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 app.use(requestContext);
 
 // Connect to MongoDB (same DB as the bot) with retry
@@ -121,6 +126,13 @@ async function connectWithRetry() {
     }
 }
 connectWithRetry();
+
+mongoose.connection.on('error', (err) => {
+    logger.error('mongodb_connection_error', { error: err });
+});
+mongoose.connection.on('disconnected', () => {
+    logger.warn('mongodb_disconnected');
+});
 
 // Session store in MongoDB
 const sessionMiddleware = session({
@@ -155,13 +167,13 @@ app.get('/api/csrf-token', generateCsrfToken);
 
 // Apply CSRF protection to all state-changing API routes
 app.use('/api/auth', csrfProtection, authRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/users', csrfProtection, userRoutes);
 app.use('/api/guild', csrfProtection, guildRoutes);
-app.use('/api/guilds', userRoutes);
+app.use('/api/guilds', csrfProtection, userRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'ok', uptime: process.uptime() });
+    res.json({ status: 'ok' });
 });
 
 // --- Production: serve React build ---
@@ -180,7 +192,8 @@ app.use((err, req, res, _next) => {
     const log = req?.log || logger;
     log.error('unhandled_server_error', { error: err });
     const status = err.status || 500;
-    res.status(status).json({ error: err.message || 'Internal server error' });
+    const message = IS_PRODUCTION ? 'Internal server error' : (err.message || 'Internal server error');
+    res.status(status).json({ error: message });
 });
 
 // Bind to 0.0.0.0 so Fly.io proxy can reach the container (not just localhost)

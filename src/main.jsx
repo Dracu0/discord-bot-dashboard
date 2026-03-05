@@ -69,6 +69,15 @@ function AppRouter() {
   const { fixedWidth } = useContext(SettingsContext);
   const loggedIn = loginQuery.data;
 
+  // Show a loading spinner while the auth check (HEAD /auth) is pending
+  if (loginQuery.isLoading) {
+    return (
+      <Center h="100vh">
+        <Loader size="lg" />
+      </Center>
+    );
+  }
+
   return (
     <QueryHolder query={loginQuery}>
       <meta

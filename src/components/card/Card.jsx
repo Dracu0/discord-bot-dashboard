@@ -1,6 +1,6 @@
 import { Paper } from "@mantine/core";
 
-function Card({ variant, children, ...rest }) {
+function Card({ children, ...rest }) {
   return (
     <Paper
       radius="lg"

@@ -10,5 +10,6 @@ const levelSchema = new Schema({
 
 levelSchema.index({ guildId: 1, userId: 1 }, { unique: true });
 levelSchema.index({ guildId: 1, Level: -1, XP: -1 });
+levelSchema.index({ guildId: 1, XP: -1 });
 
 module.exports = model('level', levelSchema);

@@ -16,6 +16,14 @@ import { ManageSuggestionsAction } from "./actions/ManageSuggestions";
 import { ModHistoryAction } from "./actions/ModHistory";
 
 /**
+ * Central dashboard configuration.
+ * - `features`: Maps feature IDs to their config panel definitions. IDs must match server-side FEATURE_FIELDS keys.
+ * - `actions`: Maps action IDs to action panel definitions.
+ * - `serverUrl`: Base URL for API calls. Empty string in production (same-origin), localhost in dev.
+ * - `inviteUrl`: Discord bot invite link.
+ */
+
+/**
  * @type ConfigType
  */
 export const config = {

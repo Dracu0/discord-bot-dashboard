@@ -49,6 +49,11 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
     }
 
     return request.then(res => {
+        // Update CSRF token from response header (server rotates after each use)
+        const newCsrf = res.headers.get('x-csrf-token');
+        if (newCsrf) {
+            csrfToken = newCsrf;
+        }
 
         if (res.ok || !throwError) {
             logger.info('api_request_ok', {

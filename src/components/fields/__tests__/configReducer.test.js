@@ -1,7 +1,18 @@
 import { describe, it, expect } from 'vitest';
 
-// Inline the reducer for unit testing (avoid importing side-effect-heavy component)
+// The reducer is inlined here because ConfigPanel.jsx has heavy side-effect imports
+// (React contexts, Mantine, etc.) that make direct import impractical in unit tests.
+// IMPORTANT: Keep this logic in sync with configReducer in ConfigPanel.jsx.
+// The source uses `runValidation(option, value)` which delegates to `option.validate`
+// or falls back to a required check. This test version matches that behavior.
 const MAX_HISTORY = 30;
+
+function runValidation(option, value) {
+    if (option.validate) {
+        return option.validate(value) || null;
+    }
+    return option.required && (value == null || value === "") ? `${option.name} is required` : null;
+}
 
 function configReducer(state, action) {
     switch (action.type) {
@@ -13,7 +24,7 @@ function configReducer(state, action) {
             const newErrors = new Map(state.errors);
             const option = options.find(o => o.id === id);
             if (option) {
-                const err = option.required && (value == null || value === "") ? `${option.name} is required` : null;
+                const err = runValidation(option, value);
                 if (err) newErrors.set(id, err); else newErrors.delete(id);
             }
 

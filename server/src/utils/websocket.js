@@ -6,6 +6,17 @@ let wss = null;
 // Track active presence: Map<guildId, Map<sessionId, { userId, username, avatar, page, lastSeen }>>
 const guildPresence = new Map();
 
+// Clean up stale presence entries every 60 seconds
+setInterval(() => {
+    const now = Date.now();
+    for (const [guildId, sessions] of guildPresence) {
+        for (const [sessionId, info] of sessions) {
+            if (now - info.lastSeen > 300_000) sessions.delete(sessionId);
+        }
+        if (sessions.size === 0) guildPresence.delete(guildId);
+    }
+}, 60_000);
+
 /**
  * Parse the session from the HTTP upgrade request using the same
  * session middleware the Express app uses. Returns the session or null.
@@ -67,6 +78,7 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
         ws.userId = req.session?.passport?.user?.id || null;
         ws.username = req.session?.passport?.user?.username || null;
         ws.avatar = req.session?.passport?.user?.avatar || null;
+        ws.userGuilds = req.session?.passport?.user?.guilds || [];
 
         ws.on('pong', () => { ws.isAlive = true; });
         ws.on('error', (err) => {
@@ -86,6 +98,11 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
             try {
                 const msg = JSON.parse(raw);
                 if (msg.type === 'subscribe_guild' && typeof msg.guildId === 'string' && /^\d{17,20}$/.test(msg.guildId)) {
+                    // Verify user has access to the guild (MANAGE_GUILD or ADMINISTRATOR)
+                    const guild = ws.userGuilds.find(g => g.id === msg.guildId);
+                    if (!guild) return;
+                    const perms = BigInt(guild.permissions);
+                    if ((perms & BigInt(0x20)) === BigInt(0) && (perms & BigInt(0x8)) === BigInt(0)) return;
                     ws.subscribedGuilds.add(msg.guildId);
                 } else if (msg.type === 'unsubscribe_guild' && typeof msg.guildId === 'string') {
                     ws.subscribedGuilds.delete(msg.guildId);
@@ -102,8 +119,8 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
                     });
                     broadcastPresence(msg.guildId);
                 }
-            } catch {
-                // Ignore invalid messages
+            } catch (parseErr) {
+                logger.warn('ws_message_parse_error', { error: parseErr.message });
             }
         });
 

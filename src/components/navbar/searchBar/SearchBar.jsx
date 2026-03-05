@@ -49,7 +49,7 @@ function SearchList({ search }) {
             features: filter(config.features),
             actions: filter(config.actions),
         }),
-        [search]
+        [search, locale]
     );
 
     const empty = features.length === 0 && actions.length === 0;

@@ -175,7 +175,7 @@ router.patch('/:featureId/enabled', async (req, res) => {
             category: 'feature.toggle',
             action: enabled ? 'enable' : 'disable',
             target: featureId,
-        }).catch(() => {});
+        }).catch(err => console.warn('Audit log write failed:', err.message));
 
         req.log?.info('feature_toggle_updated', {
             guildId,
@@ -425,7 +425,7 @@ router.patch('/:featureId', async (req, res) => {
             action: 'update',
             target: Object.keys(updates).join(', '),
             after: updates,
-        }).catch(() => {});
+        }).catch(err => console.warn('Audit log write failed:', err.message));
 
         req.log?.info('feature_config_updated', {
             guildId,

@@ -16,11 +16,12 @@ import { OptionTypes } from "../../variables/type";
 const PREVIEW_TYPE = "preview";
 
 export function OptionPanel({ value, onChange, option, error }) {
+  const input = useInput(value, onChange, option, error);
+
   if (option.type === PREVIEW_TYPE && option.render) {
     return option.render();
   }
 
-  const input = useInput(value, onChange, option, error);
   const inline = option.type === OptionTypes.Boolean;
 
   return (

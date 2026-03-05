@@ -13,6 +13,13 @@ import { PAGE_PT } from "utils/layout-tokens";
 import Card from "components/card/Card";
 import ApexChart from "components/charts/ApexChart";
 
+// TODO: These colors should use theme tokens instead of hardcoded hex values.
+const CHART_COLORS = {
+    primary: '#845EF7',
+    secondary: '#A3AED0',
+    muted: '#CBD5E0',
+};
+
 const PERIOD_OPTIONS = [
     { value: "7", label: "7d" },
     { value: "14", label: "14d" },
@@ -48,10 +55,10 @@ function ModerationTimeline({ data }) {
         chart: { toolbar: { show: false }, sparkline: { enabled: false } },
         xaxis: {
             type: "datetime",
-            labels: { style: { colors: "#A3AED0", fontSize: "12px" } },
+            labels: { style: { colors: CHART_COLORS.secondary, fontSize: "12px" } },
         },
         yaxis: {
-            labels: { style: { colors: "#CBD5E0", fontSize: "12px" } },
+            labels: { style: { colors: CHART_COLORS.muted, fontSize: "12px" } },
             min: 0,
         },
         stroke: { curve: "smooth", width: 3 },
@@ -81,12 +88,12 @@ function ModerationTimeline({ data }) {
 function ActionBreakdown({ data }) {
     const series = useMemo(() => data.map(d => d.count), [data]);
     const labels = useMemo(() => data.map(d => d.action || "unknown"), [data]);
-    const colors = ["#845EF7", "#339AF0", "#20C997", "#FF6B6B", "#FCC419", "#FF922B"];
+    const colors = [CHART_COLORS.primary, "#339AF0", "#20C997", "#FF6B6B", "#FCC419", "#FF922B"];
 
     const options = useMemo(() => ({
         labels,
         colors: colors.slice(0, labels.length),
-        legend: { position: "bottom", labels: { colors: "#A3AED0" } },
+        legend: { position: "bottom", labels: { colors: CHART_COLORS.secondary } },
         stroke: { width: 0 },
         tooltip: { theme: "dark" },
         dataLabels: { enabled: false },
@@ -109,12 +116,12 @@ function LevelDistribution({ data }) {
         chart: { toolbar: { show: false } },
         xaxis: {
             categories,
-            labels: { style: { colors: "#A3AED0", fontSize: "12px" } },
+            labels: { style: { colors: CHART_COLORS.secondary, fontSize: "12px" } },
         },
         yaxis: {
-            labels: { style: { colors: "#CBD5E0", fontSize: "12px" } },
+            labels: { style: { colors: CHART_COLORS.muted, fontSize: "12px" } },
         },
-        colors: ["#845EF7"],
+        colors: [CHART_COLORS.primary],
         fill: {
             type: "gradient",
             gradient: { type: "vertical", shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.3 },

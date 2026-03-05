@@ -6,6 +6,8 @@ function createRequestId() {
 }
 
 function write(level, message, meta = {}) {
+  if (import.meta.env.PROD && level !== 'error') return;
+
   const payload = {
     timestamp: new Date().toISOString(),
     level,

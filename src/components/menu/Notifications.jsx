@@ -14,26 +14,19 @@ export function Notifications() {
 
     const { id: serverId } = useContext(GuildContext);
 
-    // Prefetch count even when dropdown is closed
-    const countQuery = useQuery({
+    const query = useQuery({
         queryKey: ["notifications", serverId],
         queryFn: () => getNotifications(serverId),
         staleTime: 60_000,
         refetchInterval: 60_000,
     });
 
-    const query = useQuery({
-        queryKey: ["notifications", serverId],
-        queryFn: () => getNotifications(serverId),
-        enabled: opened,
-    });
-
-    const count = countQuery.data?.length ?? 0;
+    const count = query.data?.length ?? 0;
 
     return (
         <Menu opened={opened} onClose={close} position="bottom-end" width={400} withinPortal>
             <Menu.Target>
-                <UnstyledButton onClick={open} p={0}>
+                <UnstyledButton onClick={open} p={0} aria-label="Notifications">
                     <Indicator
                         size={16}
                         label={count > 0 ? count : undefined}

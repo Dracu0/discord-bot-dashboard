@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { config } from "config/config";
 import { Locale, useLocale } from "utils/Language";
+import { setFeatureEnabled } from "api/internal";
 
 const RECOMMENDED_FEATURES = ["welcome", "xp", "modlog", "automod"];
 
@@ -17,6 +18,7 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
     const { id: serverId } = useContext(GuildContext);
     const [step, setStep] = useState(0);
     const [selected, setSelected] = useState(new Set(RECOMMENDED_FEATURES));
+    const [saving, setSaving] = useState(false);
 
     const allFeatures = Object.entries(config.features).map(([id, feat]) => ({
         id,
@@ -33,7 +35,19 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
         });
     };
 
-    const goToFeatures = () => {
+    const goToFeatures = async () => {
+        if (selected.size > 0) {
+            setSaving(true);
+            try {
+                await Promise.all(
+                    [...selected].map(featureId => setFeatureEnabled(serverId, featureId, true))
+                );
+            } catch (err) {
+                console.error("Failed to enable onboarding features:", err);
+            } finally {
+                setSaving(false);
+            }
+        }
         navigate(`/guild/${serverId}/features`);
     };
 
@@ -107,6 +121,15 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
                                     padding="sm"
                                     radius="md"
                                     withBorder
+                                    role="checkbox"
+                                    aria-checked={selected.has(feat.id)}
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                            e.preventDefault();
+                                            toggleFeature(feat.id);
+                                        }
+                                    }}
                                     style={{
                                         cursor: "pointer",
                                         borderColor: selected.has(feat.id) ? "var(--accent-primary)" : "var(--border-subtle)",
@@ -189,6 +212,7 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
                                 size="md"
                                 leftSection={<IconPuzzle size={18} />}
                                 onClick={goToFeatures}
+                                loading={saving}
                             >
                                 <Locale zh="前往功能面板" en="Go to Features" />
                             </Button>

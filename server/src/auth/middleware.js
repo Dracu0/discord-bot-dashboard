@@ -9,10 +9,38 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Not authenticated' });
 }
 
+const GUILDS_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+/**
+ * Refresh the user's guild list from Discord API if stale.
+ * This ensures that permission changes and guild removals are reflected
+ * within GUILDS_REFRESH_INTERVAL rather than lasting the full session TTL.
+ */
+async function refreshUserGuilds(req) {
+    const user = req.session?.passport?.user;
+    if (!user?._accessToken) return;
+
+    const now = Date.now();
+    if (user._guildsRefreshedAt && now - user._guildsRefreshedAt < GUILDS_REFRESH_INTERVAL) return;
+
+    try {
+        const response = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+            headers: { Authorization: `Bearer ${user._accessToken}` },
+        });
+        if (!response.ok) return; // Token may have expired — skip refresh silently
+        const guilds = await response.json();
+        user.guilds = guilds;
+        user._guildsRefreshedAt = now;
+        req.session.save(() => {}); // Persist updated session
+    } catch {
+        // Network error — skip refresh, use cached guilds
+    }
+}
+
 /**
  * Middleware: Require the user to have MANAGE_GUILD permission in the target guild
  */
-function requireGuildAccess(req, res, next) {
+async function requireGuildAccess(req, res, next) {
     if (!req.isAuthenticated()) {
         req.log?.warn('guild_access_rejected_unauthenticated', { path: req.originalUrl });
         return res.status(401).json({ error: 'Not authenticated' });
@@ -23,6 +51,10 @@ function requireGuildAccess(req, res, next) {
         req.log?.warn('guild_access_rejected_invalid_guild_id', { guildId });
         return res.status(400).json({ error: 'Invalid guild ID format' });
     }
+
+    // Refresh guilds if stale
+    await refreshUserGuilds(req);
+
     const guilds = req.user.guilds || [];
 
     const guild = guilds.find(g => g.id === guildId);
