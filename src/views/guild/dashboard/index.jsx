@@ -1,10 +1,14 @@
 import React, { useContext, useMemo, useState } from "react";
 import {
     Activity,
+    ArrowRight,
     BellRing,
+    CheckCircle2,
+    Clock3,
+    Gauge,
     LayoutDashboard,
     MessageSquareWarning,
-    ServerCog,
+    Settings,
     ShieldAlert,
     Sparkles,
     Trophy,
@@ -26,7 +30,6 @@ import OnboardingWizard from "components/card/OnboardingWizard";
 import ActiveUsers from "components/card/ActiveUsers";
 import PageContainer from "components/layout/PageContainer";
 import PageHeader from "components/layout/PageHeader";
-import PageSection from "components/layout/PageSection";
 import Card from "components/card/Card";
 import MetricCard from "components/card/MetricCard";
 import LeaderboardTable from "components/card/data/LeaderboardTable";
@@ -60,36 +63,135 @@ export function UserReports() {
 
     const advanced = query.data || {};
 
-    const onlineRatio = detail?.members ? Math.round(((detail?.online || 0) / detail.members) * 100) : 0;
+    const onlineMembers = detail?.online || 0;
+    const totalMembers = detail?.members || 0;
+    const onlineRatio = totalMembers ? Math.round((onlineMembers / totalMembers) * 100) : 0;
     const enabledSystems = [detail?.welcomeEnabled, detail?.xpEnabled, detail?.suggestionsEnabled, detail?.modLogEnabled].filter(Boolean).length;
+    const setupCompletion = Math.round((enabledSystems / 4) * 100);
     const pendingSuggestions = advanced?.suggestions?.pending || 0;
+    const totalSuggestions = advanced?.suggestions?.total || 0;
     const recentActions = advanced?.moderation?.recentActions || [];
     const leaderboard = advanced?.xp?.leaderboard || [];
+    const trackedXpUsers = advanced?.xp?.totalTrackedUsers || 0;
+    const totalModerationActions = advanced?.moderation?.totalActions || 0;
+    const queuePressure = totalSuggestions > 0 ? Math.round((pendingSuggestions / totalSuggestions) * 100) : 0;
+    const enabledFeatureLabels = useMemo(
+        () => enabledFeatures.slice(0, 6).map(toTitleLabel),
+        [enabledFeatures],
+    );
+    const hiddenFeatureCount = Math.max(enabledFeatures.length - enabledFeatureLabels.length, 0);
 
     const healthItems = [
         {
+            id: "welcome",
             title: <Locale zh="歡迎流程" en="Welcome flow" />,
             value: detail?.welcomeEnabled ? <Locale zh="已啟用" en="Enabled" /> : <Locale zh="尚未設定" en="Needs setup" />,
             tone: detail?.welcomeEnabled ? "success" : "warning",
+            helper: detail?.welcomeEnabled
+                ? <Locale zh="新成員入站體驗已經就位。" en="New-member onboarding is already wired up." />
+                : <Locale zh="尚未設定歡迎頻道或訊息。" en="A welcome channel or message still needs configuration." />,
         },
         {
+            id: "xp",
             title: <Locale zh="XP 系統" en="XP system" />,
             value: detail?.xpEnabled ? <Locale zh="已啟用" en="Enabled" /> : <Locale zh="已停用" en="Disabled" />,
             tone: detail?.xpEnabled ? "success" : "neutral",
+            helper: detail?.xpEnabled
+                ? <Locale zh={`目前追蹤 ${trackedXpUsers} 位成員`} en={`Tracking ${trackedXpUsers} members right now`} />
+                : <Locale zh="尚未讓等級系統開始累積互動。" en="Leveling is not contributing engagement signals yet." />,
         },
         {
+            id: "suggestions",
             title: <Locale zh="建議審核" en="Suggestion review" />,
             value: pendingSuggestions > 0
                 ? <Locale zh={`待處理 ${pendingSuggestions} 筆`} en={`${pendingSuggestions} pending`} />
                 : <Locale zh="沒有待處理項目" en="Queue clear" />,
             tone: pendingSuggestions > 0 ? "warning" : "success",
+            helper: pendingSuggestions > 0
+                ? <Locale zh="建議隊列需要你近期處理。" en="The review queue currently needs attention." />
+                : <Locale zh="目前沒有卡住的建議等待決策。" en="There are no blocked suggestions waiting on review." />,
         },
         {
+            id: "coverage",
             title: <Locale zh="模組覆蓋率" en="System coverage" />,
             value: <Locale zh={`已啟用 ${enabledSystems}/4`} en={`${enabledSystems}/4 enabled`} />,
             tone: enabledSystems >= 3 ? "success" : "neutral",
+            helper: <Locale zh="核心模組是否都已覆蓋到目前的營運需求。" en="Whether the core management modules cover the server’s current operating needs." />,
         },
     ];
+
+    const focusItems = [
+        pendingSuggestions > 0
+            ? {
+                id: "queue",
+                to: `/guild/${serverId}/actions`,
+                icon: <BellRing className="h-4.5 w-4.5" />,
+                title: <Locale zh="優先清理建議佇列" en="Clear the suggestion queue" />,
+                description: <Locale zh={`目前有 ${pendingSuggestions} 筆建議等待審核，這是最直接的待辦壓力來源。`} en={`${pendingSuggestions} suggestions are still waiting for review, making this the clearest immediate queue pressure.`} />,
+                badge: <Locale zh="需要處理" en="Needs attention" />,
+                tone: "warning",
+            }
+            : {
+                id: "queue-clear",
+                to: `/guild/${serverId}/actions`,
+                icon: <CheckCircle2 className="h-4.5 w-4.5" />,
+                title: <Locale zh="審核隊列維持清爽" en="Keep the queue clear" />,
+                description: <Locale zh="目前沒有待審建議，可以把重心放在功能優化與伺服器設定。" en="There are no pending suggestions right now, so you can focus on tuning features and server settings." />,
+                badge: <Locale zh="狀態良好" en="Healthy" />,
+                tone: "success",
+            },
+        !detail?.welcomeEnabled
+            ? {
+                id: "welcome",
+                to: `/guild/${serverId}/features`,
+                icon: <Sparkles className="h-4.5 w-4.5" />,
+                title: <Locale zh="補齊新成員體驗" en="Finish new-member onboarding" />,
+                description: <Locale zh="歡迎流程尚未完整設定，這通常是最容易立即提升體驗的地方。" en="The welcome flow is still incomplete, which is usually the fastest way to improve first impressions." />,
+                badge: <Locale zh="推薦" en="Recommended" />,
+                tone: "warning",
+            }
+            : {
+                id: "xp",
+                to: `/guild/${serverId}/leaderboard`,
+                icon: <Trophy className="h-4.5 w-4.5" />,
+                title: <Locale zh="檢查社群互動動能" en="Review engagement momentum" />,
+                description: trackedXpUsers > 0
+                    ? <Locale zh={`目前有 ${trackedXpUsers} 位成員被 XP 系統追蹤，適合快速檢查排行榜變化。`} en={`${trackedXpUsers} members are currently tracked by XP, making the leaderboard a good pulse check.`} />
+                    : <Locale zh="XP 目前沒有明顯資料，可能值得重新檢查等級系統設定。" en="XP does not have much data yet, which may be a sign to revisit leveling setup." />,
+                badge: <Locale zh="互動" en="Engagement" />,
+                tone: "neutral",
+            },
+        !detail?.modLogEnabled
+            ? {
+                id: "modlog",
+                to: `/guild/${serverId}/features`,
+                icon: <ShieldAlert className="h-4.5 w-4.5" />,
+                title: <Locale zh="啟用管理紀錄" en="Turn on moderation logging" />,
+                description: <Locale zh="少了 mod log 之後，很多管理事件在回頭追查時都會變得模糊。" en="Without mod logging, it becomes much harder to reconstruct moderation decisions later." />,
+                badge: <Locale zh="可改善" en="Improve" />,
+                tone: "warning",
+            }
+            : {
+                id: "audit",
+                to: `/guild/${serverId}/audit-log`,
+                icon: <Clock3 className="h-4.5 w-4.5" />,
+                title: <Locale zh="回顧近期變更" en="Audit recent changes" />,
+                description: <Locale zh="前往審計與管理紀錄，快速確認最近是否有需要追蹤的動作。" en="Review the audit trail and moderation history to confirm whether any recent changes need follow-up." />,
+                badge: <Locale zh="追蹤" en="Track" />,
+                tone: "neutral",
+            },
+        {
+            id: "settings",
+            to: `/guild/${serverId}/settings`,
+            icon: <Settings className="h-4.5 w-4.5" />,
+            title: <Locale zh="同步基礎偏好設定" en="Review core preferences" />,
+            description: <Locale zh="如果功能都已大致就位，接下來最值得看的通常是語言、偏好與伺服器基礎設定。" en="If the main systems are in decent shape, the next best stop is usually language, preferences, and other foundational settings." />,
+            badge: <Locale zh="維護" en="Maintain" />,
+            tone: "neutral",
+        },
+    ];
+
+    const attentionCount = focusItems.filter((item) => item.tone === "warning").length;
 
     const moderationColumns = [
         {
@@ -138,22 +240,24 @@ export function UserReports() {
 
     return (
         <PageContainer>
-            {user && (
-                <PageHeader
-                    icon={<LayoutDashboard size={24} />}
-                    title={<Locale zh={`歡迎回來，${user.username}`} en={`Welcome back, ${user.username}`} />}
-                    description={<Locale zh="集中查看伺服器狀態、近期活動與常用操作，讓日常管理更俐落。" en="Keep tabs on server health, recent activity, and the controls you use most in one polished overview." />}
-                    meta={<>
-                        <span><Locale zh="即時總覽" en="Live overview" /></span>
-                        <span className="h-1 w-1 rounded-full bg-(--text-muted)" />
-                        <span><Locale zh="快速掌握伺服器狀態與待辦事項" en="See health, queue pressure, and next actions at a glance" /></span>
-                    </>}
-                    actions={<>
-                        <ActiveUsers guildId={serverId} page="Dashboard" />
-                        <BotStatusIndicator />
-                    </>}
-                />
-            )}
+            <PageHeader
+                icon={<LayoutDashboard size={24} />}
+                title={
+                    user
+                        ? <Locale zh={`歡迎回來，${user.username}`} en={`Welcome back, ${user.username}`} />
+                        : <Locale zh="伺服器指揮中心" en="Server mission control" />
+                }
+                description={<Locale zh="重新整理後的儀表板把關鍵健康訊號、待處理項目、核心捷徑與報表壓縮進更有層次的工作視圖。" en="The refreshed dashboard packs health signals, queue pressure, core shortcuts, and detailed reports into a denser operational workspace." />}
+                meta={<>
+                    <span><Locale zh="任務導向版面" en="Task-first layout" /></span>
+                    <span className="h-1 w-1 rounded-full bg-(--text-muted)" />
+                    <span><Locale zh="讓重點內容在一個畫面內更容易找到" en="Designed to keep the most important content within one working view" /></span>
+                </>}
+                actions={<>
+                    <ActiveUsers guildId={serverId} page="Dashboard" />
+                    <BotStatusIndicator />
+                </>}
+            />
 
             {!wizardDismissed && enabledFeatures.length === 0 && featuresQuery?.data && (
                 <OnboardingWizard
@@ -162,167 +266,265 @@ export function UserReports() {
                 />
             )}
 
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
-                <div className="xl:col-span-7">
-                    <PageSection
-                        title={<Locale zh="指揮中心" en="Command Center" />}
-                        description={<Locale zh="快速前往最常用的管理區塊，並在同一處理清目前的優先事項。" en="Jump into the tools you use most and keep the current priorities visible in one focused workspace." />}
-                        className="rounded-[30px] border border-(--border-subtle) bg-(--surface-card) px-5 py-5 shadow-(--shadow-sm) md:px-6 md:py-6"
-                        contentClassName="space-y-0"
-                    >
+            <div className="grid grid-cols-1 items-start gap-6 2xl:grid-cols-[minmax(0,1.7fr)_minmax(340px,0.95fr)]">
+                <div className="min-w-0 space-y-6">
+                    <Card variant="panel" className="overflow-hidden">
+                        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.95fr)] xl:items-start">
+                            <div className="space-y-6">
+                                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                                    <div className="min-w-0 space-y-3">
+                                        <Badge variant="secondary" className="w-fit rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em]">
+                                            <Locale zh="任務總覽" en="Operations overview" />
+                                        </Badge>
+                                        <div className="space-y-2">
+                                            <h2 className="font-['Space_Grotesk'] text-2xl font-bold tracking-tight text-(--text-primary) md:text-[32px]">
+                                                <Locale zh="把重要內容收進同一個工作畫面" en="Keep the important work in one view" />
+                                            </h2>
+                                            <p className="max-w-3xl text-sm leading-6 text-(--text-secondary) md:text-[15px]">
+                                                <Locale zh="這個區塊把社群規模、在線狀態、核心模組完整度與建議佇列壓力放到最前面，讓你更快判斷下一步。" en="This surface puts community size, live presence, core-system readiness, and suggestion pressure up front so the next move is easier to spot." />
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex shrink-0 flex-wrap gap-2">
+                                        <Button asChild size="sm">
+                                            <Link to={`/guild/${serverId}/features`}>
+                                                <Locale zh="管理功能" en="Manage features" />
+                                            </Link>
+                                        </Button>
+                                        <Button asChild variant="outline" size="sm">
+                                            <Link to={`/guild/${serverId}/actions`}>
+                                                <Locale zh="查看隊列" en="Open queue" />
+                                            </Link>
+                                        </Button>
+                                        <Button asChild variant="ghost" size="sm">
+                                            <Link to={`/guild/${serverId}/settings`}>
+                                                <Locale zh="伺服器設定" en="Server settings" />
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-4">
+                                    <InsightMetricCard
+                                        icon={<Users className="h-5 w-5" />}
+                                        label={<Locale zh="成員規模" en="Member footprint" />}
+                                        value={totalMembers}
+                                        helper={<Locale zh={`${onlineMembers} 位在線`} en={`${onlineMembers} currently online`} />}
+                                        tone="default"
+                                    />
+                                    <InsightMetricCard
+                                        icon={<Wifi className="h-5 w-5" />}
+                                        label={<Locale zh="在線比例" en="Presence rate" />}
+                                        value={`${onlineRatio}%`}
+                                        helper={<Locale zh="以目前在線成員計算" en="Calculated from active members right now" />}
+                                        tone="accent"
+                                    />
+                                    <InsightMetricCard
+                                        icon={<Sparkles className="h-5 w-5" />}
+                                        label={<Locale zh="核心模組就緒" en="Core system readiness" />}
+                                        value={`${enabledSystems}/4`}
+                                        helper={<Locale zh="歡迎、XP、建議與管理紀錄" en="Welcome, XP, suggestions, and moderation log" />}
+                                        tone="success"
+                                    />
+                                    <InsightMetricCard
+                                        icon={<MessageSquareWarning className="h-5 w-5" />}
+                                        label={<Locale zh="待處理建議" en="Pending suggestions" />}
+                                        value={pendingSuggestions}
+                                        helper={<Locale zh="需要審核的建議數量" en="Suggestions waiting for review" />}
+                                        tone={pendingSuggestions > 0 ? "warning" : "default"}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <Card className="rounded-[26px] border-(--border-subtle) bg-(--surface-primary) p-4.5 shadow-(--shadow-xs)">
+                                    <div className="mb-4 flex items-start justify-between gap-3">
+                                        <div>
+                                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-(--text-muted)">
+                                                <Locale zh="即時訊號" en="Live signals" />
+                                            </p>
+                                            <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
+                                                <Locale zh="用三個核心刻度快速感受目前的運作壓力。" en="Use three quick gauges to feel the current operating pressure." />
+                                            </p>
+                                        </div>
+                                        <Gauge className="mt-0.5 h-5 w-5 text-(--accent-primary)" />
+                                    </div>
+
+                                    <div className="space-y-3.5">
+                                        <MissionSignal
+                                            label={<Locale zh="在線覆蓋" en="Presence coverage" />}
+                                            value={`${onlineRatio}%`}
+                                            helper={<Locale zh="成員目前的在線比例" en="How much of the server is currently active" />}
+                                            progress={onlineRatio}
+                                            tone="accent"
+                                        />
+                                        <MissionSignal
+                                            label={<Locale zh="設置完整度" en="Setup completion" />}
+                                            value={`${setupCompletion}%`}
+                                            helper={<Locale zh="核心模組完成情況" en="How complete the core setup currently feels" />}
+                                            progress={setupCompletion}
+                                            tone="success"
+                                        />
+                                        <MissionSignal
+                                            label={<Locale zh="隊列壓力" en="Queue pressure" />}
+                                            value={totalSuggestions > 0 ? `${queuePressure}%` : <Locale zh="清爽" en="Clear" />}
+                                            helper={<Locale zh="待審建議占全部建議的比例" en="Pending suggestions as a share of the full suggestion volume" />}
+                                            progress={queuePressure}
+                                            tone={pendingSuggestions > 0 ? "warning" : "default"}
+                                        />
+                                    </div>
+                                </Card>
+
+                                <Card className="rounded-[26px] border-(--border-subtle) bg-(--surface-primary) p-4.5 shadow-(--shadow-xs)">
+                                    <div className="mb-4 flex items-start justify-between gap-3">
+                                        <div>
+                                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-(--text-muted)">
+                                                <Locale zh="核心系統" en="Core systems" />
+                                            </p>
+                                            <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
+                                                <Locale zh="這些是最直接影響伺服器日常體驗的四個關鍵區塊。" en="These four areas have the clearest impact on day-to-day server operations." />
+                                            </p>
+                                        </div>
+                                        <Badge variant={enabledSystems >= 3 ? "success" : "secondary"}>
+                                            {enabledSystems}/4
+                                        </Badge>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                        {healthItems.map((item) => (
+                                            <HealthListItem key={item.id} {...item} />
+                                        ))}
+                                    </div>
+                                </Card>
+                            </div>
+                        </div>
+                    </Card>
+
+                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
                         <QuickActions />
-                    </PageSection>
+
+                        <Card variant="panel" className="h-full">
+                            <div className="flex items-start justify-between gap-4">
+                                <div>
+                                    <h2 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
+                                        <Locale zh="社群脈動" en="Community pulse" />
+                                    </h2>
+                                    <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
+                                        <Locale zh="把目前最能反映互動與管理負載的三個數字放在同一張卡裡。" en="Keep the three clearest signals of engagement and moderation load inside one compact card." />
+                                    </p>
+                                </div>
+                                <Badge variant="secondary">{enabledFeatures.length} <Locale zh="個已啟用功能" en="live features" /></Badge>
+                            </div>
+
+                            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-3">
+                                <InsightMetricCard
+                                    icon={<Activity className="h-5 w-5" />}
+                                    label={<Locale zh="XP 追蹤成員" en="Tracked XP users" />}
+                                    value={trackedXpUsers}
+                                    helper={<Locale zh="目前參與等級系統的成員數" en="Members currently participating in leveling" />}
+                                    tone="default"
+                                />
+                                <InsightMetricCard
+                                    icon={<ShieldAlert className="h-5 w-5" />}
+                                    label={<Locale zh="管理動作總數" en="Moderation load" />}
+                                    value={totalModerationActions}
+                                    helper={<Locale zh="已記錄的管理動作總量" en="Total moderation actions currently recorded" />}
+                                    tone="warning"
+                                />
+                                <InsightMetricCard
+                                    icon={<BellRing className="h-5 w-5" />}
+                                    label={<Locale zh="全部建議" en="Total suggestions" />}
+                                    value={totalSuggestions}
+                                    helper={<Locale zh="包含待審與已處理建議" en="Includes reviewed and pending submissions" />}
+                                    tone="accent"
+                                />
+                            </div>
+
+                            <div className="mt-5 rounded-3xl border border-(--border-subtle) bg-(--surface-primary) p-4.5">
+                                <div className="flex items-start justify-between gap-3">
+                                    <div>
+                                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-(--text-muted)">
+                                            <Locale zh="目前已上線的功能" en="Currently live features" />
+                                        </p>
+                                        <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
+                                            <Locale zh="用這裡快速確認現在真正處於啟用狀態的功能組合。" en="Use this to quickly confirm which parts of the bot are actually active right now." />
+                                        </p>
+                                    </div>
+                                    <Button asChild variant="ghost" size="sm">
+                                        <Link to={`/guild/${serverId}/features`}>
+                                            <Locale zh="查看全部" en="View all" />
+                                        </Link>
+                                    </Button>
+                                </div>
+
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                    {enabledFeatureLabels.length > 0 ? (
+                                        <>
+                                            {enabledFeatureLabels.map((label) => (
+                                                <Badge key={label} variant="secondary" className="rounded-full px-3 py-1">
+                                                    {label}
+                                                </Badge>
+                                            ))}
+                                            {hiddenFeatureCount > 0 && (
+                                                <Badge variant="outline" className="rounded-full px-3 py-1">
+                                                    +{hiddenFeatureCount}
+                                                </Badge>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <p className="text-sm leading-6 text-(--text-secondary)">
+                                            <Locale zh="目前尚未啟用任何功能，啟用第一個模組後這裡就會開始出現狀態。" en="No features are enabled yet. Once the first module goes live, it will appear here." />
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </Card>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[minmax(0,1.03fr)_minmax(0,0.97fr)]">
+                        <LeaderboardTable
+                            title={<Locale zh="XP 排行榜" en="XP Leaderboard" />}
+                            users={leaderboard}
+                            compact
+                            showViewAll
+                            description={<Locale zh="互動熱度與 XP 成長節奏放在這裡，能更快看出誰正在帶動整個社群。" en="Keep engagement leaders and XP momentum visible here so it is easier to spot who is driving community activity." />}
+                        />
+                        <DataTable
+                            name={<Locale zh="近期管理動作" en="Recent Mod Actions" />}
+                            data={recentActions}
+                            columns={moderationColumns}
+                            description={<Locale zh="最近的警告、禁言、踢除與其他管理動作可以直接在這裡快速掃過。" en="Warns, timeouts, kicks, bans, and the rest of your recent moderation trail stay visible here for quick scanning." />}
+                        />
+                    </div>
                 </div>
-                <div className="xl:col-span-5">
+
+                <div className="space-y-6">
+                    <Card variant="panel">
+                        <div className="flex items-start justify-between gap-4">
+                            <div>
+                                <h2 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
+                                    <Locale zh="焦點看板" en="Focus board" />
+                                </h2>
+                                <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
+                                    <Locale zh="這一欄把最值得你現在處理的入口與原因直接排好，不用自己再重新判斷順序。" en="This rail lines up the most relevant next stops and explains why they deserve attention right now." />
+                                </p>
+                            </div>
+                            <Badge variant={attentionCount > 0 ? "warning" : "success"}>
+                                {attentionCount > 0 ? attentionCount : <Locale zh="良好" en="Healthy" />}
+                            </Badge>
+                        </div>
+
+                        <div className="mt-5 space-y-3">
+                            {focusItems.map((item) => (
+                                <DashboardActionHint key={item.id} {...item} />
+                            ))}
+                        </div>
+                    </Card>
+
                     <NotificationFeed />
                 </div>
             </div>
-
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
-                <div className="space-y-6 xl:col-span-8">
-                    <PageSection
-                        title={<Locale zh="整體狀態" en="At-a-glance status" />}
-                        description={<Locale zh="用更清楚的摘要來掌握成員活躍度、功能覆蓋率與目前的待辦壓力。" en="Track activity, feature coverage, and queue pressure with a clearer executive summary." />}
-                    >
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-                            <InsightMetricCard
-                                icon={<Users className="h-5 w-5" />}
-                                label={<Locale zh="成員規模" en="Member footprint" />}
-                                value={detail?.members || 0}
-                                helper={<Locale zh={`${detail?.online || 0} 位在線`} en={`${detail?.online || 0} currently online`} />}
-                                tone="default"
-                            />
-                            <InsightMetricCard
-                                icon={<Wifi className="h-5 w-5" />}
-                                label={<Locale zh="在線比例" en="Presence rate" />}
-                                value={`${onlineRatio}%`}
-                                helper={<Locale zh="根據目前在線成員估算" en="Based on currently active members" />}
-                                tone="accent"
-                            />
-                            <InsightMetricCard
-                                icon={<Sparkles className="h-5 w-5" />}
-                                label={<Locale zh="已啟用系統" en="Enabled systems" />}
-                                value={`${enabledSystems}/4`}
-                                helper={<Locale zh="歡迎、XP、建議、模組紀錄" en="Welcome, XP, suggestions, and mod log" />}
-                                tone="success"
-                            />
-                            <InsightMetricCard
-                                icon={<MessageSquareWarning className="h-5 w-5" />}
-                                label={<Locale zh="待審項目" en="Review queue" />}
-                                value={pendingSuggestions}
-                                helper={<Locale zh="建議系統待處理數量" en="Pending suggestions awaiting action" />}
-                                tone={pendingSuggestions > 0 ? "warning" : "default"}
-                            />
-                        </div>
-                    </PageSection>
-
-                    <PageSection
-                        title={<Locale zh="服務健康" en="Service health" />}
-                        description={<Locale zh="快速查看核心模組目前是否正常啟用，以及哪裡可能需要你優先調整。" en="See which core systems are already running well and where the dashboard is signaling you to take action next." />}
-                    >
-                        <Card variant="panel">
-                            <div className="mb-5 flex items-start justify-between gap-4">
-                                <div>
-                                    <h3 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
-                                        <Locale zh="伺服器健康面板" en="Server health board" />
-                                    </h3>
-                                    <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                        <Locale zh="這些指標反映出功能開啟狀態、審核壓力與整體配置完整度。" en="These indicators summarize system readiness, moderation pressure, and overall setup completeness." />
-                                    </p>
-                                </div>
-                                <Badge variant="secondary" className="shrink-0">
-                                    <Locale zh="即時摘要" en="Live summary" />
-                                </Badge>
-                            </div>
-
-                            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                                {healthItems.map((item, index) => (
-                                    <HealthListItem key={index} {...item} />
-                                ))}
-                            </div>
-                        </Card>
-                    </PageSection>
-                </div>
-
-                <div className="space-y-6 xl:col-span-4">
-                    <PageSection
-                        title={<Locale zh="下一步建議" en="Recommended next moves" />}
-                        description={<Locale zh="根據目前狀態，這些入口最值得優先查看。" en="Based on the current state of your server, these are the best next places to visit." />}
-                    >
-                        <Card variant="panel">
-                            <div className="space-y-3">
-                                <DashboardActionHint
-                                    to={`/guild/${serverId}/features`}
-                                    icon={<ServerCog className="h-4.5 w-4.5" />}
-                                    title={<Locale zh="檢查功能覆蓋率" en="Review feature coverage" />}
-                                    description={<Locale zh="確認歡迎訊息、XP 與自動化模組是否都符合目前伺服器需求。" en="Confirm welcome flows, XP, and automation modules still match how your server is operating." />}
-                                />
-                                <DashboardActionHint
-                                    to={`/guild/${serverId}/actions`}
-                                    icon={<BellRing className="h-4.5 w-4.5" />}
-                                    title={<Locale zh="清理審核佇列" en="Clear the action queue" />}
-                                    description={<Locale zh="檢查建議與管理任務，避免待處理項目累積。" en="Check suggestions and task workflows before the review queue starts piling up." />}
-                                />
-                                <DashboardActionHint
-                                    to={`/guild/${serverId}/leaderboard`}
-                                    icon={<Trophy className="h-4.5 w-4.5" />}
-                                    title={<Locale zh="查看成長動能" en="Inspect growth momentum" />}
-                                    description={<Locale zh="快速看哪些成員最活躍，XP 競爭是否正在升溫。" en="See which members are leading engagement and whether your leveling pace is heating up." />}
-                                />
-                                <DashboardActionHint
-                                    to={`/guild/${serverId}/audit-log`}
-                                    icon={<ShieldAlert className="h-4.5 w-4.5" />}
-                                    title={<Locale zh="稽核近期變更" en="Review recent changes" />}
-                                    description={<Locale zh="前往審計日誌，檢查最近是否有重要配置或管理動作。" en="Open the audit log to verify recent configuration changes and moderator actions." />}
-                                />
-                            </div>
-                        </Card>
-                    </PageSection>
-
-                    <PageSection
-                        title={<Locale zh="活躍概況" en="Activity pulse" />}
-                        description={<Locale zh="用簡潔指標追蹤最近的互動熱度與管理負載。" en="Track how engaged the server feels right now with a focused activity snapshot." />}
-                    >
-                        <div className="grid grid-cols-1 gap-3">
-                            <InsightMetricCard
-                                icon={<Activity className="h-5 w-5" />}
-                                label={<Locale zh="XP 追蹤成員" en="Tracked XP users" />}
-                                value={advanced?.xp?.totalTrackedUsers || 0}
-                                helper={<Locale zh="目前正在參與等級系統的成員" en="Members currently participating in leveling" />}
-                                tone="default"
-                            />
-                            <InsightMetricCard
-                                icon={<ShieldAlert className="h-5 w-5" />}
-                                label={<Locale zh="管理動作總數" en="Moderation load" />}
-                                value={advanced?.moderation?.totalActions || 0}
-                                helper={<Locale zh="近期累積的處分與管理紀錄" en="Recent moderation actions recorded by the bot" />}
-                                tone="warning"
-                            />
-                        </div>
-                    </PageSection>
-                </div>
-            </div>
-
-            <PageSection
-                title={<Locale zh="詳細報表" en="Detailed reports" />}
-                description={<Locale zh="需要更深入時，從這裡直接切入排行榜與近期管理紀錄。" en="When you need a deeper read, use these reports to jump from summary mode into operational detail." />}
-            >
-                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                    <LeaderboardTable
-                        title={<Locale zh="XP 排行榜" en="XP Leaderboard" />}
-                        users={leaderboard}
-                        compact
-                        showViewAll
-                        description={<Locale zh="看看誰正帶動伺服器的互動熱度，以及排名差距是否正在縮小。" en="See who is setting the pace for engagement and how tight the leaderboard race is becoming." />}
-                    />
-                    <DataTable
-                        name={<Locale zh="近期管理動作" en="Recent Mod Actions" />}
-                        data={recentActions}
-                        columns={moderationColumns}
-                        description={<Locale zh="快速檢查最新的警告、禁言、踢除與其他處理紀錄。" en="Scan the latest warns, mutes, kicks, bans, and other moderation events from one cleaner table." />}
-                    />
-                </div>
-            </PageSection>
         </PageContainer>
     );
 }
@@ -339,7 +541,7 @@ function InsightMetricCard({ icon, label, value, helper, tone = "default" }) {
     );
 }
 
-function HealthListItem({ title, value, tone = "neutral" }) {
+function HealthListItem({ title, value, tone = "neutral", helper }) {
     const toneBadge = {
         success: "success",
         warning: "warning",
@@ -347,30 +549,79 @@ function HealthListItem({ title, value, tone = "neutral" }) {
     };
 
     return (
-        <div className="flex items-center justify-between gap-4 rounded-2xl border border-(--border-subtle) bg-(--surface-primary) px-4 py-3.5">
-            <span className="text-sm font-medium text-(--text-primary)">{title}</span>
-            <Badge variant={toneBadge[tone] || "secondary"}>{value}</Badge>
+        <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-4 py-3.5">
+            <div className="flex items-center justify-between gap-4">
+                <span className="text-sm font-medium text-(--text-primary)">{title}</span>
+                <Badge variant={toneBadge[tone] || "secondary"}>{value}</Badge>
+            </div>
+            {helper ? <p className="mt-2 text-sm leading-6 text-(--text-secondary)">{helper}</p> : null}
         </div>
     );
 }
 
-function DashboardActionHint({ to, icon, title, description }) {
+function MissionSignal({ label, value, helper, progress = 0, tone = "default" }) {
+    const barTone = {
+        default: "bg-[linear-gradient(90deg,var(--accent-primary),color-mix(in_srgb,var(--accent-primary)_65%,white))]",
+        accent: "bg-[linear-gradient(90deg,#38bdf8,#818cf8)]",
+        success: "bg-[linear-gradient(90deg,#34d399,#10b981)]",
+        warning: "bg-[linear-gradient(90deg,#fb923c,#f97316)]",
+    };
+
     return (
-        <Link to={to} className="block rounded-[22px] border border-(--border-subtle) bg-(--surface-primary) p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-(--border-default) hover:shadow-(--shadow-sm)">
+        <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-4 py-3.5 shadow-(--shadow-xs)">
+            <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-semibold text-(--text-primary)">{label}</p>
+                <span className="font-['Space_Grotesk'] text-base font-semibold text-(--text-primary)">{value}</span>
+            </div>
+            {helper ? <p className="mt-1.5 text-sm leading-6 text-(--text-secondary)">{helper}</p> : null}
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-(--surface-secondary)">
+                <div
+                    className={`h-full rounded-full ${barTone[tone] || barTone.default}`}
+                    style={{ width: `${clampPercentage(progress)}%` }}
+                />
+            </div>
+        </div>
+    );
+}
+
+function DashboardActionHint({ to, icon, title, description, badge, tone = "neutral" }) {
+    const iconTone = {
+        neutral: "text-(--accent-primary)",
+        warning: "text-orange-400",
+        success: "text-emerald-400",
+    };
+
+    const badgeTone = {
+        neutral: "secondary",
+        warning: "warning",
+        success: "success",
+    };
+
+    return (
+        <Link to={to} className="block rounded-3xl border border-(--border-subtle) bg-(--surface-primary) p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-(--border-default) hover:shadow-(--shadow-sm)">
             <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-(--surface-secondary) text-(--accent-primary)">
+                <div className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-(--surface-secondary) ${iconTone[tone] || iconTone.neutral}`}>
                     {icon}
                 </div>
                 <div className="min-w-0 flex-1">
-                    <h3 className="font-['Space_Grotesk'] text-sm font-semibold text-(--text-primary)">{title}</h3>
+                    <div className="flex items-start justify-between gap-3">
+                        <h3 className="font-['Space_Grotesk'] text-sm font-semibold text-(--text-primary)">{title}</h3>
+                        {badge ? <Badge variant={badgeTone[tone] || "secondary"}>{badge}</Badge> : null}
+                    </div>
                     <p className="mt-1 text-sm leading-6 text-(--text-secondary)">{description}</p>
                     <div className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-(--accent-primary)">
-                        <Locale zh="前往檢視" en="Open section" />
+                        <Locale zh="打開區塊" en="Open section" />
+                        <ArrowRight className="h-4 w-4" />
                     </div>
                 </div>
             </div>
         </Link>
     );
+}
+
+function clampPercentage(value) {
+    if (!Number.isFinite(value)) return 0;
+    return Math.max(0, Math.min(100, Math.round(value)));
 }
 
 function toTitleLabel(value) {

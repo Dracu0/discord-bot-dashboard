@@ -77,7 +77,7 @@ function EmptyState() {
     const { t } = useTranslation();
 
     return (
-        <div className="flex flex-col items-center justify-center rounded-[24px] border border-dashed border-(--border-default) bg-(--surface-primary) px-5 py-10 text-center">
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-(--border-default) bg-(--surface-primary) px-5 py-10 text-center">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-(--surface-secondary) text-(--accent-primary)">
                 <Sparkles className="h-6 w-6" />
             </div>
@@ -93,7 +93,7 @@ function EmptyState() {
 
 function ErrorState({ onRetry }) {
     return (
-        <div className="rounded-[24px] border border-red-500/20 bg-red-500/8 p-5 text-sm text-(--text-primary)">
+        <div className="rounded-3xl border border-red-500/20 bg-red-500/8 p-5 text-sm text-(--text-primary)">
             <p className="mb-3 font-medium text-red-300">Failed to load notifications.</p>
             <Button variant="outline" size="sm" onClick={onRetry}>
                 <RefreshCw className="h-3.5 w-3.5" />
@@ -283,11 +283,11 @@ export function Notifications() {
                     ) : !hasNotifications ? (
                         <EmptyState />
                     ) : filtered.length === 0 ? (
-                        <div className="rounded-[24px] border border-dashed border-(--border-default) bg-(--surface-primary) px-5 py-8 text-center text-sm text-(--text-secondary)">
+                        <div className="rounded-3xl border border-dashed border-(--border-default) bg-(--surface-primary) px-5 py-8 text-center text-sm text-(--text-secondary)">
                             No notifications match the current filter.
                         </div>
                     ) : (
-                        <div className="max-h-[28rem] space-y-3 overflow-y-auto pe-1">
+                        <div className="max-h-112 space-y-3 overflow-y-auto pe-1">
                             {filtered.map((notification) => (
                                 <NotificationItem
                                     key={notification._id}

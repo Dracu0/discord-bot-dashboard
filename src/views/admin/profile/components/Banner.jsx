@@ -10,7 +10,7 @@ export default function Banner(props) {
     return (
         <Card className="mb-0 lg:mb-5 items-center">
             <div
-                className="w-full h-[140px]"
+                className="w-full h-35"
                 style={{
                     borderRadius: "var(--radius-lg)",
                     backgroundImage: banner ? `url(${banner})` : undefined,
@@ -21,7 +21,7 @@ export default function Banner(props) {
                     backgroundSize: "cover",
                 }}
             />
-            <Avatar className="mx-auto w-[90px] h-[90px] -mt-[45px] border-4 border-(--surface-primary) shadow-(--shadow-lg)">
+            <Avatar className="mx-auto w-22.5 h-22.5 -mt-11.25 border-4 border-(--surface-primary) shadow-(--shadow-lg)">
                 <AvatarImage src={avatar} alt={name} />
                 <AvatarFallback>{name?.charAt(0)}</AvatarFallback>
             </Avatar>
@@ -34,7 +34,7 @@ export default function Banner(props) {
             <p className="text-(--text-secondary) text-sm text-center">
                 <Locale zh="????" en="Welcome back to" /> {config.name}
             </p>
-            <div className="flex w-max mx-auto mt-[26px] flex-wrap gap-8">
+            <div className="flex w-max mx-auto mt-6.5 flex-wrap gap-8">
                 {joinedServers && (
                     <div className="flex items-center flex-col">
                         <span

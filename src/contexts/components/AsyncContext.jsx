@@ -75,7 +75,7 @@ function parseChildren(children) {
 
 export function ErrorPanel({ error, onRetry }) {
   return (
-    <div className="flex items-center justify-center min-h-[200px]">
+    <div className="flex min-h-50 items-center justify-center">
       <div className="flex flex-col items-center gap-2">
         <span>
           <Locale zh="\u52a0\u8f09\u5931\u6557" en="Failed to load" />

@@ -123,7 +123,7 @@ function MultiSelectField({ data, value, onChange, placeholder, error }) {
     <div>
       <div
         className={cn(
-          "flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-(--radius-md) border border-(--border-default) bg-(--surface-primary) px-3 py-1.5 text-sm shadow-(--shadow-xs) cursor-pointer",
+          "flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-md border border-(--border-default) bg-(--surface-primary) px-3 py-1.5 text-sm shadow-(--shadow-xs) cursor-pointer",
           error && "border-(--status-error)"
         )}
         onClick={() => setOpen(!open)}
@@ -151,13 +151,13 @@ function MultiSelectField({ data, value, onChange, placeholder, error }) {
         })}
       </div>
       {open && (
-        <div className="mt-1 max-h-60 overflow-auto rounded-(--radius-md) border border-(--border-default) bg-(--surface-card) p-1 shadow-(--shadow-lg) z-50">
+        <div className="z-50 mt-1 max-h-60 overflow-auto rounded-md border border-(--border-default) bg-(--surface-card) p-1 shadow-(--shadow-lg)">
           {data.map((item) => (
             <button
               key={item.value}
               type="button"
               className={cn(
-                "flex w-full items-center rounded-(--radius-sm) px-2 py-1.5 text-sm text-(--text-primary) hover:bg-(--surface-secondary) cursor-pointer",
+                "flex w-full items-center rounded-sm px-2 py-1.5 text-sm text-(--text-primary) hover:bg-(--surface-secondary) cursor-pointer",
                 selected.includes(item.value) && "bg-(--surface-secondary) font-medium"
               )}
               onClick={() => toggleItem(item.value)}

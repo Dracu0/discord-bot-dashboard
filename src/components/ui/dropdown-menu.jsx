@@ -12,7 +12,7 @@ const DropdownMenuContent = forwardRef(({ className, sideOffset = 4, ...props },
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-(--z-dropdown) min-w-[8rem] overflow-hidden rounded-(--radius-md) border border-(--border-default) bg-(--surface-card) p-1 shadow-(--shadow-lg) data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "z-(--z-dropdown) min-w-32 overflow-hidden rounded-md border border-(--border-default) bg-(--surface-card) p-1 shadow-(--shadow-lg) data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className
       )}
       {...props}
@@ -25,7 +25,7 @@ const DropdownMenuItem = forwardRef(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-pointer select-none items-center gap-2 rounded-(--radius-sm) px-2 py-1.5 text-sm text-(--text-primary) outline-none transition-colors focus:bg-(--surface-secondary) data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-(--text-primary) outline-none transition-colors focus:bg-(--surface-secondary) data-disabled:pointer-events-none data-disabled:opacity-50",
       className
     )}
     {...props}

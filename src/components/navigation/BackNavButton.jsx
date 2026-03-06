@@ -11,7 +11,7 @@ export default function BackNavButton({ to, zh = "\u8fd4\u56de", en = "Back", ar
             aria-label={ariaLabel || en}
             size="sm"
             variant="outline"
-            className="min-h-[44px] md:min-h-[40px]"
+            className="min-h-11 md:min-h-10"
         >
             <Link to={to}>
                 <ArrowLeft size={16} className="mr-1.5" />

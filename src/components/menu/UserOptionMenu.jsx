@@ -17,7 +17,7 @@ export default function UserOptionMenu() {
     return (
         <DropdownMenuContent
             align="end"
-            className="w-[18rem] overflow-hidden rounded-[24px] border border-(--border-default) bg-(--surface-card) p-0 shadow-(--shadow-lg)"
+            className="w-[18rem] overflow-hidden rounded-3xl border border-(--border-default) bg-(--surface-card) p-0 shadow-(--shadow-lg)"
         >
             <div className="border-b border-(--border-subtle) bg-[linear-gradient(180deg,var(--surface-card)_0%,var(--surface-primary)_100%)] px-4 py-4">
                 <div className="flex items-center gap-3">
