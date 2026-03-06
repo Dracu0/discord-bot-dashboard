@@ -43,13 +43,6 @@ export const config = {
             choices: ["en", "zh"],
             value: currentSettings.language || "en",
         },
-        {
-            id: "devMode",
-            name: "Developer Mode",
-            description: "Enable developer mode for advanced options",
-            type: "boolean",
-            value: currentSettings.devMode ?? false,
-        },
     ],
     actions: {
         "manage_suggestions": ManageSuggestionsAction,

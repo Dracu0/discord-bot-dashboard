@@ -26,9 +26,8 @@ function SettingsConfigPanel() {
     const options = useMemo(
         () => config.settings({
             language: appSettings.language,
-            devMode: appSettings.devMode,
         }),
-        [appSettings.language, appSettings.devMode]
+        [appSettings.language]
     )
 
     const onSave = useCallback((changes) => {

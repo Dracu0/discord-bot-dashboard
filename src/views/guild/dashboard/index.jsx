@@ -15,7 +15,6 @@ import BotStatusIndicator from "components/card/BotStatusIndicator";
 import QuickActions from "components/card/QuickActions";
 import OnboardingWizard from "components/card/OnboardingWizard";
 import ActiveUsers from "components/card/ActiveUsers";
-import { Separator } from "components/ui/separator";
 
 export default function Dashboard() {
     const locale = useLocale()
@@ -48,95 +47,83 @@ export function UserReports() {
     const enabledFeatures = featuresQuery.data?.enabled || [];
 
     return (
-        <div style={{ paddingTop: "80px" }}>
+        <div className="pt-20 max-w-7xl mx-auto">
+            {/* Header */}
             {user && (
-                <div className="mb-6">
-                    <div className="flex justify-between items-start flex-wrap gap-2">
-                        <div>
-                            <h2
-                                className="text-(--text-primary) font-bold text-2xl"
-                                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                            >
-                                <Locale
-                                    zh={`\u6b61\u8fce\u56de\u4f86, ${user.username}`}
-                                    en={`Welcome back, ${user.username}`}
-                                />
-                            </h2>
-                            <span className="text-(--text-secondary) text-sm mt-1 block">
-                                <Locale zh="\u9019\u662f\u60a8\u4f3a\u670d\u5668\u7684\u6982\u89bd" en="Here's an overview of your server" />
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <ActiveUsers guildId={serverId} page="Dashboard" />
-                            <BotStatusIndicator />
-                        </div>
+                <div className="mb-6 flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2
+                            className="text-(--text-primary) font-bold text-2xl"
+                            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                        >
+                            <Locale
+                                zh={`\u6b61\u8fce\u56de\u4f86, ${user.username}`}
+                                en={`Welcome back, ${user.username}`}
+                            />
+                        </h2>
+                        <span className="text-(--text-secondary) text-sm mt-1 block">
+                            <Locale zh="\u9019\u662f\u60a8\u4f3a\u670d\u5668\u7684\u6982\u89bd" en="Here's an overview of your server" />
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <ActiveUsers guildId={serverId} page="Dashboard" />
+                        <BotStatusIndicator />
                     </div>
                 </div>
             )}
+
+            {/* Onboarding */}
             {!wizardDismissed && enabledFeatures.length === 0 && featuresQuery.data && (
                 <OnboardingWizard
                     enabledFeatures={enabledFeatures}
                     onDismiss={() => setWizardDismissed(true)}
                 />
             )}
-            <QuickActions />
-            <NotificationFeed />
-            <div className="flex flex-col gap-8">
-                {data.map((row, key) => {
-                    const count = row.count
 
-                    return (
-                        <div key={key}>
-                            {row.label && <SectionHeader label={row.label} />}
-                            <div
-                                className="grid gap-5"
-                                style={{
-                                    gridTemplateColumns: `repeat(1, minmax(0, 1fr))`,
-                                }}
-                                data-count={count}
-                            >
-                                <style>{`
-                                    @media (min-width: 768px) {
-                                        [data-count="${count}"] {
-                                            grid-template-columns: repeat(${Math.min(2, count)}, minmax(0, 1fr));
-                                        }
-                                    }
-                                    @media (min-width: 1536px) {
-                                        [data-count="${count}"] {
-                                            grid-template-columns: repeat(${count}, minmax(0, 1fr));
-                                        }
-                                    }
-                                `}</style>
-                                {row.advanced ? (
-                                    <QueryHolderSkeleton query={query} height="400px" count={row.count}>
-                                        {() => <Data row={row} detail={query.data} />}
-                                    </QueryHolderSkeleton>
-                                ) : (
-                                    <Data row={row} detail={detail} />
-                                )}
-                            </div>
+            {/* Quick Actions */}
+            <QuickActions />
+
+            {/* Notifications — compact */}
+            <div className="mb-6">
+                <NotificationFeed />
+            </div>
+
+            {/* Data Grid */}
+            <div className="flex flex-col gap-6">
+                {data.map((row, key) => (
+                    <section key={key}>
+                        {row.label && <SectionLabel label={row.label} />}
+                        <div className={gridClass(row.count)}>
+                            {row.advanced ? (
+                                <QueryHolderSkeleton query={query} height="160px" count={row.count}>
+                                    {() => <Data row={row} detail={query.data} />}
+                                </QueryHolderSkeleton>
+                            ) : (
+                                <Data row={row} detail={detail} />
+                            )}
                         </div>
-                    )
-                })}
+                    </section>
+                ))}
             </div>
         </div>
     );
 }
 
-function SectionHeader({ label }) {
+function gridClass(count) {
+    if (count >= 4) return "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4";
+    if (count === 3) return "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4";
+    if (count === 2) return "grid grid-cols-1 md:grid-cols-2 gap-4";
+    return "grid grid-cols-1 gap-4";
+}
+
+function SectionLabel({ label }) {
     return (
-        <div className="mb-4">
-            <h3
-                className="text-(--text-primary) mb-2"
-                style={{
-                    fontFamily: "'Space Grotesk', sans-serif",
-                    letterSpacing: "-0.01em",
-                }}
-            >
-                {label}
-            </h3>
-            <Separator className="opacity-40 bg-(--border-subtle)" />
-        </div>
+        <h3
+            className="text-(--text-primary) text-base font-semibold mb-3"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+        >
+            {label}
+        </h3>
     )
 }
 

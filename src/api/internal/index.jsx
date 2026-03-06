@@ -4,6 +4,24 @@ export * from "./action";
 export * from "./auth";
 
 /**
+ * Get user dashboard preferences from the server
+ */
+export async function getUserPreferences() {
+  return fetchAuto("/users/preferences", { toJson: true });
+}
+
+/**
+ * Save user dashboard preferences to the server
+ */
+export async function saveUserPreferences(prefs) {
+  return fetchAuto("/users/preferences", {
+    method: "PATCH",
+    body: JSON.stringify(prefs),
+    toJson: true,
+  });
+}
+
+/**
  * Get configurable features of a server
  * You may include other data
  *

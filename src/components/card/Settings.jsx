@@ -1,6 +1,5 @@
 ﻿import { Sun, Moon, Monitor, Download } from "lucide-react";
 import Card from "components/card/Card";
-import SwitchField from "components/fields/impl/SwitchField";
 import { useContext } from "react";
 import { SettingsContext } from "contexts/SettingsContext";
 import { SelectField } from "components/fields/SelectField";
@@ -10,34 +9,20 @@ import { Button } from "components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 
 const ACCENT_COLORS = [
-  { value: "brand", color: "#8B5CF6" },
-  { value: "blue", color: "#3B82F6" },
-  { value: "teal", color: "#14B8A6" },
-  { value: "green", color: "#10B981" },
-  { value: "orange", color: "#F59E0B" },
-  { value: "pink", color: "#EC4899" },
+  { value: "brand", color: "#8B5CF6", label: "Purple" },
+  { value: "blue", color: "#3B82F6", label: "Blue" },
+  { value: "teal", color: "#14B8A6", label: "Teal" },
+  { value: "green", color: "#10B981", label: "Green" },
+  { value: "orange", color: "#F59E0B", label: "Orange" },
+  { value: "pink", color: "#EC4899", label: "Pink" },
 ];
 
 export default function Settings({ ...rest }) {
-  const { updateSettings, devMode, language, colorScheme, accentColor } = useContext(SettingsContext);
+  const { updateSettings, language, colorScheme, accentColor } = useContext(SettingsContext);
   const locale = useLocale();
 
-  const SwitchRow = ({ label, isChecked, onChange, ...props }) => {
-    return (
-      <SwitchField
-        reversed={true}
-        fz="sm"
-        mb={20}
-        label={locale(label)}
-        isChecked={isChecked}
-        onChange={(e) => onChange(e.target.checked)}
-        {...props}
-      />
-    );
-  };
-
   const handleExportSettings = () => {
-    const data = { language, fixedWidth, devMode, colorScheme, accentColor };
+    const data = { language, colorScheme, accentColor };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -79,7 +64,7 @@ export default function Settings({ ...rest }) {
           </span>
           <TooltipProvider>
             <div className="flex items-center gap-1.5">
-              {ACCENT_COLORS.map(({ value, color }) => (
+              {ACCENT_COLORS.map(({ value, color, label }) => (
                 <Tooltip key={value}>
                   <TooltipTrigger asChild>
                     <div
@@ -94,28 +79,12 @@ export default function Settings({ ...rest }) {
                       onClick={() => updateSettings({ accentColor: value })}
                     />
                   </TooltipTrigger>
-                  <TooltipContent side="top">{value}</TooltipContent>
+                  <TooltipContent side="top">{label}</TooltipContent>
                 </Tooltip>
               ))}
             </div>
           </TooltipProvider>
         </div>
-      </div>
-
-      {/* General */}
-      <div className="flex flex-col gap-2 mb-5">
-        <span className="text-sm font-semibold text-(--text-muted) uppercase tracking-[0.5px]">
-          <Locale zh="一般" en="General" />
-        </span>
-        <SwitchRow
-          label={{ zh: "開發者模式", en: "Developer Mode" }}
-          isChecked={devMode}
-          onChange={(e) =>
-            updateSettings({
-              devMode: e,
-            })
-          }
-        />
       </div>
 
       {/* Language */}

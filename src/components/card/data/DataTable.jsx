@@ -8,7 +8,7 @@ export default function DataTable({ name, data, columns }) {
     {
       columns: columns || [],
       data: data || [],
-      initialState: { pageSize: 10 },
+      initialState: { pageSize: 5 },
     },
     useGlobalFilter,
     useSortBy,
@@ -32,10 +32,10 @@ export default function DataTable({ name, data, columns }) {
 
   return (
     <Card className="w-full px-0! overflow-x-auto">
-      <span className="block ml-4 md:ml-6.25 text-(--text-primary) text-[22px] font-bold leading-none">
+      <span className="block ml-4 md:ml-5 text-(--text-primary) text-lg font-bold leading-none">
         {name}
       </span>
-      <table {...getTableProps()} className="w-full mb-6">
+      <table {...getTableProps()} className="w-full mb-4">
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
@@ -87,7 +87,7 @@ export default function DataTable({ name, data, columns }) {
                     <td
                       {...cell.getCellProps()}
                       key={i}
-                      className="text-(--text-primary) text-sm min-w-37.5 border-none"
+                      className="text-(--text-primary) text-sm min-w-24 border-none"
                     >
                       {cell.column.wrapper ? (
                         cell.column.wrapper(cell.value)
