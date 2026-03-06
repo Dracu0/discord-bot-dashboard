@@ -34,7 +34,7 @@ export const dashboardData = [
     },
     // ── Row 2: Server Overview (full width) ───────────────────
     {
-        label: "Server Overview",
+        label: null,
         advanced: false,
         count: 1,
         items: (detail) => [
