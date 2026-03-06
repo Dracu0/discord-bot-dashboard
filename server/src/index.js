@@ -134,73 +134,85 @@ mongoose.connection.on('disconnected', () => {
     logger.warn('mongodb_disconnected');
 });
 
-// Session store in MongoDB
-const sessionMiddleware = session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-        client: mongoose.connection.getClient(),
-        collectionName: 'dashboard_sessions',
-        ttl: 7 * 24 * 60 * 60, // 7 days
-    }),
-    cookie: {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: IS_PRODUCTION,
-    },
-});
-app.use(sessionMiddleware);
+let sessionMiddleware = null;
+let appInitialized = false;
 
-// Passport (Discord OAuth2)
-configurePassport(passport, {
-    clientID: DISCORD_CLIENT_ID,
-    clientSecret: DISCORD_CLIENT_SECRET,
-    callbackURL: fullCallbackURL,
-});
-app.use(passport.initialize());
-app.use(passport.session());
+function initializeConnectedApp() {
+    if (appInitialized) {
+        return;
+    }
 
-// CSRF token endpoint — clients GET this before making state-changing requests
-app.get('/api/csrf-token', generateCsrfToken);
-
-// Apply CSRF protection to all state-changing API routes
-app.use('/api/auth', csrfProtection, authRoutes);
-app.use('/auth', csrfProtection, authRoutes);
-app.use('/api/users', csrfProtection, userRoutes);
-app.use('/api/guild', csrfProtection, guildRoutes);
-app.use('/api/guilds', csrfProtection, userRoutes);
-
-// Health check
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok' });
-});
-
-// --- Production: serve React build ---
-if (IS_PRODUCTION) {
-    const buildPath = path.join(__dirname, '../../build');
-    app.use(express.static(buildPath));
-
-    // SPA catch-all: any non-API route serves index.html (React Router handles client routing)
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(buildPath, 'index.html'));
+    // Session store in MongoDB
+    sessionMiddleware = session({
+        secret: SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+            client: mongoose.connection.getClient(),
+            collectionName: 'dashboard_sessions',
+            ttl: 7 * 24 * 60 * 60, // 7 days
+        }),
+        cookie: {
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: IS_PRODUCTION,
+        },
     });
-}
+    app.use(sessionMiddleware);
 
-// Error handler
-app.use((err, req, res, _next) => {
-    const log = req?.log || logger;
-    log.error('unhandled_server_error', { error: err });
-    const status = err.status || 500;
-    const message = IS_PRODUCTION ? 'Internal server error' : (err.message || 'Internal server error');
-    res.status(status).json({ error: message });
-});
+    // Passport (Discord OAuth2)
+    configurePassport(passport, {
+        clientID: DISCORD_CLIENT_ID,
+        clientSecret: DISCORD_CLIENT_SECRET,
+        callbackURL: fullCallbackURL,
+    });
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    // CSRF token endpoint — clients GET this before making state-changing requests
+    app.get('/api/csrf-token', generateCsrfToken);
+
+    // Apply CSRF protection to all state-changing API routes
+    app.use('/api/auth', csrfProtection, authRoutes);
+    app.use('/auth', csrfProtection, authRoutes);
+    app.use('/api/users', csrfProtection, userRoutes);
+    app.use('/api/guild', csrfProtection, guildRoutes);
+    app.use('/api/guilds', csrfProtection, userRoutes);
+
+    // Health check
+    app.get('/health', (req, res) => {
+        res.json({ status: 'ok' });
+    });
+
+    // --- Production: serve React build ---
+    if (IS_PRODUCTION) {
+        const buildPath = path.join(__dirname, '../../build');
+        app.use(express.static(buildPath));
+
+        // SPA catch-all: any non-API route serves index.html (React Router handles client routing)
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(buildPath, 'index.html'));
+        });
+    }
+
+    // Error handler
+    app.use((err, req, res, _next) => {
+        const log = req?.log || logger;
+        log.error('unhandled_server_error', { error: err });
+        const status = err.status || 500;
+        const message = IS_PRODUCTION ? 'Internal server error' : (err.message || 'Internal server error');
+        res.status(status).json({ error: message });
+    });
+
+    appInitialized = true;
+}
 
 let server = null;
 
 async function startServer() {
     await connectWithRetry();
+    initializeConnectedApp();
 
     server = app.listen(PORT, '0.0.0.0', () => {
         logger.info('server_started', {
