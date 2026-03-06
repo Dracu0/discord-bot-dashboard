@@ -49,8 +49,13 @@ export function OptionPanel({ value, onChange, option, error }) {
 
   return (
         <Card className="rounded-[28px] border border-(--border-subtle) bg-[linear-gradient(180deg,var(--surface-card)_0%,var(--surface-primary)_100%)] p-5 shadow-(--shadow-sm) md:p-6">
-            <div className={cn("h-full", inline ? "flex items-start justify-between gap-5" : "space-y-4") }>
-                <div className="min-w-0 flex-1">
+            <div className={cn(
+                "h-full text-left",
+                inline
+                    ? "flex flex-col items-start gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-5"
+                    : "space-y-4"
+            )}>
+                <div className="min-w-0 flex-1 text-left">
                     <div className="space-y-2">
                         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--text-muted)">
                             {inline ? "Toggle" : "Configuration"}
@@ -77,7 +82,7 @@ export function OptionPanel({ value, onChange, option, error }) {
                     )}
                 </div>
 
-                {inline && <div className="shrink-0 pt-1">{input}</div>}
+                                {inline && <div className="shrink-0 self-start pt-1 sm:pt-0">{input}</div>}
             </div>
     </Card>
   );

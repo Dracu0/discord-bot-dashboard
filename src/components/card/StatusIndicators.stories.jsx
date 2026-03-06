@@ -23,7 +23,7 @@ function ActiveUsersPresentation({ users }) {
                                     </AvatarFallback>
                                 </Avatar>
                             </TooltipTrigger>
-                            <TooltipContent>{`${u.username} — ${u.page || "?"}`}</TooltipContent>
+                            <TooltipContent>{`${u.username} ï¿½ ${u.page || "?"}`}</TooltipContent>
                         </Tooltip>
                     ))}
                     {users.length > 5 && (
@@ -52,8 +52,9 @@ function BotStatusPresentation({ status, ping }) {
         idle: { variant: "yellow", label: "Idle" },
         dnd: { variant: "red", label: "Busy" },
         offline: { variant: "secondary", label: "Offline" },
+        unknown: { variant: "secondary", label: "Status unknown" },
     };
-    const cfg = STATUS_MAP[status] || STATUS_MAP.offline;
+    const cfg = STATUS_MAP[status] || STATUS_MAP.unknown;
     return (
         <div className="flex items-center gap-2">
             <TooltipProvider>
@@ -65,13 +66,15 @@ function BotStatusPresentation({ status, ping }) {
                                 status === "online" && "bg-emerald-500",
                                 status === "idle" && "bg-amber-500",
                                 status === "dnd" && "bg-red-500",
-                                (!status || status === "offline") && "bg-gray-500",
+                                (!status || status === "offline" || status === "unknown") && "bg-gray-500",
                             )} />
                             {cfg.label}
                         </Badge>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">
-                        {ping != null ? `Ping: ${ping}ms` : "No data yet"}
+                        {status && status !== "unknown"
+                            ? (ping != null ? `Ping: ${ping}ms` : "Live status received")
+                            : "Waiting for live bot telemetry"}
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
@@ -89,6 +92,7 @@ export const BotOnline = () => <BotStatusPresentation status="online" ping={42} 
 export const BotIdle = () => <BotStatusPresentation status="idle" ping={120} />;
 export const BotBusy = () => <BotStatusPresentation status="dnd" ping={300} />;
 export const BotOffline = () => <BotStatusPresentation status="offline" />;
+export const BotUnknown = () => <BotStatusPresentation status="unknown" />;
 
 const sampleUsers = [
     { userId: "1", username: "Alice", avatar: null, page: "Dashboard" },
