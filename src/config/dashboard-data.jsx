@@ -2,6 +2,42 @@ import { DataTypes } from "../variables/type";
 import React from "react";
 import { Locale } from "../utils/Language";
 
+function toTitleLabel(value) {
+    return String(value || "")
+        .replace(/[._-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function shortenDiscordId(value) {
+    if (!value) return "—";
+    const text = String(value);
+    if (text.length <= 10) return text;
+    return `${text.slice(0, 4)}…${text.slice(-4)}`;
+}
+
+function ModerationIdCell({ value, label }) {
+    return (
+        <div className="min-w-0 max-w-40">
+            <span className="block text-[11px] uppercase tracking-[0.12em] text-(--text-muted) mb-1">
+                {label}
+            </span>
+            <span
+                className="inline-flex items-center rounded-full px-2.5 py-1 text-sm font-semibold"
+                style={{
+                    background: "var(--surface-secondary)",
+                    color: "var(--text-primary)",
+                    fontFamily: "var(--font-mono)",
+                }}
+                title={value || "—"}
+            >
+                {shortenDiscordId(value)}
+            </span>
+        </div>
+    );
+}
+
 /**
  * Dashboard data rows for the bot - uses real data from the backend
  *
@@ -140,32 +176,26 @@ export const dashboardData = [
                                         color: "var(--accent-primary)",
                                     }}
                                 >
-                                    {value || "—"}
+                                    {toTitleLabel(value) || "—"}
                                 </span>
                             ),
                         },
                         {
                             header: "Target",
                             accessor: "targetId",
-                            wrapper: (value) => (
-                                <div className="min-w-0">
-                                    <span className="block text-sm font-semibold text-(--text-primary) truncate">{value || "—"}</span>
-                                </div>
-                            ),
+                            wrapper: (value) => <ModerationIdCell value={value} label="User ID" />,
                         },
                         {
                             header: "Moderator",
                             accessor: "moderatorId",
-                            wrapper: (value) => (
-                                <span className="text-sm font-medium text-(--text-secondary)">{value || "—"}</span>
-                            ),
+                            wrapper: (value) => <ModerationIdCell value={value} label="Moderator" />,
                         },
                         {
                             header: "Reason",
                             accessor: "reason",
                             wrapper: (value) => (
                                 <div className="max-w-56">
-                                    <span className="block text-sm text-(--text-secondary) line-clamp-2">{value || "No reason provided"}</span>
+                                    <span className="block text-sm font-medium text-(--text-primary) line-clamp-2">{value || "No reason provided"}</span>
                                 </div>
                             ),
                         },
