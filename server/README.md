@@ -42,7 +42,8 @@ In your [Discord Developer Portal](https://discord.com/developers/applications):
 
 1. Go to your application → OAuth2
 2. Add redirect URL: `http://localhost:8080/auth/discord/callback`
-3. Copy Client ID and Client Secret to your `.env`
+3. For Fly.io / production, also add: `https://discord-bot-dashboard.fly.dev/auth/discord/callback`
+4. Copy Client ID and Client Secret to your `.env`
 
 ### 4. Update Frontend Config
 
@@ -67,10 +68,10 @@ npm start
 
 | Method | Path                     | Description       |
 | ------ | ------------------------ | ----------------- |
-| `HEAD` | `/auth`                  | Check auth status |
-| `GET`  | `/auth/discord`          | Start OAuth2 flow |
-| `GET`  | `/auth/discord/callback` | OAuth2 callback   |
-| `POST` | `/auth/signout`          | Sign out          |
+| `HEAD` | `/auth` or `/api/auth`                  | Check auth status |
+| `GET`  | `/auth/discord` or `/api/auth/discord`          | Start OAuth2 flow |
+| `GET`  | `/auth/discord/callback` or `/api/auth/discord/callback` | OAuth2 callback   |
+| `POST` | `/auth/signout` or `/api/auth/signout`          | Sign out          |
 
 ### User
 

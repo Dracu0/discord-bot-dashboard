@@ -37,7 +37,7 @@ const {
     PORT = 8080,
     SESSION_SECRET,
     DASHBOARD_URL = IS_PRODUCTION ? '' : 'http://localhost:3000',
-    CALLBACK_URL = IS_PRODUCTION ? '/api/auth/discord/callback' : 'http://localhost:8080/api/auth/discord/callback',
+    CALLBACK_URL = IS_PRODUCTION ? '/auth/discord/callback' : 'http://localhost:8080/auth/discord/callback',
     APP_URL, // e.g. https://my-dashboard.fly.dev — set in Fly.io secrets
 } = process.env;
 
@@ -87,6 +87,7 @@ const authLimiter = rateLimit({ windowMs: 60000, max: 20, standardHeaders: true,
 const guildLimiter = rateLimit({ windowMs: 60000, max: 60, standardHeaders: true, legacyHeaders: false });
 const userLimiter = rateLimit({ windowMs: 60000, max: 30, standardHeaders: true, legacyHeaders: false });
 app.use('/api/auth', authLimiter);
+app.use('/auth', authLimiter);
 app.use('/api/guild', guildLimiter);
 app.use('/api/guilds', userLimiter);
 app.use('/api/users', userLimiter);
@@ -167,6 +168,7 @@ app.get('/api/csrf-token', generateCsrfToken);
 
 // Apply CSRF protection to all state-changing API routes
 app.use('/api/auth', csrfProtection, authRoutes);
+app.use('/auth', csrfProtection, authRoutes);
 app.use('/api/users', csrfProtection, userRoutes);
 app.use('/api/guild', csrfProtection, guildRoutes);
 app.use('/api/guilds', csrfProtection, userRoutes);
