@@ -63,12 +63,12 @@ function NotificationItem({ notification, isRead, onMarkRead }) {
         opacity: isRead ? 0.6 : 1,
       }}
     >
-      <IconComp className={`h-[18px] w-[18px] shrink-0 ${cfg.dotClass}`} />
-      <span className="text-sm text-[var(--text-primary)] flex-1 line-clamp-1">
+      <IconComp className={`h-4.5 w-4.5 shrink-0 ${cfg.dotClass}`} />
+      <span className="text-sm text-(--text-primary) flex-1 line-clamp-1">
         {notification.message}
       </span>
       {notification.time && (
-        <span className="text-xs text-[var(--text-secondary)] whitespace-nowrap">
+        <span className="text-xs text-(--text-secondary) whitespace-nowrap">
           {new Date(notification.time).toLocaleDateString()}
         </span>
       )}
@@ -129,7 +129,7 @@ export default function NotificationFeed() {
   if (isError) {
     return (
       <div className="mb-6">
-        <span className="text-sm text-[var(--status-error)] font-medium">
+        <span className="text-sm text-(--status-error) font-medium">
           <Locale zh="無法加載通知" en="Failed to load notifications." />
         </span>
       </div>
@@ -142,7 +142,7 @@ export default function NotificationFeed() {
     <div className="mb-6">
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5">
-          <span className="text-sm font-semibold text-[var(--text-primary)] font-['Space_Grotesk'] tracking-tight">
+          <span className="text-sm font-semibold text-(--text-primary) font-['Space_Grotesk'] tracking-tight">
             <Locale zh="通知" en="Notifications" />
           </span>
           {unreadCount > 0 && (

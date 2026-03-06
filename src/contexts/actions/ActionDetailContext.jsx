@@ -24,6 +24,9 @@ export function ActionDetailProvider({children}) {
 
     return <QueryHolderSkeleton query={query} count={2}>
         <ActionDetailContext.Provider value={{
+            tasks: [],
+            total: 0,
+            totalPages: 1,
             ...query.data,
             page,
             setPage,

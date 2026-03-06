@@ -75,10 +75,10 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
             >
               <Rocket className="h-8 w-8 text-violet-500" />
             </div>
-            <h3 className="text-[var(--text-primary)] font-['Space_Grotesk'] text-center m-0 text-lg font-semibold">
+            <h3 className="text-(--text-primary) font-['Space_Grotesk'] text-center m-0 text-lg font-semibold">
               <Locale zh="歡迎使用 Mocotron 儀表板！" en="Welcome to the Mocotron Dashboard!" />
             </h3>
-            <p className="text-[var(--text-secondary)] text-sm text-center max-w-[500px] m-0">
+            <p className="text-(--text-secondary) text-sm text-center max-w-125 m-0">
               <Locale
                 zh="看起來您還沒有為此伺服器配置任何功能。讓我們幫您快速設置！"
                 en="It looks like you haven't configured any features for this server yet. Let's get you set up quickly!"
@@ -101,7 +101,7 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
           icon={<Puzzle className="h-4 w-4" />}
         >
           <div className="py-4">
-            <p className="text-sm text-[var(--text-secondary)] mb-4 m-0">
+            <p className="text-sm text-(--text-secondary) mb-4 m-0">
               <Locale
                 zh="選擇要啟用的功能。您可以隨時在功能面板中更改。"
                 en="Select which features you'd like to enable. You can always change this later in the Features panel."
@@ -135,7 +135,7 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-semibold text-[var(--text-primary)] line-clamp-1">
+                        <span className="text-sm font-semibold text-(--text-primary) line-clamp-1">
                           {feat.name}
                         </span>
                         {feat.recommended && (
@@ -145,7 +145,7 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
                         )}
                       </div>
                       {feat.description && (
-                        <span className="text-xs text-[var(--text-secondary)] line-clamp-2 mt-0.5 block">
+                        <span className="text-xs text-(--text-secondary) line-clamp-2 mt-0.5 block">
                           {feat.description}
                         </span>
                       )}
@@ -182,10 +182,10 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
             >
               <Settings className="h-8 w-8 text-green-500" />
             </div>
-            <h3 className="text-[var(--text-primary)] font-['Space_Grotesk'] text-center m-0 text-lg font-semibold">
+            <h3 className="text-(--text-primary) font-['Space_Grotesk'] text-center m-0 text-lg font-semibold">
               <Locale zh="準備就緒！" en="You're All Set!" />
             </h3>
-            <p className="text-[var(--text-secondary)] text-sm text-center max-w-[500px] m-0">
+            <p className="text-(--text-secondary) text-sm text-center max-w-125 m-0">
               {selected.size > 0 ? (
                 <Locale
                   zh={`您選擇了 ${selected.size} 個功能。前往功能面板啟用並配置它們。`}
@@ -207,7 +207,7 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
                 {saving && (
                   <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                 )}
-                <Puzzle className="h-[18px] w-[18px] mr-2" />
+                <Puzzle className="h-4.5 w-4.5 mr-2" />
                 <Locale zh="前往功能面板" en="Go to Features" />
               </Button>
               <Button variant="outline" onClick={() => setStep(1)}>

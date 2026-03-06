@@ -10,7 +10,7 @@ export const CustomCommandsFeature = {
         />
     ),
     options: (values) => {
-        const commands = values.customCommands || [];
+        const commands = values?.customCommands || [];
         const entries = commands.map(
             (cmd) => `!${cmd.name} — ${cmd.response?.slice(0, 60) || "(no response)"}${cmd.response?.length > 60 ? "…" : ""}`
         );

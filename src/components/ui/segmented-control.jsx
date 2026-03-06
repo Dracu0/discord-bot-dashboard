@@ -1,7 +1,10 @@
 import { cn } from "lib/utils";
 
-function SegmentedControl({ value, onChange, data, className, size = "sm" }) {
-  const items = data.map((item) =>
+function SegmentedControl({ value, onChange, onValueChange, data, items: itemsProp, className, size = "sm" }) {
+  const resolvedData = data || itemsProp || [];
+  const resolvedOnChange = onChange || onValueChange;
+
+  const items = resolvedData.map((item) =>
     typeof item === "string" ? { value: item, label: item } : item
   );
 
@@ -17,7 +20,7 @@ function SegmentedControl({ value, onChange, data, className, size = "sm" }) {
         <button
           key={item.value}
           type="button"
-          onClick={() => onChange(item.value)}
+          onClick={() => resolvedOnChange(item.value)}
           className={cn(
             "relative inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-sm)] font-medium transition-all duration-150 cursor-pointer",
             sizes[size],

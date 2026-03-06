@@ -35,12 +35,12 @@ export default function ServerPicker({ query, ...rest }) {
         <Card className="mb-0 2xl:mb-5 gap-8" {...rest}>
             <div className="flex flex-col items-center">
                 <p
-                    className="text-[var(--text-primary)] font-bold text-2xl mt-2.5"
+                    className="text-(--text-primary) font-bold text-2xl mt-2.5"
                     style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                 >
                     <Locale zh="您的服務器" en="Your Servers" />
                 </p>
-                <p className="text-[var(--text-secondary)] text-base">
+                <p className="text-(--text-secondary) text-base">
                     <Locale
                         zh={`把${config.name}邀請到你的服務器, 並且客製化你的機器人`}
                         en={`Invite ${config.name} to Your Server, And Customize the bot`}
@@ -68,13 +68,13 @@ export default function ServerPicker({ query, ...rest }) {
 
 function Servers({ includes, guilds, sortBy }) {
     const filtered = useMemo(() => {
-        const matched = guilds.filter((server) => includes(server.name));
+        const matched = (guilds || []).filter((server) => includes(server.name));
         return sortGuilds(matched, sortBy);
     }, [guilds, includes, sortBy]);
 
     if (filtered.length === 0) {
         return (
-            <p className="text-[var(--text-muted)] text-sm text-center py-5">
+            <p className="text-(--text-muted) text-sm text-center py-5">
                 <Locale zh="沒有找到服務器" en="No servers found" />
             </p>
         );

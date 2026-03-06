@@ -36,7 +36,7 @@ function FeaturePanel() {
         <div className="flex flex-col mb-2.5">
             {canToggle && !enabled && (
                 <div
-                    className="px-4 py-3 mb-4 text-sm font-semibold rounded-[var(--radius-md)] border"
+                    className="px-4 py-3 mb-4 text-sm font-semibold rounded-md border"
                     style={{
                         backgroundColor: "var(--status-warning-bg)",
                         color: "var(--status-warning)",
@@ -69,7 +69,7 @@ function FeatureConfigPanel({ detail, enabled }) {
 
     const client = useQueryClient()
     const options = useMemo(
-        () => info.options(values, state),
+        () => info.options(values || {}, state),
         [info.id, values]
     )
 

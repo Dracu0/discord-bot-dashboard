@@ -19,7 +19,10 @@ export function FeaturesProvider({children}) {
 
   return (
     <QueryHolderSkeleton query={query} height={180} count={4}>
-        <FeaturesContext.Provider value={query.data}>
+        <FeaturesContext.Provider value={{
+            ...query.data,
+            enabled: query.data?.enabled || [],
+        }}>
           {children}
         </FeaturesContext.Provider>
     </QueryHolderSkeleton>

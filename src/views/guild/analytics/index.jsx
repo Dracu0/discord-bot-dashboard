@@ -28,14 +28,14 @@ const PERIOD_OPTIONS = [
 function StatCard({ label, value, sublabel, color = "brand" }) {
     return (
         <Card className="flex flex-col p-5">
-            <span className="text-xs uppercase font-bold text-[var(--text-secondary)]">
+            <span className="text-xs uppercase font-bold text-(--text-secondary)">
                 {label}
             </span>
-            <h2 className="text-2xl font-bold text-[var(--text-primary)] mt-1">
+            <h2 className="text-2xl font-bold text-(--text-primary) mt-1">
                 {value ?? "\u2014"}
             </h2>
             {sublabel && (
-                <span className="text-xs text-[var(--text-secondary)] mt-1">
+                <span className="text-xs text-(--text-secondary) mt-1">
                     {sublabel}
                 </span>
             )}
@@ -73,7 +73,7 @@ function ModerationTimeline({ data = [] }) {
     if (data.length === 0) {
         return (
             <div className="flex items-center justify-center py-10">
-                <span className="text-[var(--text-secondary)] text-sm">
+                <span className="text-(--text-secondary) text-sm">
                     <Locale zh="\u6b64\u6642\u6bb5\u7121\u5be9\u6838\u8a18\u9304" en="No moderation actions in this period" />
                 </span>
             </div>
@@ -147,7 +147,7 @@ function SuggestionFunnel({ data = [] }) {
     if (total === 0) {
         return (
             <div className="flex items-center justify-center py-10">
-                <span className="text-[var(--text-secondary)] text-sm">
+                <span className="text-(--text-secondary) text-sm">
                     <Locale zh="\u7121\u5efa\u8b70\u8cc7\u6599" en="No suggestion data" />
                 </span>
             </div>
@@ -162,14 +162,14 @@ function SuggestionFunnel({ data = [] }) {
                         <Badge variant={statusVariants[d.status] || "secondary"} className="text-xs">
                             {d.status}
                         </Badge>
-                        <span className="text-sm text-[var(--text-primary)]">{d.count}</span>
+                        <span className="text-sm text-(--text-primary)">{d.count}</span>
                     </div>
-                    <span className="text-xs text-[var(--text-secondary)]">
+                    <span className="text-xs text-(--text-secondary)">
                         {((d.count / total) * 100).toFixed(1)}%
                     </span>
                 </div>
             ))}
-            <span className="text-xs text-[var(--text-secondary)] text-center mt-1.5">
+            <span className="text-xs text-(--text-secondary) text-center mt-1.5">
                 <Locale zh={`\u5171 ${total} \u7b46\u5efa\u8b70`} en={`${total} total suggestions`} />
             </span>
         </div>
@@ -198,7 +198,7 @@ export default function Analytics() {
 
     if (query.isLoading) {
         return (
-            <div className="flex items-center justify-center h-[400px]" style={{ paddingTop: "80px" }}>
+            <div className="flex items-center justify-center h-100" style={{ paddingTop: "80px" }}>
                 <Spinner size="lg" />
             </div>
         );
@@ -221,9 +221,9 @@ export default function Analytics() {
         <div style={{ paddingTop: "80px" }}>
             <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
                 <div className="flex items-center gap-2">
-                    <BarChart3 size={28} className="text-[var(--accent-primary)]" />
+                    <BarChart3 size={28} className="text-(--accent-primary)" />
                     <h2
-                        className="text-2xl font-bold text-[var(--text-primary)]"
+                        className="text-2xl font-bold text-(--text-primary)"
                         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                     >
                         <Locale zh="\u6578\u64da\u5206\u6790" en="Analytics" />
@@ -262,48 +262,48 @@ export default function Analytics() {
             {/* Charts Row 1 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
                 <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                    <span className="text-lg font-bold text-(--text-primary) mb-3">
                         <Locale zh="\u5be9\u6838\u8da8\u52e2" en="Moderation Trend" />
                     </span>
-                    <ModerationTimeline data={data.moderation?.byDay} />
+                    <ModerationTimeline data={data.moderation?.byDay || []} />
                 </Card>
 
                 <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                    <span className="text-lg font-bold text-(--text-primary) mb-3">
                         <Locale zh="\u64cd\u4f5c\u985e\u578b\u5206\u4f48" en="Action Type Breakdown" />
                     </span>
-                    <ActionBreakdown data={data.moderation?.byType} />
+                    <ActionBreakdown data={data.moderation?.byType || []} />
                 </Card>
             </div>
 
             {/* Charts Row 2 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
                 <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                    <span className="text-lg font-bold text-(--text-primary) mb-3">
                         <Locale zh="\u7b49\u7d1a\u5206\u4f48" en="Level Distribution" />
                     </span>
-                    <LevelDistribution data={data.xp?.levelDistribution} />
+                    <LevelDistribution data={data.xp?.levelDistribution || []} />
                 </Card>
 
                 <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                    <span className="text-lg font-bold text-(--text-primary) mb-3">
                         <Locale zh="\u5efa\u8b70\u72c0\u614b" en="Suggestion Status" />
                     </span>
-                    <SuggestionFunnel data={data.suggestions?.byStatus} />
+                    <SuggestionFunnel data={data.suggestions?.byStatus || []} />
                 </Card>
             </div>
 
             {/* Audit Activity */}
             {(data.audit?.byCategory || []).length > 0 && (
                 <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                    <span className="text-lg font-bold text-(--text-primary) mb-3">
                         <Locale zh="\u5100\u8868\u677f\u64cd\u4f5c\u8a18\u9304" en="Dashboard Activity" />
                     </span>
                     <div className="flex items-center gap-4 flex-wrap">
                         {(data.audit?.byCategory || []).map(d => (
                             <div key={d.category} className="flex items-center gap-1.5">
                                 <Badge variant="secondary" className="text-base">{d.category}</Badge>
-                                <span className="text-lg font-bold text-[var(--text-primary)]">{d.count}</span>
+                                <span className="text-lg font-bold text-(--text-primary)">{d.count}</span>
                             </div>
                         ))}
                     </div>

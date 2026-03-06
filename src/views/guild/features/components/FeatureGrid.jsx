@@ -12,7 +12,7 @@ export default function FeatureGrid() {
     return (
         <div className="flex flex-col gap-5">
             <span
-                className="text-[var(--text-primary)] text-2xl font-bold ms-6 mt-11"
+                className="text-(--text-primary) text-2xl font-bold ms-6 mt-11"
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
             >
                 <Locale zh="功能列表" en="Features List" />
@@ -41,6 +41,7 @@ function FeatureWithToggle({ id, feature, enabled }) {
 
 function Features() {
     const { enabled } = useContext(FeaturesContext);
+    const safeEnabled = enabled || [];
 
     return Object.entries(config.features).map(([id, feature], index) => (
         <div
@@ -51,7 +52,7 @@ function Features() {
             )}
             style={{ animationDelay: `${index * 60}ms`, animationFillMode: "backwards" }}
         >
-            <FeatureWithToggle id={id} feature={feature} enabled={enabled.includes(id)} />
+            <FeatureWithToggle id={id} feature={feature} enabled={safeEnabled.includes(id)} />
         </div>
     ));
 }

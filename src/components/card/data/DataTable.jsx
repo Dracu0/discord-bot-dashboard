@@ -6,8 +6,8 @@ import Card from "components/card/Card";
 export default function DataTable({ name, data, columns }) {
   const tableInstance = useTable(
     {
-      columns,
-      data,
+      columns: columns || [],
+      data: data || [],
       initialState: { pageSize: 10 },
     },
     useGlobalFilter,
@@ -31,8 +31,8 @@ export default function DataTable({ name, data, columns }) {
   } = tableInstance;
 
   return (
-    <Card className="w-full !px-0 overflow-x-auto">
-      <span className="block ml-4 md:ml-[25px] text-[var(--text-primary)] text-[22px] font-bold leading-none">
+    <Card className="w-full px-0! overflow-x-auto">
+      <span className="block ml-4 md:ml-6.25 text-(--text-primary) text-[22px] font-bold leading-none">
         {name}
       </span>
       <table {...getTableProps()} className="w-full mb-6">
@@ -87,7 +87,7 @@ export default function DataTable({ name, data, columns }) {
                     <td
                       {...cell.getCellProps()}
                       key={i}
-                      className="text-[var(--text-primary)] text-sm min-w-[150px] border-none"
+                      className="text-(--text-primary) text-sm min-w-37.5 border-none"
                     >
                       {cell.column.wrapper ? (
                         cell.column.wrapper(cell.value)
@@ -107,8 +107,8 @@ export default function DataTable({ name, data, columns }) {
 
       {/* Pagination controls */}
       {pageCount > 1 && (
-        <div className="flex justify-between items-center px-4 md:px-[25px] py-3">
-          <span className="text-sm text-[var(--text-muted)]">
+        <div className="flex justify-between items-center px-4 md:px-6.25 py-3">
+          <span className="text-sm text-(--text-muted)">
             Page {pageIndex + 1} of {pageCount}
           </span>
           <div className="flex items-center gap-1">
