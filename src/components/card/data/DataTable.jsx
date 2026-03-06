@@ -1,9 +1,13 @@
 import React from "react";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, TableProperties } from "lucide-react";
 import Card from "components/card/Card";
+import { Badge } from "components/ui/badge";
+import { Button } from "components/ui/button";
+import { useTranslation } from "utils/Language";
 
-export default function DataTable({ name, data, columns }) {
+export default function DataTable({ name, data, columns, description }) {
+  const { t } = useTranslation();
   const tableInstance = useTable(
     {
       columns: columns || [],
@@ -24,18 +28,29 @@ export default function DataTable({ name, data, columns }) {
     canPreviousPage,
     canNextPage,
     pageCount,
-    gotoPage,
     nextPage,
     previousPage,
     state: { pageIndex },
   } = tableInstance;
 
   return (
-    <Card className="w-full px-0! overflow-x-auto">
-      <span className="block ml-4 md:ml-5 text-(--text-primary) text-lg font-bold leading-none">
-        {name}
-      </span>
-      <table {...getTableProps()} className="w-full mb-4">
+    <Card className="w-full px-0! overflow-hidden">
+      <div className="flex items-start justify-between gap-3 px-5 pb-4 border-b border-(--border-subtle)">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-(--text-primary) text-lg font-bold leading-none">
+              {name}
+            </span>
+            <Badge variant="secondary">{(data || []).length} {t("common.rows")}</Badge>
+          </div>
+          {description && (
+            <p className="mt-1 text-sm text-(--text-secondary)">{description}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="overflow-x-auto px-3 md:px-4 py-4">
+      <table {...getTableProps()} className="w-full min-w-160 border-separate border-spacing-0">
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
@@ -43,20 +58,17 @@ export default function DataTable({ name, data, columns }) {
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   key={i}
-                  className="pr-2.5 cursor-pointer select-none"
-                  style={{
-                    borderColor: "var(--border-subtle)",
-                    background: "var(--surface-secondary)",
-                  }}
+                  className="px-3 md:px-4 py-3 cursor-pointer select-none text-left border-y border-(--border-subtle) bg-(--surface-secondary) first:rounded-s-xl first:border-s last:rounded-e-xl last:border-e"
                 >
-                  <div className="flex justify-between items-center text-[10px] lg:text-xs text-gray-400 font-bold">
-                    {column.render("header")}
-                    {column.isSorted &&
-                      (column.isSortedDesc ? (
-                        <ArrowDown className="h-3 w-3 ml-1" />
+                  <div className="flex justify-between items-center gap-2 text-[11px] lg:text-xs text-(--text-muted) font-bold uppercase tracking-[0.12em]">
+                    <span>{column.render("header")}</span>
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <ArrowDown className="h-3.5 w-3.5 shrink-0" />
                       ) : (
-                        <ArrowUp className="h-3 w-3 ml-1" />
-                      ))}
+                        <ArrowUp className="h-3.5 w-3.5 shrink-0" />
+                      )
+                    ) : null}
                   </div>
                 </th>
               ))}
@@ -67,9 +79,15 @@ export default function DataTable({ name, data, columns }) {
           {page.length === 0 ? (
             <tr>
               <td colSpan={columns.length} className="border-none">
-                <div className="flex justify-center py-8">
-                  <span className="text-muted-foreground text-base">
-                    No data available
+                <div className="flex flex-col items-center justify-center py-10 gap-2 text-center">
+                  <div className="rounded-full bg-(--surface-secondary) p-3">
+                    <TableProperties className="h-5 w-5 text-(--accent-primary)" />
+                  </div>
+                  <span className="text-(--text-primary) text-base font-semibold">
+                    {t("common.noData")}
+                  </span>
+                  <span className="text-sm text-(--text-muted)">
+                    {t("common.tableEmptyHint")}
                   </span>
                 </div>
               </td>
@@ -81,18 +99,19 @@ export default function DataTable({ name, data, columns }) {
                 <tr
                   {...row.getRowProps()}
                   key={index}
-                  style={{ background: index % 2 === 1 ? "var(--surface-secondary)" : "transparent" }}
+                  className="transition-colors hover:bg-(--surface-secondary)/70"
+                  style={{ background: index % 2 === 1 ? "color-mix(in srgb, var(--surface-secondary) 70%, transparent)" : "transparent" }}
                 >
                   {row.cells.map((cell, i) => (
                     <td
                       {...cell.getCellProps()}
                       key={i}
-                      className="text-(--text-primary) text-sm min-w-24 border-none"
+                      className="text-(--text-primary) text-sm min-w-24 border-b border-(--border-subtle) px-3 md:px-4 py-4 align-top"
                     >
                       {cell.column.wrapper ? (
                         cell.column.wrapper(cell.value)
                       ) : (
-                        <span className="text-base font-bold">
+                        <span className="text-sm md:text-[15px] font-semibold leading-6">
                           {cell.value}
                         </span>
                       )}
@@ -104,30 +123,35 @@ export default function DataTable({ name, data, columns }) {
           )}
         </tbody>
       </table>
+      </div>
 
       {/* Pagination controls */}
       {pageCount > 1 && (
-        <div className="flex justify-between items-center px-4 md:px-6.25 py-3">
+        <div className="flex justify-between items-center px-5 py-4 border-t border-(--border-subtle)">
           <span className="text-sm text-(--text-muted)">
-            Page {pageIndex + 1} of {pageCount}
+            {t("common.pageOf", { page: pageIndex + 1, total: pageCount })}
           </span>
           <div className="flex items-center gap-1">
-            <button
-              className="inline-flex items-center justify-center h-8 w-8 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:pointer-events-none"
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
               disabled={!canPreviousPage}
               onClick={() => previousPage()}
               aria-label="Previous page"
             >
               <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
-              className="inline-flex items-center justify-center h-8 w-8 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:pointer-events-none"
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
               disabled={!canNextPage}
               onClick={() => nextPage()}
               aria-label="Next page"
             >
               <ChevronRight className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
       )}

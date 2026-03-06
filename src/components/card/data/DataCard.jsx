@@ -62,13 +62,13 @@ export default function DataCard({name, value, type, ...optional}) {
             }
 
             case DataTypes.Table:{
-                const {columns} = optional
+                const {columns, description} = optional
 
                 if (optional.variant === "leaderboard") {
                     return <LeaderboardTable title={name} users={value} compact showViewAll description={optional.description} />
                 }
 
-                return <DataTable name={name} data={value} columns={columns} />
+                return <DataTable name={name} data={value} columns={columns} description={description} />
             }
 
             case DataTypes.Group: {

@@ -32,6 +32,29 @@ const SOURCE_COLORS = {
     bot: "orange",
 };
 
+function toTitleCase(value) {
+    return String(value || "")
+        .replace(/[._-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function formatSourceLabel(source) {
+    if (!source) return "Dashboard";
+    return toTitleCase(source);
+}
+
+function formatCategoryLabel(category) {
+    if (!category) return "General";
+    return toTitleCase(category);
+}
+
+function formatActionLabel(action) {
+    if (!action) return "Update";
+    return toTitleCase(action);
+}
+
 function DiffView({ before, after }) {
     if (before == null && after == null) return null;
 
@@ -54,46 +77,62 @@ function DiffView({ before, after }) {
 function AuditLogRow({ entry }) {
     const [expanded, setExpanded] = useState(false);
     const hasDiff = entry.before != null || entry.after != null;
+    const createdAt = entry.createdAt ? new Date(entry.createdAt) : null;
+    const source = entry.source || "dashboard";
+    const action = entry.action || "update";
+    const category = entry.category || "general";
+    const target = entry.target || entry.details || "—";
 
     return (
         <>
             <TableRow
+                className={hasDiff ? "cursor-pointer" : "cursor-default"}
                 style={{ cursor: hasDiff ? "pointer" : "default" }}
                 onClick={() => hasDiff && setExpanded(p => !p)}
             >
                 <TableCell>
-                    <span className="text-xs text-(--text-secondary)">
-                        {new Date(entry.createdAt).toLocaleString()}
-                    </span>
+                    <div className="min-w-34">
+                        <span className="block text-sm font-semibold text-(--text-primary)">
+                            {createdAt ? createdAt.toLocaleDateString() : "—"}
+                        </span>
+                        <span className="block text-xs text-(--text-muted)">
+                            {createdAt ? createdAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}
+                        </span>
+                    </div>
                 </TableCell>
                 <TableCell>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <span className="text-sm text-(--text-primary) font-medium">
-                                    {entry.actorTag || entry.actorId}
-                                </span>
+                                <div className="min-w-0 max-w-40">
+                                    <span className="block text-sm text-(--text-primary) font-semibold truncate">
+                                        {entry.actorTag || entry.actorId}
+                                    </span>
+                                    <span className="block text-xs text-(--text-muted) truncate">
+                                        {entry.actorId}
+                                    </span>
+                                </div>
                             </TooltipTrigger>
                             <TooltipContent>{entry.actorId}</TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
                 </TableCell>
                 <TableCell>
-                    <Badge variant={SOURCE_COLORS[entry.source] || "secondary"}>
-                        {entry.source}
+                    <Badge variant={SOURCE_COLORS[source] || "secondary"}>
+                        {formatSourceLabel(source)}
                     </Badge>
                 </TableCell>
                 <TableCell>
-                    <span className="text-sm text-(--text-primary)">{entry.category}</span>
+                    <span className="text-sm text-(--text-primary) font-medium">{formatCategoryLabel(category)}</span>
                 </TableCell>
                 <TableCell>
-                    <Badge variant={ACTION_COLORS[entry.action] || "secondary"}>
-                        {entry.action}
+                    <Badge variant={ACTION_COLORS[action] || "secondary"}>
+                        {formatActionLabel(action)}
                     </Badge>
                 </TableCell>
                 <TableCell>
-                    <span className="text-sm text-(--text-secondary) line-clamp-1">
-                        {entry.target || "\u2014"}
+                    <span className="text-sm text-(--text-secondary) line-clamp-2 block max-w-48">
+                        {target}
                     </span>
                 </TableCell>
                 <TableCell>
@@ -107,7 +146,7 @@ function AuditLogRow({ entry }) {
             {hasDiff && expanded && (
                 <TableRow>
                     <TableCell colSpan={7} className="p-0 border-none">
-                        <div className="p-3 bg-(--surface-secondary) rounded-sm">
+                        <div className="m-3 rounded-xl border border-(--border-subtle) bg-(--surface-secondary) p-4">
                             <span className="text-xs font-semibold text-(--text-secondary) mb-1 block">
                                 <Locale zh="\u8b8a\u66f4\u8a73\u60c5" en="Change Details" />
                             </span>
@@ -189,7 +228,7 @@ export default function AuditLogPage() {
             <Collapsible open={showFilters}>
                 <CollapsibleContent>
                     <Card className="p-4 mb-4 bg-(--surface-card)">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 flex-wrap">
                             <Select
                                 value={category || "__all__"}
                                 onValueChange={(val) => { setCategory(val === "__all__" ? null : val); setPage(1); }}
@@ -238,18 +277,18 @@ export default function AuditLogPage() {
 
             {entries.length > 0 && (
                 <>
-                    <div className="min-w-175 overflow-x-auto">
+                    <div className="overflow-x-auto rounded-xl border border-(--border-subtle) bg-(--surface-card) shadow-(--shadow-sm)">
                         <Table
-                            className="rounded-md overflow-hidden border border-(--border-subtle)"
+                            className="min-w-175 rounded-md overflow-hidden"
                         >
-                            <TableHeader>
+                            <TableHeader className="bg-(--surface-secondary)">
                                 <TableRow>
-                                    <TableHead><Locale zh="\u6642\u9593" en="Time" /></TableHead>
-                                    <TableHead><Locale zh="\u64cd\u4f5c\u8005" en="Actor" /></TableHead>
-                                    <TableHead><Locale zh="\u4f86\u6e90" en="Source" /></TableHead>
-                                    <TableHead><Locale zh="\u5206\u985e" en="Category" /></TableHead>
-                                    <TableHead><Locale zh="\u64cd\u4f5c" en="Action" /></TableHead>
-                                    <TableHead><Locale zh="\u76ee\u6a19" en="Target" /></TableHead>
+                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u6642\u9593" en="Time" /></TableHead>
+                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u64cd\u4f5c\u8005" en="Actor" /></TableHead>
+                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u4f86\u6e90" en="Source" /></TableHead>
+                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u5206\u985e" en="Category" /></TableHead>
+                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u64cd\u4f5c" en="Action" /></TableHead>
+                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u76ee\u6a19" en="Target" /></TableHead>
                                     <TableHead className="w-10" />
                                 </TableRow>
                             </TableHeader>

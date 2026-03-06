@@ -127,20 +127,60 @@ export const dashboardData = [
                 {
                     name: <Locale en="Recent Mod Actions" />,
                     type: DataTypes.Table,
+                    description: <Locale en="A quick snapshot of the latest moderation events across your server." />,
                     columns: [
-                        { header: "Action", accessor: "action" },
-                        { header: "Target", accessor: "targetId" },
-                        { header: "Moderator", accessor: "moderatorId" },
-                        { header: "Reason", accessor: "reason" },
+                        {
+                            header: "Action",
+                            accessor: "action",
+                            wrapper: (value) => (
+                                <span
+                                    className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold"
+                                    style={{
+                                        background: "var(--sidebar-active)",
+                                        color: "var(--accent-primary)",
+                                    }}
+                                >
+                                    {value || "—"}
+                                </span>
+                            ),
+                        },
+                        {
+                            header: "Target",
+                            accessor: "targetId",
+                            wrapper: (value) => (
+                                <div className="min-w-0">
+                                    <span className="block text-sm font-semibold text-(--text-primary) truncate">{value || "—"}</span>
+                                </div>
+                            ),
+                        },
+                        {
+                            header: "Moderator",
+                            accessor: "moderatorId",
+                            wrapper: (value) => (
+                                <span className="text-sm font-medium text-(--text-secondary)">{value || "—"}</span>
+                            ),
+                        },
+                        {
+                            header: "Reason",
+                            accessor: "reason",
+                            wrapper: (value) => (
+                                <div className="max-w-56">
+                                    <span className="block text-sm text-(--text-secondary) line-clamp-2">{value || "No reason provided"}</span>
+                                </div>
+                            ),
+                        },
                         {
                             header: "Date",
                             accessor: "createdAt",
                             wrapper: (v) => (
-                                <span>
-                                    {v
-                                        ? new Date(v).toLocaleDateString()
-                                        : "—"}
-                                </span>
+                                <div className="min-w-28">
+                                    <span className="block text-sm font-medium text-(--text-primary)">
+                                        {v ? new Date(v).toLocaleDateString() : "—"}
+                                    </span>
+                                    <span className="block text-xs text-(--text-muted)">
+                                        {v ? new Date(v).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}
+                                    </span>
+                                </div>
                             ),
                         },
                     ],
