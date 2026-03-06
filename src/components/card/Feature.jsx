@@ -8,6 +8,7 @@ import { Locale, useLocale } from "../../utils/Language";
 import { Button } from "components/ui/button";
 import { Switch } from "components/ui/switch";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
+import { Badge } from "components/ui/badge";
 
 export default function Feature({ banner, name, description, id: featureId, enabled, canToggle, onToggle, isToggling }) {
   const { id: serverId } = useContext(GuildContext);
@@ -26,7 +27,7 @@ export default function Feature({ banner, name, description, id: featureId, enab
   return (
     <Card
       variant="flush"
-      className="flex flex-row no-underline transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-(--shadow-md)"
+      className="group flex flex-row no-underline transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-(--shadow-md)"
       style={{
         opacity: canToggle && !enabled ? 0.7 : 1,
       }}
@@ -43,17 +44,20 @@ export default function Feature({ banner, name, description, id: featureId, enab
           }}
         />
 
-        <div className="flex min-w-0 flex-1 items-center justify-between gap-4 px-4 py-4 md:px-5">
-          <div className="flex flex-col gap-1 flex-1 min-w-0">
-            <h4
-              className="text-(--text-primary) font-['Space_Grotesk'] leading-[1.3] truncate m-0 text-base font-semibold"
-            >
-              {locale(name)}
-            </h4>
+        <div className="flex min-w-0 flex-1 flex-col gap-4 px-4 py-4 md:flex-row md:items-start md:justify-between md:px-5 md:py-5">
+          <div className="flex min-w-0 flex-1 flex-col gap-2.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <h4 className="m-0 font-['Space_Grotesk'] text-lg font-semibold leading-tight text-(--text-primary) md:text-[19px]">
+                {locale(name)}
+              </h4>
+              <Badge variant={enabled ? "green" : "secondary"} className="rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.14em]">
+                {enabled ? <Locale zh="已啟用" en="Enabled" /> : <Locale zh="未啟用" en="Disabled" />}
+              </Badge>
+            </div>
             <TooltipProvider>
               <Tooltip delayDuration={500}>
                 <TooltipTrigger asChild>
-                  <p className="text-(--text-secondary) text-sm font-normal leading-[1.5] line-clamp-1 m-0">
+                  <p className="m-0 max-w-3xl text-sm leading-6 text-(--text-secondary) line-clamp-2">
                     {description}
                   </p>
                 </TooltipTrigger>
@@ -64,7 +68,7 @@ export default function Feature({ banner, name, description, id: featureId, enab
             </TooltipProvider>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2 self-stretch">
+          <div className="flex shrink-0 flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center md:pt-0.5">
             {canToggle && (
               <Switch
                 checked={enabled}
@@ -77,10 +81,10 @@ export default function Feature({ banner, name, description, id: featureId, enab
                   onToggle?.(!enabled);
                 }}
                 disabled={isToggling}
-                className="scale-90"
+                className="scale-90 self-start sm:self-center"
               />
             )}
-            <Button size="sm" className="h-9 rounded-md px-3 text-sm font-medium">
+            <Button size="sm" className="h-10 rounded-full px-4 text-sm font-medium shadow-(--shadow-xs)">
               <Locale zh="配置" en="Configure" />
             </Button>
           </div>

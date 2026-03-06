@@ -12,6 +12,7 @@ import ImageField from "./impl/ImageField";
 import EmojiField from "./impl/EmojiField";
 import PairField from "./complex/PairField";
 import { OptionTypes } from "../../variables/type";
+import { cn } from "lib/utils";
 
 const PREVIEW_TYPE = "preview";
 
@@ -47,26 +48,37 @@ export function OptionPanel({ value, onChange, option, error }) {
   const inline = option.type === OptionTypes.Boolean;
 
   return (
-    <Card className={inline ? "flex flex-row-reverse gap-5" : "flex flex-col gap-5"}>
-      <div className="h-full">
-        <p className="text-lg font-bold mb-1 text-(--text-primary)">
-          {option.name}
-        </p>
-        {option.description && (
-          <p className="mb-4 text-(--text-primary)">{option.description}</p>
-        )}
-        {input}
-        {option.helper && (
-          <p className="text-xs text-(--text-muted) mt-1">
-            {option.helper}
-          </p>
-        )}
-        {error && (
-          <p className="text-xs text-(--status-error) mt-1">
-            {error}
-          </p>
-        )}
-      </div>
+        <Card className="rounded-[28px] border border-(--border-subtle) bg-[linear-gradient(180deg,var(--surface-card)_0%,var(--surface-primary)_100%)] p-5 shadow-(--shadow-sm) md:p-6">
+            <div className={cn("h-full", inline ? "flex items-start justify-between gap-5" : "space-y-4") }>
+                <div className="min-w-0 flex-1">
+                    <div className="space-y-2">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--text-muted)">
+                            {inline ? "Toggle" : "Configuration"}
+                        </p>
+                        <p className="font-['Space_Grotesk'] text-xl font-semibold leading-tight text-(--text-primary)">
+                            {option.name}
+                        </p>
+                        {option.description && (
+                            <p className="text-sm leading-6 text-(--text-secondary)">{option.description}</p>
+                        )}
+                    </div>
+
+                    {!inline && <div className="pt-1">{input}</div>}
+
+                    {option.helper && (
+                        <p className="mt-3 text-xs leading-5 text-(--text-muted)">
+                            {option.helper}
+                        </p>
+                    )}
+                    {error && (
+                        <p className="mt-2 text-xs font-medium leading-5 text-(--status-error)">
+                            {error}
+                        </p>
+                    )}
+                </div>
+
+                {inline && <div className="shrink-0 pt-1">{input}</div>}
+            </div>
     </Card>
   );
 }
