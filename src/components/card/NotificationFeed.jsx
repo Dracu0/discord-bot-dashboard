@@ -1,27 +1,16 @@
 import React, { useContext, useMemo, useState } from "react";
-import { Badge } from "components/ui/badge";
-import { Button } from "components/ui/button";
-import { SegmentedControl } from "components/ui/segmented-control";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
+import { BellRing, Sparkles } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "api/internal";
 import { GuildContext } from "contexts/guild/GuildContext";
-import { AlertCircle, Shield, CircleCheck, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Locale, useLocale } from "utils/Language";
+import Card from "components/card/Card";
+import { Badge } from "components/ui/badge";
+import { Button } from "components/ui/button";
+import { SegmentedControl } from "components/ui/segmented-control";
+import { NotificationItem, getNotificationVariant } from "components/menu/NotificationItem";
 
-const TYPE_CONFIG = {
-  info: { icon: AlertCircle, color: "blue", dotClass: "text-blue-400", label: "Info" },
-  moderation: { icon: Shield, color: "orange", dotClass: "text-orange-400", label: "Mod" },
-  success: { icon: CircleCheck, color: "green", dotClass: "text-green-400", label: "OK" },
-};
-
-const BADGE_COLOR_CLASSES = {
-  blue: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  orange: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-  green: "bg-green-500/20 text-green-400 border-green-500/30",
-};
-
-const COLLAPSED_COUNT = 5;
+const COLLAPSED_COUNT = 4;
 
 function useReadState(serverId) {
   const key = `notif_read_${serverId}`;
@@ -51,49 +40,15 @@ function useReadState(serverId) {
   return { readIds, markRead, markAllRead };
 }
 
-function NotificationItem({ notification, isRead, onMarkRead }) {
-  const cfg = TYPE_CONFIG[notification.type] || TYPE_CONFIG.info;
-  const IconComp = cfg.icon;
+function buildNotificationId(notification, index) {
+  return notification.id || `${notification.type || "info"}-${notification.time || "now"}-${notification.message || "item"}-${index}`;
+}
 
+function SummaryChip({ label, value, variant = "secondary" }) {
   return (
-    <div
-      className="flex items-center gap-2 px-4 py-3 rounded-md transition-opacity duration-200"
-      style={{
-        background: "var(--surface-secondary)",
-        opacity: isRead ? 0.6 : 1,
-      }}
-    >
-      <IconComp className={`h-4.5 w-4.5 shrink-0 ${cfg.dotClass}`} />
-      <span className="text-sm text-(--text-primary) flex-1 line-clamp-1">
-        {notification.message}
-      </span>
-      {notification.time && (
-        <span className="text-xs text-(--text-secondary) whitespace-nowrap">
-          {new Date(notification.time).toLocaleDateString()}
-        </span>
-      )}
-      <Badge
-        variant="outline"
-        className={`text-[10px] px-1.5 rounded-sm ${BADGE_COLOR_CLASSES[cfg.color] || ""}`}
-      >
-        {cfg.label}
-      </Badge>
-      {!isRead && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                className="inline-flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                onClick={onMarkRead}
-                aria-label="Mark as read"
-              >
-                <Check className="h-3.5 w-3.5" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Mark as read</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
+    <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-primary) px-3 py-2.5">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-(--text-muted)">{label}</div>
+      <div className="mt-1 font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">{value}</div>
     </div>
   );
 }
@@ -109,58 +64,108 @@ export default function NotificationFeed() {
   });
 
   const [filter, setFilter] = useState("all");
-  const [expanded, setExpanded] = useState(false);
   const { readIds, markRead, markAllRead } = useReadState(serverId);
 
-  const filtered = useMemo(() => {
-    if (!notifications) return [];
-    if (filter === "all") return notifications;
-    return notifications.filter(n => n.type === filter);
-  }, [notifications, filter]);
+  const normalized = useMemo(
+    () => (notifications || []).map((notification, index) => ({
+      ...notification,
+      _id: buildNotificationId(notification, index),
+    })),
+    [notifications]
+  );
 
-  const displayed = expanded ? filtered : filtered.slice(0, COLLAPSED_COUNT);
-  const hasMore = filtered.length > COLLAPSED_COUNT;
+  const filtered = useMemo(() => {
+    if (!normalized) return [];
+    if (filter === "all") return normalized;
+    if (filter === "unread") return normalized.filter((n) => !readIds.has(n._id));
+    return normalized.filter((n) => getNotificationVariant(n).key === filter);
+  }, [normalized, filter, readIds]);
+
+  const displayed = filtered.slice(0, COLLAPSED_COUNT);
 
   const unreadCount = useMemo(() => {
-    if (!notifications) return 0;
-    return notifications.filter((n, i) => !readIds.has(n.id ?? i)).length;
-  }, [notifications, readIds]);
+    return normalized.filter((n) => !readIds.has(n._id)).length;
+  }, [normalized, readIds]);
+
+  const moderationCount = useMemo(
+    () => normalized.filter((notification) => getNotificationVariant(notification).key === "moderation").length,
+    [normalized]
+  );
+
+  const infoCount = useMemo(
+    () => normalized.filter((notification) => getNotificationVariant(notification).key === "info").length,
+    [normalized]
+  );
 
   if (isError) {
     return (
-      <div className="mb-6">
-        <span className="text-sm text-(--status-error) font-medium">
-          <Locale zh="無法加載通知" en="Failed to load notifications." />
-        </span>
-      </div>
+      <Card variant="panel">
+        <div className="rounded-3xl border border-red-500/20 bg-red-500/8 p-5 text-sm text-(--text-primary)">
+          <span className="font-medium text-red-300">
+            <Locale zh="無法加載通知" en="Failed to load notifications." />
+          </span>
+        </div>
+      </Card>
     );
   }
 
-  if (!notifications || notifications.length === 0) return null;
+  if (!notifications || notifications.length === 0) {
+    return (
+      <Card variant="panel">
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div>
+            <h3 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
+              <Locale zh="通知中心" en="Notification stream" />
+            </h3>
+            <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
+              <Locale zh="即時掌握建議、管理事件與系統提醒。" en="Stay on top of review queue changes, moderation activity, and system alerts." />
+            </p>
+          </div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-(--surface-secondary) text-(--accent-primary)">
+            <BellRing className="h-5 w-5" />
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-(--border-default) bg-(--surface-primary) px-5 py-10 text-center">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-(--surface-secondary) text-(--accent-primary)">
+            <Sparkles className="h-6 w-6" />
+          </div>
+          <p className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
+            <Locale zh="目前沒有新通知" en="No new notifications" />
+          </p>
+          <p className="mt-1 max-w-xs text-sm leading-6 text-(--text-secondary)">
+            <Locale zh="一旦有待審建議或新的管理動作，它們會在這裡顯示。" en="As soon as there are pending reviews or moderation events, they will appear here." />
+          </p>
+        </div>
+      </Card>
+    );
+  }
 
   return (
-    <div className="mb-6">
-      <div className="flex items-center justify-between mb-2.5">
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm font-semibold text-(--text-primary) font-['Space_Grotesk'] tracking-tight">
-            <Locale zh="通知" en="Notifications" />
-          </span>
-          {unreadCount > 0 && (
-            <Badge className="rounded-full text-xs px-2">
-              {unreadCount}
-            </Badge>
-          )}
+    <Card variant="panel">
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <h3 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
+            <Locale zh="通知中心" en="Notification stream" />
+          </h3>
+          <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
+            <Locale zh="在儀表板上直接查看最新提醒，快速判斷現在最需要你處理的是什麼。" en="Keep the most recent alerts visible on the dashboard so you can tell what needs attention right now." />
+          </p>
         </div>
-        {unreadCount > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 px-2 text-xs"
-            onClick={() => markAllRead(notifications.map((n, i) => n.id ?? i))}
-          >
-            <Locale zh="全部已讀" en="Mark all read" />
-          </Button>
-        )}
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-full"
+          onClick={() => markAllRead(normalized.map((n) => n._id))}
+          disabled={unreadCount === 0}
+        >
+          <Locale zh="全部已讀" en="Mark all read" />
+        </Button>
+      </div>
+
+      <div className="mb-4 grid grid-cols-3 gap-2.5">
+        <SummaryChip label={locale({ zh: "未讀", en: "Unread" })} value={unreadCount} />
+        <SummaryChip label={locale({ zh: "資訊", en: "Info" })} value={infoCount} />
+        <SummaryChip label={locale({ zh: "管理", en: "Mod" })} value={moderationCount} />
       </div>
 
       <SegmentedControl
@@ -168,42 +173,38 @@ export default function NotificationFeed() {
         onValueChange={setFilter}
         items={[
           { value: "all", label: locale({ zh: "全部", en: "All" }) },
+          { value: "unread", label: locale({ zh: "未讀", en: "Unread" }) },
           { value: "info", label: "Info" },
           { value: "moderation", label: "Mod" },
           { value: "success", label: "OK" },
         ]}
         size="sm"
-        className="mb-2.5"
+        className="mb-4 rounded-full"
       />
 
-      <div className="flex flex-col gap-2">
-        {displayed.map((n, i) => {
-          const nId = n.id ?? i;
-          return (
-            <NotificationItem
-              key={nId}
-              notification={n}
-              isRead={readIds.has(nId)}
-              onMarkRead={() => markRead(nId)}
-            />
-          );
-        })}
+      <div className="space-y-3">
+        {displayed.length > 0 ? displayed.map((notification) => (
+          <NotificationItem
+            key={notification._id}
+            notification={notification}
+            isRead={readIds.has(notification._id)}
+            onMarkRead={() => markRead(notification._id)}
+          />
+        )) : (
+          <div className="rounded-3xl border border-dashed border-(--border-default) bg-(--surface-primary) px-5 py-8 text-center text-sm text-(--text-secondary)">
+            <Locale zh="目前篩選條件下沒有通知。" en="No notifications match the current filter." />
+          </div>
+        )}
       </div>
 
-      {hasMore && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full mt-2"
-          onClick={() => setExpanded(prev => !prev)}
-        >
-          {expanded
-            ? locale({ zh: "收起", en: "Show less" })
-            : locale({ zh: `顯示全部 (${filtered.length})`, en: `Show all (${filtered.length})` })
-          }
-          {expanded ? <ChevronUp className="ml-1 h-3.5 w-3.5" /> : <ChevronDown className="ml-1 h-3.5 w-3.5" />}
-        </Button>
+      {filtered.length > COLLAPSED_COUNT && (
+        <div className="mt-4 flex items-center justify-between rounded-2xl border border-(--border-subtle) bg-(--surface-primary) px-4 py-3 text-sm text-(--text-secondary)">
+          <span>
+            <Locale zh={`尚有 ${filtered.length - COLLAPSED_COUNT} 則通知未顯示`} en={`${filtered.length - COLLAPSED_COUNT} more notifications available`} />
+          </span>
+          <Badge variant="secondary">{filtered.length}</Badge>
+        </div>
       )}
-    </div>
+    </Card>
   );
 }

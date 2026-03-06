@@ -11,8 +11,8 @@ export default function ActiveUsers({ guildId, page }) {
   if (!users || users.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-1">
-      <span className="text-xs text-muted-foreground mr-1">
+    <div className="inline-flex items-center gap-2 rounded-full border border-(--border-subtle) bg-(--surface-primary) px-2.5 py-1.5 shadow-(--shadow-xs)">
+      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)">
         {locale({ zh: "線上", en: "Online" })}
       </span>
       <TooltipProvider>
@@ -20,7 +20,7 @@ export default function ActiveUsers({ guildId, page }) {
           {users.slice(0, 5).map((u) => (
             <Tooltip key={u.userId}>
               <TooltipTrigger asChild>
-                <Avatar className="h-7 w-7 border-2 border-background">
+                <Avatar className="h-7 w-7 border-2 border-(--surface-card)">
                   {u.avatar ? (
                     <AvatarImage
                       src={`https://cdn.discordapp.com/avatars/${u.userId}/${u.avatar}.webp?size=64`}
@@ -40,7 +40,7 @@ export default function ActiveUsers({ guildId, page }) {
           {users.length > 5 && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Avatar className="h-7 w-7 border-2 border-background">
+                <Avatar className="h-7 w-7 border-2 border-(--surface-card)">
                   <AvatarFallback className="text-[10px] bg-gray-500 text-white">
                     +{users.length - 5}
                   </AvatarFallback>
