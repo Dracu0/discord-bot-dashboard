@@ -115,7 +115,7 @@ export function ConfigItemListAnimated({ options, changes, errors, onChange }) {
 
 export function ConfigGridSkeleton() {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-[5px] md:mt-[10px]">
+        <div className="mt-1.5 grid grid-cols-1 gap-5 md:mt-2.5 lg:grid-cols-2">
             <Skeleton className="h-80 rounded-lg" />
             <Skeleton className="h-80 rounded-lg" />
             <Skeleton className="h-80 rounded-lg" />
@@ -126,7 +126,7 @@ export function ConfigGridSkeleton() {
 
 export function ConfigGrid(props) {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-[5px] md:mt-[10px]">
+        <div className="mt-1.5 grid grid-cols-1 gap-5 md:mt-2.5 lg:grid-cols-2">
             <ConfigPanel {...props} />
         </div>
     );

@@ -72,21 +72,18 @@ const routes = [
         children: [
             {
                 path: ":action",
+                component: <ActionTasks />,
                 hide: true,
-                children: [
-                    {
-                        path: "task/:task",
-                        component: <TaskConfigBoard/>,
-                    },
-                    {
-                        path: "add",
-                        component: <SubmitTaskBoard/>,
-                    },
-                    {
-                        path: "*",
-                        component: <ActionTasks />,
-                    }
-                ]
+            },
+            {
+                path: ":action/task/:task",
+                component: <TaskConfigBoard/>,
+                hide: true,
+            },
+            {
+                path: ":action/add",
+                component: <SubmitTaskBoard/>,
+                hide: true,
             },
             {
                 path: "*",

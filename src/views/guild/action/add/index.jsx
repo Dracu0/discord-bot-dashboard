@@ -13,6 +13,7 @@ import {addTask} from "api/internal";
 import NameInput from "../components/NameInput";
 import {usePageState} from "utils/State";
 import {Locale, useLocale} from "utils/Language";
+import PageSection from "components/layout/PageSection";
 
 export default function SubmitTaskBoard() {
     useBanner()
@@ -30,15 +31,15 @@ function SubmitTask() {
         {zh: "\u65b0\u4efb\u52d9", en: "New Task"}
     ].map(locale))
 
-    return <div className="flex flex-col mt-2.5 gap-1.5">
-        <span className="text-[25px] font-bold">
-            <Locale zh="\u5275\u5efa\u65b0\u4efb\u52d9" en="New Task" />
-        </span>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-1.5">
+    return <PageSection
+        title={<Locale zh="\u5275\u5efa\u65b0\u4efb\u52d9" en="New Task" />}
+        description={<Locale zh="\u5efa\u7acb\u4e00\u500b\u65b0\u7684\u52d5\u4f5c\u4efb\u52d9\uff0c\u4e26\u5728\u5efa\u7acb\u524d\u5148\u586b\u5beb\u521d\u59cb\u8a2d\u5b9a\u3002" en="Create a new task for this action and configure its initial settings before saving." />}
+        className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
+    >
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <ConfigPanel />
         </div>
-    </div>
+    </PageSection>
 }
 
 function ConfigPanel() {

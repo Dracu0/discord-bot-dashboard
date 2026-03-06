@@ -3,12 +3,12 @@ import React from "react";
 
 export function List({ title, description, icon, items }) {
   return (
-    <Card className="!p-0">
-      <div className="flex flex-col w-full px-[22px] py-[18px]">
-        <span className="text-(--text-primary) text-xl font-semibold">
+    <Card variant="flush" className="overflow-hidden">
+      <div className="flex w-full flex-col gap-1 border-b border-(--border-subtle) bg-(--surface-card) px-5 py-4.5 md:px-6 md:py-5">
+        <span className="font-['Space_Grotesk'] text-xl font-semibold text-(--text-primary)">
           {title}
         </span>
-        <span className="text-(--text-secondary)">{description}</span>
+        <span className="text-sm text-(--text-secondary)">{description}</span>
       </div>
       {(items || []).map((item, key) => (
         <ListItem key={key} icon={icon} {...item} />
@@ -20,20 +20,20 @@ export function List({ title, description, icon, items }) {
 function ListItem({ name, description, value, icon: IconComp }) {
   return (
     <div
-      className="px-6 py-[21px] transition-all duration-200"
+      className="border-b border-(--border-subtle) px-5 py-5 transition-all duration-200 last:border-b-0 md:px-6"
       style={{ background: "transparent" }}
     >
       <div className="flex flex-col justify-center">
-        <div className="relative flex items-center">
-          <div className="flex flex-col w-[70%] md:w-full me-1 md:me-4 xl:me-6">
-            <span className="text-(--text-primary) text-base mb-[5px] font-bold me-3.5">
+        <div className="relative flex items-center justify-between gap-4">
+          <div className="flex min-w-0 flex-1 flex-col">
+            <span className="mb-1.25 me-3.5 text-base font-bold text-(--text-primary)">
               {name}
             </span>
-            <span className="text-(--text-muted) text-sm font-normal me-3.5">
+            <span className="me-3.5 text-sm font-normal text-(--text-muted)">
               {description}
             </span>
           </div>
-          <div className="flex items-center me-1 md:me-4 xl:me-6">
+          <div className="flex shrink-0 items-center gap-2 text-right">
             {IconComp && <IconComp size={18} color="var(--text-primary)" style={{ marginRight: 7 }} />}
             <span className="font-bold text-base text-(--text-primary)">
               {value}

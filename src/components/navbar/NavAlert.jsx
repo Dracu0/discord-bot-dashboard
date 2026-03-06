@@ -42,25 +42,28 @@ export default function NavAlert({ rootText, childText, children, clip = true })
     }, [rootText, childText, children, clip, sidebarWidth]);
 
     const breadcrumbItems = [];
-    breadcrumbItems.push(
-        <span key="root" className="text-sm font-semibold" style={{ color: "var(--accent-primary)" }}>
-            {rootText}
-        </span>
-    );
+    breadcrumbItems.push({
+        key: "root",
+        content: rootText,
+        className: "text-sm font-semibold",
+        style: { color: "var(--accent-primary)" },
+    });
     if (Array.isArray(childText)) {
         childText.forEach((text, i) =>
-            breadcrumbItems.push(
-                <span key={i} className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                    {text}
-                </span>
-            )
+            breadcrumbItems.push({
+                key: i,
+                content: text,
+                className: "text-sm",
+                style: { color: "var(--text-secondary)" },
+            })
         );
     } else {
-        breadcrumbItems.push(
-            <span key="child" className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                {childText}
-            </span>
-        );
+        breadcrumbItems.push({
+            key: "child",
+            content: childText,
+            className: "text-sm",
+            style: { color: "var(--text-secondary)" },
+        });
     }
 
     return (
@@ -83,15 +86,22 @@ export default function NavAlert({ rootText, childText, children, clip = true })
         >
             <div className="flex w-full flex-col md:flex-row xl:items-center">
                 <div className="mb-2 md:mb-0">
-                    {/* Breadcrumbs */}
-                    <div className="flex items-center gap-1 text-sm mb-1.25 min-w-0 overflow-hidden">
-                        {breadcrumbItems.map((item, i) => (
-                            <React.Fragment key={i}>
-                                {i > 0 && <span className="text-sm" style={{ color: "var(--text-secondary)" }}>/</span>}
-                                {item}
-                            </React.Fragment>
-                        ))}
-                    </div>
+                    <nav aria-label="Breadcrumb" className="mb-1.25 min-w-0 overflow-hidden">
+                        <ol className="flex items-center gap-1 text-sm">
+                            {breadcrumbItems.map((item, i) => (
+                                <li key={item.key} className="inline-flex min-w-0 items-center gap-1">
+                                    {i > 0 && <span className="text-sm" style={{ color: "var(--text-secondary)" }}>/</span>}
+                                    <span
+                                        className={cn(item.className, i === breadcrumbItems.length - 1 && "truncate")}
+                                        style={item.style}
+                                        aria-current={i === breadcrumbItems.length - 1 ? "page" : undefined}
+                                    >
+                                        {item.content}
+                                    </span>
+                                </li>
+                            ))}
+                        </ol>
+                    </nav>
                     <p
                         className="font-bold text-2xl md:text-[34px] truncate"
                         style={{

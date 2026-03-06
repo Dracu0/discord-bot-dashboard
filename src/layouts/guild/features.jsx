@@ -48,7 +48,7 @@ function Content() {
                     </div>
                 </div>
                 <div className="col-span-12 xl:col-span-4">
-                    <div className="flex flex-col gap-5 xl:sticky xl:top-26">
+                    <div className="flex flex-col gap-5 xl:sticky" style={{ top: "calc(var(--page-top-offset, 96px) - 8px)" }}>
                         {dataList}
                     </div>
                 </div>

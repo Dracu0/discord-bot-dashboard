@@ -12,6 +12,7 @@ import {useQueryClient} from "@tanstack/react-query";
 import {usePageState} from "../../../../utils/State";
 import {Locale, useLocale} from "../../../../utils/Language";
 import BackNavButton from "components/navigation/BackNavButton";
+import PageSection from "components/layout/PageSection";
 
 export default function TaskBoard() {
     const {action: actionId} = useParams()
@@ -32,13 +33,13 @@ export default function TaskBoard() {
         [{zh: "\u52d5\u4f5c", en: "Action"}, actionName].map(locale)
     )
 
-    return <div className="flex flex-col mt-2.5 gap-1.5">
-        <span className="text-[25px] font-bold">
-            <Locale zh="\u4fee\u6539\u4efb\u52d9" en="Modify Task" />
-        </span>
-
+    return <PageSection
+        title={<Locale zh="\u4fee\u6539\u4efb\u52d9" en="Modify Task" />}
+        description={<Locale zh="\u66f4\u65b0\u6b64\u4efb\u52d9\u7684\u540d\u7a31\u8207\u8a2d\u5b9a\uff0c\u8b8a\u66f4\u6703\u5728\u5132\u5b58\u5f8c\u540c\u6b65\u5230\u4f3a\u670d\u5668\u3002" en="Update the task name and settings here; changes will sync back to the server when saved." />}
+        className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
+    >
         <TaskConfigPanel />
-    </div>
+    </PageSection>
 }
 
 function TaskConfigPanel() {
@@ -61,7 +62,7 @@ export function Config({detail}) {
     }
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-1.5">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <ConfigPanel
                 savedName={name}
                 values={values}

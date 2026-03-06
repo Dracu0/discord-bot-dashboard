@@ -11,6 +11,7 @@ import { Locale, useLocale } from "../../../../utils/Language";
 import { Task } from "../components/Task";
 import { useTextFilter } from "hooks/useTextFilter";
 import { Inbox } from "lucide-react";
+import PageSection from "components/layout/PageSection";
 
 import { useParams } from "react-router-dom";
 import {
@@ -40,18 +41,16 @@ function TasksPanel() {
         name
     ].map(locale))
 
-    return <div className="flex flex-col gap-1.5 pt-2.5 px-1 md:px-3 lg:px-2.5">
-        <div className="flex flex-col items-center gap-5 mb-1.5">
-            <span className="text-2xl font-bold">
-                <Locale zh="\u904b\u884c\u4e2d" en="Tasks" />
-            </span>
-
-            <SearchInput value={filter} onChange={setFilter} bg="var(--surface-secondary)" groupStyle={{ maw: "20rem" }} />
-        </div>
+    return <PageSection
+        title={<Locale zh="\u904b\u884c\u4e2d" en="Tasks" />}
+        description={<Locale zh="\u641c\u5c0b\u3001\u6aa2\u8996\u4e26\u7ba1\u7406\u6b64\u52d5\u4f5c\u76ee\u524d\u7684\u4efb\u52d9\u9805\u76ee\u3002" en="Search, review, and manage the tasks currently attached to this action." />}
+        actions={<SearchInput value={filter} onChange={setFilter} bg="var(--surface-secondary)" groupStyle={{ maw: "20rem" }} />}
+        className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
+    >
         <ActionDetailProvider>
             <TasksContent includes={includes} />
         </ActionDetailProvider>
-    </div>
+    </PageSection>
 }
 
 function TasksContent({includes}) {
@@ -80,7 +79,7 @@ function TasksContent({includes}) {
         </div>
     ) : (
         <div className="animate-in slide-in-from-bottom duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 {tasks
                     .filter((task) => includes(task.name))
                     .map((task) => (
