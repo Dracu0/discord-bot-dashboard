@@ -9,6 +9,11 @@ build
 
 # testing
 /coverage
+/playwright-report
+/test-results
+/blob-report
+/.playwright
+playwright/.cache
 
 # production
 /build
