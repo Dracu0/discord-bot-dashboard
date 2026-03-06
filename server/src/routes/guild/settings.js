@@ -66,7 +66,7 @@ router.patch('/', async (req, res) => {
                 }
             } else if (key === 'suggestionCooldownMs') {
                 if (typeof value !== 'number' || value < 0 || value > 86400) {
-                    return res.status(400).json({ error: 'suggestionCooldownMs must be a number in seconds (0-86400)' });
+                    return res.status(400).json({ error: 'Suggestion cooldown must be between no cooldown and 24 hours' });
                 }
             }
 

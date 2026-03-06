@@ -126,7 +126,6 @@ async function connectWithRetry() {
         }
     }
 }
-connectWithRetry();
 
 mongoose.connection.on('error', (err) => {
     logger.error('mongodb_connection_error', { error: err });
@@ -198,15 +197,25 @@ app.use((err, req, res, _next) => {
     res.status(status).json({ error: message });
 });
 
-// Bind to 0.0.0.0 so Fly.io proxy can reach the container (not just localhost)
-const server = app.listen(PORT, '0.0.0.0', () => {
-    logger.info('server_started', {
-        port: Number(PORT),
-        mode: IS_PRODUCTION ? 'production' : 'development',
-    });
+let server = null;
 
-    // Attach WebSocket server
-    startWebSocketServer(server, sessionMiddleware);
+async function startServer() {
+    await connectWithRetry();
+
+    server = app.listen(PORT, '0.0.0.0', () => {
+        logger.info('server_started', {
+            port: Number(PORT),
+            mode: IS_PRODUCTION ? 'production' : 'development',
+        });
+
+        // Attach WebSocket server
+        startWebSocketServer(server, sessionMiddleware);
+    });
+}
+
+startServer().catch((error) => {
+    logger.error('server_start_failed', { error });
+    process.exit(1);
 });
 
 // Graceful shutdown
@@ -221,6 +230,14 @@ function shutdown(signal) {
         process.exit(1);
     }, 30000);
     forceExit.unref();
+
+    if (!server) {
+        Promise.resolve()
+            .then(() => closeRedis())
+            .then(() => mongoose.connection.close())
+            .finally(() => process.exit(0));
+        return;
+    }
 
     server.close(async () => {
         try {

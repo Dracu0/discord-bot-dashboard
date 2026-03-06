@@ -1,4 +1,5 @@
 import { Locale } from "../../utils/Language";
+import { OptionTypes } from "../../variables/type";
 
 export const SuggestionsFeature = {
     name: {
@@ -30,14 +31,21 @@ export const SuggestionsFeature = {
             },
             {
                 id: "suggestionCooldownMs",
-                name: "Suggestion Cooldown (s)",
+                name: "Suggestion Cooldown",
                 description:
-                    "Cooldown between suggestions per user in seconds (0 = no cooldown, max 86400 = 24 hours)",
-                type: "number",
-                value: (values.suggestionCooldownMs ?? 0) / 1000,
+                    "Choose how long each user must wait before submitting another suggestion.",
+                type: OptionTypes.Duration,
+                duration: {
+                    baseUnit: "milliseconds",
+                    units: ["seconds", "minutes", "hours", "days"],
+                    min: 0,
+                    max: 24 * 60 * 60 * 1000,
+                    zeroLabel: "No cooldown",
+                },
+                value: values.suggestionCooldownMs ?? 0,
                 validate: (v) => {
                     if (v < 0) return "Cooldown cannot be negative";
-                    if (v > 86400) return "Maximum cooldown is 86400 seconds (24 hours)";
+                    if (v > 24 * 60 * 60 * 1000) return "Maximum cooldown is 24 hours";
                     if (!Number.isFinite(v)) return "Must be a valid number";
                 },
             },

@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "components/ui/avatar";
 import { Badge } from "components/ui/badge";
 import { Button } from "components/ui/button";
-import { Card } from "components/ui/card";
+import Card from "components/card/Card";
 import { Link } from "react-router-dom";
 import React from "react";
 import { iconToUrl } from "api/discord/DiscordApi";

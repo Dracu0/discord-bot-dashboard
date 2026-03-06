@@ -9,6 +9,7 @@ import PageContainer from "components/layout/PageContainer";
 import PageHeader from "components/layout/PageHeader";
 import PageSection from "components/layout/PageSection";
 import Card from "components/card/Card";
+import MetricCard from "components/card/MetricCard";
 import { Badge } from "components/ui/badge";
 
 const THEME_LABELS = {
@@ -152,18 +153,15 @@ function SettingsOverview() {
 
 function OverviewCard({ icon, label, value, detail }) {
     return (
-        <Card variant="interactive" className="h-full p-4 md:p-5">
-            <div className="flex h-full flex-col gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-(--accent-primary)/15 bg-(--accent-primary)/10 text-(--accent-primary)">
-                    {icon}
-                </div>
-                <div className="space-y-2">
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-(--text-muted)">{label}</p>
-                    <p className="font-['Space_Grotesk'] text-xl font-semibold text-(--text-primary)">{value}</p>
-                    <p className="text-sm leading-6 text-(--text-secondary)">{detail}</p>
-                </div>
-            </div>
-        </Card>
+        <MetricCard
+            icon={icon}
+            label={label}
+            value={value}
+            detail={detail}
+            variant="interactive"
+            iconContainerClassName="border border-(--accent-primary)/15 bg-(--accent-primary)/10"
+            detailClassName="mt-0.5"
+        />
     );
 }
 

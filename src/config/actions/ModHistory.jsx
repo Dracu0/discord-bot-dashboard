@@ -1,4 +1,5 @@
 import { Locale } from "utils/Language";
+import { OptionTypes } from "../../variables/type";
 
 const ACTION_TYPES = [
     { label: "Warn", value: "warn" },
@@ -50,9 +51,16 @@ export const ModHistoryAction = {
         },
         {
             id: "duration",
-            name: "Duration (seconds)",
-            description: "Duration of the action (for timeouts)",
-            type: "number",
+            name: "Duration",
+            description: "How long the action lasts when the moderation action is a timeout.",
+            type: OptionTypes.Duration,
+            duration: {
+                baseUnit: "seconds",
+                units: ["seconds", "minutes", "hours", "days"],
+                min: 0,
+                max: 28 * 24 * 60 * 60,
+                zeroLabel: "No duration",
+            },
             value: values ? values.duration : 0,
         },
     ],

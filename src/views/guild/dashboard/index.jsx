@@ -14,8 +14,9 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { usePageInfo } from "../../../contexts/PageInfoContext";
 import { GuildDetailContext, ServerDetailProvider } from "../../../contexts/guild/GuildDetailContext";
-import { getServerAdvancedDetails, getFeatures } from "api/internal";
+import { getServerAdvancedDetails } from "api/internal";
 import { GuildContext } from "contexts/guild/GuildContext";
+import { FeaturesContext } from "contexts/FeaturesContext";
 import { useLocale, Locale } from "utils/Language";
 import NotificationFeed from "components/card/NotificationFeed";
 import { UserDataContext } from "contexts/UserDataContext";
@@ -27,6 +28,7 @@ import PageContainer from "components/layout/PageContainer";
 import PageHeader from "components/layout/PageHeader";
 import PageSection from "components/layout/PageSection";
 import Card from "components/card/Card";
+import MetricCard from "components/card/MetricCard";
 import LeaderboardTable from "components/card/data/LeaderboardTable";
 import DataTable from "components/card/data/DataTable";
 import { Badge } from "components/ui/badge";
@@ -45,6 +47,7 @@ export default function Dashboard() {
 
 export function UserReports() {
     const { detail } = useContext(GuildDetailContext);
+    const { enabled: enabledFeatures, query: featuresQuery } = useContext(FeaturesContext);
     const { id: serverId } = useContext(GuildContext);
     const user = useContext(UserDataContext);
     const [wizardDismissed, setWizardDismissed] = useState(false);
@@ -55,12 +58,6 @@ export function UserReports() {
         enabled: Boolean(serverId),
     });
 
-    const featuresQuery = useQuery({
-        queryKey: ["features", serverId],
-        queryFn: () => getFeatures(serverId),
-    });
-
-    const enabledFeatures = featuresQuery.data?.enabled || [];
     const advanced = query.data || {};
 
     const onlineRatio = detail?.members ? Math.round(((detail?.online || 0) / detail.members) * 100) : 0;
@@ -158,7 +155,7 @@ export function UserReports() {
                 />
             )}
 
-            {!wizardDismissed && enabledFeatures.length === 0 && featuresQuery.data && (
+            {!wizardDismissed && enabledFeatures.length === 0 && featuresQuery?.data && (
                 <OnboardingWizard
                     enabledFeatures={enabledFeatures}
                     onDismiss={() => setWizardDismissed(true)}
@@ -331,26 +328,14 @@ export function UserReports() {
 }
 
 function InsightMetricCard({ icon, label, value, helper, tone = "default" }) {
-    const toneClasses = {
-        default: "border-(--border-subtle) bg-(--surface-card)",
-        accent: "border-(--accent-primary)/15 bg-(--accent-primary)/8",
-        success: "border-emerald-500/15 bg-emerald-500/8",
-        warning: "border-orange-500/15 bg-orange-500/8",
-    };
-
     return (
-        <Card className={`p-4.5 ${toneClasses[tone] || toneClasses.default}`}>
-            <div className="mb-4 flex items-start justify-between gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-(--surface-secondary) text-(--accent-primary)">
-                    {icon}
-                </div>
-            </div>
-            <div className="space-y-1.5">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-(--text-muted)">{label}</p>
-                <p className="font-['Space_Grotesk'] text-3xl font-bold tracking-tight text-(--text-primary)">{value}</p>
-                {helper && <p className="text-sm leading-6 text-(--text-secondary)">{helper}</p>}
-            </div>
-        </Card>
+        <MetricCard
+            icon={icon}
+            label={label}
+            value={value}
+            detail={helper}
+            tone={tone}
+        />
     );
 }
 

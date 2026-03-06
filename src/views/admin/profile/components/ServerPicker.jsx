@@ -1,4 +1,4 @@
-import { Card } from "components/ui/card";
+import Card from "components/card/Card";
 import { SegmentedControl } from "components/ui/segmented-control";
 import React, { useMemo, useState } from "react";
 import Server from "views/admin/profile/components/Server";

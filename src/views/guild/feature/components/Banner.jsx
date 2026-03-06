@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { Button } from "components/ui/button";
 import { Spinner } from "components/ui/spinner";
 
@@ -48,22 +48,24 @@ function EnableToggle() {
 export default function useBanner(localeName) {
     const { id: serverId } = useContext(GuildContext);
     const { description, canToggle } = useFeatureInfo();
-
-    useLayoutUpdate({
+    const buttons = useMemo(() => ([
+        <ActiveUsers key="presence" guildId={serverId} page={localeName} />,
+        ...(canToggle ? [<EnableToggle key="toggle" />] : []),
+        <BackNavButton
+            key="back"
+            to={`/guild/${serverId}/features`}
+            zh="返回功能"
+            en="Back to Features"
+            ariaLabel="Back to Features"
+        />,
+    ]), [canToggle, localeName, serverId]);
+    const layoutProps = useMemo(() => ({
         banner: {
             title: localeName,
             description,
-            buttons: [
-                <ActiveUsers key="presence" guildId={serverId} page={localeName} />,
-                ...(canToggle ? [<EnableToggle key="toggle" />] : []),
-                <BackNavButton
-                    key="back"
-                    to={`/guild/${serverId}/features`}
-                    zh="返回功能"
-                    en="Back to Features"
-                    ariaLabel="Back to Features"
-                />,
-            ],
+            buttons,
         },
-    });
+    }), [buttons, description, localeName]);
+
+    useLayoutUpdate(layoutProps);
 }

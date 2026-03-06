@@ -1,4 +1,5 @@
 import { Locale } from "../../utils/Language";
+import { OptionTypes } from "../../variables/type";
 
 export const AutoModFeature = {
     name: {
@@ -81,13 +82,20 @@ export const AutoModFeature = {
             },
             {
                 id: "automodAntiSpamInterval",
-                name: "Spam Interval (ms)",
-                description: "Time window in milliseconds for spam detection (default: 5000 = 5 seconds)",
-                type: "number",
+                name: "Spam Detection Window",
+                description: "Choose how much time counts as one spam burst when checking repeated messages.",
+                type: OptionTypes.Duration,
+                duration: {
+                    baseUnit: "milliseconds",
+                    units: ["seconds", "minutes"],
+                    min: 1000,
+                    max: 60000,
+                    zeroLabel: "Disabled",
+                },
                 value: values.automodAntiSpamInterval ?? 5000,
                 validate: (v) => {
-                    if (v < 1000) return "Minimum interval is 1000ms (1 second)";
-                    if (v > 60000) return "Maximum interval is 60000ms (60 seconds)";
+                    if (v < 1000) return "Minimum interval is 1 second";
+                    if (v > 60000) return "Maximum interval is 1 minute";
                 },
             },
             {
@@ -100,12 +108,18 @@ export const AutoModFeature = {
             },
             {
                 id: "automodTimeoutDuration",
-                name: "Timeout Duration (ms)",
-                description: "Duration of timeout when action is 'timeout' (default: 60000 = 1 minute)",
-                type: "number",
+                name: "Timeout Length",
+                description: "Choose how long members should be timed out when the auto-mod action is set to timeout.",
+                type: OptionTypes.Duration,
+                duration: {
+                    baseUnit: "milliseconds",
+                    units: ["seconds", "minutes", "hours", "days"],
+                    min: 5000,
+                    max: 28 * 24 * 60 * 60 * 1000,
+                },
                 value: values.automodTimeoutDuration ?? 60000,
                 validate: (v) => {
-                    if (v < 5000) return "Minimum timeout is 5000ms (5 seconds)";
+                    if (v < 5000) return "Minimum timeout is 5 seconds";
                     if (v > 2419200000) return "Maximum timeout is 28 days";
                 },
             },

@@ -6,7 +6,8 @@ import {useQuery} from "@tanstack/react-query";
 
 export const FeaturesContext = createContext({
     enabled: [],
-    data: null
+  data: null,
+  query: null,
 });
 
 export function FeaturesProvider({children}) {
@@ -14,17 +15,30 @@ export function FeaturesProvider({children}) {
     const query = useQuery({
         queryKey: ["features", serverId],
         queryFn: () => getFeatures(serverId),
+    enabled: Boolean(serverId),
         retry: 0
     })
 
   return (
-    <QueryHolderSkeleton query={query} height={180} count={4}>
-        <FeaturesContext.Provider value={{
-            ...query.data,
-            enabled: query.data?.enabled || [],
-        }}>
-          {children}
-        </FeaturesContext.Provider>
+    <FeaturesContext.Provider value={{
+      ...query.data,
+      data: query.data?.data || null,
+      enabled: query.data?.enabled || [],
+      query,
+    }}>
+      {children}
+    </FeaturesContext.Provider>
+  );
+}
+
+export function FeaturesGate({ children, height = 180, count = 4 }) {
+  const { query } = useContext(FeaturesContext);
+
+  if (!query) return children;
+
+  return (
+    <QueryHolderSkeleton query={query} height={height} count={count}>
+      {children}
     </QueryHolderSkeleton>
   );
 }

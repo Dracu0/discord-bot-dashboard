@@ -18,6 +18,7 @@ export const OptionTypes = {
     MultiLine_Text: "long_string",
     Text: "string",
     Number: "number",
+    Duration: "duration",
     Enum: "enum",
     Advanced_Enum: "id_enum",
     Image: "image",

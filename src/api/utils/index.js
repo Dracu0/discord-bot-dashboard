@@ -112,13 +112,16 @@ export function useEnableFeatureMutation(serverId, featureId) {
                 }
             }
 
-            return client.setQueryData(
+            client.setQueryData(
                 ["features", serverId],
                 data => data ? {
                     ...data,
                     enabled: modify(data)
                 } : data
             )
+
+            client.invalidateQueries({ queryKey: ["features", serverId] })
+            client.invalidateQueries({ queryKey: ["server_detail", serverId] })
         },
         onError(error) {
             logger.error('feature_toggle_failed', { serverId, featureId, error: error.message })

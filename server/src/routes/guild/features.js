@@ -351,6 +351,24 @@ router.patch('/:featureId', async (req, res) => {
                 }
                 config[key] = parseInt(value.replace('#', ''), 16);
             }
+            else if (key === 'suggestionCooldownMs' && typeof value === 'number' && Number.isFinite(value)) {
+                if (value < 0 || value > 24 * 60 * 60 * 1000) {
+                    return res.status(400).json({ error: 'Suggestion cooldown must be between no cooldown and 24 hours' });
+                }
+                config[key] = Math.round(value);
+            }
+            else if (key === 'automodAntiSpamInterval' && typeof value === 'number' && Number.isFinite(value)) {
+                if (value < 1000 || value > 60000) {
+                    return res.status(400).json({ error: 'Spam detection window must be between 1 second and 1 minute' });
+                }
+                config[key] = Math.round(value);
+            }
+            else if (key === 'automodTimeoutDuration' && typeof value === 'number' && Number.isFinite(value)) {
+                if (value < 5000 || value > 28 * 24 * 60 * 60 * 1000) {
+                    return res.status(400).json({ error: 'Auto-mod timeout length must be between 5 seconds and 28 days' });
+                }
+                config[key] = Math.round(value);
+            }
             else if (Array.isArray(value) && ['suggestionChannelIds', 'xpIgnoredChannelIds', 'autoRoleIds', 'automodExemptRoleIds', 'automodExemptChannelIds', 'ticketSupportRoleIds'].includes(key)) {
                 config[key] = value.filter(v => typeof v === 'string' && /^\d{17,20}$/.test(v));
             }

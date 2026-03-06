@@ -15,11 +15,9 @@ export function useLayoutUpdate(props) {
     const propsRef = useRef(props)
     propsRef.current = props
 
-    const title = props?.banner?.title
-
     useEffect(
         () => update(propsRef.current),
-        [update, title]
+        [update, props]
     )
 }
 

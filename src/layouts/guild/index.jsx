@@ -5,6 +5,7 @@ import { PageInfoProvider } from "contexts/PageInfoContext";
 import React, { useContext } from "react";
 import { Navigate, Outlet, Route, useParams } from "react-router-dom";
 import { UserDataProvider } from "contexts/UserDataContext";
+import { FeaturesProvider } from "contexts/FeaturesContext";
 import { SettingsContext } from "contexts/SettingsContext";
 import routes from "../../routes";
 import { GuildContext } from "contexts/guild/GuildContext";
@@ -73,11 +74,13 @@ export default function GuildBoard() {
 
     return (
         <GuildContext.Provider value={{ id }}>
-            <UserDataProvider>
-                <RouteWrapper>
-                    <Outlet />
-                </RouteWrapper>
-            </UserDataProvider>
+            <FeaturesProvider>
+                <UserDataProvider>
+                    <RouteWrapper>
+                        <Outlet />
+                    </RouteWrapper>
+                </UserDataProvider>
+            </FeaturesProvider>
         </GuildContext.Provider>
     );
 }

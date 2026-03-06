@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import bannerImg from "assets/img/common/ActionBanner.png";
 
@@ -10,15 +10,16 @@ import {useLayoutUpdate} from "../../../../contexts/layouts/LayoutContext";
 export function useActionBanner(buttons) {
     const {name, description, banner} = useActionInfo()
     const locale = useLocale()
+  const layoutProps = useMemo(() => ({
+    banner: {
+      title: locale(name),
+      description,
+      image: banner,
+      buttons
+    }
+  }), [banner, buttons, description, locale, name])
 
-    useLayoutUpdate({
-        banner: {
-            title: locale(name),
-            description,
-            image: banner,
-            buttons
-        }
-    })
+  useLayoutUpdate(layoutProps)
 }
 
 export default function ActionBanner({children}) {

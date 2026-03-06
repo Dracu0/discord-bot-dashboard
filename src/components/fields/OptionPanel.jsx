@@ -1,5 +1,5 @@
 import { Switch } from "components/ui/switch";
-import { Card } from "components/ui/card";
+import Card from "components/card/Card";
 import { SelectField } from "components/fields/SelectField";
 import { InputField } from "./impl/InputField";
 import MessageBuildCard from "./complex/MessageBuildCard";
@@ -10,6 +10,7 @@ import TextArea from "./TextArea";
 import IdSelectField from "./impl/IdSelectField";
 import ImageField from "./impl/ImageField";
 import EmojiField from "./impl/EmojiField";
+import DurationField from "./impl/DurationField";
 import PairField from "./complex/PairField";
 import { OptionTypes } from "../../variables/type";
 import { cn } from "lib/utils";
@@ -148,6 +149,15 @@ export function getInput(value, onChange, option, error) {
                     onChange={({ target }) =>
                         onChange(isText ? target.value : (isNaN(target.valueAsNumber) ? 0 : target.valueAsNumber))
                     }
+                    error={error}
+                />
+            );
+        case OptionTypes.Duration:
+            return (
+                <DurationField
+                    value={value}
+                    onChange={onChange}
+                    option={option}
                     error={error}
                 />
             );

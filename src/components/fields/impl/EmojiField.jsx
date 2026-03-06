@@ -1,21 +1,11 @@
+import data from "@emoji-mart/data";
 import { InputField } from "./InputField";
 import { Popover, PopoverTrigger, PopoverContent } from "components/ui/popover";
 import { Picker } from "emoji-mart";
-import React, { useEffect, useRef, useCallback, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { QueryHolderSkeleton } from "contexts/components/AsyncContext";
 
 export default function EmojiField({ value, onChange: change }) {
-  const query = useQuery({
-    queryKey: ["emojis"],
-    queryFn: () =>
-      fetch("https://cdn.jsdelivr.net/npm/@emoji-mart/data").then((res) =>
-        res.json()
-      ),
-    refetchOnWindowFocus: false,
-  });
-
   const onChange = (event) => {
     change(event.native);
   };
@@ -36,20 +26,18 @@ export default function EmojiField({ value, onChange: change }) {
           <PopoverTrigger asChild>
             <button
               type="button"
-              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-8 w-8 rounded-(--radius-sm) hover:bg-(--surface-secondary) transition-colors cursor-pointer"
+              className="absolute right-2 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-sm transition-colors cursor-pointer hover:bg-(--surface-secondary)"
               aria-label="Select Emoji"
             >
-              <ChevronDown className="h-[18px] w-[18px] text-(--text-muted)" />
+              <ChevronDown className="h-4.5 w-4.5 text-(--text-muted)" />
             </button>
           </PopoverTrigger>
           <PopoverContent
             side="top"
-            className="w-[350px] p-0 overflow-hidden rounded-2xl"
+            className="w-87.5 overflow-hidden rounded-2xl p-0"
             style={{ zIndex: 1500 }}
           >
-            <QueryHolderSkeleton query={query}>
-              <EmojiPicker data={query.data} onChange={onChange} />
-            </QueryHolderSkeleton>
+            <EmojiPicker data={data} onChange={onChange} />
           </PopoverContent>
         </Popover>
       </div>

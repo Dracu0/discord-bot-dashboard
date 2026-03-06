@@ -1,5 +1,5 @@
 import { Avatar, AvatarImage, AvatarFallback } from "components/ui/avatar";
-import { Card } from "components/ui/card";
+import Card from "components/card/Card";
 import React from "react";
 import { config } from "../../../../config/config";
 import { Locale } from "../../../../utils/Language";

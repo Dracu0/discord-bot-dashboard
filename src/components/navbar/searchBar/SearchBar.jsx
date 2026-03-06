@@ -4,9 +4,6 @@ import { FeaturesContext } from "contexts/FeaturesContext";
 import Feature from "../../card/Feature";
 import { useLocation } from "react-router-dom";
 import SearchInput from "../../fields/impl/SearchInput";
-import { GuildContext } from "contexts/guild/GuildContext";
-import { useQuery } from "@tanstack/react-query";
-import { getFeatures } from "api/internal";
 import { Query } from "contexts/components/AsyncContext";
 import { config } from "../../../config/config";
 import { Action } from "../../card/Action";
@@ -98,6 +95,7 @@ function Content({ features, actions }) {
 
 function SearchModal({ isOpen, onClose, search }) {
     const all = search.length === 0;
+    const { query } = useContext(FeaturesContext);
 
     return (
         <Modal
@@ -110,35 +108,17 @@ function SearchModal({ isOpen, onClose, search }) {
                 en: `Search Filter: ${all ? "All" : search}`,
             }}
         >
-            <DataProvider>
+            <Query
+                query={query}
+                placeholder={
+                    <div className="flex flex-col gap-4">
+                        <div className="h-25 animate-pulse rounded-lg bg-muted" />
+                        <div className="h-25 animate-pulse rounded-lg bg-muted" />
+                    </div>
+                }
+            >
                 <SearchList search={search} />
-            </DataProvider>
+            </Query>
         </Modal>
-    );
-}
-
-function DataProvider({ children }) {
-    const { id: serverId } = useContext(GuildContext);
-
-    const features = useQuery({
-        queryKey: ["features", serverId],
-        queryFn: () => getFeatures(serverId),
-        retry: 0,
-    });
-
-    return (
-        <Query
-            query={features}
-            placeholder={
-                <div className="flex flex-col gap-4">
-                    <div className="animate-pulse rounded-lg bg-muted h-[100px]" />
-                    <div className="animate-pulse rounded-lg bg-muted h-[100px]" />
-                </div>
-            }
-        >
-            <FeaturesContext.Provider value={features.data}>
-                {children}
-            </FeaturesContext.Provider>
-        </Query>
     );
 }
