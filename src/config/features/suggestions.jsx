@@ -42,7 +42,7 @@ export const SuggestionsFeature = {
                     max: 24 * 60 * 60 * 1000,
                     zeroLabel: "No cooldown",
                 },
-                value: values.suggestionCooldownMs ?? 0,
+                value: values.suggestionCooldownMs ?? 5 * 60 * 1000,
                 validate: (v) => {
                     if (v < 0) return "Cooldown cannot be negative";
                     if (v > 24 * 60 * 60 * 1000) return "Maximum cooldown is 24 hours";

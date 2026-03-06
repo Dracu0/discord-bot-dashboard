@@ -51,7 +51,7 @@ const guildConfigurationSchema = new Schema({
     },
     suggestionCooldownMs: {
         type: Number,
-        default: 0,
+        default: 5 * 60 * 1000,
     },
     pingEnabled: {
         type: Boolean,
@@ -180,7 +180,7 @@ const guildConfigurationSchema = new Schema({
     },
     automodTimeoutDuration: {
         type: Number,
-        default: 60000,
+        default: 10 * 60 * 1000,
     },
     automodExemptRoleIds: {
         type: [String],

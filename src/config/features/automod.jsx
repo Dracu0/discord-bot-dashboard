@@ -117,7 +117,7 @@ export const AutoModFeature = {
                     min: 5000,
                     max: 28 * 24 * 60 * 60 * 1000,
                 },
-                value: values.automodTimeoutDuration ?? 60000,
+                value: values.automodTimeoutDuration ?? 10 * 60 * 1000,
                 validate: (v) => {
                     if (v < 5000) return "Minimum timeout is 5 seconds";
                     if (v > 2419200000) return "Maximum timeout is 28 days";
