@@ -114,6 +114,8 @@ export const dashboardData = [
                 {
                     name: <Locale en="XP Leaderboard" />,
                     type: DataTypes.Table,
+                    variant: "leaderboard",
+                    description: <Locale en="See who is leading the server and how close the chase is getting." />,
                     columns: [
                         { header: "Rank", accessor: "rank" },
                         { header: "User", accessor: "userName" },

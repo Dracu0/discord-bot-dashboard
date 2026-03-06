@@ -100,6 +100,14 @@ export default {
     "leaderboard.title": "XP 排行榜",
     "leaderboard.loadFailed": "無法載入排行榜",
     "leaderboard.noData": "沒有排行榜資料",
+    "leaderboard.description": "追蹤伺服器的頂尖成員、比較 XP 成長速度，並查看誰正在快速攀升。",
+    "leaderboard.compactDescription": "快速查看目前表現最佳的成員。",
+    "leaderboard.viewFull": "查看完整排行榜",
+    "leaderboard.level": "等級",
+    "leaderboard.levelShort": "Lv. {level}",
+    "leaderboard.totalXp": "總 XP",
+    "leaderboard.emptyDescription": "此伺服器目前尚未產生任何排行榜資料。",
+    "leaderboard.emptyHint": "當成員開始獲得 XP 後，排行榜就會在這裡顯示。",
 
     // Settings
     "settings.title": "伺服器設置",

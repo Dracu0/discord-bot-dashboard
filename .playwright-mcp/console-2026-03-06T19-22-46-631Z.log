@@ -1,0 +1,1252 @@
+[     622ms] [WARNING] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition. @ http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4435
+[     622ms] [WARNING] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath. @ http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4435
+[     803ms] [ERROR] Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s 
+
+Check the render method of `Primitive.button.SlotClone`. 
+    at Badge (http://localhost:3000/src/components/ui/badge.jsx:44:18)
+    at http://localhost:3000/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=53ef45c2:145:13
+    at http://localhost:3000/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=53ef45c2:122:13
+    at http://localhost:3000/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=53ef45c2:235:13
+    at http://localhost:3000/node_modules/.vite/deps/chunk-EMMABLZM.js?v=53ef45c2:2214:13
+    at http://localhost:3000/node_modules/.vite/deps/chunk-EMMABLZM.js?v=53ef45c2:2191:13
+    at http://localhost:3000/node_modules/.vite/deps/chunk-EMMABLZM.js?v=53ef45c2:2304:13
+    at http://localhost:3000/node_modules/.vite/deps/chunk-EMMABLZM.js?v=53ef45c2:2329:13
+    at http://localhost:3000/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=53ef45c2:394:13
+    at Provider2 (http://localhost:3000/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=53ef45c2:60:15)
+    at Provider (http://localhost:3000/node_modules/.vite/deps/chunk-EMMABLZM.js?v=53ef45c2:2129:15)
+    at Popper (http://localhost:3000/node_modules/.vite/deps/chunk-EMMABLZM.js?v=53ef45c2:2321:11)
+    at Tooltip (http://localhost:3000/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=53ef45c2:302:5)
+    at Provider2 (http://localhost:3000/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=53ef45c2:60:15)
+    at TooltipProvider (http://localhost:3000/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=53ef45c2:258:5)
+    at div
+    at BotStatusIndicator (http://localhost:3000/src/components/card/BotStatusIndicator.jsx?t=1772824953762:37:21)
+    at div
+    at div
+    at div
+    at UserReports (http://localhost:3000/src/views/guild/dashboard/index.jsx?t=1772824953762:55:22)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824953762:89:39)
+    at ServerDetailProvider (http://localhost:3000/src/contexts/guild/GuildDetailContext.jsx?t=1772824953762:26:40)
+    at Dashboard (http://localhost:3000/src/views/guild/dashboard/index.jsx?t=1772824953762:37:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824953762:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824953762:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824953762:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824953762:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824953762:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824953762:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824953762:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824953762:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18) @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:520
+[     813ms] [WARNING] WebSocket connection to 'ws://localhost:8080/ws' failed: WebSocket is closed before the connection is established. @ http://localhost:3000/src/hooks/useWebSocket.js:145
+[     845ms] [WARNING] [WS] Connection error Event @ http://localhost:3000/src/hooks/useWebSocket.js:78
+[     848ms] [ERROR] WebSocket connection to 'ws://localhost:8080/ws' failed: Error during WebSocket handshake: Unexpected response code: 404 @ http://localhost:3000/src/hooks/useWebSocket.js:39
+[     871ms] [WARNING] [WS] Connection error Event @ http://localhost:3000/src/hooks/useWebSocket.js:78
+[    3851ms] [ERROR] WebSocket connection to 'ws://localhost:8080/ws' failed: Error during WebSocket handshake: Unexpected response code: 404 @ http://localhost:3000/src/hooks/useWebSocket.js:39
+[    3851ms] [WARNING] [WS] Connection error Event @ http://localhost:3000/src/hooks/useWebSocket.js:78
+[    8359ms] [ERROR] WebSocket connection to 'ws://localhost:8080/ws' failed: Error during WebSocket handshake: Unexpected response code: 404 @ http://localhost:3000/src/hooks/useWebSocket.js:39
+[    8359ms] [WARNING] [WS] Connection error Event @ http://localhost:3000/src/hooks/useWebSocket.js:78
+[   11753ms] [WARNING] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition. @ http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4435
+[   11753ms] [WARNING] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath. @ http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4435
+[   32311ms] [ERROR] Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:520
+[   32381ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32381ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32382ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+[   32385ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32385ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32385ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17777:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   32387ms] [ERROR] The above error occurred in the <Context.Provider> component:
+
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824953762:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32387ms] [ERROR] [ErrorBoundary] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15) {componentStack: 
+    at SettingsProvider (http://localhost:3000/sr…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32387ms] [ERROR] The above error occurred in the <ForwardRef(Toaster2)> component:
+
+    at Toaster2 (http://localhost:3000/node_modules/.vite/deps/sonner.js?v=53ef45c2:882:11)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32388ms] [ERROR] [ErrorBoundary] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17777:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15) {componentStack: 
+    at Toaster2 (http://localhost:3000/node_modul…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32517ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32518ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32520ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18921:11)
+    at flushSyncCallbacks (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:9166:30)
+[   32520ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32521ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32522ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18921:11)
+    at flushSyncCallbacks (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:9166:30)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19485:11)
+[   32522ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998680:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998662:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998662:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998662:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998662:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998662:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998662:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32522ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18921:11)
+    at flushSyncCallbacks (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:9166:30) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32522ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998680:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998662:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998662:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998662:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998662:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998662:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998662:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32522ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18921:11)
+    at flushSyncCallbacks (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:9166:30)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19485:11) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32539ms] [ERROR] Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:520
+[   32563ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32563ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32564ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32564ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32564ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32564ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32565ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32565ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32565ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998680:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998662:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998662:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998662:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998662:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998669:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998662:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32565ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32566ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998680:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998662:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998662:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998662:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998662:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998669:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998662:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32566ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32668ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32669ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32670ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17638:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17749:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   32669ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32669ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32670ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32671ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32671ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32672ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32672ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32673ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32672ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32672ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32672ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32675ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+[   32673ms] [ERROR] The above error occurred in the <ErrorBoundary> component:
+
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32674ms] [ERROR] The above error occurred in the <StrictMode> component:
+
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32681ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32682ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32685ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17638:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17749:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   32682ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32682ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32683ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32685ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32683ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32684ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32684ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32687ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32685ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32685ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32685ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32688ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+[   32685ms] [ERROR] The above error occurred in the <ErrorBoundary> component:
+
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32686ms] [ERROR] The above error occurred in the <StrictMode> component:
+
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32686ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32686ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32686ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32689ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+[   32689ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32689ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32689ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32693ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17638:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17749:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   32694ms] [ERROR] Warning: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:520
+[   32718ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32718ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32718ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32718ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32719ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32719ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32719ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32719ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32719ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32721ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32720ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998669:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998669:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998669:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998670:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998669:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32720ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32720ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998669:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998669:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998669:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998670:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998669:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32720ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32736ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32736ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32736ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32736ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32737ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32737ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32738ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32738ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32738ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32738ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32738ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32740ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32739ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998670:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998669:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998669:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998670:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998669:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32739ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32740ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998670:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998669:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998669:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998670:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998669:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32740ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32748ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32748ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32749ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32749ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32749ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32749ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32751ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32750ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32750ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32750ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32750ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32750ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32750ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32753ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32752ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998670:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998669:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998669:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998670:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998669:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32752ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32752ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998670:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998669:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998669:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998670:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998669:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32752ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32762ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32762ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32762ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32762ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32762ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32763ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17638:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17749:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   32763ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32763ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32763ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32763ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32763ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32763ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32765ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32764ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32764ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32765ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32765ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32765ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32765ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32766ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32765ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32766ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32766ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32766ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32766ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32767ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32768ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+[   32767ms] [ERROR] The above error occurred in the <ErrorBoundary> component:
+
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32768ms] [ERROR] The above error occurred in the <StrictMode> component:
+
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32771ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32771ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32771ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32771ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32771ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32771ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   32773ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17638:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17749:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   32969ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32970ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32970ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32970ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32970ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32970ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32970ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32972ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32971ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32972ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32972ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32972ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32972ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32972ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32972ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32974ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32973ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998670:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998669:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998669:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998670:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998669:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32973ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32974ms] [ERROR] The above error occurred in the <Leaderboard> component:
+
+    at Leaderboard (http://localhost:3000/src/views/guild/leaderboard/index.jsx?t=1772824998670:38:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4537:26)
+    at main
+    at div
+    at PageInfoProvider (http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998669:100:36)
+    at div
+    at RouteWrapper (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:38:25)
+    at QueryHolderSkeleton (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:89:39)
+    at UserDataProvider (http://localhost:3000/src/contexts/UserDataContext.jsx?t=1772824998669:23:36)
+    at GuildBoard (http://localhost:3000/src/layouts/guild/index.jsx?t=1772824998670:132:18)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4131:5)
+    at Routes (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4601:5)
+    at Suspense
+    at Router (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4544:15)
+    at BrowserRouter (http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:5290:5)
+    at QueryHolder (http://localhost:3000/src/contexts/components/AsyncContext.jsx?t=1772824998669:22:31)
+    at AppRouter (http://localhost:3000/src/main.jsx?t=1772824998670:89:22)
+    at SettingsProvider (http://localhost:3000/src/contexts/SettingsContext.jsx?t=1772824998669:74:36)
+    at QueryClientProvider (http://localhost:3000/node_modules/.vite/deps/@tanstack_react-query.js?v=53ef45c2:3168:3)
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32974ms] [ERROR] [ErrorBoundary] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11) {componentStack: 
+    at Leaderboard (http://localhost:3000/src/vie…dules/.vite/deps/next-themes.js?v=53ef45c2:42:18)} @ http://localhost:3000/src/components/ErrorBoundary.jsx:15
+[   32982ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32982ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32983ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32983ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32983ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32983ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32984ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17638:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17749:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   32984ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32984ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32985ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32985ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32985ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32985ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32985ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32986ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   32986ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32986ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32987ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32987ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32987ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32987ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32987ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32988ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   32988ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32988ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32988ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32988ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32989ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32989ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32989ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32990ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+[   32989ms] [ERROR] The above error occurred in the <ErrorBoundary> component:
+
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32990ms] [ERROR] The above error occurred in the <StrictMode> component:
+
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   32998ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32998ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32998ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32998ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32998ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32998ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32999ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17638:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17749:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   32999ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32999ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32999ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   32999ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33000ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33000ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33000ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33001ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at commitPassiveMountOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18206:19)
+    at commitPassiveMountEffects_complete (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18179:17)
+    at commitPassiveMountEffects_begin (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18169:15)
+    at commitPassiveMountEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18159:11)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19543:11)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+[   33001ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33001ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33001ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33001ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33001ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33001ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33001ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33003ms] TypeError: setInfo is not a function
+    at http://localhost:3000/src/contexts/PageInfoContext.jsx?t=1772824998670:96:5
+    at commitHookEffectListMount (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:16963:34)
+    at invokePassiveEffectMountInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18374:19)
+    at invokeEffectsInDev (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19754:19)
+    at commitDoubleInvokeEffectsInDEV (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19739:15)
+    at flushPassiveEffectsImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19556:13)
+    at flushPassiveEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19500:22)
+    at commitRootImpl (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19469:13)
+    at commitRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:19330:13)
+    at performSyncWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:18948:11)
+[   33002ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33002ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33002ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33002ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33002ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33002ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33002ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33005ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+[   33003ms] [ERROR] The above error occurred in the <ErrorBoundary> component:
+
+    at ErrorBoundary (http://localhost:3000/src/components/ErrorBoundary.jsx:9:5)
+    at V (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:44:25)
+    at J (http://localhost:3000/node_modules/.vite/deps/next-themes.js?v=53ef45c2:42:18)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   33003ms] [ERROR] The above error occurred in the <StrictMode> component:
+
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:14079
+[   33003ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33003ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33003ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33003ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33003ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33004ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33004ms] [ERROR] [Global Error] ErrorEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:19
+[   33008ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17660:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17627:15)
+[   33005ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   33006ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   33006ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   33006ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   33006ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   33006ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   33006ms] [ERROR] [Unhandled Rejection] PromiseRejectionEvent @ http://localhost:3000/src/components/ErrorBoundary.jsx:22
+[   33012ms] NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at removeChildFromContainer (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:8509:23)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17558:21)
+    at recursivelyTraverseDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17535:13)
+    at commitDeletionEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17638:15)
+    at commitDeletionEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17526:13)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17724:17)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17946:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+    at commitMutationEffectsOnFiber (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17749:15)
+    at recursivelyTraverseMutationEffects (http://localhost:3000/node_modules/.vite/deps/chunk-PNGJSGSD.js?v=53ef45c2:17735:15)
+[   33356ms] [WARNING] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition. @ http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4435
+[   33356ms] [WARNING] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath. @ http://localhost:3000/node_modules/.vite/deps/react-router-dom.js?v=53ef45c2:4435

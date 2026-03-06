@@ -100,6 +100,14 @@ export default {
     "leaderboard.title": "XP Leaderboard",
     "leaderboard.loadFailed": "Failed to load leaderboard",
     "leaderboard.noData": "No leaderboard data",
+    "leaderboard.description": "Track your top members, compare XP pace, and spot who is climbing the server fastest.",
+    "leaderboard.compactDescription": "Your current top performers at a glance.",
+    "leaderboard.viewFull": "View full leaderboard",
+    "leaderboard.level": "Level",
+    "leaderboard.levelShort": "Lv. {level}",
+    "leaderboard.totalXp": "Total XP",
+    "leaderboard.emptyDescription": "No ranking data has been recorded for this server yet.",
+    "leaderboard.emptyHint": "Once members start earning XP, the leaderboard will come alive here.",
 
     // Settings
     "settings.title": "Server Settings",
