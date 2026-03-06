@@ -9,6 +9,7 @@ import { Badge } from "components/ui/badge";
 import { Button } from "components/ui/button";
 import { SegmentedControl } from "components/ui/segmented-control";
 import { NotificationItem, getNotificationVariant } from "components/menu/NotificationItem";
+import { CardMetric, CardSectionHeader } from "components/card/primitives";
 
 const COLLAPSED_COUNT = 4;
 
@@ -42,15 +43,6 @@ function useReadState(serverId) {
 
 function buildNotificationId(notification, index) {
   return notification.id || `${notification.type || "info"}-${notification.time || "now"}-${notification.message || "item"}-${index}`;
-}
-
-function SummaryChip({ label, value, variant = "secondary" }) {
-  return (
-    <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-primary) px-3 py-2.5">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-(--text-muted)">{label}</div>
-      <div className="mt-1 font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">{value}</div>
-    </div>
-  );
 }
 
 export default function NotificationFeed() {
@@ -112,19 +104,16 @@ export default function NotificationFeed() {
   if (!notifications || notifications.length === 0) {
     return (
       <Card variant="panel">
-        <div className="mb-4 flex items-start justify-between gap-4">
-          <div>
-            <h3 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
-              <Locale zh="通知中心" en="Notification stream" />
-            </h3>
-            <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-              <Locale zh="即時掌握建議、管理事件與系統提醒。" en="Stay on top of review queue changes, moderation activity, and system alerts." />
-            </p>
-          </div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-(--surface-secondary) text-(--accent-primary)">
-            <BellRing className="h-5 w-5" />
-          </div>
-        </div>
+        <CardSectionHeader
+          className="mb-4"
+          title={<Locale zh="通知中心" en="Notification stream" />}
+          description={<Locale zh="即時掌握建議、管理事件與系統提醒。" en="Stay on top of review queue changes, moderation activity, and system alerts." />}
+          icon={
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-(--surface-secondary) text-(--accent-primary)">
+              <BellRing className="h-5 w-5" />
+            </div>
+          }
+        />
         <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-(--border-default) bg-(--surface-primary) px-5 py-10 text-center">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-(--surface-secondary) text-(--accent-primary)">
             <Sparkles className="h-6 w-6" />
@@ -142,30 +131,27 @@ export default function NotificationFeed() {
 
   return (
     <Card variant="panel">
-      <div className="mb-4 flex items-start justify-between gap-4">
-        <div>
-          <h3 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
-            <Locale zh="通知中心" en="Notification stream" />
-          </h3>
-          <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-            <Locale zh="在儀表板上直接查看最新提醒，快速判斷現在最需要你處理的是什麼。" en="Keep the most recent alerts visible on the dashboard so you can tell what needs attention right now." />
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-full"
-          onClick={() => markAllRead(normalized.map((n) => n._id))}
-          disabled={unreadCount === 0}
-        >
-          <Locale zh="全部已讀" en="Mark all read" />
-        </Button>
-      </div>
+      <CardSectionHeader
+        className="mb-4"
+        title={<Locale zh="通知中心" en="Notification stream" />}
+        description={<Locale zh="在儀表板上直接查看最新提醒，快速判斷現在最需要你處理的是什麼。" en="Keep the most recent alerts visible on the dashboard so you can tell what needs attention right now." />}
+        action={
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full"
+            onClick={() => markAllRead(normalized.map((n) => n._id))}
+            disabled={unreadCount === 0}
+          >
+            <Locale zh="全部已讀" en="Mark all read" />
+          </Button>
+        }
+      />
 
       <div className="mb-4 grid grid-cols-3 gap-2.5">
-        <SummaryChip label={locale({ zh: "未讀", en: "Unread" })} value={unreadCount} />
-        <SummaryChip label={locale({ zh: "資訊", en: "Info" })} value={infoCount} />
-        <SummaryChip label={locale({ zh: "管理", en: "Mod" })} value={moderationCount} />
+        <CardMetric variant="chip" label={locale({ zh: "未讀", en: "Unread" })} value={unreadCount} />
+        <CardMetric variant="chip" label={locale({ zh: "資訊", en: "Info" })} value={infoCount} />
+        <CardMetric variant="chip" label={locale({ zh: "管理", en: "Mod" })} value={moderationCount} />
       </div>
 
       <SegmentedControl

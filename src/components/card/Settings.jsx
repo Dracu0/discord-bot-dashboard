@@ -7,6 +7,7 @@ import { Languages, Locale, useLocale } from "utils/Language";
 import { SegmentedControl } from "components/ui/segmented-control";
 import { Button } from "components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
+import { CardSectionHeader } from "components/card/primitives";
 
 const ACCENT_COLORS = [
   { value: "brand", color: "#8B5CF6", label: "Purple" },
@@ -33,10 +34,12 @@ export default function Settings({ ...rest }) {
   };
 
   return (
-    <Card className="mb-5" {...rest}>
-      <span className="block w-full text-(--text-primary) font-bold text-xl font-['Space_Grotesk'] mb-7.5">
-        <Locale zh="用戶設置" en="Settings" />
-      </span>
+    <Card variant="panel" className="mb-5" {...rest}>
+      <CardSectionHeader
+        className="mb-7.5"
+        title={<Locale zh="用戶設置" en="Settings" />}
+        description={<Locale zh="調整個人化外觀、語言與匯出偏好設定。" en="Personalize appearance, language, and exported dashboard preferences." />}
+      />
 
       {/* Appearance */}
       <div className="flex flex-col gap-2 mb-5">

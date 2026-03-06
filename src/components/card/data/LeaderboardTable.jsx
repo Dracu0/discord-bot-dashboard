@@ -8,6 +8,7 @@ import { Button } from "components/ui/button";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { useTranslation } from "utils/Language";
 import { avatarToUrl } from "api/discord/DiscordApi";
+import { CardSectionHeader } from "components/card/primitives";
 
 const RANK_STYLES = {
   1: {
@@ -171,15 +172,16 @@ function EmptyLeaderboard({ title }) {
 
   return (
     <Card className="w-full overflow-hidden">
-      <div className="flex items-center justify-between gap-3 border-b border-(--border-subtle) pb-4">
-        <div>
-          <p className="text-lg font-bold text-(--text-primary)">{title}</p>
-          <p className="text-sm text-(--text-secondary)">{t("leaderboard.emptyDescription")}</p>
-        </div>
-        <div className="rounded-full p-3 bg-(--surface-secondary)">
-          <Sparkles className="h-5 w-5 text-(--accent-primary)" />
-        </div>
-      </div>
+      <CardSectionHeader
+        className="border-b border-(--border-subtle) pb-4"
+        title={title}
+        description={t("leaderboard.emptyDescription")}
+        icon={
+          <div className="rounded-full bg-(--surface-secondary) p-3">
+            <Sparkles className="h-5 w-5 text-(--accent-primary)" />
+          </div>
+        }
+      />
       <div className="py-10 text-center">
         <p className="text-(--text-primary) font-semibold">{t("leaderboard.noData")}</p>
         <p className="mt-1 text-sm text-(--text-muted)">{t("leaderboard.emptyHint")}</p>
@@ -214,25 +216,24 @@ export default function LeaderboardTable({
 
   return (
     <Card className="w-full overflow-hidden px-0">
-      <div className="flex items-start justify-between gap-3 px-5 pb-4 border-b border-(--border-subtle)">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-lg font-bold text-(--text-primary)">{title}</p>
+      <CardSectionHeader
+        className="border-b border-(--border-subtle) px-5 pb-4"
+        title={title}
+        description={description || t(compact ? "leaderboard.compactDescription" : "leaderboard.description")}
+        action={
+          <div className="flex items-center gap-2">
             <Badge variant="secondary">{total ?? normalized.length} {t("common.users")}</Badge>
+            {showViewAll && guildId && (
+              <Button asChild variant="ghost" size="sm" className="shrink-0">
+                <Link to={`/guild/${guildId}/leaderboard`}>
+                  {t("leaderboard.viewFull")}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            )}
           </div>
-          <p className="mt-1 text-sm text-(--text-secondary)">
-            {description || t(compact ? "leaderboard.compactDescription" : "leaderboard.description")}
-          </p>
-        </div>
-        {showViewAll && guildId && (
-          <Button asChild variant="ghost" size="sm" className="shrink-0">
-            <Link to={`/guild/${guildId}/leaderboard`}>
-              {t("leaderboard.viewFull")}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        )}
-      </div>
+        }
+      />
 
       <div className="px-5 py-5">
         <div className={compact ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 xl:grid-cols-3 gap-3"}>

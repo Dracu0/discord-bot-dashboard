@@ -5,6 +5,7 @@ import { GuildContext } from "contexts/guild/GuildContext";
 import { Locale, useLocale } from "utils/Language";
 import Card from "components/card/Card";
 import { Badge } from "components/ui/badge";
+import { CardHeading, CardSectionHeader } from "components/card/primitives";
 
 const actions = [
   {
@@ -36,9 +37,11 @@ export default function QuickActions() {
 
   return (
     <div className="mb-6">
-      <span className="mb-3 block font-['Space_Grotesk'] text-sm font-semibold tracking-tight text-(--text-primary)">
-        <Locale zh="快捷操作" en="Quick Actions" />
-      </span>
+      <CardSectionHeader
+        className="mb-3"
+        title={<Locale zh="快捷操作" en="Quick Actions" />}
+        titleClassName="text-sm font-semibold tracking-tight"
+      />
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         {actions.map(({ icon: Icon, label, description, path, badge }) => (
           <Link key={path} to={`/guild/${serverId}/${path}`} className="group">
@@ -53,14 +56,11 @@ export default function QuickActions() {
                   </Badge>
                 </div>
 
-                <div className="space-y-1.5">
-                  <h3 className="font-['Space_Grotesk'] text-base font-semibold text-(--text-primary)">
-                    <Locale {...label} />
-                  </h3>
-                  <p className="text-sm leading-6 text-(--text-secondary)">
-                    {locale(description)}
-                  </p>
-                </div>
+                <CardHeading
+                  title={<Locale {...label} />}
+                  description={locale(description)}
+                  titleClassName="text-base"
+                />
 
                 <div className="mt-auto flex items-center gap-2 text-sm font-medium text-(--accent-primary)">
                   <span><Locale zh="立即前往" en="Open workspace" /></span>

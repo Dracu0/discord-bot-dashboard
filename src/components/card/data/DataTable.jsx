@@ -2,6 +2,7 @@ import React from "react";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 import { ArrowUp, ArrowDown, ChevronLeft, ChevronRight, TableProperties } from "lucide-react";
 import Card from "components/card/Card";
+import { CardSectionHeader } from "components/card/primitives";
 import { Badge } from "components/ui/badge";
 import { Button } from "components/ui/button";
 import { useTranslation } from "utils/Language";
@@ -35,19 +36,12 @@ export default function DataTable({ name, data, columns, description }) {
 
   return (
     <Card className="w-full px-0! overflow-hidden">
-      <div className="flex items-start justify-between gap-3 px-5 pb-4 border-b border-(--border-subtle)">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-(--text-primary) text-lg font-bold leading-none">
-              {name}
-            </span>
-            <Badge variant="secondary">{(data || []).length} {t("common.rows")}</Badge>
-          </div>
-          {description && (
-            <p className="mt-1 text-sm text-(--text-secondary)">{description}</p>
-          )}
-        </div>
-      </div>
+      <CardSectionHeader
+        className="border-b border-(--border-subtle) px-5 pb-4"
+        title={name}
+        description={description}
+        action={<Badge variant="secondary">{(data || []).length} {t("common.rows")}</Badge>}
+      />
 
       <div className="overflow-x-auto px-3 md:px-4 py-4">
       <table {...getTableProps()} className="w-full min-w-160 border-separate border-spacing-0">

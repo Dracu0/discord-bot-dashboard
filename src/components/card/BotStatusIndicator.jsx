@@ -2,6 +2,7 @@ import React from "react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 import { useBotStatus } from "hooks/useWebSocket";
 import { Locale } from "utils/Language";
+import { CardPill } from "components/card/primitives";
 
 const STATUS_MAP = {
   online: { color: "green", label: { zh: "在線", en: "Online" } },
@@ -30,11 +31,11 @@ export default function BotStatusIndicator() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="inline-flex cursor-default items-center gap-2 rounded-full border border-(--border-subtle) bg-(--surface-primary) px-3 py-1.5 text-xs font-semibold text-(--text-primary) shadow-(--shadow-xs)">
+            <CardPill className="cursor-default gap-2 text-xs font-semibold text-(--text-primary)">
               <span className={`h-2.5 w-2.5 rounded-full ${STATUS_DOT_CLASSES[cfg.color] || "bg-gray-500"}`} />
               <span><Locale {...cfg.label} /></span>
               {hasLiveStatus && ping != null && <span className="text-(--text-muted)">{ping}ms</span>}
-            </div>
+            </CardPill>
           </TooltipTrigger>
           <TooltipContent side="bottom">
             {hasLiveStatus

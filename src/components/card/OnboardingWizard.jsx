@@ -9,6 +9,7 @@ import { Button } from "components/ui/button";
 import { Badge } from "components/ui/badge";
 import { Checkbox } from "components/ui/checkbox";
 import { Stepper, StepperStep } from "components/ui/stepper";
+import Card from "components/card/Card";
 
 const RECOMMENDED_FEATURES = ["welcome", "xp", "modlog", "automod"];
 
@@ -55,13 +56,7 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
   if (enabledFeatures && enabledFeatures.length > 0) return null;
 
   return (
-    <div
-      className="p-6 rounded-2xl mb-6 border"
-      style={{
-        background: "linear-gradient(135deg, var(--surface-card) 0%, var(--surface-secondary) 100%)",
-        borderColor: "var(--border-subtle)",
-      }}
-    >
+    <Card variant="panel" className="mb-6 rounded-[28px] p-6">
       <Stepper activeStep={step} size="sm">
         {/* Step 0: Welcome */}
         <StepperStep
@@ -217,6 +212,6 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
           </div>
         </StepperStep>
       </Stepper>
-    </div>
+    </Card>
   );
 }

@@ -1,15 +1,16 @@
 ﻿import Card from "components/card/Card";
 import React from "react";
+import { CardSectionHeader } from "components/card/primitives";
 
 export function List({ title, description, icon, items }) {
   return (
     <Card variant="flush" className="overflow-hidden">
-      <div className="flex w-full flex-col gap-1 border-b border-(--border-subtle) bg-(--surface-card) px-5 py-4.5 md:px-6 md:py-5">
-        <span className="font-['Space_Grotesk'] text-xl font-semibold text-(--text-primary)">
-          {title}
-        </span>
-        <span className="text-sm text-(--text-secondary)">{description}</span>
-      </div>
+      <CardSectionHeader
+        className="border-b border-(--border-subtle) bg-(--surface-card) px-5 py-4.5 md:px-6 md:py-5"
+        title={title}
+        description={description}
+        titleClassName="text-xl"
+      />
       {(items || []).map((item, key) => (
         <ListItem key={key} icon={icon} {...item} />
       ))}

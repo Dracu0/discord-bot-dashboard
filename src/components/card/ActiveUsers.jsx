@@ -3,6 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "components/ui/avatar";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 import { usePresence } from "hooks/useWebSocket";
 import { useLocale } from "utils/Language";
+import { CardPill } from "components/card/primitives";
 
 export default function ActiveUsers({ guildId, page }) {
   const users = usePresence(guildId, page);
@@ -11,7 +12,7 @@ export default function ActiveUsers({ guildId, page }) {
   if (!users || users.length === 0) return null;
 
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-(--border-subtle) bg-(--surface-primary) px-2.5 py-1.5 shadow-(--shadow-xs)">
+    <CardPill className="gap-2 px-2.5">
       <span className="text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)">
         {locale({ zh: "線上", en: "Online" })}
       </span>
@@ -53,6 +54,6 @@ export default function ActiveUsers({ guildId, page }) {
           )}
         </div>
       </TooltipProvider>
-    </div>
+    </CardPill>
   );
 }
