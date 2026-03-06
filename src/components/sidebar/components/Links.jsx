@@ -26,7 +26,7 @@ export function SidebarLinks({ routes, collapsed, onNavigate }) {
   const grouped = [];
   let lastCategory = null;
 
-  routes.forEach((route, index) => {
+  (routes || []).forEach((route, index) => {
     const cat = route.category ? locale(route.category) : null;
     if (cat && cat !== lastCategory) {
       grouped.push({ type: "category", label: cat, key: `cat-${index}` });

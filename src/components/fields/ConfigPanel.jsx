@@ -99,7 +99,7 @@ function useConfigSaveState(save, onSaved, getInitialState) {
 }
 
 export function ConfigItemListAnimated({ options, changes, errors, onChange }) {
-    return options.map((option) => (
+    return (options || []).map((option) => (
         <div key={option.id} className="w-full h-full">
             <OptionPanel
                 option={option}

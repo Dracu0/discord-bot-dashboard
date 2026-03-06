@@ -11,7 +11,7 @@ export default function InformationMap({name, description, value, ...rest}) {
             </span>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">{
-                value.map((item, key) =>
+                (value || []).map((item, key) =>
                     <Information
                         key={key}
                         title={item.name}

@@ -10,7 +10,7 @@ export function List({ title, description, icon, items }) {
         </span>
         <span className="text-[var(--text-secondary)]">{description}</span>
       </div>
-      {items.map((item, key) => (
+      {(items || []).map((item, key) => (
         <ListItem key={key} icon={icon} {...item} />
       ))}
     </Card>

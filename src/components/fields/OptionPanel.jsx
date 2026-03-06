@@ -115,7 +115,7 @@ export function getInput(value, onChange, option, error) {
         case OptionTypes.Enum:
             return (
                 <SelectField
-                    options={option.choices.map((choice) => ({
+                    options={(option.choices || []).map((choice) => ({
                         label: choice,
                         value: choice,
                     }))}

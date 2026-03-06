@@ -9,7 +9,7 @@ import { List } from "./List";
 import InformationMap from "./InformationMap";
 
 export function DataList({items}) {
-    return items.map((item, key) => {
+    return (items || []).map((item, key) => {
 
         return <DataCard key={key} {...item} />
     })
@@ -67,8 +67,9 @@ export default function DataCard({name, value, type, ...optional}) {
             }
 
             case DataTypes.Group: {
-                return <div className={`grid grid-cols-1 xl:grid-cols-${value.length} gap-5`}>
-                    {value.map((item, key) => <DataCard key={key} {...item} />)}
+                const groupItems = value || [];
+                return <div className={`grid grid-cols-1 xl:grid-cols-${groupItems.length} gap-5`}>
+                    {groupItems.map((item, key) => <DataCard key={key} {...item} />)}
                 </div>
             }
 
