@@ -44,13 +44,6 @@ export const config = {
             value: currentSettings.language || "en",
         },
         {
-            id: "fixedWidth",
-            name: "Fixed Width",
-            description: "Use a fixed viewport width for the dashboard layout",
-            type: "boolean",
-            value: currentSettings.fixedWidth ?? true,
-        },
-        {
             id: "devMode",
             name: "Developer Mode",
             description: "Enable developer mode for advanced options",

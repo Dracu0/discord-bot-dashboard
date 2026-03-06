@@ -15,18 +15,18 @@ function SegmentedControl({ value, onChange, onValueChange, data, items: itemsPr
   };
 
   return (
-    <div className={cn("inline-flex items-center rounded-[var(--radius-md)] bg-[var(--surface-secondary)] p-1", className)}>
+    <div className={cn("inline-flex items-center rounded-md bg-(--surface-secondary) p-1", className)}>
       {items.map((item) => (
         <button
           key={item.value}
           type="button"
           onClick={() => resolvedOnChange(item.value)}
           className={cn(
-            "relative inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-sm)] font-medium transition-all duration-150 cursor-pointer",
+            "relative inline-flex items-center justify-center whitespace-nowrap rounded-sm font-medium transition-all duration-150 cursor-pointer",
             sizes[size],
             value === item.value
-              ? "bg-[var(--surface-primary)] text-[var(--text-primary)] shadow-[var(--shadow-xs)]"
-              : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+              ? "bg-(--surface-primary) text-(--text-primary) shadow-(--shadow-xs)"
+              : "text-(--text-muted) hover:text-(--text-secondary)"
           )}
         >
           {item.label}

@@ -1,4 +1,4 @@
-import { cn } from "lib/utils";
+﻿import { cn } from "lib/utils";
 import { Calendar, BarChart3, CircleCheck, AlertTriangle } from "lucide-react";
 import { Button } from "components/ui/button";
 import Card from "components/card/Card";
@@ -13,9 +13,9 @@ export default function ChartData({ name, description, value, time_unit, status,
                     {time_unit && (
                         <Button
                             variant="secondary"
-                            className="bg-[var(--surface-secondary)] text-sm font-medium text-[var(--text-primary)] rounded-[7px]"
+                            className="bg-(--surface-secondary) text-sm font-medium text-(--text-primary) rounded-[7px]"
                         >
-                            <Calendar size={16} className="text-[var(--text-primary)]" />
+                            <Calendar size={16} className="text-(--text-primary)" />
                             {time_unit}
                         </Button>
                     )}
@@ -23,9 +23,9 @@ export default function ChartData({ name, description, value, time_unit, status,
                     <Button
                         variant="secondary"
                         size="icon"
-                        className="ms-auto bg-[var(--surface-secondary)] w-[37px] h-[37px] p-0 rounded-[10px]"
+                        className="ms-auto bg-(--surface-secondary) w-9.25 h-9.25 p-0 rounded-[10px]"
                     >
-                        <BarChart3 size={24} className="text-[var(--accent-primary)]" />
+                        <BarChart3 size={24} className="text-(--accent-primary)" />
                     </Button>
                 </div>
             </div>
@@ -33,13 +33,13 @@ export default function ChartData({ name, description, value, time_unit, status,
                 <div className="flex flex-col items-start text-start me-5 mt-7 gap-0">
                     <span
                         className={cn(
-                            "text-[var(--text-primary)] font-bold leading-none",
+                            "text-(--text-primary) font-bold leading-none",
                             name.length <= 5 ? "text-[34px]" : "text-xl"
                         )}
                     >
                         {name}
                     </span>
-                    <span className="text-[var(--text-secondary)] text-sm font-medium mt-1 mb-8">
+                    <span className="text-(--text-secondary) text-sm font-medium mt-1 mb-8">
                         {description}
                     </span>
 
@@ -63,7 +63,7 @@ export default function ChartData({ name, description, value, time_unit, status,
                         </div>
                     )}
                 </div>
-                <div className="min-h-[260px] min-w-[75%] mt-auto">
+                <div className="min-h-65 min-w-[75%] mt-auto">
                     <ApexChart
                         chartOptions={options}
                         chartData={value}

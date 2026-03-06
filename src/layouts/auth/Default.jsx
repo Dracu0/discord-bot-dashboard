@@ -1,9 +1,9 @@
-import React from "react";
+﻿import React from "react";
 import FixedPlugin from "components/fixedPlugin/FixedPlugin";
 
 function AuthIllustration({ children }) {
   return (
-    <div className="relative min-h-screen bg-[var(--surface-primary)] flex overflow-hidden">
+    <div className="relative min-h-screen bg-(--surface-primary) flex overflow-hidden">
       {/* Decorative glow orbs */}
       <div
         className="absolute hidden sm:block md:w-[500px] md:h-[500px] w-[250px] h-[250px]"

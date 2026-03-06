@@ -4,7 +4,6 @@ import {useTheme} from "next-themes";
 export const SettingsContext = createContext({
     updateSettings: (settings) => {},
     devMode: null,
-    fixedWidth: null,
     language: "en",
     colorScheme: "system",
     sidebarCollapsed: false,
@@ -15,7 +14,6 @@ export function SettingsProvider({children}) {
     const { setTheme } = useTheme();
     const [settings, setSetting] = useState(() => ({
         devMode: getItem("dev_mode", false),
-        fixedWidth: getItem("fixedWidth", true),
         language: getItem("lang", "en"),
         colorScheme: getItem("colorScheme", "system"),
         sidebarCollapsed: getItem("sidebarCollapsed", false),
@@ -32,7 +30,6 @@ export function SettingsProvider({children}) {
             try {
                 localStorage.setItem("lang", settings.language)
                 localStorage.setItem("dev_mode", settings.devMode)
-                localStorage.setItem("fixedWidth", settings.fixedWidth)
                 localStorage.setItem("colorScheme", JSON.stringify(settings.colorScheme))
                 localStorage.setItem("sidebarCollapsed", JSON.stringify(settings.sidebarCollapsed))
                 localStorage.setItem("accentColor", JSON.stringify(settings.accentColor))

@@ -36,7 +36,7 @@ export function SelectField({ value, onChange, options, isMulti, placeholder, er
         value={value != null ? String(value) : undefined}
         onValueChange={(val) => onChange && onChange(val)}
       >
-        <SelectTrigger className={cn(error && "border-[var(--status-error)]")}>
+        <SelectTrigger className={cn(error && "border-(--status-error)")}>
           <SelectValue placeholder={placeholder || "Select an item"} />
         </SelectTrigger>
         <SelectContent>
@@ -48,7 +48,7 @@ export function SelectField({ value, onChange, options, isMulti, placeholder, er
         </SelectContent>
       </Select>
       {error && (
-        <p className="text-xs text-[var(--status-error)] mt-1">{error}</p>
+        <p className="text-xs text-(--status-error) mt-1">{error}</p>
       )}
     </div>
   );
@@ -76,13 +76,13 @@ function MultiSelectField({ data, value, onChange, placeholder, error }) {
     <div>
       <div
         className={cn(
-          "flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-primary)] px-3 py-1.5 text-sm shadow-[var(--shadow-xs)] cursor-pointer",
-          error && "border-[var(--status-error)]"
+          "flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-(--radius-md) border border-(--border-default) bg-(--surface-primary) px-3 py-1.5 text-sm shadow-(--shadow-xs) cursor-pointer",
+          error && "border-(--status-error)"
         )}
         onClick={() => setOpen(!open)}
       >
         {selected.length === 0 && (
-          <span className="text-[var(--text-muted)]">{placeholder || "Select items"}</span>
+          <span className="text-(--text-muted)">{placeholder || "Select items"}</span>
         )}
         {selected.map((val) => {
           const item = data.find((d) => d.value === val);
@@ -91,7 +91,7 @@ function MultiSelectField({ data, value, onChange, placeholder, error }) {
               {item?.label || val}
               <button
                 type="button"
-                className="ml-0.5 rounded-full hover:bg-[var(--surface-secondary)] p-0.5"
+                className="ml-0.5 rounded-full hover:bg-(--surface-secondary) p-0.5"
                 onClick={(e) => {
                   e.stopPropagation();
                   removeItem(val);
@@ -104,14 +104,14 @@ function MultiSelectField({ data, value, onChange, placeholder, error }) {
         })}
       </div>
       {open && (
-        <div className="mt-1 max-h-60 overflow-auto rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-card)] p-1 shadow-[var(--shadow-lg)] z-50">
+        <div className="mt-1 max-h-60 overflow-auto rounded-(--radius-md) border border-(--border-default) bg-(--surface-card) p-1 shadow-(--shadow-lg) z-50">
           {data.map((item) => (
             <button
               key={item.value}
               type="button"
               className={cn(
-                "flex w-full items-center rounded-[var(--radius-sm)] px-2 py-1.5 text-sm text-[var(--text-primary)] hover:bg-[var(--surface-secondary)] cursor-pointer",
-                selected.includes(item.value) && "bg-[var(--surface-secondary)] font-medium"
+                "flex w-full items-center rounded-(--radius-sm) px-2 py-1.5 text-sm text-(--text-primary) hover:bg-(--surface-secondary) cursor-pointer",
+                selected.includes(item.value) && "bg-(--surface-secondary) font-medium"
               )}
               onClick={() => toggleItem(item.value)}
             >
@@ -121,7 +121,7 @@ function MultiSelectField({ data, value, onChange, placeholder, error }) {
         </div>
       )}
       {error && (
-        <p className="text-xs text-[var(--status-error)] mt-1">{error}</p>
+        <p className="text-xs text-(--status-error) mt-1">{error}</p>
       )}
     </div>
   );

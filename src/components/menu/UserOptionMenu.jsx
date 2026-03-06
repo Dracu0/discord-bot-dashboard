@@ -1,4 +1,4 @@
-import { useContext } from "react";
+﻿import { useContext } from "react";
 import { UserDataContext } from "contexts/UserDataContext";
 import { Link } from "react-router-dom";
 import { useLogout } from "../../api/internal";
@@ -22,7 +22,7 @@ export default function UserOptionMenu() {
         >
             <div className="w-full mb-0">
                 <span
-                    className="block ps-5 pt-4 pb-2.5 w-full text-sm font-bold text-[var(--text-primary)]"
+                    className="block ps-5 pt-4 pb-2.5 w-full text-sm font-bold text-(--text-primary)"
                     style={{ borderBottom: "1px solid var(--border-subtle)" }}
                 >
                     <Locale zh="\u6b61\u8fce" en="Welcome" />, {user.username}

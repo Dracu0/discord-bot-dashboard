@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+﻿import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Trophy } from "lucide-react";
 import { GuildContext } from "contexts/guild/GuildContext";
@@ -28,7 +28,7 @@ export default function Leaderboard() {
 
     if (query.isLoading && !query.data) {
         return (
-            <div className="flex items-center justify-center h-[400px]" style={{ paddingTop: "80px" }}>
+            <div className="flex items-center justify-center h-100" style={{ paddingTop: "80px" }}>
                 <Spinner size="lg" />
             </div>
         );
@@ -49,14 +49,14 @@ export default function Leaderboard() {
     return (
         <div style={{ paddingTop: "80px" }}>
             <div className="flex items-center gap-2 mb-6">
-                <Trophy size={28} className="text-[var(--accent-primary)]" />
+                <Trophy size={28} className="text-(--accent-primary)" />
                 <h2
-                    className="text-2xl font-bold text-[var(--text-primary)]"
+                    className="text-2xl font-bold text-(--text-primary)"
                     style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                 >
                     {t("leaderboard.title")}
                 </h2>
-                <span className="text-[var(--text-secondary)] text-sm">
+                <span className="text-(--text-secondary) text-sm">
                     ({data.total} {t("common.users")})
                 </span>
             </div>
@@ -65,16 +65,16 @@ export default function Leaderboard() {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="bg-[var(--surface-secondary)] border-[var(--border-subtle)]">
+                            <TableHead className="bg-(--surface-secondary) border-(--border-subtle)">
                                 <span className="text-xs text-gray-400 font-bold">Rank</span>
                             </TableHead>
-                            <TableHead className="bg-[var(--surface-secondary)] border-[var(--border-subtle)]">
+                            <TableHead className="bg-(--surface-secondary) border-(--border-subtle)">
                                 <span className="text-xs text-gray-400 font-bold">User</span>
                             </TableHead>
-                            <TableHead className="bg-[var(--surface-secondary)] border-[var(--border-subtle)]">
+                            <TableHead className="bg-(--surface-secondary) border-(--border-subtle)">
                                 <span className="text-xs text-gray-400 font-bold">Level</span>
                             </TableHead>
-                            <TableHead className="bg-[var(--surface-secondary)] border-[var(--border-subtle)]">
+                            <TableHead className="bg-(--surface-secondary) border-(--border-subtle)">
                                 <span className="text-xs text-gray-400 font-bold">XP</span>
                             </TableHead>
                         </TableRow>
@@ -84,7 +84,7 @@ export default function Leaderboard() {
                             <TableRow>
                                 <TableCell colSpan={4} className="border-none">
                                     <div className="flex items-center justify-center py-8">
-                                        <span className="text-[var(--text-muted)]">{t("leaderboard.noData")}</span>
+                                        <span className="text-(--text-muted)">{t("leaderboard.noData")}</span>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -92,21 +92,21 @@ export default function Leaderboard() {
                             users.map((user, i) => (
                                 <TableRow
                                     key={user.userId}
-                                    className={i % 2 === 1 ? "bg-[var(--surface-secondary)]" : "bg-transparent"}
+                                    className={i % 2 === 1 ? "bg-(--surface-secondary)" : "bg-transparent"}
                                 >
                                     <TableCell className="border-none">
-                                        <span className={`text-base font-bold ${user.rank <= 3 ? "text-[var(--accent-primary)]" : "text-[var(--text-primary)]"}`}>
+                                        <span className={`text-base font-bold ${user.rank <= 3 ? "text-(--accent-primary)" : "text-(--text-primary)"}`}>
                                             #{user.rank}
                                         </span>
                                     </TableCell>
                                     <TableCell className="border-none">
-                                        <span className="text-base font-bold text-[var(--text-primary)]">{user.userName}</span>
+                                        <span className="text-base font-bold text-(--text-primary)">{user.userName}</span>
                                     </TableCell>
                                     <TableCell className="border-none">
-                                        <span className="text-base font-bold text-[var(--text-primary)]">{user.level}</span>
+                                        <span className="text-base font-bold text-(--text-primary)">{user.level}</span>
                                     </TableCell>
                                     <TableCell className="border-none">
-                                        <span className="text-base text-[var(--text-primary)]">{user.xp.toLocaleString()}</span>
+                                        <span className="text-base text-(--text-primary)">{user.xp.toLocaleString()}</span>
                                     </TableCell>
                                 </TableRow>
                             ))

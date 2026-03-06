@@ -13,23 +13,23 @@ export default function Server({ server, ...rest }) {
     return (
         <Card className="p-4" {...rest}>
             <div className="flex items-center flex-col md:flex-row gap-4">
-                <Avatar className="w-20 h-20 shrink-0 rounded-[var(--radius-md)]">
+                <Avatar className="w-20 h-20 shrink-0 rounded-(--radius-md)">
                     <AvatarImage src={icon && iconToUrl(id, icon)} alt={name} />
-                    <AvatarFallback className="rounded-[var(--radius-md)] text-lg">
+                    <AvatarFallback className="rounded-(--radius-md) text-lg">
                         {name?.charAt(0)}
                     </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-2 items-center md:items-start flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap justify-center md:justify-start">
                         <span
-                            className="text-[var(--text-primary)] font-semibold text-lg truncate"
+                            className="text-(--text-primary) font-semibold text-lg truncate"
                             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                         >
                             {name}
                         </span>
                         {server.exist && (
                             <Badge variant="green">
-                                <Locale zh="已加入" en="Joined" />
+                                <Locale zh="???" en="Joined" />
                             </Badge>
                         )}
                     </div>
@@ -44,7 +44,7 @@ function InviteButton() {
     return (
         <Button variant="outline" size="sm" asChild>
             <Link to="/invite" target="_blank">
-                <Locale zh="邀請到服務器" en="Invite to Server" />
+                <Locale zh="??????" en="Invite to Server" />
             </Link>
         </Button>
     );
@@ -54,7 +54,7 @@ function ConfigButton({ server }) {
     return (
         <Button variant="default" size="sm" asChild>
             <Link to={`/guild/${server.id}`}>
-                <Locale zh="配置服務器" en="Customize" />
+                <Locale zh="?????" en="Customize" />
             </Link>
         </Button>
     );

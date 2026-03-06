@@ -1,4 +1,4 @@
-import { ArrowUp } from "lucide-react";
+﻿import { ArrowUp } from "lucide-react";
 import React from "react";
 
 export function NotificationItem({ title, description, image }) {
@@ -11,11 +11,11 @@ export function NotificationItem({ title, description, image }) {
             </div>
 
             <div className="flex flex-col">
-                <span className="mb-1.5 font-bold text-[var(--text-primary)] text-base">
+                <span className="mb-1.5 font-bold text-(--text-primary) text-base">
                     {title}
                 </span>
                 <div className="flex items-center">
-                    <span className="text-sm leading-none text-[var(--text-secondary)]">
+                    <span className="text-sm leading-none text-(--text-secondary)">
                         {description}
                     </span>
                 </div>

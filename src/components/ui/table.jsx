@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+﻿import { forwardRef } from "react";
 import { cn } from "lib/utils";
 
 const Table = forwardRef(({ className, ...props }, ref) => (
@@ -22,7 +22,7 @@ const TableRow = forwardRef(({ className, ...props }, ref) => (
   <tr
     ref={ref}
     className={cn(
-      "border-b border-[var(--border-subtle)] transition-colors hover:bg-[var(--surface-secondary)] data-[state=selected]:bg-[var(--surface-secondary)]",
+      "border-b border-(--border-subtle) transition-colors hover:bg-(--surface-secondary) data-[state=selected]:bg-(--surface-secondary)",
       className
     )}
     {...props}
@@ -34,7 +34,7 @@ const TableHead = forwardRef(({ className, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
-      "h-10 px-4 text-left align-middle font-medium text-[var(--text-muted)] [&:has([role=checkbox])]:pr-0",
+      "h-10 px-4 text-left align-middle font-medium text-(--text-muted) [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}

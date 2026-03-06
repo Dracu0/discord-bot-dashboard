@@ -1,4 +1,4 @@
-import { cn } from "lib/utils";
+﻿import { cn } from "lib/utils";
 
 const sizes = {
   sm: "h-4 w-4 border-[1.5px]",
@@ -11,7 +11,7 @@ function Spinner({ size = "md", className }) {
   return (
     <div
       className={cn(
-        "animate-spin rounded-full border-[var(--accent-primary)] border-t-transparent",
+        "animate-spin rounded-full border-(--accent-primary) border-t-transparent",
         sizes[size],
         className
       )}

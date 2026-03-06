@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "components/ui/tabs";
+﻿import { Tabs, TabsList, TabsTrigger, TabsContent } from "components/ui/tabs";
 import { Separator } from "components/ui/separator";
 import { OptionField, OptionHandlerContext } from "../OptionPanel";
 import { InputField } from "../impl/InputField";
@@ -60,7 +60,7 @@ function MessagePanel({ data, onChange }) {
         value={data.message}
         onChange={(event) => onType(event.target.value)}
       />
-      <p className="text-xs text-[var(--text-muted)] mt-1">
+      <p className="text-xs text-(--text-muted) mt-1">
         Content cannot be empty
       </p>
     </div>
@@ -149,7 +149,7 @@ function Category({ isFirst, name, fields, mapper }) {
   return (
     <div className="flex flex-col">
       {!isFirst && <Separator className="my-4" />}
-      <p className="text-xl font-bold my-3 text-[var(--text-primary)]">
+      <p className="text-xl font-bold my-3 text-(--text-primary)">
         {name}
       </p>
       <div className="flex flex-col gap-3">{fields.map(mapper)}</div>
@@ -161,7 +161,7 @@ function Field({ option, value, onChange, head }) {
   return (
     <>
       <span
-        className={head ? "text-lg font-bold text-[var(--text-primary)]" : "text-[var(--text-primary)]"}
+        className={head ? "text-lg font-bold text-(--text-primary)" : "text-(--text-primary)"}
         style={{ wordBreak: "keep-all" }}
       >
         {option.name}

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import not_found from "assets/img/info/not_found_404.svg";
 import { Locale } from "utils/Language";
 import { ArrowLeft } from "lucide-react";
@@ -25,10 +25,10 @@ export default function NotFound() {
                 >
                     404
                 </h1>
-                <span className="text-lg text-[var(--text-primary)] font-semibold mt-1">
+                <span className="text-lg text-(--text-primary) font-semibold mt-1">
                     <Locale zh="\u627e\u4e0d\u5230\u9801\u9762" en="Page Not Found" />
                 </span>
-                <span className="text-sm text-[var(--text-secondary)] mt-1 text-center max-w-[360px]">
+                <span className="text-sm text-(--text-secondary) mt-1 text-center max-w-[360px]">
                     <Locale zh="\u60a8\u8acb\u6c42\u7684\u8cc7\u6e90\u4e0d\u5b58\u5728" en="The page you're looking for doesn't exist or has been moved" />
                 </span>
                 <Button asChild className="mt-6" size="lg">

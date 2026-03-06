@@ -1,4 +1,4 @@
-import { Sun, Moon, Monitor, Download } from "lucide-react";
+﻿import { Sun, Moon, Monitor, Download } from "lucide-react";
 import Card from "components/card/Card";
 import SwitchField from "components/fields/impl/SwitchField";
 import { useContext } from "react";
@@ -19,7 +19,7 @@ const ACCENT_COLORS = [
 ];
 
 export default function Settings({ ...rest }) {
-  const { updateSettings, devMode, fixedWidth, language, colorScheme, accentColor } = useContext(SettingsContext);
+  const { updateSettings, devMode, language, colorScheme, accentColor } = useContext(SettingsContext);
   const locale = useLocale();
 
   const SwitchRow = ({ label, isChecked, onChange, ...props }) => {
@@ -49,17 +49,17 @@ export default function Settings({ ...rest }) {
 
   return (
     <Card className="mb-5" {...rest}>
-      <span className="block w-full text-[var(--text-primary)] font-bold text-xl font-['Space_Grotesk'] mb-[30px]">
+      <span className="block w-full text-(--text-primary) font-bold text-xl font-['Space_Grotesk'] mb-7.5">
         <Locale zh="用戶設置" en="Settings" />
       </span>
 
       {/* Appearance */}
       <div className="flex flex-col gap-2 mb-5">
-        <span className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-[0.5px]">
+        <span className="text-sm font-semibold text-(--text-muted) uppercase tracking-[0.5px]">
           <Locale zh="外觀" en="Appearance" />
         </span>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-[var(--text-primary)] font-medium">
+          <span className="text-sm text-(--text-primary) font-medium">
             <Locale zh="主題" en="Theme" />
           </span>
           <SegmentedControl
@@ -74,7 +74,7 @@ export default function Settings({ ...rest }) {
           />
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-[var(--text-primary)] font-medium">
+          <span className="text-sm text-(--text-primary) font-medium">
             <Locale zh="強調色" en="Accent Color" />
           </span>
           <TooltipProvider>
@@ -83,7 +83,7 @@ export default function Settings({ ...rest }) {
                 <Tooltip key={value}>
                   <TooltipTrigger asChild>
                     <div
-                      className="h-[22px] w-[22px] rounded-full cursor-pointer"
+                      className="h-5.5 w-5.5 rounded-full cursor-pointer"
                       style={{
                         backgroundColor: color,
                         outline: (accentColor || "brand") === value
@@ -104,18 +104,9 @@ export default function Settings({ ...rest }) {
 
       {/* General */}
       <div className="flex flex-col gap-2 mb-5">
-        <span className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-[0.5px]">
+        <span className="text-sm font-semibold text-(--text-muted) uppercase tracking-[0.5px]">
           <Locale zh="一般" en="General" />
         </span>
-        <SwitchRow
-          label={{ zh: "固定屏幕最小寬度", en: "Fixed Screen Min-Width" }}
-          isChecked={fixedWidth}
-          onChange={(v) =>
-            updateSettings({
-              fixedWidth: v,
-            })
-          }
-        />
         <SwitchRow
           label={{ zh: "開發者模式", en: "Developer Mode" }}
           isChecked={devMode}
@@ -129,7 +120,7 @@ export default function Settings({ ...rest }) {
 
       {/* Language */}
       <div className="flex flex-col gap-2 mb-5">
-        <span className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-[0.5px]">
+        <span className="text-sm font-semibold text-(--text-muted) uppercase tracking-[0.5px]">
           <Locale zh="語言" en="Language" />
         </span>
         <SelectField
@@ -145,7 +136,7 @@ export default function Settings({ ...rest }) {
 
       {/* Data */}
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-[0.5px]">
+        <span className="text-sm font-semibold text-(--text-muted) uppercase tracking-[0.5px]">
           <Locale zh="資料" en="Data" />
         </span>
         <Button

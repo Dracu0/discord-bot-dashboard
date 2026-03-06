@@ -1,4 +1,4 @@
-import React, { Suspense, useContext, useEffect } from 'react';
+﻿import React, { Suspense, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
@@ -9,7 +9,7 @@ import 'assets/css/App.css';
 
 import { hasLoggedIn } from './api/internal';
 import { QueryHolder } from './contexts/components/AsyncContext';
-import { SettingsContext, SettingsProvider } from './contexts/SettingsContext';
+import { SettingsProvider } from './contexts/SettingsContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { config } from './config/config';
 import GuildBoard, { GuildRoutes } from 'layouts/guild';
@@ -21,8 +21,8 @@ function LazyFallback() {
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="flex flex-col items-center gap-2">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent-primary)] border-t-transparent" />
-        <p className="text-sm text-[var(--text-secondary)]">Loading...</p>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-(--accent-primary) border-t-transparent" />
+        <p className="text-sm text-(--text-secondary)">Loading...</p>
       </div>
     </div>
   );
@@ -63,23 +63,18 @@ function AppRouter() {
     queryFn: () => hasLoggedIn(),
     refetchOnWindowFocus: false,
   });
-  const { fixedWidth } = useContext(SettingsContext);
   const loggedIn = loginQuery.data;
 
   if (loginQuery.isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent-primary)] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-(--accent-primary) border-t-transparent" />
       </div>
     );
   }
 
   return (
     <QueryHolder query={loginQuery}>
-      <meta
-        name="viewport"
-        content={`width=${fixedWidth ? '340' : 'device-width'}, initial-scale=1`}
-      />
       <BrowserRouter>
         <Suspense fallback={<LazyFallback />}>
           <Routes>

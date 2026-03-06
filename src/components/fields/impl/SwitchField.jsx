@@ -1,4 +1,4 @@
-import { Switch } from "components/ui/switch";
+﻿import { Switch } from "components/ui/switch";
 import { cn } from "lib/utils";
 import React from "react";
 
@@ -17,7 +17,7 @@ export default function Default(props) {
           <span
             className={cn(
               "text-start text-base font-medium transition-colors duration-200",
-              isChecked ? "text-[var(--accent-primary)]" : "text-[var(--text-primary)]"
+              isChecked ? "text-(--accent-primary)" : "text-(--text-primary)"
             )}
           >
             {label}

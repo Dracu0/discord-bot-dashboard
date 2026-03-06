@@ -7,13 +7,13 @@ export function InputField({ error, className, ...props }) {
       <Input
         className={cn(
           "font-medium",
-          error && "border-[var(--status-error)]",
+          error && "border-(--status-error)",
           className
         )}
         {...props}
       />
       {error && (
-        <p className="text-xs text-[var(--status-error)] mt-1">{error}</p>
+        <p className="text-xs text-(--status-error) mt-1">{error}</p>
       )}
     </div>
   );

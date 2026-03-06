@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+﻿import React, { useContext, useState, useRef, useEffect } from "react";
 import { GuildContext } from "../../contexts/guild/GuildContext";
 import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "../../api/internal";
@@ -47,7 +47,7 @@ export function Notifications() {
                         {count}
                     </span>
                 )}
-                <Bell size={20} className="text-[var(--text-secondary)]" />
+                <Bell size={20} className="text-(--text-secondary)" />
             </button>
             {opened && (
                 <div
@@ -59,7 +59,7 @@ export function Notifications() {
                         boxShadow: "var(--shadow-lg)",
                     }}
                 >
-                    <span className="w-full mb-5 block text-base font-semibold text-[var(--text-primary)]">
+                    <span className="w-full mb-5 block text-base font-semibold text-(--text-primary)">
                         <Locale zh="\u901a\u77e5" en="Notifications" />
                         {count > 0 && (
                             <Badge variant="blue" className="ml-2 rounded-full">{count}</Badge>
@@ -70,13 +70,13 @@ export function Notifications() {
                             {() =>
                                 query.data && query.data.length > 0
                                     ? query.data.map((item, key) => (
-                                        <div key={key} className="rounded-lg p-0 cursor-pointer hover:bg-[var(--surface-secondary)] transition-colors">
+                                        <div key={key} className="rounded-lg p-0 cursor-pointer hover:bg-(--surface-secondary) transition-colors">
                                             <div className="flex items-center">
                                                 <NotificationItem {...item} />
                                             </div>
                                         </div>
                                     ))
-                                    : <span className="text-sm text-[var(--text-secondary)] text-center py-4 block">
+                                    : <span className="text-sm text-(--text-secondary) text-center py-4 block">
                                         <Locale zh="\u66ab\u7121\u901a\u77e5" en="No notifications" />
                                     </span>
                             }

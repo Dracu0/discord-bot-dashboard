@@ -1,4 +1,4 @@
-import { cn } from "lib/utils";
+﻿import { cn } from "lib/utils";
 
 import { Action } from "components/card/Action";
 import { config } from "config/config";
@@ -8,7 +8,7 @@ export default function ActionsList() {
     return (
         <div className="flex flex-col gap-5">
             <span
-                className="text-[var(--text-primary)] text-2xl font-bold ms-6 mt-11"
+                className="text-(--text-primary) text-2xl font-bold ms-6 mt-11"
                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
             >
                 <Locale zh="動作列表" en="Actions List" />

@@ -1,4 +1,4 @@
-import { Input } from "components/ui/input";
+﻿import { Input } from "components/ui/input";
 import { Search } from "lucide-react";
 import React from "react";
 import { useLocale } from "../../../utils/Language";
@@ -19,17 +19,17 @@ export default function SearchInput({ value, onSearch, onChange, groupStyle, cla
         aria-label="Search"
         onClick={onSearch}
       >
-        <Search className="h-[15px] w-[15px] text-[var(--text-muted)]" />
+        <Search className="h-[15px] w-[15px] text-(--text-muted)" />
       </div>
       <Input
-        className="pl-9 pr-16 rounded-full bg-[var(--surface-secondary)] text-[var(--text-primary)] text-sm font-medium"
+        className="pl-9 pr-16 rounded-full bg-(--surface-secondary) text-(--text-primary) text-sm font-medium"
         placeholder={locale({ zh: "搜索...", en: "Search" })}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         {...props}
       />
       <div className="absolute right-3 top-1/2 -translate-y-1/2">
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-[var(--border-default)] bg-[var(--surface-secondary)] px-1.5 text-[10px] font-medium text-[var(--text-muted)]">
+        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-(--border-default) bg-(--surface-secondary) px-1.5 text-[10px] font-medium text-(--text-muted)">
           Ctrl+K
         </kbd>
       </div>

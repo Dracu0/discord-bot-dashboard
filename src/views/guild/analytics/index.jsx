@@ -7,6 +7,7 @@ import { usePageInfo } from "contexts/PageInfoContext";
 import { Locale, useLocale } from "utils/Language";
 import Card from "components/card/Card";
 import ApexChart from "components/charts/ApexChart";
+import StatCard from "components/card/data/StatCard";
 import { Badge } from "components/ui/badge";
 import { Spinner } from "components/ui/spinner";
 import { SegmentedControl } from "components/ui/segmented-control";
@@ -24,24 +25,6 @@ const PERIOD_OPTIONS = [
     { value: "30", label: "30d" },
     { value: "90", label: "90d" },
 ];
-
-function StatCard({ label, value, sublabel, color = "brand" }) {
-    return (
-        <Card className="flex flex-col p-5">
-            <span className="text-xs uppercase font-bold text-(--text-secondary)">
-                {label}
-            </span>
-            <h2 className="text-2xl font-bold text-(--text-primary) mt-1">
-                {value ?? "\u2014"}
-            </h2>
-            {sublabel && (
-                <span className="text-xs text-(--text-secondary) mt-1">
-                    {sublabel}
-                </span>
-            )}
-        </Card>
-    );
-}
 
 function ModerationTimeline({ data = [] }) {
     const series = useMemo(() => [{

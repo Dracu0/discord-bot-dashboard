@@ -57,7 +57,7 @@ function Content() {
             </div>
         );
     } else {
-        return <div className="flex flex-col mb-[30px]">
+        return <div className="flex flex-col mb-7.5">
             <BannerWrapper banner={banner} />
             <Outlet />
         </div>

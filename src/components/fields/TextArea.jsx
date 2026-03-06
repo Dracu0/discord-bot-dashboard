@@ -9,13 +9,13 @@ export default function TextArea({ error, className, ...props }) {
         rows={3}
         className={cn(
           "min-h-[80px] resize-y",
-          error && "border-[var(--status-error)]",
+          error && "border-(--status-error)",
           className
         )}
         {...props}
       />
       {error && (
-        <p className="text-xs text-[var(--status-error)] mt-1">{error}</p>
+        <p className="text-xs text-(--status-error) mt-1">{error}</p>
       )}
     </div>
   );

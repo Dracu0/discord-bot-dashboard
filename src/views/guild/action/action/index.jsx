@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+﻿import React, { useContext } from "react";
 
 import { usePageInfo } from "contexts/PageInfoContext";
 import { ActionDetailContext, ActionDetailProvider, useActionInfo } from "contexts/actions/ActionDetailContext";
@@ -6,11 +6,11 @@ import { useBanner } from "./components/Banner";
 import NotFound from "../../../info/Not_Found";
 import SearchInput from "components/fields/impl/SearchInput";
 
-import not_found from "assets/img/info/not_found.svg";
 import CreateButton from "./components/CreateButton";
 import { Locale, useLocale } from "../../../../utils/Language";
 import { Task } from "../components/Task";
 import { useTextFilter } from "hooks/useTextFilter";
+import { Inbox } from "lucide-react";
 
 import { useParams } from "react-router-dom";
 import {
@@ -58,13 +58,25 @@ function TasksContent({includes}) {
     const {tasks, page, totalPages, setPage} = useContext(ActionDetailContext)
 
     return tasks.length === 0 ? (
-        <div className="h-[50vh] bg-cover" style={{ backgroundImage: `url(${not_found})` }}>
-            <div className="flex flex-col w-full h-full backdrop-blur-[50px]">
-                <span className="text-center text-[22px] font-bold mt-2.5">
-                    <Locale zh="\u6c92\u6709\u4efb\u52d9\u6b63\u5728\u904b\u884c" en="No Tasks running" />
-                </span>
-                <CreateButton />
+        <div className="flex flex-col items-center justify-center py-16 gap-4">
+            <div
+                className="flex items-center justify-center h-16 w-16 rounded-full"
+                style={{ background: "var(--surface-secondary)" }}
+            >
+                <Inbox className="h-8 w-8 text-(--text-muted)" />
             </div>
+            <div className="text-center">
+                <span className="block text-lg font-semibold text-(--text-primary) font-['Space_Grotesk']">
+                    <Locale zh="沒有任務正在運行" en="No entries yet" />
+                </span>
+                <span className="block text-sm text-(--text-secondary) mt-1 max-w-xs mx-auto">
+                    <Locale
+                        zh="可以使用 Discord 機器人指令或透過下方按鈕建立任務。"
+                        en="Use the bot commands in Discord or create a new entry below to get started."
+                    />
+                </span>
+            </div>
+            <CreateButton />
         </div>
     ) : (
         <div className="animate-in slide-in-from-bottom duration-300">

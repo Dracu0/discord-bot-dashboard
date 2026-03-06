@@ -4,32 +4,32 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "compon
 import { Badge } from "components/ui/badge";
 import { cn } from "lib/utils";
 
-// ── Presentational wrappers for Storybook (no hooks) ──
+// -- Presentational wrappers for Storybook (no hooks) --
 
 function ActiveUsersPresentation({ users }) {
     if (!users || users.length === 0) return null;
     return (
         <div className="flex items-center gap-1">
-            <span className="text-xs text-[var(--text-secondary)] mr-1">Online</span>
+            <span className="text-xs text-(--text-secondary) mr-1">Online</span>
             <TooltipProvider>
                 <div className="flex -space-x-2">
                     {users.slice(0, 5).map((u) => (
                         <Tooltip key={u.userId}>
                             <TooltipTrigger asChild>
-                                <Avatar className="h-7 w-7 border-2 border-[var(--surface-primary)]">
+                                <Avatar className="h-7 w-7 border-2 border-(--surface-primary)">
                                     <AvatarImage src={null} alt={u.username} />
                                     <AvatarFallback className="text-xs bg-blue-500 text-white">
                                         {u.username?.[0]?.toUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>
                             </TooltipTrigger>
-                            <TooltipContent>{`${u.username} — ${u.page || "?"}`}</TooltipContent>
+                            <TooltipContent>{`${u.username} � ${u.page || "?"}`}</TooltipContent>
                         </Tooltip>
                     ))}
                     {users.length > 5 && (
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Avatar className="h-7 w-7 border-2 border-[var(--surface-primary)]">
+                                <Avatar className="h-7 w-7 border-2 border-(--surface-primary)">
                                     <AvatarFallback className="text-xs bg-gray-500 text-white">
                                         +{users.length - 5}
                                     </AvatarFallback>
@@ -79,7 +79,7 @@ function BotStatusPresentation({ status, ping }) {
     );
 }
 
-// ── Stories ──
+// -- Stories --
 
 export default {
     title: "Dashboard/StatusIndicators",

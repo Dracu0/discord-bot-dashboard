@@ -61,7 +61,7 @@ function AuditLogRow({ entry }) {
                 onClick={() => hasDiff && setExpanded(p => !p)}
             >
                 <TableCell>
-                    <span className="text-xs text-[var(--text-secondary)]">
+                    <span className="text-xs text-(--text-secondary)">
                         {new Date(entry.createdAt).toLocaleString()}
                     </span>
                 </TableCell>
@@ -69,7 +69,7 @@ function AuditLogRow({ entry }) {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <span className="text-sm text-[var(--text-primary)] font-medium">
+                                <span className="text-sm text-(--text-primary) font-medium">
                                     {entry.actorTag || entry.actorId}
                                 </span>
                             </TooltipTrigger>
@@ -83,7 +83,7 @@ function AuditLogRow({ entry }) {
                     </Badge>
                 </TableCell>
                 <TableCell>
-                    <span className="text-sm text-[var(--text-primary)]">{entry.category}</span>
+                    <span className="text-sm text-(--text-primary)">{entry.category}</span>
                 </TableCell>
                 <TableCell>
                     <Badge variant={ACTION_COLORS[entry.action] || "secondary"}>
@@ -91,7 +91,7 @@ function AuditLogRow({ entry }) {
                     </Badge>
                 </TableCell>
                 <TableCell>
-                    <span className="text-sm text-[var(--text-secondary)] line-clamp-1">
+                    <span className="text-sm text-(--text-secondary) line-clamp-1">
                         {entry.target || "\u2014"}
                     </span>
                 </TableCell>
@@ -106,8 +106,8 @@ function AuditLogRow({ entry }) {
             {hasDiff && expanded && (
                 <TableRow>
                     <TableCell colSpan={7} className="p-0 border-none">
-                        <div className="p-3 bg-[var(--surface-secondary)] rounded-[var(--radius-sm)]">
-                            <span className="text-xs font-semibold text-[var(--text-secondary)] mb-1 block">
+                        <div className="p-3 bg-(--surface-secondary) rounded-(--radius-sm)">
+                            <span className="text-xs font-semibold text-(--text-secondary) mb-1 block">
                                 <Locale zh="\u8b8a\u66f4\u8a73\u60c5" en="Change Details" />
                             </span>
                             <DiffView before={entry.before} after={entry.after} />
@@ -164,9 +164,9 @@ export default function AuditLogPage() {
         <div style={{ paddingTop: "80px" }}>
             <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2">
-                    <History size={24} className="text-[var(--accent-primary)]" />
+                    <History size={24} className="text-(--accent-primary)" />
                     <h3
-                        className="text-[var(--text-primary)] font-semibold text-xl"
+                        className="text-(--text-primary) font-semibold text-xl"
                         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                     >
                         <Locale zh="\u5be9\u8a08\u65e5\u8a8c" en="Audit Log" />
@@ -187,7 +187,7 @@ export default function AuditLogPage() {
 
             <Collapsible open={showFilters}>
                 <CollapsibleContent>
-                    <Card className="p-4 mb-4 bg-[var(--surface-card)]">
+                    <Card className="p-4 mb-4 bg-(--surface-card)">
                         <div className="flex items-center gap-3">
                             <Select
                                 value={category || "__all__"}
@@ -228,8 +228,8 @@ export default function AuditLogPage() {
 
             {!query.isLoading && entries.length === 0 && (
                 <div className="flex flex-col items-center py-10">
-                    <History size={48} className="text-[var(--text-secondary)] opacity-40" />
-                    <span className="text-[var(--text-secondary)] text-sm mt-2">
+                    <History size={48} className="text-(--text-secondary) opacity-40" />
+                    <span className="text-(--text-secondary) text-sm mt-2">
                         <Locale zh="\u66ab\u7121\u5be9\u8a08\u65e5\u8a8c" en="No audit log entries found" />
                     </span>
                 </div>
@@ -239,7 +239,7 @@ export default function AuditLogPage() {
                 <>
                     <div className="min-w-[700px] overflow-x-auto">
                         <Table
-                            className="rounded-[var(--radius-md)] overflow-hidden border border-[var(--border-subtle)]"
+                            className="rounded-(--radius-md) overflow-hidden border border-(--border-subtle)"
                         >
                             <TableHeader>
                                 <TableRow>

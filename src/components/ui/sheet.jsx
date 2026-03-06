@@ -12,7 +12,7 @@ const SheetPortal = DialogPrimitive.Portal;
 const SheetOverlay = forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-[var(--z-modal)] bg-black/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-(--z-modal) bg-black/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -22,7 +22,7 @@ const SheetOverlay = forwardRef(({ className, ...props }, ref) => (
 SheetOverlay.displayName = "SheetOverlay";
 
 const sheetVariants = cva(
-  "fixed z-[var(--z-modal)] bg-[var(--sidebar-bg)] shadow-[var(--shadow-xl)] transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-200 data-[state=open]:duration-300",
+  "fixed z-(--z-modal) bg-(--sidebar-bg) shadow-(--shadow-xl) transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-200 data-[state=open]:duration-300",
   {
     variants: {
       side: {
@@ -43,7 +43,7 @@ const SheetContent = forwardRef(({ side = "left", className, children, ...props 
     <SheetOverlay />
     <DialogPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-[var(--radius-sm)] p-1 text-[var(--text-muted)] opacity-70 transition-opacity hover:opacity-100">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-(--radius-sm) p-1 text-(--text-muted) opacity-70 transition-opacity hover:opacity-100">
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>

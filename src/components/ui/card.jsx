@@ -1,11 +1,11 @@
-import { forwardRef } from "react";
+﻿import { forwardRef } from "react";
 import { cn } from "lib/utils";
 
 const Card = forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "rounded-[var(--radius-lg)] border border-[var(--border-default)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-sm)] transition-all duration-200",
+      "rounded-(--radius-lg) border border-(--border-default) bg-(--surface-card) p-5 shadow-(--shadow-sm) transition-all duration-200",
       className
     )}
     {...props}
@@ -19,12 +19,12 @@ const CardHeader = forwardRef(({ className, ...props }, ref) => (
 CardHeader.displayName = "CardHeader";
 
 const CardTitle = forwardRef(({ className, ...props }, ref) => (
-  <h3 ref={ref} className={cn("font-semibold text-lg font-[var(--font-heading)] text-[var(--text-primary)] leading-none tracking-tight", className)} {...props} />
+  <h3 ref={ref} className={cn("text-lg font-(--font-heading) text-(--text-primary) leading-none tracking-tight", className)} {...props} />
 ));
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = forwardRef(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn("text-sm text-[var(--text-secondary)]", className)} {...props} />
+  <p ref={ref} className={cn("text-sm text-(--text-secondary)", className)} {...props} />
 ));
 CardDescription.displayName = "CardDescription";
 

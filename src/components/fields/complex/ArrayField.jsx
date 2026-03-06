@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { OptionField } from "../OptionPanel";
 import { Button } from "components/ui/button";
 import { Separator } from "components/ui/separator";
@@ -35,7 +35,7 @@ export default function ArrayField({ element, value: valueRaw, onChange }) {
       })}
 
       {value.length === 0 && (
-        <p className="text-[var(--text-muted)]">No items yet</p>
+        <p className="text-(--text-muted)">No items yet</p>
       )}
 
       <div className="mt-2">

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+﻿import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Puzzle, Hand, Settings } from "lucide-react";
 import { GuildContext } from "contexts/guild/GuildContext";
@@ -32,7 +32,7 @@ export default function QuickActions() {
 
   return (
     <div className="mb-6">
-      <span className="block text-sm font-semibold text-[var(--text-primary)] mb-2.5 font-['Space_Grotesk'] tracking-tight">
+      <span className="block text-sm font-semibold text-(--text-primary) mb-2.5 font-['Space_Grotesk'] tracking-tight">
         <Locale zh="快捷操作" en="Quick Actions" />
       </span>
       <TooltipProvider>

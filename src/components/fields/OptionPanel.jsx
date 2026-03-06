@@ -27,20 +27,20 @@ export function OptionPanel({ value, onChange, option, error }) {
   return (
     <Card className={inline ? "flex flex-row-reverse gap-5" : "flex flex-col gap-5"}>
       <div className="h-full">
-        <p className="text-lg font-bold mb-1 text-[var(--text-primary)]">
+        <p className="text-lg font-bold mb-1 text-(--text-primary)">
           {option.name}
         </p>
         {option.description && (
-          <p className="mb-4 text-[var(--text-primary)]">{option.description}</p>
+          <p className="mb-4 text-(--text-primary)">{option.description}</p>
         )}
         {input}
         {option.helper && (
-          <p className="text-xs text-[var(--text-muted)] mt-1">
+          <p className="text-xs text-(--text-muted) mt-1">
             {option.helper}
           </p>
         )}
         {error && (
-          <p className="text-xs text-[var(--status-error)] mt-1">
+          <p className="text-xs text-(--status-error) mt-1">
             {error}
           </p>
         )}

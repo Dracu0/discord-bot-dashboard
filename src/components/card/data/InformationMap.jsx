@@ -1,12 +1,12 @@
-import Card from "components/card/Card";
+﻿import Card from "components/card/Card";
 
 export default function InformationMap({name, description, value, ...rest}) {
     return (
         <Card {...rest}>
-            <span className="block text-[var(--text-primary)] font-bold text-xl mt-2.5 mb-1">
+            <span className="block text-(--text-primary) font-bold text-xl mt-2.5 mb-1">
                 {name}
             </span>
-            <span className="block text-[var(--text-muted)] text-base me-[26px] mb-10">
+            <span className="block text-(--text-muted) text-base me-[26px] mb-10">
                 {description}
             </span>
 
@@ -29,10 +29,10 @@ function Information(props) {
 
     return (
         <Card className="p-3" style={{ background: "var(--surface-secondary)" }} {...rest}>
-            <span className="block font-medium text-[var(--text-secondary)] text-sm">
+            <span className="block font-medium text-(--text-secondary) text-sm">
                 {title}
             </span>
-            <span className="block text-[var(--text-primary)] font-medium text-base">
+            <span className="block text-(--text-primary) font-medium text-base">
                 {value}
             </span>
         </Card>

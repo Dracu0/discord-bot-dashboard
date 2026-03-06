@@ -29,8 +29,8 @@ function SignIn({ loading = false }) {
                 >
                     {config.name || "Mocotron"}
                 </span>
-                <p className="text-[var(--text-muted)] text-sm font-normal mb-6">
-                    <Locale zh="Discord 機器人管理面板" en="Discord Bot Dashboard" />
+                <p className="text-(--text-muted) text-sm font-normal mb-6">
+                    <Locale zh="Discord ???????" en="Discord Bot Dashboard" />
                 </p>
 
                 {/* Card */}
@@ -44,20 +44,20 @@ function SignIn({ loading = false }) {
                     }}
                 >
                     <h2
-                        className="text-[var(--text-primary)] text-2xl md:text-[28px] mb-2"
+                        className="text-(--text-primary) text-2xl md:text-[28px] mb-2"
                         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                     >
-                        <Locale zh="歡迎回來" en="Welcome Back" />
+                        <Locale zh="????" en="Welcome Back" />
                     </h2>
-                    <p className="mb-7 text-[var(--text-secondary)] font-normal text-base leading-[1.6]">
-                        <Locale zh="讓你的創意社群更上一層樓" en="Empower Your Creative Community" />
+                    <p className="mb-7 text-(--text-secondary) font-normal text-base leading-[1.6]">
+                        <Locale zh="????????????" en="Empower Your Creative Community" />
                     </p>
 
                     <button
                         onClick={onSignIn}
                         disabled={loading}
                         className={cn(
-                            "w-full h-[52px] rounded-[var(--radius-md)] text-base font-semibold text-white",
+                            "w-full h-[52px] rounded-(--radius-md) text-base font-semibold text-white",
                             "inline-flex items-center justify-center gap-2",
                             "transition-all duration-150 cursor-pointer",
                             "hover:-translate-y-px active:scale-[0.98]",
@@ -70,11 +70,11 @@ function SignIn({ loading = false }) {
                         ) : (
                             <DiscordIcon size={22} />
                         )}
-                        <Locale zh="Discord 登入" en="Continue with Discord" />
+                        <Locale zh="Discord ??" en="Continue with Discord" />
                     </button>
 
-                    <p className="mt-5 text-[var(--text-muted)] font-normal text-xs">
-                        <Locale zh="您的所有個人信息都將被保密" en="Your data stays private and secure" />
+                    <p className="mt-5 text-(--text-muted) font-normal text-xs">
+                        <Locale zh="?????????????" en="Your data stays private and secure" />
                     </p>
                 </div>
             </div>

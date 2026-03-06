@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+﻿import React, { useContext } from "react";
 import { useDisclosure } from "hooks/useDisclosure";
 import { Menu, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Button } from "components/ui/button";
@@ -45,7 +45,7 @@ function Sidebar({ routes }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full h-8 w-8 text-[var(--text-muted)]"
+                  className="rounded-full h-8 w-8 text-(--text-muted)"
                   onClick={toggle}
                   aria-label={
                     sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
@@ -75,7 +75,7 @@ export function SidebarResponsive({ routes }) {
 
   return (
     <div className="flex items-center xl:hidden">
-      <Button variant="ghost" size="icon" className="h-10 w-10 text-[var(--text-muted)]" onClick={open}>
+      <Button variant="ghost" size="icon" className="h-10 w-10 text-(--text-muted)" onClick={open}>
         <Menu size={20} />
       </Button>
 

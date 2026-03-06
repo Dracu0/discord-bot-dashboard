@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { Locale } from "../../utils/Language";
 import { Button } from "components/ui/button";
 import { Spinner } from "components/ui/spinner";
@@ -58,7 +58,7 @@ export function QueryHolderSkeleton({ query, height = 200, children, count = 1, 
 
   if (isLoading) {
     return [...Array(count)].map((_, i) => (
-      <Skeleton key={i} style={{ height }} className="rounded-[var(--radius-lg)]" />
+      <Skeleton key={i} style={{ height }} className="rounded-(--radius-lg)" />
     ));
   }
 

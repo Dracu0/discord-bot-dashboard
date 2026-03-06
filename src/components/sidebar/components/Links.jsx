@@ -39,7 +39,7 @@ export function SidebarLinks({ routes, collapsed, onNavigate }) {
     if (item.type === "category") {
       if (collapsed) return null;
       return (
-        <div key={item.key} className="mt-[18px] mb-2 px-1">
+        <div key={item.key} className="mt-4.5 mb-2 px-1">
           <span
             className="text-[11px] font-bold uppercase"
             style={{

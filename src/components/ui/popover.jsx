@@ -14,7 +14,7 @@ const PopoverContent = forwardRef(
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          "z-[var(--z-popover)] w-72 rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-lg)] outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+          "z-(--z-popover) w-72 rounded-(--radius-md) border border-(--border-default) bg-(--surface-card) p-4 shadow-(--shadow-lg) outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
           className
         )}
         {...props}

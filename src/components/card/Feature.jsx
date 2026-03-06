@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import Card from "components/card/Card";
 import React, { useCallback, useContext } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -45,14 +45,14 @@ export default function Feature({ banner, name, description, id: featureId, enab
         <div className="flex items-center justify-between gap-4 p-4 flex-1 min-w-0">
           <div className="flex flex-col gap-1 flex-1 min-w-0">
             <h4
-              className="text-[var(--text-primary)] font-['Space_Grotesk'] leading-[1.3] truncate m-0 text-base font-semibold"
+              className="text-(--text-primary) font-['Space_Grotesk'] leading-[1.3] truncate m-0 text-base font-semibold"
             >
               {locale(name)}
             </h4>
             <TooltipProvider>
               <Tooltip delayDuration={500}>
                 <TooltipTrigger asChild>
-                  <p className="text-[var(--text-secondary)] text-sm font-normal leading-[1.5] line-clamp-1 m-0">
+                  <p className="text-(--text-secondary) text-sm font-normal leading-[1.5] line-clamp-1 m-0">
                     {description}
                   </p>
                 </TooltipTrigger>

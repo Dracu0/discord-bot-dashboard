@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "components/ui/button";
@@ -33,7 +33,7 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full h-7 w-7 text-[var(--text-muted)]"
+                className="rounded-full h-7 w-7 text-(--text-muted)"
                 onClick={handleBack}
                 aria-label="Back to servers"
               >

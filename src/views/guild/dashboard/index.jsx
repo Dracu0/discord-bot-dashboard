@@ -54,7 +54,7 @@ export function UserReports() {
                     <div className="flex justify-between items-start flex-wrap gap-2">
                         <div>
                             <h2
-                                className="text-[var(--text-primary)] font-bold text-2xl"
+                                className="text-(--text-primary) font-bold text-2xl"
                                 style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                             >
                                 <Locale
@@ -62,7 +62,7 @@ export function UserReports() {
                                     en={`Welcome back, ${user.username}`}
                                 />
                             </h2>
-                            <span className="text-[var(--text-secondary)] text-sm mt-1 block">
+                            <span className="text-(--text-secondary) text-sm mt-1 block">
                                 <Locale zh="\u9019\u662f\u60a8\u4f3a\u670d\u5668\u7684\u6982\u89bd" en="Here's an overview of your server" />
                             </span>
                         </div>
@@ -127,7 +127,7 @@ function SectionHeader({ label }) {
     return (
         <div className="mb-4">
             <h3
-                className="text-[var(--text-primary)] mb-2"
+                className="text-(--text-primary) mb-2"
                 style={{
                     fontFamily: "'Space Grotesk', sans-serif",
                     letterSpacing: "-0.01em",
@@ -135,7 +135,7 @@ function SectionHeader({ label }) {
             >
                 {label}
             </h3>
-            <Separator className="opacity-40 bg-[var(--border-subtle)]" />
+            <Separator className="opacity-40 bg-(--border-subtle)" />
         </div>
     )
 }

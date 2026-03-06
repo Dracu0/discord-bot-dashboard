@@ -49,7 +49,7 @@ function RouteWrapper({ children }) {
                     `}</style>
 
                     <div
-                        className="fixed z-[100]"
+                        className="fixed z-100"
                         data-guild-navbar
                         style={{ width: `calc(100% - ${sidebarW}px)` }}
                     >
@@ -58,7 +58,7 @@ function RouteWrapper({ children }) {
 
                     <main
                         id="main-content"
-                        className="mx-auto min-h-screen p-5 md:p-[30px] pe-5"
+                        className="mx-auto min-h-screen p-5 md:p-7.5 pe-5"
                         data-guild-content
                         style={{
                             paddingTop: 50,
@@ -93,6 +93,7 @@ export default function GuildBoard() {
 
 export function GuildRoutes() {
     return <>
+        <Route index element={<Navigate replace to="dashboard" />} />
         {getRoutes(routes)}
         <Route path="*" element={<Navigate replace to="dashboard" />} />
     </>
