@@ -11,22 +11,21 @@ export default function PageHeader({
   return (
     <section
       className={cn(
-        "rounded-[28px] border border-(--border-subtle) bg-(--surface-card) px-5 py-5 shadow-(--shadow-sm) md:px-6 md:py-6",
+        "overflow-hidden rounded-[30px] border border-(--border-subtle) bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.14),transparent_28%),linear-gradient(180deg,var(--surface-card)_0%,var(--surface-primary)_100%)] px-5 py-5 shadow-(--shadow-md) md:px-6 md:py-6",
         className
       )}
     >
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-        <div className="flex min-w-0 items-start gap-4">
+      <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+        <div className="flex min-w-0 items-start gap-4 md:gap-5">
           {icon && (
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-(--sidebar-active) text-(--accent-primary) shadow-(--shadow-xs)">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-(--accent-primary)/15 bg-(--accent-primary)/10 text-(--accent-primary) shadow-(--shadow-xs) md:h-14 md:w-14 md:rounded-3xl">
               {icon}
             </div>
           )}
-          <div className="min-w-0 space-y-2">
-            <div className="space-y-1">
+          <div className="min-w-0 space-y-3">
+            <div className="space-y-1.5">
               <h1
-                className="text-2xl font-bold tracking-tight text-(--text-primary) md:text-[28px]"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                className="font-['Space_Grotesk'] text-2xl font-bold tracking-tight text-(--text-primary) md:text-[30px]"
               >
                 {title}
               </h1>
@@ -44,7 +43,7 @@ export default function PageHeader({
           </div>
         </div>
         {actions && (
-          <div className="flex shrink-0 flex-wrap items-center gap-2 lg:justify-end">
+          <div className="flex shrink-0 flex-wrap items-center gap-2.5 xl:max-w-[38rem] xl:justify-end">
             {actions}
           </div>
         )}

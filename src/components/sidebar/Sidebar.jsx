@@ -20,24 +20,20 @@ function Sidebar({ routes }) {
   const toggle = () => updateSettings({ sidebarCollapsed: !sidebarCollapsed });
 
   return (
-    <div className="hidden xl:block fixed min-h-full" style={{ zIndex: 20 }}>
+    <div className="fixed inset-y-0 left-0 z-20 hidden xl:block">
       <div
-        className="h-screen min-h-full overflow-x-hidden flex flex-col"
+        className="flex h-screen min-h-full flex-col overflow-hidden border-r border-(--sidebar-border) bg-(--sidebar-bg) shadow-[24px_0_60px_rgba(2,6,23,0.12)]"
         style={{
           width,
-          background: "var(--sidebar-bg)",
-          borderRight: "1px solid var(--sidebar-border)",
           transition: "width 0.25s cubic-bezier(.4,0,.2,1)",
         }}
       >
-        <div className="overflow-y-auto flex-1">
+        <div className="flex-1 overflow-y-auto">
           <Content routes={routes} collapsed={sidebarCollapsed} />
         </div>
 
-        {/* Collapse toggle */}
         <div
-          className="flex justify-center py-2"
-          style={{ borderTop: "1px solid var(--sidebar-border)" }}
+          className="flex items-center justify-center border-t border-(--sidebar-border) px-4 py-3"
         >
           <TooltipProvider>
             <Tooltip>
@@ -45,7 +41,7 @@ function Sidebar({ routes }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full h-8 w-8 text-(--text-muted)"
+                  className="h-9 w-9 rounded-full bg-(--surface-secondary) text-(--text-muted) hover:bg-(--surface-primary)"
                   onClick={toggle}
                   aria-label={
                     sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
@@ -75,14 +71,14 @@ export function SidebarResponsive({ routes }) {
 
   return (
     <div className="flex items-center xl:hidden">
-      <Button variant="ghost" size="icon" className="h-10 w-10 text-(--text-muted)" onClick={open}>
+      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-(--surface-secondary) text-(--text-primary) hover:bg-(--surface-primary)" onClick={open}>
         <Menu size={20} />
       </Button>
 
       <Sheet open={opened} onOpenChange={(isOpen) => !isOpen && close()}>
         <SheetContent
           side="left"
-          className="p-0"
+          className="overflow-hidden border-r border-(--sidebar-border) p-0"
           style={{ width: SIDEBAR_FULL, background: "var(--sidebar-bg)" }}
         >
           <Content routes={routes} collapsed={false} onNavigate={close} />

@@ -41,6 +41,11 @@ const routes = [
         })),
         children: [
             {
+                index: true,
+                component: <Features/>,
+                hide: true,
+            },
+            {
                 path: ":feature",
                 component: <Feature />,
                 hide: true
@@ -70,6 +75,11 @@ const routes = [
             path: id
         })),
         children: [
+            {
+                index: true,
+                component: <ActionsBoard/>,
+                hide: true,
+            },
             {
                 path: ":action",
                 component: <ActionTasks />,

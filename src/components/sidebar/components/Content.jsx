@@ -21,10 +21,10 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
   };
 
   return (
-    <div className="flex flex-col h-full pt-4">
+    <div className="flex h-full flex-col px-3 pb-3 pt-4">
       <div
-        className={`flex items-center gap-2 mb-2 ${
-          collapsed ? "px-0 justify-center" : "px-5 justify-start"
+        className={`mb-3 flex items-center gap-2 ${
+          collapsed ? "justify-center px-0" : "justify-start px-2"
         }`}
       >
         <TooltipProvider>
@@ -33,7 +33,7 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full h-7 w-7 text-(--text-muted)"
+                className="h-8 w-8 rounded-full bg-(--surface-secondary) text-(--text-muted) hover:bg-(--surface-primary)"
                 onClick={handleBack}
                 aria-label="Back to servers"
               >
@@ -46,25 +46,26 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
           </Tooltip>
         </TooltipProvider>
         {!collapsed && (
-          <span
-            className="text-xs font-semibold"
-            style={{ color: "var(--text-muted)" }}
-          >
+          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-(--text-muted)">
             <Locale zh="\u8FD4\u56DE" en="Back" />
           </span>
         )}
       </div>
       <Brand collapsed={collapsed} />
-      <div className="mt-2 mb-auto">
-        <div
-          style={{
-            paddingInlineStart: collapsed ? 8 : 16,
-            paddingInlineEnd: collapsed ? 8 : 12,
-          }}
-        >
+      <div className="mb-auto mt-4">
+        <div className={collapsed ? "px-1" : "px-2"}>
           <Links routes={routes} collapsed={collapsed} onNavigate={onNavigate} />
         </div>
       </div>
+
+      {!collapsed && (
+        <div className="rounded-3xl border border-(--border-subtle) bg-(--surface-secondary)/75 px-4 py-3">
+          <p className="font-['Space_Grotesk'] text-sm font-semibold text-(--text-primary)">Workspace</p>
+          <p className="mt-1 text-xs leading-5 text-(--text-secondary)">
+            Jump between server tools quickly with a cleaner command-center style navigation.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import React from "react";
-import { Badge } from "components/ui/badge";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 import { useBotStatus } from "hooks/useWebSocket";
 import { Locale } from "utils/Language";
@@ -29,15 +28,11 @@ export default function BotStatusIndicator() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Badge
-              variant="outline"
-              className="cursor-default normal-case rounded-md text-xs font-semibold px-2.5 py-1 flex items-center gap-1.5"
-            >
-              <span className={`h-2 w-2 rounded-full ${STATUS_DOT_CLASSES[cfg.color] || "bg-gray-500"}`} />
-              <span>
-                <Locale {...cfg.label} />
-              </span>
-            </Badge>
+            <div className="inline-flex cursor-default items-center gap-2 rounded-full border border-(--border-subtle) bg-(--surface-primary) px-3 py-1.5 text-xs font-semibold text-(--text-primary) shadow-(--shadow-xs)">
+              <span className={`h-2.5 w-2.5 rounded-full ${STATUS_DOT_CLASSES[cfg.color] || "bg-gray-500"}`} />
+              <span><Locale {...cfg.label} /></span>
+              {ping != null && <span className="text-(--text-muted)">{ping}ms</span>}
+            </div>
           </TooltipTrigger>
           <TooltipContent side="bottom">
             {ping != null ? `Ping: ${ping}ms` : "No data yet"}

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLocale } from "utils/Language";
-import { Circle } from "lucide-react";
+import { ChevronRight, Circle } from "lucide-react";
 import {
   Tooltip,
   TooltipTrigger,
@@ -10,14 +10,8 @@ import {
 } from "components/ui/tooltip";
 import { cn } from "lib/utils";
 
-function hasSegment(pathname, segment) {
-  const segments = pathname.split("/").filter(Boolean);
-  return segments.includes(segment);
-}
-
-function endsWithSegment(pathname, segment) {
-  const segments = pathname.split("/").filter(Boolean);
-  return segments[segments.length - 1] === segment;
+function routeIsActive(pathname, segment) {
+  return pathname.includes(`/${segment}`);
 }
 
 export function SidebarLinks({ routes, collapsed, onNavigate }) {
@@ -66,8 +60,7 @@ export function SidebarLinks({ routes, collapsed, onNavigate }) {
 
 function RouteItem({ route, collapsed, onNavigate }) {
   const location = useLocation();
-  const active = endsWithSegment(location.pathname, route.path);
-  const includes = hasSegment(location.pathname, route.path);
+  const active = routeIsActive(location.pathname, route.path);
 
   return (
     <>
@@ -81,8 +74,8 @@ function RouteItem({ route, collapsed, onNavigate }) {
       />
 
       {!collapsed && (
-        <div className="flex flex-col pl-6">
-          {includes &&
+        <div className="mt-1 flex flex-col gap-1 pl-4">
+          {active &&
             route.items &&
             route.items.map((item, key) => {
               const path = `${route.path}/${item.path}`;
@@ -90,11 +83,12 @@ function RouteItem({ route, collapsed, onNavigate }) {
                 <Item
                   key={key}
                   path={path}
-                  active={hasSegment(location.pathname, item.path)}
+                  active={routeIsActive(location.pathname, item.path)}
                   name={item.name}
-                  icon={<Circle size={8} />}
+                  icon={<ChevronRight size={14} />}
                   collapsed={false}
                   onNavigate={onNavigate}
+                  nested
                 />
               );
             })}
@@ -104,87 +98,84 @@ function RouteItem({ route, collapsed, onNavigate }) {
   );
 }
 
-function Item({ active, name, path, icon, collapsed, onNavigate }) {
+function Item({ active, name, path, icon, collapsed, onNavigate, nested = false }) {
   const locale = useLocale();
   const label = locale(name);
 
-  const button = (
-    <button
-      type="button"
-      onClick={onNavigate}
+  const button = ({ isActive }) => (
+    <div
       className={cn(
-        "w-full my-0.5 flex items-center border-0 cursor-pointer transition-all duration-200",
+        "group relative my-0.5 flex w-full items-center transition-all duration-200",
         collapsed
-          ? "py-2.5 px-0 justify-center"
-          : "py-1.5 px-2.5 justify-start"
+          ? "justify-center rounded-2xl px-0 py-3"
+          : nested
+            ? "justify-start rounded-2xl px-3 py-2"
+            : "justify-start rounded-2xl px-3.5 py-3"
       )}
-      style={{
-        borderRadius: "var(--radius-md)",
-        background: active ? "var(--sidebar-active)" : "transparent",
-      }}
-      onMouseEnter={(e) => {
-        if (!active)
-          e.currentTarget.style.background = "var(--sidebar-hover)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = active
-          ? "var(--sidebar-active)"
-          : "transparent";
-      }}
     >
+      {isActive && !collapsed && (
+        <span className="absolute inset-y-2 left-1.5 w-1 rounded-full bg-(--accent-primary)" />
+      )}
       <div
         className={cn(
-          "flex items-center w-full",
-          collapsed ? "gap-0 justify-center" : "gap-2.5 justify-start"
+          "flex w-full items-center",
+          collapsed ? "justify-center gap-0" : nested ? "justify-start gap-2" : "justify-start gap-3"
         )}
       >
         <div
-          className="flex items-center justify-center shrink-0"
-          style={{
-            color: active ? "var(--accent-primary)" : "var(--text-muted)",
-            width: collapsed ? 24 : 20,
-          }}
+          className={cn(
+            "flex shrink-0 items-center justify-center transition-colors duration-150",
+            collapsed ? "w-6" : nested ? "w-4" : "w-5",
+            isActive ? "text-(--accent-primary)" : "text-(--text-muted) group-hover:text-(--text-primary)"
+          )}
         >
           {icon}
         </div>
         {!collapsed && (
           <span
-            className="flex-1 text-sm truncate text-left"
-            style={{
-              color: active ? "var(--text-primary)" : "var(--text-secondary)",
-              fontWeight: active ? 600 : 400,
-              fontFamily: "'Space Grotesk', 'DM Sans', sans-serif",
-            }}
+            className={cn(
+              "flex-1 truncate text-left font-['Space_Grotesk'] text-sm transition-colors duration-150",
+              isActive ? "font-semibold text-(--text-primary)" : "font-medium text-(--text-secondary) group-hover:text-(--text-primary)",
+              nested && "text-[13px]"
+            )}
           >
             {label}
           </span>
         )}
-        {!collapsed && active && (
-          <div
-            className="shrink-0"
-            style={{
-              width: 4,
-              height: 20,
-              borderRadius: 4,
-              background: "var(--accent-primary)",
-            }}
+        {!collapsed && !nested && (
+          <ChevronRight
+            size={16}
+            className={cn(
+              "shrink-0 transition-all duration-150",
+              isActive ? "translate-x-0 text-(--accent-primary)" : "text-(--text-muted) opacity-0 group-hover:translate-x-0.5 group-hover:opacity-100"
+            )}
           />
         )}
       </div>
-    </button>
+    </div>
   );
 
   return (
-    <NavLink to={path} style={{ textDecoration: "none" }}>
+    <NavLink
+      to={path}
+      onClick={onNavigate}
+      style={{ textDecoration: "none" }}
+      className={({ isActive }) => cn(
+        collapsed ? "block" : "block rounded-2xl",
+        isActive
+          ? "bg-(--sidebar-active) shadow-[inset_0_0_0_1px_rgba(99,102,241,0.12)]"
+          : "hover:bg-(--sidebar-hover)"
+      )}
+    >
       {collapsed ? (
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger asChild>{button}</TooltipTrigger>
+            <TooltipTrigger asChild>{button({ isActive: active })}</TooltipTrigger>
             <TooltipContent side="right">{label}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       ) : (
-        button
+        button({ isActive: active })
       )}
     </NavLink>
   );

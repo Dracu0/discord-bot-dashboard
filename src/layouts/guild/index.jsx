@@ -12,6 +12,10 @@ import { SIDEBAR_FULL, SIDEBAR_COLLAPSED } from "../../utils/layout-tokens";
 
 function getRoutes(routes) {
     return routes.map((route, key) => {
+        if (route.index) {
+            return <Route index element={route.component} key={key} />
+        }
+
         return <Route path={route.path} element={route.component} key={key}>
             {route.children && getRoutes(route.children)}
         </Route>

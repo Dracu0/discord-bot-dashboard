@@ -46,10 +46,13 @@ export default function Banner({ image, title, description, clip = true, childre
   );
 }
 
-export function BannerButton({ url, children, ...props }) {
+export function BannerButton({ url, children, leftIcon, ...props }) {
   return (
     <Button asChild variant="secondary" size="sm" className="min-w-10" {...props}>
-      <a href={url} className="no-underline">{children}</a>
+      <a href={url} className="no-underline">
+        {leftIcon}
+        {children}
+      </a>
     </Button>
   );
 }

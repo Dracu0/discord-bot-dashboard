@@ -20,6 +20,20 @@ import { Notifications } from "../menu/Notifications";
 
 const ICON_BTN = 36;
 
+function IconActionButton({ children, className, ...props }) {
+    return (
+        <Button
+            variant="ghost"
+            size="icon"
+            className={className || "rounded-full bg-(--surface-secondary) text-(--text-primary) hover:bg-(--surface-primary)"}
+            style={{ width: ICON_BTN, height: ICON_BTN, transition: "transform 0.2s ease" }}
+            {...props}
+        >
+            {children}
+        </Button>
+    );
+}
+
 export default function HeaderLinks() {
     const { colorScheme, updateSettings } = useContext(SettingsContext);
     const { routes } = useContext(PageInfoContext);
@@ -29,18 +43,14 @@ export default function HeaderLinks() {
         <>
             <SearchBar className="me-2.5" />
             <SidebarResponsive routes={routes} />
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2 rounded-full border border-(--border-subtle) bg-(--surface-primary)/80 px-2 py-1 shadow-(--shadow-xs)">
                 <Notifications />
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full"
-                    style={{ width: ICON_BTN, height: ICON_BTN, transition: "transform 0.2s ease" }}
+                <IconActionButton
                     onClick={() => updateSettings({ colorScheme: isDark ? "light" : "dark" })}
                     aria-label="Toggle color scheme"
                 >
                     {isDark ? <Sun size={18} /> : <Moon size={18} />}
-                </Button>
+                </IconActionButton>
                 <SettingsMenu />
                 <UserMenu />
             </div>
@@ -53,16 +63,12 @@ function SettingsMenu() {
 
     return (
         <>
-            <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full"
-                style={{ width: ICON_BTN, height: ICON_BTN }}
+            <IconActionButton
                 aria-label="Settings"
                 onClick={open}
             >
                 <Settings size={18} />
-            </Button>
+            </IconActionButton>
             <SettingsModal isOpen={opened} onClose={close} />
         </>
     );
@@ -74,7 +80,7 @@ function UserMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-1.5 cursor-pointer">
+                <button type="button" className="flex items-center gap-2 rounded-full border border-transparent px-1 py-1 transition-colors hover:border-(--border-subtle) hover:bg-(--surface-secondary)">
                     <Avatar
                         className="h-8 w-8"
                         style={{ border: "2px solid var(--accent-primary)" }}
@@ -88,11 +94,9 @@ function UserMenu() {
                     >
                         {username}
                     </span>
-                </div>
+                </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[200px]">
-                <UserOptionMenu />
-            </DropdownMenuContent>
+            <UserOptionMenu />
         </DropdownMenu>
     );
 }

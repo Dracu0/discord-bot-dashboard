@@ -20,18 +20,12 @@ export function SidebarBrand({ collapsed }) {
       {id != null ? (
         <GuildHeader id={id} collapsed={collapsed} />
       ) : (
-        <div className="flex flex-col items-center gap-1 my-5">
+        <div className="my-3 flex flex-col items-center gap-2">
           {collapsed ? (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span
-                    className="font-extrabold text-lg"
-                    style={{
-                      color: "var(--accent-primary)",
-                      fontFamily: "'Space Grotesk', 'DM Sans', sans-serif",
-                    }}
-                  >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-(--accent-primary)/10 font-['Space_Grotesk'] text-lg font-extrabold text-(--accent-primary)">
                     {config.name.charAt(0)}
                   </span>
                 </TooltipTrigger>
@@ -40,32 +34,24 @@ export function SidebarBrand({ collapsed }) {
             </TooltipProvider>
           ) : (
             <>
-              <span
-                className="font-extrabold text-xl"
-                style={{
-                  color: "var(--accent-primary)",
-                  fontFamily: "'Space Grotesk', 'DM Sans', sans-serif",
-                  letterSpacing: "-0.5px",
-                }}
-              >
-                {config.name}
-              </span>
-              <span
-                className="text-xs font-medium"
-                style={{ color: "var(--text-muted)" }}
-              >
-                Dashboard
-              </span>
+              <div className="flex items-center gap-3 rounded-[28px] border border-(--border-subtle) bg-(--surface-primary) px-4 py-3 shadow-(--shadow-xs)">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-(--accent-primary)/10 font-['Space_Grotesk'] text-xl font-extrabold text-(--accent-primary)">
+                  {config.name.charAt(0)}
+                </span>
+                <div className="min-w-0">
+                  <span className="block font-['Space_Grotesk'] text-lg font-bold tracking-tight text-(--text-primary)">
+                    {config.name}
+                  </span>
+                  <span className="block text-xs font-medium uppercase tracking-[0.14em] text-(--text-muted)">
+                    Dashboard workspace
+                  </span>
+                </div>
+              </div>
             </>
           )}
         </div>
       )}
-      {!collapsed && (
-        <Separator
-          className="w-4/5 mb-5"
-          style={{ background: "var(--sidebar-border)" }}
-        />
-      )}
+      {!collapsed && <Separator className="mb-4 w-full bg-(--sidebar-border)" />}
     </div>
   );
 }
@@ -87,11 +73,11 @@ function GuildHeader({ id, collapsed }) {
 
   if (collapsed) {
     return (
-      <div className="flex flex-col items-center gap-1 mt-2">
+      <div className="mt-1 flex flex-col items-center gap-1">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Avatar className="h-8 w-8">
+              <Avatar className="h-10 w-10 border border-(--border-subtle) shadow-(--shadow-xs)">
                 <AvatarImage src={icon} alt={query.data.name} />
                 <AvatarFallback>{query.data.name.charAt(0)}</AvatarFallback>
               </Avatar>
@@ -104,34 +90,23 @@ function GuildHeader({ id, collapsed }) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-2 mt-2">
-      <span
-        className="font-extrabold text-xs uppercase"
-        style={{
-          color: "var(--accent-primary)",
-          fontFamily: "'Space Grotesk', 'DM Sans', sans-serif",
-          letterSpacing: "1px",
-        }}
-      >
+    <div className="mt-1 flex flex-col gap-3">
+      <span className="px-2 font-['Space_Grotesk'] text-[11px] font-extrabold uppercase tracking-[0.18em] text-(--accent-primary)">
         {config.name}
       </span>
       <div
-        className="flex items-center gap-3 px-4 py-2"
-        style={{
-          borderRadius: 16,
-          background: "var(--surface-secondary)",
-        }}
+        className="flex items-center gap-3 rounded-[28px] border border-(--border-subtle) bg-(--surface-primary) px-4 py-3 shadow-(--shadow-xs)"
       >
-        <Avatar className="h-8 w-8">
+        <Avatar className="h-11 w-11 border border-(--border-subtle)">
           <AvatarImage src={icon} alt={query.data.name} />
           <AvatarFallback>{query.data.name.charAt(0)}</AvatarFallback>
         </Avatar>
-        <span
-          className="font-bold text-lg"
-          style={{ color: "var(--text-primary)" }}
-        >
-          {query.data.name}
-        </span>
+        <div className="min-w-0 flex-1">
+          <span className="block truncate font-['Space_Grotesk'] text-base font-bold text-(--text-primary)">
+            {query.data.name}
+          </span>
+          <span className="block text-xs text-(--text-muted)">Guild workspace</span>
+        </div>
       </div>
     </div>
   );

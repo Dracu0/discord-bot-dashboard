@@ -8,12 +8,11 @@ export default function AdminFooter() {
 
     return (
         <Footer>
-            <div className="flex gap-5 md:gap-11">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm md:justify-end md:gap-6">
                 {config.footer.map((item, i) => (
                     <a
                         key={i}
-                        className="font-medium"
-                        style={{ color: "var(--text-secondary)" }}
+                        className="font-medium text-(--text-secondary) transition-colors duration-150 hover:text-(--text-primary)"
                         href={item.url}
                     >
                         {locale(item.name)}
