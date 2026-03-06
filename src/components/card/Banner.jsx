@@ -17,7 +17,7 @@ export default function Banner({ image, title, description, clip = true, childre
       {image && (
         <div className="absolute inset-0 bg-black/40 rounded-2xl z-0" />
       )}
-      <div className="flex items-center justify-between flex-wrap gap-2 relative z-[1]">
+      <div className="flex items-center justify-between flex-wrap gap-2 relative z-1">
         <div className="flex flex-col flex-1 min-w-0">
           <span
             className={cn(
@@ -46,10 +46,10 @@ export default function Banner({ image, title, description, clip = true, childre
   );
 }
 
-export function BannerButton({ url, ...props }) {
+export function BannerButton({ url, children, ...props }) {
   return (
-    <a href={url} className="no-underline">
-      <Button variant="secondary" size="sm" className="min-w-[40px]" {...props} />
-    </a>
+    <Button asChild variant="secondary" size="sm" className="min-w-10" {...props}>
+      <a href={url} className="no-underline">{children}</a>
+    </Button>
   );
 }

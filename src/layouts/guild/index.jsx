@@ -23,45 +23,32 @@ function RouteWrapper({ children }) {
     const sidebarW = sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL;
 
     return (
-        <div>
+        <div className="min-h-screen bg-(--surface-secondary)">
             <PageInfoProvider>
+                <a href="#main-content" className="skip-to-content">Skip to content</a>
                 <Sidebar routes={routes} />
                 <div
-                    className="min-h-screen relative overflow-visible"
+                    className="min-h-screen relative transition-[margin-left] duration-250"
+                    data-guild-shell
                     style={{
-                        float: "right",
-                        transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
-                        width: `calc(100% - ${sidebarW}px)`,
-                        maxWidth: `calc(100% - ${sidebarW}px)`,
+                        marginLeft: sidebarW,
                     }}
                 >
-                    {/* On screens below xl, take full width */}
                     <style>{`
                         @media (max-width: 1279px) {
-                            [data-guild-content] {
-                                width: 100% !important;
-                                max-width: 100% !important;
-                            }
-                            [data-guild-navbar] {
-                                width: 100% !important;
+                            [data-guild-shell] {
+                                margin-left: 0 !important;
                             }
                         }
                     `}</style>
 
-                    <div
-                        className="fixed z-100"
-                        data-guild-navbar
-                        style={{ width: `calc(100% - ${sidebarW}px)` }}
-                    >
-                        <Navbar />
-                    </div>
+                    <Navbar />
 
                     <main
                         id="main-content"
-                        className="mx-auto min-h-screen p-5 md:p-7.5 pe-5"
+                        className="mx-auto min-h-screen px-5 pb-5 md:px-7.5 md:pb-7.5 pe-5"
                         data-guild-content
                         style={{
-                            paddingTop: 50,
                             animation: "fadeSlideUp 0.3s ease both",
                         }}
                     >

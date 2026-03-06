@@ -294,6 +294,17 @@ form {
   top: 0;
 }
 
+.nav-alert {
+  will-change: transform, backdrop-filter;
+}
+
+@media (max-width: 1279px) {
+  .nav-alert {
+    left: 16px !important;
+    right: 16px !important;
+  }
+}
+
 /* Focus-visible ring for all interactive elements */
 :focus-visible {
   outline: 2px solid var(--accent-primary);

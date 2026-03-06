@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePageState } from "utils/State";
 import { useLocale, Locale } from "utils/Language";
+import { usePageInfo } from "contexts/PageInfoContext";
 import useBanner from "./components/Banner";
 
 export default function Feature() {
@@ -30,6 +31,10 @@ function FeaturePanel() {
     const query = useFeatureDetailQuery(id)
     const featuresData = useContext(FeaturesContext)
     const enabled = !canToggle || featuresData?.enabled?.includes(id)
+    usePageInfo([
+        locale({ zh: "功能面板", en: "Features" }),
+        locale(name),
+    ])
     useBanner(locale(name))
 
     return (

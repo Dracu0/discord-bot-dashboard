@@ -7,11 +7,11 @@ import { useLocale } from "../../utils/Language";
 export default function AdminNavbar() {
     const { info } = useContext(PageInfoContext);
     const locale = useLocale();
-
-    const brandText = info ? info.name : "Loading...";
+    const rootText = info?.section || locale({ zh: "頁面", en: "Pages" });
+    const trail = info?.trail?.length ? info.trail : [info?.title || "Loading..."];
 
     return (
-        <NavAlert rootText={locale({ zh: "\u9801\u9762", en: "Pages" })} childText={brandText}>
+        <NavAlert rootText={rootText} childText={trail}>
             <AdminNavbarLinks />
         </NavAlert>
     );

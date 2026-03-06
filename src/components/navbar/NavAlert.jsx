@@ -1,13 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { cn } from "lib/utils";
 import { SettingsContext } from "../../contexts/SettingsContext";
-import { contentWidthCalc, SIDEBAR_FULL, SIDEBAR_COLLAPSED } from "../../utils/layout-tokens";
+import { SIDEBAR_FULL, SIDEBAR_COLLAPSED } from "../../utils/layout-tokens";
 
 export default function NavAlert({ rootText, childText, children, clip = true }) {
     const { sidebarCollapsed } = useContext(SettingsContext);
-    const width = contentWidthCalc(sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL);
-    const margin = "5vw";
-    const clipMargin = { base: 12, md: 30 };
+    const sidebarWidth = sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL;
 
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
@@ -40,7 +38,10 @@ export default function NavAlert({ rootText, childText, children, clip = true })
 
     return (
         <div
-            className="fixed z-30 mx-auto pb-2 pt-2 px-[15px] md:px-[10px] xl:ps-3 min-h-[64px] top-3 md:top-4"
+            className={cn(
+                "nav-alert fixed z-(--z-sticky) pb-2 pt-2 px-3 md:px-2.5 xl:ps-3 min-h-16 top-3 md:top-4",
+                clip ? "nav-alert--clip" : "nav-alert--full"
+            )}
             style={{
                 backdropFilter: "blur(20px) saturate(180%)",
                 borderRadius: "var(--radius-lg)",
@@ -48,15 +49,14 @@ export default function NavAlert({ rootText, childText, children, clip = true })
                 transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
                 lineHeight: "25.6px",
                 background: "var(--navbar-bg)",
-                left: clip ? undefined : margin,
-                right: clip ? undefined : margin,
-                width: clip ? width : undefined,
+                left: clip ? `${sidebarWidth + 20}px` : "5vw",
+                right: clip ? "20px" : "5vw",
             }}
         >
             <div className="flex w-full flex-col md:flex-row xl:items-center">
                 <div className="mb-2 md:mb-0">
                     {/* Breadcrumbs */}
-                    <div className="flex items-center gap-1 text-sm mb-[5px]">
+                    <div className="flex items-center gap-1 text-sm mb-1.25 min-w-0 overflow-hidden">
                         {breadcrumbItems.map((item, i) => (
                             <React.Fragment key={i}>
                                 {i > 0 && <span className="text-sm" style={{ color: "var(--text-secondary)" }}>/</span>}
@@ -65,7 +65,7 @@ export default function NavAlert({ rootText, childText, children, clip = true })
                         ))}
                     </div>
                     <p
-                        className="font-bold text-2xl md:text-[34px]"
+                        className="font-bold text-2xl md:text-[34px] truncate"
                         style={{
                             color: "var(--text-primary)",
                             fontFamily: "'Space Grotesk', sans-serif",
@@ -78,7 +78,7 @@ export default function NavAlert({ rootText, childText, children, clip = true })
                     </p>
                 </div>
                 <div
-                    className="flex items-center flex-row ms-auto w-full md:w-auto p-2.5"
+                    className="flex items-center flex-row ms-auto w-full md:w-auto p-2.5 gap-1.5 flex-wrap md:flex-nowrap"
                     style={{
                         borderRadius: "var(--radius-lg)",
                         background: "var(--surface-primary)",

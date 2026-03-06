@@ -17,6 +17,7 @@ import {
     Pagination, PaginationContent, PaginationItem, PaginationLink,
     PaginationPrevious, PaginationNext,
 } from "components/ui/pagination";
+import { PAGE_PT } from "utils/layout-tokens";
 
 const ACTION_COLORS = {
     update: "blue",
@@ -106,7 +107,7 @@ function AuditLogRow({ entry }) {
             {hasDiff && expanded && (
                 <TableRow>
                     <TableCell colSpan={7} className="p-0 border-none">
-                        <div className="p-3 bg-(--surface-secondary) rounded-(--radius-sm)">
+                        <div className="p-3 bg-(--surface-secondary) rounded-sm">
                             <span className="text-xs font-semibold text-(--text-secondary) mb-1 block">
                                 <Locale zh="\u8b8a\u66f4\u8a73\u60c5" en="Change Details" />
                             </span>
@@ -161,7 +162,7 @@ export default function AuditLogPage() {
     ], [locale]);
 
     return (
-        <div style={{ paddingTop: "80px" }}>
+        <div style={{ paddingTop: PAGE_PT }}>
             <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2">
                     <History size={24} className="text-(--accent-primary)" />
@@ -193,7 +194,7 @@ export default function AuditLogPage() {
                                 value={category || "__all__"}
                                 onValueChange={(val) => { setCategory(val === "__all__" ? null : val); setPage(1); }}
                             >
-                                <SelectTrigger className="w-[200px]">
+                                <SelectTrigger className="w-50">
                                     <SelectValue placeholder={locale({ zh: "\u5206\u985e", en: "Category" })} />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -206,7 +207,7 @@ export default function AuditLogPage() {
                                 value={action || "__all__"}
                                 onValueChange={(val) => { setAction(val === "__all__" ? null : val); setPage(1); }}
                             >
-                                <SelectTrigger className="w-[160px]">
+                                <SelectTrigger className="w-40">
                                     <SelectValue placeholder={locale({ zh: "\u64cd\u4f5c", en: "Action" })} />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -237,9 +238,9 @@ export default function AuditLogPage() {
 
             {entries.length > 0 && (
                 <>
-                    <div className="min-w-[700px] overflow-x-auto">
+                    <div className="min-w-175 overflow-x-auto">
                         <Table
-                            className="rounded-(--radius-md) overflow-hidden border border-(--border-subtle)"
+                            className="rounded-md overflow-hidden border border-(--border-subtle)"
                         >
                             <TableHeader>
                                 <TableRow>

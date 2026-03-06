@@ -18,7 +18,7 @@ export default function Overview() {
     const guilds = guildsQuery.data;
 
     return (
-        <div className="pt-[30px] md:pt-20">
+        <div className="pt-7.5 md:pt-20">
             <div className="grid grid-cols-12 gap-5">
                 <div className="col-span-12 lg:col-span-7">
                     <Banner

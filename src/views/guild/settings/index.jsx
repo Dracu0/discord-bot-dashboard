@@ -5,6 +5,7 @@ import {SettingsContext} from "../../../contexts/SettingsContext";
 import {ConfigGrid} from "components/fields/ConfigPanel";
 import {config} from "config/config";
 import {useLocale} from "utils/Language";
+import {PAGE_PT} from "utils/layout-tokens";
 
 export default function SettingsPanel() {
     const locale = useLocale()
@@ -13,7 +14,7 @@ export default function SettingsPanel() {
     )
 
     return (
-        <div style={{ paddingTop: "80px" }}>
+        <div style={{ paddingTop: PAGE_PT }}>
             <SettingsConfigPanel />
         </div>
     );
