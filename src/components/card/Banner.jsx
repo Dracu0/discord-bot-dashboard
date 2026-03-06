@@ -5,7 +5,7 @@ import { cn } from "lib/utils";
 export default function Banner({ image, title, description, clip = true, children }) {
   return (
     <div
-      className="flex flex-col py-4 md:py-6 px-5 md:px-8 rounded-2xl relative overflow-hidden"
+      className="relative flex min-h-40 flex-col overflow-hidden rounded-[28px] px-5 py-5 shadow-(--shadow-md) md:px-8 md:py-7"
       style={{
         backgroundImage: image ? `url(${image})` : undefined,
         background: !image
@@ -15,13 +15,13 @@ export default function Banner({ image, title, description, clip = true, childre
       }}
     >
       {image && (
-        <div className="absolute inset-0 bg-black/40 rounded-2xl z-0" />
+        <div className="absolute inset-0 z-0 rounded-[28px] bg-[linear-gradient(135deg,rgba(10,15,30,0.78)_0%,rgba(18,28,45,0.48)_45%,rgba(10,15,30,0.7)_100%)]" />
       )}
-      <div className="flex items-center justify-between flex-wrap gap-2 relative z-1">
-        <div className="flex flex-col flex-1 min-w-0">
+      <div className="relative z-1 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
           <span
             className={cn(
-              "text-lg md:text-[22px] text-white font-bold font-['Space_Grotesk'] tracking-tight leading-6 md:leading-7",
+              "text-xl text-white font-bold font-['Space_Grotesk'] tracking-tight leading-7 md:text-[26px] md:leading-8",
               clip && "max-w-full md:max-w-[80%]"
             )}
           >
@@ -30,7 +30,7 @@ export default function Banner({ image, title, description, clip = true, childre
           {description && (
             <span
               className={cn(
-                "text-sm text-white/85 font-medium mt-1 leading-5 line-clamp-2",
+                "text-sm text-white/85 font-medium leading-6 line-clamp-3 md:text-[15px]",
                 clip && "max-w-full md:max-w-[75%]"
               )}
             >
@@ -38,7 +38,7 @@ export default function Banner({ image, title, description, clip = true, childre
             </span>
           )}
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           {children}
         </div>
       </div>

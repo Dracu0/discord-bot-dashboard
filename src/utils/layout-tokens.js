@@ -24,3 +24,10 @@ export function contentWidthCalc(sidebarWidth, extraPx = 70) {
 export const PAGE_PT_BASE = `${NAVBAR_HEIGHT + NAVBAR_TOP_OFFSET}px`;
 export const PAGE_PT_MD = `${NAVBAR_HEIGHT + NAVBAR_TOP_OFFSET_MD}px`;
 export const PAGE_PT = PAGE_PT_MD;
+
+export function getResponsiveGridClass(count) {
+    if (count >= 4) return "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4";
+    if (count === 3) return "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3";
+    if (count === 2) return "grid grid-cols-1 gap-4 md:grid-cols-2";
+    return "grid grid-cols-1 gap-4";
+}

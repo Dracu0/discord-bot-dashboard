@@ -1,4 +1,4 @@
-﻿import React, { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Trophy } from "lucide-react";
 import { GuildContext } from "contexts/guild/GuildContext";
@@ -11,11 +11,13 @@ import {
     Pagination, PaginationContent, PaginationItem, PaginationLink,
     PaginationPrevious, PaginationNext,
 } from "components/ui/pagination";
-import { PAGE_PT } from "utils/layout-tokens";
+import PageContainer from "components/layout/PageContainer";
+import PageHeader from "components/layout/PageHeader";
+import PageSection from "components/layout/PageSection";
 
 export default function Leaderboard() {
     const locale = useLocale();
-    usePageInfo(locale({ zh: "\u6392\u884c\u699c", en: "Leaderboard" }));
+    usePageInfo(locale({ zh: "排行榜", en: "Leaderboard" }));
     const { id: serverId } = useContext(GuildContext);
     const [page, setPage] = useState(1);
     const { t } = useTranslation();
@@ -28,17 +30,17 @@ export default function Leaderboard() {
 
     if (query.isLoading && !query.data) {
         return (
-            <div className="flex items-center justify-center h-100" style={{ paddingTop: PAGE_PT }}>
+            <PageContainer className="flex h-100 items-center justify-center">
                 <Spinner size="lg" />
-            </div>
+            </PageContainer>
         );
     }
 
     if (query.isError) {
         return (
-            <div style={{ paddingTop: PAGE_PT }}>
+            <PageContainer>
                 <span className="text-red-500">{t("leaderboard.loadFailed")}</span>
-            </div>
+            </PageContainer>
         );
     }
 
@@ -47,60 +49,63 @@ export default function Leaderboard() {
     const users = data.users || data.entries || [];
 
     return (
-        <div style={{ paddingTop: PAGE_PT }}>
-            <div className="flex items-center gap-2 mb-6">
-                <Trophy size={28} className="text-(--accent-primary)" />
-                <h2
-                    className="text-2xl font-bold text-(--text-primary)"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                >
-                    {t("leaderboard.title")}
-                </h2>
-                <span className="text-(--text-secondary) text-sm">
-                    ({data.total} {t("common.users")})
-                </span>
-            </div>
-
-            <LeaderboardTable
+        <PageContainer>
+            <PageHeader
+                icon={<Trophy size={24} />}
                 title={t("leaderboard.title")}
-                users={users}
-                total={data.total}
                 description={t("leaderboard.description")}
+                meta={<>
+                    <span>{data.total} {t("common.users")}</span>
+                    <span className="h-1 w-1 rounded-full bg-(--text-muted)" />
+                    <span>{data.totalPages} {data.totalPages === 1 ? "page" : "pages"}</span>
+                </>}
             />
 
-            {data.totalPages > 1 && (
-                <div className="flex justify-center py-4">
-                    <Pagination>
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious
-                                    onClick={() => setPage(p => Math.max(1, p - 1))}
-                                    disabled={page <= 1}
-                                />
-                            </PaginationItem>
-                            {Array.from({ length: Math.min(data.totalPages, 5) }, (_, i) => {
-                                const pageNum = i + 1;
-                                return (
-                                    <PaginationItem key={pageNum}>
-                                        <PaginationLink
-                                            isActive={page === pageNum}
-                                            onClick={() => setPage(pageNum)}
-                                        >
-                                            {pageNum}
-                                        </PaginationLink>
-                                    </PaginationItem>
-                                );
-                            })}
-                            <PaginationItem>
-                                <PaginationNext
-                                    onClick={() => setPage(p => Math.min(data.totalPages, p + 1))}
-                                    disabled={page >= data.totalPages}
-                                />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
-                </div>
-            )}
-        </div>
+            <PageSection
+                title={t("leaderboard.title")}
+                description={t("leaderboard.description")}
+            >
+                <LeaderboardTable
+                    title={t("leaderboard.title")}
+                    users={users}
+                    total={data.total}
+                    description={t("leaderboard.description")}
+                />
+
+                {data.totalPages > 1 && (
+                    <div className="flex justify-center py-2">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        onClick={() => setPage((p) => Math.max(1, p - 1))}
+                                        disabled={page <= 1}
+                                    />
+                                </PaginationItem>
+                                {Array.from({ length: Math.min(data.totalPages, 5) }, (_, i) => {
+                                    const pageNum = i + 1;
+                                    return (
+                                        <PaginationItem key={pageNum}>
+                                            <PaginationLink
+                                                isActive={page === pageNum}
+                                                onClick={() => setPage(pageNum)}
+                                            >
+                                                {pageNum}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    );
+                                })}
+                                <PaginationItem>
+                                    <PaginationNext
+                                        onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
+                                        disabled={page >= data.totalPages}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
+                )}
+            </PageSection>
+        </PageContainer>
     );
 }

@@ -46,7 +46,7 @@ function RouteWrapper({ children }) {
 
                     <main
                         id="main-content"
-                        className="mx-auto min-h-screen px-5 pb-5 md:px-7.5 md:pb-7.5 pe-5"
+                        className="mx-auto min-h-screen px-4 pb-6 sm:px-5 md:px-6 md:pb-7 xl:px-7.5"
                         data-guild-content
                         style={{
                             animation: "fadeSlideUp 0.3s ease both",

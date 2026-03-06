@@ -5,7 +5,7 @@ import { LayoutContext, LayoutProvider } from "../../contexts/layouts/LayoutCont
 import bannerImg from "../../assets/img/common/ActionBanner.png";
 import Banner from "../../components/card/Banner";
 import { Outlet } from "react-router-dom";
-import { PAGE_PT } from "../../utils/layout-tokens";
+import PageContainer from "components/layout/PageContainer";
 
 export function ActionsLayout() {
     const locale = useLocale()
@@ -15,9 +15,9 @@ export function ActionsLayout() {
     );
 
     return <LayoutProvider>
-        <div style={{ paddingTop: PAGE_PT }}>
+        <PageContainer>
             <Content />
-        </div>
+        </PageContainer>
     </LayoutProvider>
 }
 
@@ -42,22 +42,22 @@ function Content() {
 
     if (dataList) {
         return (
-            <div className="grid grid-cols-12 gap-5 mb-5">
+            <div className="grid grid-cols-12 gap-6 pb-2">
                 <div className="col-span-12 xl:col-span-8">
-                    <div className="flex flex-col mb-2.5">
+                    <div className="flex flex-col gap-5">
                         <BannerWrapper banner={banner} />
                         <Outlet />
                     </div>
                 </div>
                 <div className="col-span-12 xl:col-span-4">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-5 xl:sticky xl:top-26">
                         {dataList}
                     </div>
                 </div>
             </div>
         );
     } else {
-        return <div className="flex flex-col mb-7.5">
+        return <div className="flex flex-col gap-5 pb-2">
             <BannerWrapper banner={banner} />
             <Outlet />
         </div>

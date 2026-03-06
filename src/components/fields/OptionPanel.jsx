@@ -15,6 +15,28 @@ import { OptionTypes } from "../../variables/type";
 
 const PREVIEW_TYPE = "preview";
 
+function normalizeEnumChoice(choice) {
+    if (typeof choice === "string" || typeof choice === "number") {
+        return {
+            label: String(choice),
+            value: String(choice),
+        }
+    }
+
+    if (choice && typeof choice === "object") {
+        return {
+            ...choice,
+            value: choice.value ?? choice.id ?? choice.key ?? choice.label ?? choice.name ?? "",
+            label: choice.label ?? choice.name ?? choice.value ?? choice.id ?? "",
+        }
+    }
+
+    return {
+        label: String(choice ?? ""),
+        value: String(choice ?? ""),
+    }
+}
+
 export function OptionPanel({ value, onChange, option, error }) {
   const input = useInput(value, onChange, option, error);
 
@@ -115,10 +137,7 @@ export function getInput(value, onChange, option, error) {
         case OptionTypes.Enum:
             return (
                 <SelectField
-                    options={(option.choices || []).map((choice) => ({
-                        label: choice,
-                        value: choice,
-                    }))}
+                    options={(option.choices || []).map(normalizeEnumChoice)}
                     placeholder="Select an item"
                     value={value}
                     onChange={onChange}

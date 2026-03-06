@@ -6,16 +6,63 @@ import {
   SelectItem,
 } from "components/ui/select";
 import { cn } from "lib/utils";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Badge } from "components/ui/badge";
 import { X } from "lucide-react";
 
+function normalizeOptionLabel(label, fallbackValue) {
+  if (React.isValidElement(label) || typeof label === "string" || typeof label === "number") {
+    return label;
+  }
+
+  if (label && typeof label === "object") {
+    if ("label" in label) {
+      return normalizeOptionLabel(label.label, fallbackValue);
+    }
+
+    if ("en" in label || "zh" in label) {
+      return label.en || label.zh || String(fallbackValue ?? "");
+    }
+
+    if ("name" in label) {
+      return normalizeOptionLabel(label.name, fallbackValue);
+    }
+
+    if ("value" in label && (typeof label.value === "string" || typeof label.value === "number")) {
+      return String(label.value);
+    }
+  }
+
+  return String(fallbackValue ?? "");
+}
+
+function normalizeOption(opt) {
+  if (typeof opt === "string" || typeof opt === "number") {
+    return {
+      value: String(opt),
+      label: String(opt),
+    };
+  }
+
+  if (!opt || typeof opt !== "object") {
+    return {
+      value: String(opt ?? ""),
+      label: String(opt ?? ""),
+    };
+  }
+
+  const rawValue = opt.value ?? opt.id ?? opt.key ?? opt.label ?? opt.name ?? "";
+
+  return {
+    ...opt,
+    value: String(rawValue),
+    label: normalizeOptionLabel(opt.label ?? opt.name ?? rawValue, rawValue),
+  };
+}
+
 export function SelectField({ value, onChange, options, isMulti, placeholder, error, ...props }) {
   const data = Array.isArray(options)
-    ? options.map((opt) => ({
-        value: String(opt.value),
-        label: opt.label || String(opt.value),
-      }))
+    ? options.map(normalizeOption)
     : [];
 
   if (isMulti) {

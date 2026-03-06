@@ -11,12 +11,14 @@ import StatCard from "components/card/data/StatCard";
 import { Badge } from "components/ui/badge";
 import { Spinner } from "components/ui/spinner";
 import { SegmentedControl } from "components/ui/segmented-control";
+import PageContainer from "components/layout/PageContainer";
+import PageHeader from "components/layout/PageHeader";
+import PageSection from "components/layout/PageSection";
 
-// Updated chart colors: blue/cyan theme instead of purple
 const CHART_COLORS = {
-    primary: '#0EA5E9',
-    secondary: '#A3AED0',
-    muted: '#CBD5E0',
+    primary: "#0EA5E9",
+    secondary: "#A3AED0",
+    muted: "#CBD5E0",
 };
 
 const PERIOD_OPTIONS = [
@@ -29,7 +31,7 @@ const PERIOD_OPTIONS = [
 function ModerationTimeline({ data = [] }) {
     const series = useMemo(() => [{
         name: "Actions",
-        data: data.map(d => ({ x: d.date, y: d.count })),
+        data: data.map((d) => ({ x: d.date, y: d.count })),
     }], [data]);
 
     const options = useMemo(() => ({
@@ -57,7 +59,7 @@ function ModerationTimeline({ data = [] }) {
         return (
             <div className="flex items-center justify-center py-10">
                 <span className="text-(--text-secondary) text-sm">
-                    <Locale zh="\u6b64\u6642\u6bb5\u7121\u5be9\u6838\u8a18\u9304" en="No moderation actions in this period" />
+                    <Locale zh="此時段無審核記錄" en="No moderation actions in this period" />
                 </span>
             </div>
         );
@@ -67,8 +69,8 @@ function ModerationTimeline({ data = [] }) {
 }
 
 function ActionBreakdown({ data = [] }) {
-    const series = useMemo(() => data.map(d => d.count), [data]);
-    const labels = useMemo(() => data.map(d => d.action || "unknown"), [data]);
+    const series = useMemo(() => data.map((d) => d.count), [data]);
+    const labels = useMemo(() => data.map((d) => d.action || "unknown"), [data]);
     const colors = [CHART_COLORS.primary, "#339AF0", "#20C997", "#FF6B6B", "#FCC419", "#FF922B"];
 
     const options = useMemo(() => ({
@@ -88,10 +90,10 @@ function ActionBreakdown({ data = [] }) {
 function LevelDistribution({ data = [] }) {
     const series = useMemo(() => [{
         name: "Users",
-        data: data.map(d => d.count),
+        data: data.map((d) => d.count),
     }], [data]);
 
-    const categories = useMemo(() => data.map(d => d.range), [data]);
+    const categories = useMemo(() => data.map((d) => d.range), [data]);
 
     const options = useMemo(() => ({
         chart: { toolbar: { show: false } },
@@ -131,7 +133,7 @@ function SuggestionFunnel({ data = [] }) {
         return (
             <div className="flex items-center justify-center py-10">
                 <span className="text-(--text-secondary) text-sm">
-                    <Locale zh="\u7121\u5efa\u8b70\u8cc7\u6599" en="No suggestion data" />
+                    <Locale zh="無建議資料" en="No suggestion data" />
                 </span>
             </div>
         );
@@ -139,7 +141,7 @@ function SuggestionFunnel({ data = [] }) {
 
     return (
         <div className="flex flex-col gap-2">
-            {data.map(d => (
+            {data.map((d) => (
                 <div key={d.status} className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                         <Badge variant={statusVariants[d.status] || "secondary"} className="text-xs">
@@ -152,15 +154,15 @@ function SuggestionFunnel({ data = [] }) {
                     </span>
                 </div>
             ))}
-            <span className="text-xs text-(--text-secondary) text-center mt-1.5">
-                <Locale zh={`\u5171 ${total} \u7b46\u5efa\u8b70`} en={`${total} total suggestions`} />
+            <span className="mt-1.5 text-center text-xs text-(--text-secondary)">
+                <Locale zh={`共 ${total} 筆建議`} en={`${total} total suggestions`} />
             </span>
         </div>
     );
 }
 
 function formatDuration(ms) {
-    if (!ms) return "\u2014";
+    if (!ms) return "—";
     const hours = Math.floor(ms / (1000 * 60 * 60));
     if (hours < 24) return `${hours}h`;
     const days = Math.floor(hours / 24);
@@ -169,7 +171,7 @@ function formatDuration(ms) {
 
 export default function Analytics() {
     const locale = useLocale();
-    usePageInfo(locale({ zh: "\u6578\u64da\u5206\u6790", en: "Analytics" }));
+    usePageInfo(locale({ zh: "數據分析", en: "Analytics" }));
     const { id: serverId } = useContext(GuildContext);
     const [days, setDays] = useState("30");
 
@@ -181,19 +183,19 @@ export default function Analytics() {
 
     if (query.isLoading) {
         return (
-            <div className="flex items-center justify-center h-100" style={{ paddingTop: "80px" }}>
+            <PageContainer className="flex min-h-100 items-center justify-center">
                 <Spinner size="lg" />
-            </div>
+            </PageContainer>
         );
     }
 
     if (query.isError) {
         return (
-            <div style={{ paddingTop: "80px" }}>
+            <PageContainer>
                 <span className="text-red-500">
-                    <Locale zh="\u7121\u6cd5\u8f09\u5165\u5206\u6790\u8cc7\u6599" en="Failed to load analytics data" />
+                    <Locale zh="無法載入分析資料" en="Failed to load analytics data" />
                 </span>
-            </div>
+            </PageContainer>
         );
     }
 
@@ -201,97 +203,107 @@ export default function Analytics() {
     if (!data) return null;
 
     return (
-        <div style={{ paddingTop: "80px" }}>
-            <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
-                <div className="flex items-center gap-2">
-                    <BarChart3 size={28} className="text-(--accent-primary)" />
-                    <h2
-                        className="text-2xl font-bold text-(--text-primary)"
-                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                    >
-                        <Locale zh="\u6578\u64da\u5206\u6790" en="Analytics" />
-                    </h2>
+        <PageContainer>
+            <PageHeader
+                icon={<BarChart3 size={24} />}
+                title={<Locale zh="數據分析" en="Analytics" />}
+                description={<Locale zh="掌握審核活動、建議流程、等級分佈與工單效率的近期趨勢。" en="Track moderation, suggestions, XP progression, and ticket performance over the period that matters to you." />}
+                meta={<>
+                    <span><Locale zh={`最近 ${days} 天`} en={`Last ${days} days`} /></span>
+                    <span className="h-1 w-1 rounded-full bg-(--text-muted)" />
+                    <span><Locale zh="資料會自動刷新" en="Data refreshes automatically" /></span>
+                </>}
+                actions={<SegmentedControl data={PERIOD_OPTIONS} value={days} onChange={setDays} size="sm" />}
+            />
+
+            <PageSection
+                title={<Locale zh="關鍵指標" en="Key Metrics" />}
+                description={<Locale zh="快速掌握最近期間內最值得關注的統計數字。" en="Start with the headline numbers before diving into the detailed charts below." />}
+            >
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                    <StatCard
+                        label={<Locale zh="審核操作" en="Mod Actions" />}
+                        value={(data.moderation?.byDay || []).reduce((s, d) => s + d.count, 0)}
+                        sublabel={<Locale zh={`過去 ${days} 天`} en={`Last ${days} days`} />}
+                    />
+                    <StatCard
+                        label={<Locale zh="待處理建議" en="Pending Suggestions" />}
+                        value={(data.suggestions?.byStatus || []).find((d) => d.status === "pending")?.count ?? 0}
+                    />
+                    <StatCard
+                        label={<Locale zh="未結客服單" en="Open Tickets" />}
+                        value={data.tickets?.open}
+                    />
+                    <StatCard
+                        label={<Locale zh="平均解決時間" en="Avg Resolution" />}
+                        value={formatDuration(data.tickets?.avgResolutionMs)}
+                        sublabel={<Locale zh="客服單" en="Tickets" />}
+                    />
                 </div>
-                <SegmentedControl
-                    data={PERIOD_OPTIONS}
-                    value={days}
-                    onChange={setDays}
-                    size="sm"
-                />
-            </div>
+            </PageSection>
 
-            {/* Summary Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <StatCard
-                    label={<Locale zh="\u5be9\u6838\u64cd\u4f5c" en="Mod Actions" />}
-                    value={(data.moderation?.byDay || []).reduce((s, d) => s + d.count, 0)}
-                    sublabel={<Locale zh={`\u904e\u53bb ${days} \u5929`} en={`Last ${days} days`} />}
-                />
-                <StatCard
-                    label={<Locale zh="\u5f85\u8655\u7406\u5efa\u8b70" en="Pending Suggestions" />}
-                    value={(data.suggestions?.byStatus || []).find(d => d.status === "pending")?.count ?? 0}
-                />
-                <StatCard
-                    label={<Locale zh="\u672a\u7d50\u5ba2\u670d\u55ae" en="Open Tickets" />}
-                    value={data.tickets?.open}
-                />
-                <StatCard
-                    label={<Locale zh="\u5e73\u5747\u89e3\u6c7a\u6642\u9593" en="Avg Resolution" />}
-                    value={formatDuration(data.tickets?.avgResolutionMs)}
-                    sublabel={<Locale zh="\u5ba2\u670d\u55ae" en="Tickets" />}
-                />
-            </div>
+            <PageSection
+                title={<Locale zh="活動與審核" en="Activity & Moderation" />}
+                description={<Locale zh="用趨勢圖與類型分佈理解近期的管理負載。" en="Understand how moderation workload evolves and which action types dominate the queue." />}
+            >
+                <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                    <Card variant="panel" className="flex flex-col">
+                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
+                            <Locale zh="審核趨勢" en="Moderation Trend" />
+                        </span>
+                        <ModerationTimeline data={data.moderation?.byDay || []} />
+                    </Card>
 
-            {/* Charts Row 1 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-                <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-(--text-primary) mb-3">
-                        <Locale zh="\u5be9\u6838\u8da8\u52e2" en="Moderation Trend" />
-                    </span>
-                    <ModerationTimeline data={data.moderation?.byDay || []} />
-                </Card>
+                    <Card variant="panel" className="flex flex-col">
+                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
+                            <Locale zh="操作類型分佈" en="Action Type Breakdown" />
+                        </span>
+                        <ActionBreakdown data={data.moderation?.byType || []} />
+                    </Card>
+                </div>
+            </PageSection>
 
-                <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-(--text-primary) mb-3">
-                        <Locale zh="\u64cd\u4f5c\u985e\u578b\u5206\u4f48" en="Action Type Breakdown" />
-                    </span>
-                    <ActionBreakdown data={data.moderation?.byType || []} />
-                </Card>
-            </div>
+            <PageSection
+                title={<Locale zh="成長與流程" en="Growth & Workflow" />}
+                description={<Locale zh="觀察使用者成長曲線與建議處理狀態，找出瓶頸。" en="Review leveling progress and suggestion throughput to spot friction before it piles up." />}
+            >
+                <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                    <Card variant="panel" className="flex flex-col">
+                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
+                            <Locale zh="等級分佈" en="Level Distribution" />
+                        </span>
+                        <LevelDistribution data={data.xp?.levelDistribution || []} />
+                    </Card>
 
-            {/* Charts Row 2 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-                <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-(--text-primary) mb-3">
-                        <Locale zh="\u7b49\u7d1a\u5206\u4f48" en="Level Distribution" />
-                    </span>
-                    <LevelDistribution data={data.xp?.levelDistribution || []} />
-                </Card>
+                    <Card variant="panel" className="flex flex-col">
+                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
+                            <Locale zh="建議狀態" en="Suggestion Status" />
+                        </span>
+                        <SuggestionFunnel data={data.suggestions?.byStatus || []} />
+                    </Card>
+                </div>
+            </PageSection>
 
-                <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-(--text-primary) mb-3">
-                        <Locale zh="\u5efa\u8b70\u72c0\u614b" en="Suggestion Status" />
-                    </span>
-                    <SuggestionFunnel data={data.suggestions?.byStatus || []} />
-                </Card>
-            </div>
-
-            {/* Audit Activity */}
             {(data.audit?.byCategory || []).length > 0 && (
-                <Card className="flex flex-col p-5">
-                    <span className="text-lg font-bold text-(--text-primary) mb-3">
-                        <Locale zh="\u5100\u8868\u677f\u64cd\u4f5c\u8a18\u9304" en="Dashboard Activity" />
-                    </span>
-                    <div className="flex items-center gap-4 flex-wrap">
-                        {(data.audit?.byCategory || []).map(d => (
-                            <div key={d.category} className="flex items-center gap-1.5">
-                                <Badge variant="secondary" className="text-base">{d.category}</Badge>
-                                <span className="text-lg font-bold text-(--text-primary)">{d.count}</span>
-                            </div>
-                        ))}
-                    </div>
-                </Card>
+                <PageSection
+                    title={<Locale zh="儀表板活動" en="Dashboard Activity" />}
+                    description={<Locale zh="查看管理操作最常集中在哪些類別。" en="See which configuration areas are generating the most dashboard activity." />}
+                >
+                    <Card variant="panel" className="flex flex-col">
+                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
+                            <Locale zh="儀表板操作記錄" en="Dashboard Activity" />
+                        </span>
+                        <div className="flex flex-wrap items-center gap-4">
+                            {(data.audit?.byCategory || []).map((d) => (
+                                <div key={d.category} className="flex items-center gap-1.5">
+                                    <Badge variant="secondary" className="text-base">{d.category}</Badge>
+                                    <span className="text-lg font-bold text-(--text-primary)">{d.count}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                </PageSection>
             )}
-        </div>
+        </PageContainer>
     );
 }

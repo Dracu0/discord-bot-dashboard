@@ -11,13 +11,15 @@ import { Spinner } from "components/ui/spinner";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "components/ui/table";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 import { Collapsible, CollapsibleContent } from "components/ui/collapsible";
-import { Card } from "components/ui/card";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "components/ui/select";
 import {
     Pagination, PaginationContent, PaginationItem, PaginationLink,
     PaginationPrevious, PaginationNext,
 } from "components/ui/pagination";
-import { PAGE_PT } from "utils/layout-tokens";
+import PageContainer from "components/layout/PageContainer";
+import PageHeader from "components/layout/PageHeader";
+import PageSection from "components/layout/PageSection";
+import Card from "components/card/Card";
 
 const ACTION_COLORS = {
     update: "blue",
@@ -59,14 +61,14 @@ function DiffView({ before, after }) {
     if (before == null && after == null) return null;
 
     return (
-        <div className="flex items-center gap-1.5 mt-1">
+        <div className="mt-1 flex items-center gap-1.5">
             {before != null && (
-                <code className="rounded bg-red-500/10 text-red-400 px-1.5 py-0.5 text-xs font-mono max-w-[45%] break-all">
+                <code className="max-w-[45%] break-all rounded bg-red-500/10 px-1.5 py-0.5 font-mono text-xs text-red-400">
                     - {typeof before === "object" ? JSON.stringify(before) : String(before)}
                 </code>
             )}
             {after != null && (
-                <code className="rounded bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 text-xs font-mono max-w-[45%] break-all">
+                <code className="max-w-[45%] break-all rounded bg-emerald-500/10 px-1.5 py-0.5 font-mono text-xs text-emerald-400">
                     + {typeof after === "object" ? JSON.stringify(after) : String(after)}
                 </code>
             )}
@@ -88,7 +90,7 @@ function AuditLogRow({ entry }) {
             <TableRow
                 className={hasDiff ? "cursor-pointer" : "cursor-default"}
                 style={{ cursor: hasDiff ? "pointer" : "default" }}
-                onClick={() => hasDiff && setExpanded(p => !p)}
+                onClick={() => hasDiff && setExpanded((p) => !p)}
             >
                 <TableCell>
                     <div className="min-w-34">
@@ -105,10 +107,10 @@ function AuditLogRow({ entry }) {
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <div className="min-w-0 max-w-40">
-                                    <span className="block text-sm text-(--text-primary) font-semibold truncate">
+                                    <span className="block truncate text-sm font-semibold text-(--text-primary)">
                                         {entry.actorTag || entry.actorId}
                                     </span>
-                                    <span className="block text-xs text-(--text-muted) truncate">
+                                    <span className="block truncate text-xs text-(--text-muted)">
                                         {entry.actorId}
                                     </span>
                                 </div>
@@ -123,7 +125,7 @@ function AuditLogRow({ entry }) {
                     </Badge>
                 </TableCell>
                 <TableCell>
-                    <span className="text-sm text-(--text-primary) font-medium">{formatCategoryLabel(category)}</span>
+                    <span className="text-sm font-medium text-(--text-primary)">{formatCategoryLabel(category)}</span>
                 </TableCell>
                 <TableCell>
                     <Badge variant={ACTION_COLORS[action] || "secondary"}>
@@ -131,7 +133,7 @@ function AuditLogRow({ entry }) {
                     </Badge>
                 </TableCell>
                 <TableCell>
-                    <span className="text-sm text-(--text-secondary) line-clamp-2 block max-w-48">
+                    <span className="block max-w-48 line-clamp-2 text-sm text-(--text-secondary)">
                         {target}
                     </span>
                 </TableCell>
@@ -145,10 +147,10 @@ function AuditLogRow({ entry }) {
             </TableRow>
             {hasDiff && expanded && (
                 <TableRow>
-                    <TableCell colSpan={7} className="p-0 border-none">
+                    <TableCell colSpan={7} className="border-none p-0">
                         <div className="m-3 rounded-xl border border-(--border-subtle) bg-(--surface-secondary) p-4">
-                            <span className="text-xs font-semibold text-(--text-secondary) mb-1 block">
-                                <Locale zh="\u8b8a\u66f4\u8a73\u60c5" en="Change Details" />
+                            <span className="mb-1 block text-xs font-semibold text-(--text-secondary)">
+                                <Locale zh="變更詳情" en="Change Details" />
                             </span>
                             <DiffView before={entry.before} after={entry.after} />
                         </div>
@@ -161,7 +163,7 @@ function AuditLogRow({ entry }) {
 
 export default function AuditLogPage() {
     const locale = useLocale();
-    usePageInfo(locale({ zh: "\u5be9\u8a08\u65e5\u8a8c", en: "Audit Log" }));
+    usePageInfo(locale({ zh: "審計日誌", en: "Audit Log" }));
 
     const { id: serverId } = useContext(GuildContext);
     const [page, setPage] = useState(1);
@@ -178,7 +180,7 @@ export default function AuditLogPage() {
     const { entries = [], total = 0, totalPages = 0 } = query.data || {};
 
     const categoryOptions = useMemo(() => [
-        { value: "__all__", label: locale({ zh: "\u5168\u90e8\u5206\u985e", en: "All Categories" }) },
+        { value: "__all__", label: locale({ zh: "全部分類", en: "All Categories" }) },
         { value: "config.welcome", label: "Welcome" },
         { value: "config.xp", label: "XP" },
         { value: "config.automod", label: "AutoMod" },
@@ -187,12 +189,12 @@ export default function AuditLogPage() {
         { value: "config.starboard", label: "Starboard" },
         { value: "config.tickets", label: "Tickets" },
         { value: "config.minecraft", label: "Minecraft" },
-        { value: "feature.toggle", label: locale({ zh: "\u529f\u80fd\u5207\u63db", en: "Feature Toggle" }) },
-        { value: "settings", label: locale({ zh: "\u8a2d\u7f6e", en: "Settings" }) },
+        { value: "feature.toggle", label: locale({ zh: "功能切換", en: "Feature Toggle" }) },
+        { value: "settings", label: locale({ zh: "設置", en: "Settings" }) },
     ], [locale]);
 
     const actionOptions = useMemo(() => [
-        { value: "__all__", label: locale({ zh: "\u5168\u90e8\u64cd\u4f5c", en: "All Actions" }) },
+        { value: "__all__", label: locale({ zh: "全部操作", en: "All Actions" }) },
         { value: "update", label: "Update" },
         { value: "enable", label: "Enable" },
         { value: "disable", label: "Disable" },
@@ -201,43 +203,35 @@ export default function AuditLogPage() {
     ], [locale]);
 
     return (
-        <div style={{ paddingTop: PAGE_PT }}>
-            <div className="flex items-center justify-between mb-5">
-                <div className="flex items-center gap-2">
-                    <History size={24} className="text-(--accent-primary)" />
-                    <h3
-                        className="text-(--text-primary) font-semibold text-xl"
-                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                    >
-                        <Locale zh="\u5be9\u8a08\u65e5\u8a8c" en="Audit Log" />
-                    </h3>
-                    {total > 0 && (
-                        <Badge variant="secondary">{total}</Badge>
-                    )}
-                </div>
-                <Button
+        <PageContainer>
+            <PageHeader
+                icon={<History size={24} />}
+                title={<Locale zh="審計日誌" en="Audit Log" />}
+                description={<Locale zh="追蹤誰在何時修改了哪些設定，並查看每次變更的前後差異。" en="Track who changed what, when it happened, and inspect the before-and-after details for each update." />}
+                meta={total > 0 ? <Badge variant="secondary">{total}</Badge> : null}
+                actions={<Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowFilters(p => !p)}
+                    onClick={() => setShowFilters((p) => !p)}
                 >
                     <Filter size={14} className="mr-1" />
-                    <Locale zh="\u7be9\u9078" en="Filters" />
-                </Button>
-            </div>
+                    <Locale zh="篩選" en="Filters" />
+                </Button>}
+            />
 
             <Collapsible open={showFilters}>
                 <CollapsibleContent>
-                    <Card className="p-4 mb-4 bg-(--surface-card)">
-                        <div className="flex items-center gap-3 flex-wrap">
+                    <Card variant="panel" className="mb-2 bg-(--surface-card)">
+                        <div className="flex flex-wrap items-center gap-3">
                             <Select
                                 value={category || "__all__"}
                                 onValueChange={(val) => { setCategory(val === "__all__" ? null : val); setPage(1); }}
                             >
                                 <SelectTrigger className="w-50">
-                                    <SelectValue placeholder={locale({ zh: "\u5206\u985e", en: "Category" })} />
+                                    <SelectValue placeholder={locale({ zh: "分類", en: "Category" })} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {categoryOptions.map(opt => (
+                                    {categoryOptions.map((opt) => (
                                         <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                                     ))}
                                 </SelectContent>
@@ -247,10 +241,10 @@ export default function AuditLogPage() {
                                 onValueChange={(val) => { setAction(val === "__all__" ? null : val); setPage(1); }}
                             >
                                 <SelectTrigger className="w-40">
-                                    <SelectValue placeholder={locale({ zh: "\u64cd\u4f5c", en: "Action" })} />
+                                    <SelectValue placeholder={locale({ zh: "操作", en: "Action" })} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {actionOptions.map(opt => (
+                                    {actionOptions.map((opt) => (
                                         <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                                     ))}
                                 </SelectContent>
@@ -267,33 +261,36 @@ export default function AuditLogPage() {
             )}
 
             {!query.isLoading && entries.length === 0 && (
-                <div className="flex flex-col items-center py-10">
-                    <History size={48} className="text-(--text-secondary) opacity-40" />
-                    <span className="text-(--text-secondary) text-sm mt-2">
-                        <Locale zh="\u66ab\u7121\u5be9\u8a08\u65e5\u8a8c" en="No audit log entries found" />
-                    </span>
-                </div>
+                <PageSection>
+                    <div className="flex flex-col items-center rounded-[28px] border border-dashed border-(--border-subtle) bg-(--surface-card) py-12">
+                        <History size={48} className="text-(--text-secondary) opacity-40" />
+                        <span className="mt-2 text-sm text-(--text-secondary)">
+                            <Locale zh="暫無審計日誌" en="No audit log entries found" />
+                        </span>
+                    </div>
+                </PageSection>
             )}
 
             {entries.length > 0 && (
-                <>
+                <PageSection
+                    title={<Locale zh="活動紀錄" en="Activity Feed" />}
+                    description={<Locale zh="展開任一列即可檢視更詳細的差異內容。" en="Expand any row to inspect the detailed change diff for that event." />}
+                >
                     <div className="overflow-x-auto rounded-xl border border-(--border-subtle) bg-(--surface-card) shadow-(--shadow-sm)">
-                        <Table
-                            className="min-w-175 rounded-md overflow-hidden"
-                        >
+                        <Table className="min-w-175 overflow-hidden rounded-md">
                             <TableHeader className="bg-(--surface-secondary)">
                                 <TableRow>
-                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u6642\u9593" en="Time" /></TableHead>
-                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u64cd\u4f5c\u8005" en="Actor" /></TableHead>
-                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u4f86\u6e90" en="Source" /></TableHead>
-                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u5206\u985e" en="Category" /></TableHead>
-                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u64cd\u4f5c" en="Action" /></TableHead>
-                                    <TableHead className="text-[11px] uppercase tracking-[0.12em] font-bold"><Locale zh="\u76ee\u6a19" en="Target" /></TableHead>
+                                    <TableHead className="text-[11px] font-bold uppercase tracking-[0.12em]"><Locale zh="時間" en="Time" /></TableHead>
+                                    <TableHead className="text-[11px] font-bold uppercase tracking-[0.12em]"><Locale zh="操作者" en="Actor" /></TableHead>
+                                    <TableHead className="text-[11px] font-bold uppercase tracking-[0.12em]"><Locale zh="來源" en="Source" /></TableHead>
+                                    <TableHead className="text-[11px] font-bold uppercase tracking-[0.12em]"><Locale zh="分類" en="Category" /></TableHead>
+                                    <TableHead className="text-[11px] font-bold uppercase tracking-[0.12em]"><Locale zh="操作" en="Action" /></TableHead>
+                                    <TableHead className="text-[11px] font-bold uppercase tracking-[0.12em]"><Locale zh="目標" en="Target" /></TableHead>
                                     <TableHead className="w-10" />
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {entries.map(entry => (
+                                {entries.map((entry) => (
                                     <AuditLogRow key={entry.id} entry={entry} />
                                 ))}
                             </TableBody>
@@ -301,12 +298,12 @@ export default function AuditLogPage() {
                     </div>
 
                     {totalPages > 1 && (
-                        <div className="flex justify-center mt-4">
+                        <div className="mt-4 flex justify-center">
                             <Pagination>
                                 <PaginationContent>
                                     <PaginationItem>
                                         <PaginationPrevious
-                                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                                            onClick={() => setPage((p) => Math.max(1, p - 1))}
                                             disabled={page <= 1}
                                         />
                                     </PaginationItem>
@@ -325,7 +322,7 @@ export default function AuditLogPage() {
                                     })}
                                     <PaginationItem>
                                         <PaginationNext
-                                            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                                             disabled={page >= totalPages}
                                         />
                                     </PaginationItem>
@@ -333,8 +330,8 @@ export default function AuditLogPage() {
                             </Pagination>
                         </div>
                     )}
-                </>
+                </PageSection>
             )}
-        </div>
+        </PageContainer>
     );
 }

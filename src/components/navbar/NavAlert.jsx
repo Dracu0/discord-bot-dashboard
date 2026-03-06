@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "lib/utils";
 import { SettingsContext } from "../../contexts/SettingsContext";
-import { SIDEBAR_FULL, SIDEBAR_COLLAPSED } from "../../utils/layout-tokens";
+import { SIDEBAR_FULL, SIDEBAR_COLLAPSED, PAGE_PT } from "../../utils/layout-tokens";
 
 export default function NavAlert({ rootText, childText, children, clip = true }) {
     const { sidebarCollapsed } = useContext(SettingsContext);
     const sidebarWidth = sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL;
+    const navRef = useRef(null);
 
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
@@ -13,6 +14,32 @@ export default function NavAlert({ rootText, childText, children, clip = true })
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
+
+    useLayoutEffect(() => {
+        const node = navRef.current;
+        if (!node) return undefined;
+
+        const applyOffset = () => {
+            const rect = node.getBoundingClientRect();
+            const safeOffset = Math.ceil(rect.bottom + 20);
+            document.documentElement.style.setProperty("--page-top-offset", `${safeOffset}px`);
+        };
+
+        applyOffset();
+
+        const observer = typeof ResizeObserver !== "undefined"
+            ? new ResizeObserver(() => applyOffset())
+            : null;
+
+        observer?.observe(node);
+        window.addEventListener("resize", applyOffset);
+
+        return () => {
+            observer?.disconnect();
+            window.removeEventListener("resize", applyOffset);
+            document.documentElement.style.setProperty("--page-top-offset", PAGE_PT);
+        };
+    }, [rootText, childText, children, clip, sidebarWidth]);
 
     const breadcrumbItems = [];
     breadcrumbItems.push(
@@ -38,6 +65,7 @@ export default function NavAlert({ rootText, childText, children, clip = true })
 
     return (
         <div
+            ref={navRef}
             className={cn(
                 "nav-alert fixed z-(--z-sticky) pb-2 pt-2 px-3 md:px-2.5 xl:ps-3 min-h-16 top-3 md:top-4",
                 clip ? "nav-alert--clip" : "nav-alert--full"

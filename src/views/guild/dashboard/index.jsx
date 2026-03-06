@@ -1,7 +1,8 @@
 import React, { useContext, useMemo, useState } from "react";
+import { LayoutDashboard } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { usePageInfo } from "../../../contexts/PageInfoContext";
 import { GuildDetailContext, ServerDetailProvider } from "../../../contexts/guild/GuildDetailContext";
-import { useQuery } from "@tanstack/react-query";
 import { getServerAdvancedDetails, getFeatures } from "api/internal";
 import { QueryHolderSkeleton } from "contexts/components/AsyncContext";
 import { GuildContext } from "contexts/guild/GuildContext";
@@ -15,64 +16,60 @@ import BotStatusIndicator from "components/card/BotStatusIndicator";
 import QuickActions from "components/card/QuickActions";
 import OnboardingWizard from "components/card/OnboardingWizard";
 import ActiveUsers from "components/card/ActiveUsers";
+import PageContainer from "components/layout/PageContainer";
+import PageHeader from "components/layout/PageHeader";
+import PageSection from "components/layout/PageSection";
+import { getResponsiveGridClass } from "utils/layout-tokens";
 
 export default function Dashboard() {
-    const locale = useLocale()
+    const locale = useLocale();
 
-    usePageInfo(locale({ zh: "\u5100\u8868\u677f", en: "Dashboard" }))
+    usePageInfo(locale({ zh: "儀表板", en: "Dashboard" }));
 
     return <ServerDetailProvider>
         <UserReports />
-    </ServerDetailProvider>
+    </ServerDetailProvider>;
 }
 
 export function UserReports() {
-    const { detail } = useContext(GuildDetailContext)
-    const { id: serverId } = useContext(GuildContext)
-    const user = useContext(UserDataContext)
-    const data = config.data.dashboard
-    const [wizardDismissed, setWizardDismissed] = useState(false)
+    const { detail } = useContext(GuildDetailContext);
+    const { id: serverId } = useContext(GuildContext);
+    const user = useContext(UserDataContext);
+    const data = config.data.dashboard;
+    const [wizardDismissed, setWizardDismissed] = useState(false);
 
     const query = useQuery({
         queryKey: ["server_advanced_detail", serverId],
         queryFn: () => getServerAdvancedDetails(serverId),
-        enabled: data.some(row => row.advanced)
-    })
+        enabled: data.some((row) => row.advanced),
+    });
 
     const featuresQuery = useQuery({
         queryKey: ["features", serverId],
         queryFn: () => getFeatures(serverId),
-    })
+    });
 
     const enabledFeatures = featuresQuery.data?.enabled || [];
 
     return (
-        <div className="pt-20 max-w-7xl mx-auto">
-            {/* Header */}
+        <PageContainer>
             {user && (
-                <div className="mb-6 flex justify-between items-center flex-wrap gap-2">
-                    <div>
-                        <h2
-                            className="text-(--text-primary) font-bold text-2xl"
-                            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                        >
-                            <Locale
-                                zh={`\u6b61\u8fce\u56de\u4f86, ${user.username}`}
-                                en={`Welcome back, ${user.username}`}
-                            />
-                        </h2>
-                        <span className="text-(--text-secondary) text-sm mt-1 block">
-                            <Locale zh="\u9019\u662f\u60a8\u4f3a\u670d\u5668\u7684\u6982\u89bd" en="Here's an overview of your server" />
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-4">
+                <PageHeader
+                    icon={<LayoutDashboard size={24} />}
+                    title={<Locale zh={`歡迎回來，${user.username}`} en={`Welcome back, ${user.username}`} />}
+                    description={<Locale zh="集中查看伺服器狀態、近期活動與常用操作，讓日常管理更俐落。" en="Keep tabs on server health, recent activity, and the controls you use most in one polished overview." />}
+                    meta={<>
+                        <span><Locale zh="即時總覽" en="Live overview" /></span>
+                        <span className="h-1 w-1 rounded-full bg-(--text-muted)" />
+                        <span><Locale zh="可直接前往常用設定" en="Jump straight into common settings" /></span>
+                    </>}
+                    actions={<>
                         <ActiveUsers guildId={serverId} page="Dashboard" />
                         <BotStatusIndicator />
-                    </div>
-                </div>
+                    </>}
+                />
             )}
 
-            {/* Onboarding */}
             {!wizardDismissed && enabledFeatures.length === 0 && featuresQuery.data && (
                 <OnboardingWizard
                     enabledFeatures={enabledFeatures}
@@ -80,20 +77,22 @@ export function UserReports() {
                 />
             )}
 
-            {/* Quick Actions */}
-            <QuickActions />
-
-            {/* Notifications — compact */}
-            <div className="mb-6">
+            <PageSection
+                title={<Locale zh="常用控制" en="Command Center" />}
+                description={<Locale zh="快速處理功能、動作與通知，不必來回切換頁面。" en="Handle features, actions, and notifications without bouncing around the interface." />}
+                contentClassName="space-y-0"
+            >
+                <QuickActions />
                 <NotificationFeed />
-            </div>
+            </PageSection>
 
-            {/* Data Grid */}
-            <div className="flex flex-col gap-6">
+            <div className="space-y-8">
                 {data.map((row, key) => (
-                    <section key={key}>
-                        {row.label && <SectionLabel label={row.label} />}
-                        <div className={gridClass(row.count)}>
+                    <PageSection
+                        key={key}
+                        title={row.label ? <SectionLabel label={row.label} /> : null}
+                    >
+                        <div className={getResponsiveGridClass(row.count)}>
                             {row.advanced ? (
                                 <QueryHolderSkeleton query={query} height="160px" count={row.count}>
                                     {() => <Data row={row} detail={query.data} />}
@@ -102,38 +101,31 @@ export function UserReports() {
                                 <Data row={row} detail={detail} />
                             )}
                         </div>
-                    </section>
+                    </PageSection>
                 ))}
             </div>
-        </div>
+        </PageContainer>
     );
-}
-
-function gridClass(count) {
-    if (count >= 4) return "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4";
-    if (count === 3) return "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4";
-    if (count === 2) return "grid grid-cols-1 md:grid-cols-2 gap-4";
-    return "grid grid-cols-1 gap-4";
 }
 
 function SectionLabel({ label }) {
     return (
-        <h3
-            className="text-(--text-primary) text-base font-semibold mb-3"
+        <span
+            className="text-(--text-primary) text-base font-semibold"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
             {label}
-        </h3>
-    )
+        </span>
+    );
 }
 
 function Data({ row, detail }) {
-    const state = usePageState()
+    const state = usePageState();
 
     const items = useMemo(
         () => row.items(detail, state),
-        [detail, state]
-    )
+        [detail, row, state]
+    );
 
-    return <DataList items={items} />
+    return <DataList items={items} />;
 }

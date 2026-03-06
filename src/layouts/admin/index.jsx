@@ -7,14 +7,16 @@ export default function Dashboard() {
   document.documentElement.dir = "ltr";
 
   return (
-    <div className="min-h-screen relative px-4 sm:px-5 md:px-10 lg:px-20 xl:px-[120px]">
-      <UserDataProvider>
-        <Profile />
-        <div>
-          <AdminFooter />
-        </div>
-      </UserDataProvider>
-      <Outlet />
+    <div className="min-h-screen bg-(--surface-secondary)">
+      <div className="mx-auto min-h-screen max-w-7xl px-4 pb-8 sm:px-5 lg:px-6 xl:px-7.5">
+        <UserDataProvider>
+          <Profile />
+          <div>
+            <AdminFooter />
+          </div>
+        </UserDataProvider>
+        <Outlet />
+      </div>
     </div>
   );
 }
