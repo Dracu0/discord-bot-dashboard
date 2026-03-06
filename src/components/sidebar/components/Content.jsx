@@ -58,14 +58,6 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
         </div>
       </div>
 
-      {!collapsed && (
-        <div className="rounded-3xl border border-(--border-subtle) bg-(--surface-secondary)/75 px-4 py-3">
-          <p className="font-['Space_Grotesk'] text-sm font-semibold text-(--text-primary)">Workspace</p>
-          <p className="mt-1 text-xs leading-5 text-(--text-secondary)">
-            Jump between server tools quickly with a cleaner command-center style navigation.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
