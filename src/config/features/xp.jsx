@@ -62,7 +62,9 @@ export const XPFeature = {
                 type: "array",
                 element: {
                     type: "pair",
-                    holder: "",
+                    holder: [0, ""],
+                    first: { id: "level", type: "number", name: "Level" },
+                    second: { id: "roleId", type: "id_enum", name: "Role", choices: roleChoices, element: { type: "role" } },
                 },
                 value: (values.levelRoles || []).map((lr) => [
                     lr.level,
@@ -78,7 +80,9 @@ export const XPFeature = {
                 type: "array",
                 element: {
                     type: "pair",
-                    holder: "",
+                    holder: ["", 1],
+                    first: { id: "channelId", type: "id_enum", name: "Channel", choices: channelChoices, element: { type: "channel" } },
+                    second: { id: "multiplier", type: "number", name: "Multiplier" },
                 },
                 value: (values.xpChannelMultipliers || []).map((m) => [
                     m.targetId,
@@ -94,7 +98,9 @@ export const XPFeature = {
                 type: "array",
                 element: {
                     type: "pair",
-                    holder: "",
+                    holder: ["", 1],
+                    first: { id: "roleId", type: "id_enum", name: "Role", choices: roleChoices, element: { type: "role" } },
+                    second: { id: "multiplier", type: "number", name: "Multiplier" },
                 },
                 value: (values.xpRoleMultipliers || []).map((m) => [
                     m.targetId,

@@ -35,7 +35,9 @@ export const ModLogFeature = {
                 type: "array",
                 element: {
                     type: "pair",
-                    holder: "",
+                    holder: [1, "timeout"],
+                    first: { id: "count", type: "number", name: "Warn Count" },
+                    second: { id: "action", type: "enum", name: "Action", choices: ["timeout", "kick", "ban"] },
                 },
                 value: (values.warnThresholds || []).map((t) => [
                     t.count,
