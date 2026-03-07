@@ -9,12 +9,10 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-(--surface-secondary)">
-      <div className="mx-auto min-h-screen max-w-7xl px-4 pb-8 sm:px-5 lg:px-6 xl:px-7.5">
+      <div className="mx-auto min-h-screen max-w-7xl px-4 py-8 sm:px-5 md:py-10 lg:px-6 xl:px-7.5">
         <UserDataProvider>
           <Profile />
-          <div>
-            <AdminFooter />
-          </div>
+          <AdminFooter />
         </UserDataProvider>
         <Outlet />
       </div>

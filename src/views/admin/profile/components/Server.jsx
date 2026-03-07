@@ -11,25 +11,22 @@ export default function Server({ server, ...rest }) {
     const { name, id, icon } = server;
 
     return (
-        <Card className="p-4" {...rest}>
-            <div className="flex items-center flex-col md:flex-row gap-4">
-                <Avatar className="w-14 h-14 sm:w-20 sm:h-20 shrink-0 rounded-md">
+        <Card variant="interactive" className="p-4 md:p-5" {...rest}>
+            <div className="flex items-center gap-4">
+                <Avatar className="h-12 w-12 shrink-0 rounded-xl sm:h-14 sm:w-14">
                     <AvatarImage src={icon && iconToUrl(id, icon)} alt={name} />
-                    <AvatarFallback className="rounded-md text-lg">
+                    <AvatarFallback className="rounded-xl text-base">
                         {name?.charAt(0)}
                     </AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col gap-2 items-center md:items-start flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap justify-center md:justify-start">
-                        <span
-                            className="text-(--text-primary) font-semibold text-lg truncate"
-                            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                        >
+                <div className="flex min-w-0 flex-1 flex-col gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="truncate font-['Space_Grotesk'] text-base font-semibold text-(--text-primary) sm:text-lg">
                             {name}
                         </span>
                         {server.exist && (
                             <Badge variant="green">
-                                <Locale zh="\u5DF2\u52A0\u5165" en="Joined" />
+                                <Locale zh="已加入" en="Joined" />
                             </Badge>
                         )}
                     </div>
@@ -42,9 +39,9 @@ export default function Server({ server, ...rest }) {
 
 function InviteButton() {
     return (
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" size="sm" className="w-fit" asChild>
             <Link to="/invite" target="_blank">
-                <Locale zh="\u9080\u8ACB\u5230\u4F3A\u670D\u5668" en="Invite to Server" />
+                <Locale zh="邀請到伺服器" en="Invite to Server" />
             </Link>
         </Button>
     );
@@ -52,9 +49,9 @@ function InviteButton() {
 
 function ConfigButton({ server }) {
     return (
-        <Button variant="default" size="sm" asChild>
+        <Button variant="default" size="sm" className="w-fit" asChild>
             <Link to={`/guild/${server.id}`}>
-                <Locale zh="\u81EA\u5B9A\u7FA9\u8A2D\u5B9A" en="Customize" />
+                <Locale zh="自定義設定" en="Customize" />
             </Link>
         </Button>
     );

@@ -1,12 +1,11 @@
-import Card from "components/card/Card";
 import { SegmentedControl } from "components/ui/segmented-control";
 import React, { useMemo, useState } from "react";
 import Server from "views/admin/profile/components/Server";
 import { QueryHolderSkeleton } from "../../../../contexts/components/AsyncContext";
 import SearchInput from "../../../../components/fields/impl/SearchInput";
-import { config } from "../../../../config/config";
-import { Locale, useLocale } from "../../../../utils/Language";
+import { Locale } from "../../../../utils/Language";
 import { useTextFilter } from "../../../../hooks/useTextFilter";
+import PageSection from "../../../../components/layout/PageSection";
 
 const SORT_OPTIONS = [
     { value: "default", label: "Default" },
@@ -27,28 +26,17 @@ function sortGuilds(guilds, sortBy) {
     return guilds;
 }
 
-export default function ServerPicker({ query, ...rest }) {
+export default function ServerPicker({ query }) {
     const { query: filter, setQuery: setFilter, includes } = useTextFilter();
     const [sortBy, setSortBy] = useState("default");
 
     return (
-        <Card className="mb-0 2xl:mb-5 gap-8" {...rest}>
-            <div className="flex flex-col items-center">
-                <p
-                    className="text-(--text-primary) font-bold text-2xl mt-2.5"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                >
-                    <Locale zh="您的服務器" en="Your Servers" />
-                </p>
-                <p className="text-(--text-secondary) text-base">
-                    <Locale
-                        zh={`把${config.name}邀請到你的服務器, 並且客製化你的機器人`}
-                        en={`Invite ${config.name} to Your Server, And Customize the bot`}
-                    />
-                </p>
-
-                <div className="flex items-end flex-wrap justify-center gap-3 mt-3">
-                    <SearchInput value={filter} onChange={setFilter} groupStyle={{ maxWidth: 400 }} />
+        <PageSection
+            title={<Locale zh="您的伺服器" en="Your Servers" />}
+            description={<Locale zh="瀏覽已連線的伺服器，快速進入管理面板或邀請機器人。" en="Browse connected servers, jump into a dashboard, or invite the bot to new communities." />}
+            actions={
+                <div className="flex flex-wrap items-end gap-3">
+                    <SearchInput value={filter} onChange={setFilter} groupStyle={{ maxWidth: 260 }} />
                     <SegmentedControl
                         value={sortBy}
                         onChange={setSortBy}
@@ -56,13 +44,12 @@ export default function ServerPicker({ query, ...rest }) {
                         size="xs"
                     />
                 </div>
-            </div>
-            <div className="flex flex-col gap-3">
-                <QueryHolderSkeleton count={3} query={query}>
-                    <Servers includes={includes} guilds={query.data} sortBy={sortBy} />
-                </QueryHolderSkeleton>
-            </div>
-        </Card>
+            }
+        >
+            <QueryHolderSkeleton count={3} query={query}>
+                <Servers includes={includes} guilds={query.data} sortBy={sortBy} />
+            </QueryHolderSkeleton>
+        </PageSection>
     );
 }
 
@@ -74,11 +61,15 @@ function Servers({ includes, guilds, sortBy }) {
 
     if (filtered.length === 0) {
         return (
-            <p className="text-(--text-muted) text-sm text-center py-5">
-                <Locale zh="沒有找到服務器" en="No servers found" />
+            <p className="text-(--text-muted) text-sm text-center py-8">
+                <Locale zh="沒有找到伺服器" en="No servers found" />
             </p>
         );
     }
 
-    return filtered.map((server) => <Server key={server.id} server={server} />);
+    return (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((server) => <Server key={server.id} server={server} />)}
+        </div>
+    );
 }
