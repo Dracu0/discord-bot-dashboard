@@ -5,6 +5,7 @@ const { hasManageGuild } = require('./permissions');
 
 let wss = null;
 let latestBotStatus = null;
+let healthPollInterval = null;
 let presenceCleanupInterval = null;
 // Track active presence: Map<guildId, Map<sessionId, { userId, username, avatar, page, lastSeen }>>
 const guildPresence = new Map();
@@ -179,6 +180,49 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
         }
     }
 
+    // Health poll fallback — poll the bot's /health endpoint directly
+    // when Redis is not available (or as a secondary source)
+    const botHealthUrl = process.env.BOT_HEALTH_URL || null;
+    if (botHealthUrl) {
+        const HEALTH_POLL_INTERVAL = 20_000; // 20 seconds
+        async function pollBotHealth() {
+            try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 5000);
+                const headers = {};
+                if (process.env.BOT_HEALTH_TOKEN) {
+                    headers['Authorization'] = `Bearer ${process.env.BOT_HEALTH_TOKEN}`;
+                }
+                const res = await fetch(botHealthUrl, {
+                    signal: controller.signal,
+                    headers,
+                });
+                clearTimeout(timeout);
+                if (res.ok) {
+                    const data = await res.json();
+                    latestBotStatus = data;
+                    broadcast({ type: 'bot:status', data: latestBotStatus });
+                } else {
+                    latestBotStatus = { status: 'offline', stale: true };
+                    broadcast({ type: 'bot:status', data: latestBotStatus });
+                }
+            } catch {
+                // Bot unreachable
+                if (latestBotStatus?.status !== 'offline' || !latestBotStatus?.stale) {
+                    latestBotStatus = { status: 'offline', stale: true };
+                    broadcast({ type: 'bot:status', data: latestBotStatus });
+                }
+            }
+        }
+        pollBotHealth(); // Poll immediately
+        healthPollInterval = setInterval(pollBotHealth, HEALTH_POLL_INTERVAL);
+        logger.info('health_poll_started', { url: botHealthUrl, intervalMs: HEALTH_POLL_INTERVAL });
+    } else if (!hasRedis) {
+        logger.warn('no_bot_status_source', {
+            reason: 'Neither REDIS_URL nor BOT_HEALTH_URL is configured — bot status will be unavailable',
+        });
+    }
+
     logger.info('websocket_server_started', { path: '/ws' });
 }
 
@@ -266,6 +310,10 @@ function broadcastPresence(guildId) {
 }
 
 function stopWebSocketServer() {
+    if (healthPollInterval) {
+        clearInterval(healthPollInterval);
+        healthPollInterval = null;
+    }
     if (presenceCleanupInterval) {
         clearInterval(presenceCleanupInterval);
         presenceCleanupInterval = null;
