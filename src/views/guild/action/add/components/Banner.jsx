@@ -1,7 +1,5 @@
 import React, {useContext} from "react";
 
-// Chakra imports
-// Assets
 import {GuildContext} from "contexts/guild/GuildContext";
 
 import {useParams} from "react-router-dom";

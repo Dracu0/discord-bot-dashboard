@@ -4,6 +4,7 @@ const Level = require('../../models/Level');
 const ModLog = require('../../models/ModLog');
 const Suggestion = require('../../models/Suggestion');
 const AuditLog = require('../../models/AuditLog');
+const Ticket = require('../../models/Ticket');
 const { fetchGuild, fetchGuildChannels, fetchGuildRoles } = require('../../utils/discord');
 
 // GET /guild/:id
@@ -173,8 +174,6 @@ router.get('/leaderboard', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch leaderboard' });
     }
 });
-
-const Ticket = require('../../models/Ticket');
 
 // GET /guild/:id/analytics
 router.get('/analytics', async (req, res) => {

@@ -6,6 +6,7 @@ import logger from "utils/logger";
 // CSRF token management — fetched once, included in all state-changing requests
 let csrfToken = null;
 let csrfFetching = null;
+let csrfMutex = Promise.resolve();
 
 async function ensureCsrfToken() {
     if (csrfToken) return csrfToken;
@@ -15,6 +16,15 @@ async function ensureCsrfToken() {
         .then(data => { csrfToken = data.token; csrfFetching = null; return csrfToken; })
         .catch(() => { csrfFetching = null; return null; });
     return csrfFetching;
+}
+
+/**
+ * Serialize state-changing requests so CSRF token rotation doesn't cause
+ * race conditions when multiple mutations fire concurrently.
+ */
+function withCsrfMutex(fn) {
+    csrfMutex = csrfMutex.then(fn, fn);
+    return csrfMutex;
 }
 
 // Reset CSRF token on auth change (e.g. logout)
@@ -38,15 +48,8 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
     });
 
     const request = needsCsrf
-        ? ensureCsrfToken().then(token => doFetch(token))
+        ? withCsrfMutex(() => ensureCsrfToken().then(token => doFetch(token)))
         : doFetch(null);
-    let mapper
-
-    if (toJson) {
-        mapper = res => res.json()
-    } else {
-        mapper = res => res.text().then(() => res)
-    }
 
     return request.then(res => {
         // Update CSRF token from response header (server rotates after each use)
@@ -64,7 +67,7 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
                 durationMs: Date.now() - startedAt,
             })
 
-            return mapper? mapper(res) : res
+            return toJson ? res.json() : res
         } else {
             return res.text().then(s => {
                 logger.error('api_request_failed', {

@@ -30,7 +30,7 @@ function SignIn({ loading = false }) {
                     {config.name || "Mocotron"}
                 </span>
                 <p className="text-(--text-muted) text-sm font-normal mb-6">
-                    <Locale zh="Discord ???????" en="Discord Bot Dashboard" />
+                    <Locale zh="Discord \u6A5F\u5668\u4EBA\u63A7\u5236\u53F0" en="Discord Bot Dashboard" />
                 </p>
 
                 {/* Card */}
@@ -47,10 +47,10 @@ function SignIn({ loading = false }) {
                         className="text-(--text-primary) text-2xl md:text-[28px] mb-2"
                         style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                     >
-                        <Locale zh="????" en="Welcome Back" />
+                        <Locale zh="\u6B61\u8FCE\u56DE\u4F86" en="Welcome Back" />
                     </h2>
                     <p className="mb-7 text-(--text-secondary) font-normal text-base leading-[1.6]">
-                        <Locale zh="????????????" en="Empower Your Creative Community" />
+                        <Locale zh="\u8CE6\u80FD\u60A8\u7684\u5275\u610F\u793E\u7FA4" en="Empower Your Creative Community" />
                     </p>
 
                     <button
@@ -70,11 +70,11 @@ function SignIn({ loading = false }) {
                         ) : (
                             <DiscordIcon size={22} />
                         )}
-                        <Locale zh="Discord ??" en="Continue with Discord" />
+                        <Locale zh="\u4F7F\u7528 Discord \u767B\u5165" en="Continue with Discord" />
                     </button>
 
                     <p className="mt-5 text-(--text-muted) font-normal text-xs">
-                        <Locale zh="?????????????" en="Your data stays private and secure" />
+                        <Locale zh="\u60A8\u7684\u8CC7\u6599\u5B89\u5168\u4E14\u53D7\u4FDD\u8B77" en="Your data stays private and secure" />
                     </p>
                 </div>
             </div>

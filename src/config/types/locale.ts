@@ -1,8 +1,8 @@
-import {ReactJSXElement} from "@emotion/react/types/jsx-namespace";
+import React from "react";
 
 export type MultiLang = string | {
     en: string
     [lang: string]: string
 }
 
-export type TextElement = string | ReactJSXElement
+export type TextElement = string | React.ReactNode

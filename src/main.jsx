@@ -90,7 +90,7 @@ function AppRouter() {
             )}
             {!loggedIn && (
               <>
-                <Route path="/auth" element={<AuthLayout isCallback />} />
+                <Route path="/auth" element={<AuthLayout />} />
                 <Route path="/signin" element={<AuthLayout />} />
                 <Route path="*" element={<Navigate replace to="/signin" />} />
               </>

@@ -1,5 +1,7 @@
 const router = require('express').Router({ mergeParams: true });
 const GuildConfiguration = require('../../models/GuildConfiguration');
+const AuditLog = require('../../models/AuditLog');
+const logger = require('../../utils/logger');
 const { publishConfigInvalidation } = require('../../utils/redis');
 const { isObject, colorToHex } = require('./helpers');
 
@@ -81,6 +83,17 @@ router.patch('/', async (req, res) => {
 
         await config.save();
         publishConfigInvalidation(guildId);
+
+        AuditLog.create({
+            guildId,
+            actorId: req.user?.id || 'unknown',
+            actorTag: req.user?.username || '',
+            source: 'dashboard',
+            category: 'config.settings',
+            action: 'update',
+            target: Object.keys(updates).join(', '),
+            after: updates,
+        }).catch(err => logger.warn('audit_log_write_failed', { error: err.message, guildId }));
 
         req.log?.info('settings_updated', {
             guildId,

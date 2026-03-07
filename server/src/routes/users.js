@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { requireAuth } = require('../auth/middleware');
 const { fetchBotGuildIds } = require('../utils/discord');
+const { hasManageGuild } = require('../utils/permissions');
 const UserPreference = require('../models/UserPreference');
 
 const ALLOWED_PREF_KEYS = ['colorScheme', 'accentColor', 'language', 'sidebarCollapsed'];
@@ -57,7 +58,7 @@ router.patch('/preferences', requireAuth, async (req, res) => {
         if (updates.accentColor && !ALLOWED_ACCENTS.includes(updates.accentColor)) {
             return res.status(400).json({ error: 'Invalid accentColor' });
         }
-        if (updates.language && typeof updates.language !== 'string') {
+        if (updates.language && (typeof updates.language !== 'string' || updates.language.length > 10)) {
             return res.status(400).json({ error: 'Invalid language' });
         }
         if ('sidebarCollapsed' in updates && typeof updates.sidebarCollapsed !== 'boolean') {
@@ -92,11 +93,7 @@ router.patch('/preferences', requireAuth, async (req, res) => {
 router.get('/', requireAuth, async (req, res) => {
     try {
         const manageable = (req.user.guilds || [])
-            .filter(g => {
-                const perms = BigInt(g.permissions);
-                // MANAGE_GUILD (0x20) or ADMINISTRATOR (0x8)
-                return (perms & BigInt(0x20)) !== BigInt(0) || (perms & BigInt(0x8)) !== BigInt(0);
-            });
+            .filter(g => hasManageGuild(g.permissions));
 
         // Fetch all bot guild IDs in one batch instead of N individual API calls
         const botGuildIds = await fetchBotGuildIds();

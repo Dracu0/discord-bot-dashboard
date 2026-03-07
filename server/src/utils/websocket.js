@@ -1,14 +1,16 @@
 const { WebSocketServer } = require('ws');
 const logger = require('./logger');
 const { getSubscriber } = require('./redis');
+const { hasManageGuild } = require('./permissions');
 
 let wss = null;
 let latestBotStatus = null;
+let presenceCleanupInterval = null;
 // Track active presence: Map<guildId, Map<sessionId, { userId, username, avatar, page, lastSeen }>>
 const guildPresence = new Map();
 
 // Clean up stale presence entries every 60 seconds
-setInterval(() => {
+presenceCleanupInterval = setInterval(() => {
     const now = Date.now();
     for (const [guildId, sessions] of guildPresence) {
         for (const [sessionId, info] of sessions) {
@@ -109,8 +111,7 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
                     // Verify user has access to the guild (MANAGE_GUILD or ADMINISTRATOR)
                     const guild = ws.userGuilds.find(g => g.id === msg.guildId);
                     if (!guild) return;
-                    const perms = BigInt(guild.permissions);
-                    if ((perms & BigInt(0x20)) === BigInt(0) && (perms & BigInt(0x8)) === BigInt(0)) return;
+                    if (!hasManageGuild(guild.permissions)) return;
                     ws.subscribedGuilds.add(msg.guildId);
                 } else if (msg.type === 'unsubscribe_guild' && typeof msg.guildId === 'string') {
                     ws.subscribedGuilds.delete(msg.guildId);
@@ -265,6 +266,10 @@ function broadcastPresence(guildId) {
 }
 
 function stopWebSocketServer() {
+    if (presenceCleanupInterval) {
+        clearInterval(presenceCleanupInterval);
+        presenceCleanupInterval = null;
+    }
     if (wss) {
         wss.close();
         wss = null;

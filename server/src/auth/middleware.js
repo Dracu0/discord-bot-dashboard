@@ -1,3 +1,5 @@
+const { hasManageGuild } = require('../utils/permissions');
+
 /**
  * Middleware: Require the user to be authenticated
  */
@@ -31,7 +33,9 @@ async function refreshUserGuilds(req) {
         const guilds = await response.json();
         user.guilds = guilds;
         user._guildsRefreshedAt = now;
-        req.session.save(() => {}); // Persist updated session
+        req.session.save((err) => {
+            if (err) req.log?.warn('session_save_failed', { error: err.message });
+        });
     } catch {
         // Network error — skip refresh, use cached guilds
     }
@@ -64,12 +68,7 @@ async function requireGuildAccess(req, res, next) {
         return res.status(403).json({ error: 'You are not a member of this guild' });
     }
 
-    // Check MANAGE_GUILD (0x20) or ADMINISTRATOR (0x8) permission
-    const permissions = BigInt(guild.permissions);
-    const hasManageGuild = (permissions & BigInt(0x20)) !== BigInt(0);
-    const hasAdmin = (permissions & BigInt(0x8)) !== BigInt(0);
-
-    if (!hasManageGuild && !hasAdmin) {
+    if (!hasManageGuild(guild.permissions)) {
         req.log?.warn('guild_access_rejected_missing_permissions', {
             guildId,
             userId: req.user?.id || null,

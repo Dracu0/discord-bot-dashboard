@@ -62,6 +62,7 @@ export function SettingsProvider({children}) {
     const { setTheme } = useTheme();
     const serverSyncTimer = useRef(null);
     const hasFetchedServer = useRef(false);
+    const isInitialMerge = useRef(true);
 
     const [settings, setSetting] = useState(() => ({
         language: getItem("lang", "en"),
@@ -84,6 +85,7 @@ export function SettingsProvider({children}) {
         getUserPreferences()
             .then(prefs => {
                 if (prefs && typeof prefs === "object") {
+                    isInitialMerge.current = true;
                     setSetting(prev => ({
                         ...prev,
                         ...(prefs.colorScheme ? { colorScheme: prefs.colorScheme } : {}),
@@ -115,6 +117,12 @@ export function SettingsProvider({children}) {
             // Apply accent color palette to CSS custom properties
             applyAccentPalette(settings.accentColor)
 
+            // Skip server save for the initial merge from server data
+            if (isInitialMerge.current) {
+                isInitialMerge.current = false;
+                return;
+            }
+
             // Debounce server save (500ms)
             if (serverSyncTimer.current) clearTimeout(serverSyncTimer.current);
             serverSyncTimer.current = setTimeout(() => {
@@ -125,6 +133,10 @@ export function SettingsProvider({children}) {
                     sidebarCollapsed: settings.sidebarCollapsed,
                 }).catch(() => {});
             }, 500);
+
+            return () => {
+                if (serverSyncTimer.current) clearTimeout(serverSyncTimer.current);
+            };
         },
         [settings, setTheme]
     )

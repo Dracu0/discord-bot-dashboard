@@ -303,6 +303,10 @@ form {
     left: 16px !important;
     right: 16px !important;
   }
+
+  [data-guild-shell] {
+    margin-left: 0 !important;
+  }
 }
 
 /* Focus-visible ring for all interactive elements */

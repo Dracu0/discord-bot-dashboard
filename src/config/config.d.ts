@@ -9,7 +9,14 @@ export type PageState = {
      * User's Language
      */
     lang: "en" | "zh"
+    /**
+     * Color scheme determined by the resolved theme
+     */
     darkMode: boolean
+    /**
+     * User-configured color scheme preference
+     */
+    colorScheme?: "light" | "dark" | "system" | "auto"
 }
 
 export type DashboardState = PageState & {
@@ -29,6 +36,7 @@ export type OptionState = PageState & {
 export type DashboardDataRow = {
     advanced: boolean,
     count: number,
+    label?: string,
     items: (detail: any, state: DashboardState) => DataItem[]
 }
 

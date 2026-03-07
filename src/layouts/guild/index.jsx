@@ -2,7 +2,7 @@ import AdminFooter from "components/footer/FooterAdmin";
 import Navbar from "components/navbar/NavbarAdmin";
 import Sidebar from "components/sidebar/Sidebar";
 import { PageInfoProvider } from "contexts/PageInfoContext";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Navigate, Outlet, Route, useParams } from "react-router-dom";
 import { UserDataProvider } from "contexts/UserDataContext";
 import { FeaturesProvider } from "contexts/FeaturesContext";
@@ -39,13 +39,7 @@ function RouteWrapper({ children }) {
                         marginLeft: sidebarW,
                     }}
                 >
-                    <style>{`
-                        @media (max-width: 1279px) {
-                            [data-guild-shell] {
-                                margin-left: 0 !important;
-                            }
-                        }
-                    `}</style>
+
 
                     <Navbar />
 
@@ -70,7 +64,7 @@ function RouteWrapper({ children }) {
 
 export default function GuildBoard() {
     const { id } = useParams();
-    document.documentElement.dir = "ltr";
+    useEffect(() => { document.documentElement.dir = "ltr"; }, []);
 
     return (
         <GuildContext.Provider value={{ id }}>

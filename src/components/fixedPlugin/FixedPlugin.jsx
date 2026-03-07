@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "components/ui/button";
@@ -6,6 +6,8 @@ import { Button } from "components/ui/button";
 export default function FixedPlugin(props) {
     const { ...rest } = props;
     const { resolvedTheme, setTheme } = useTheme();
+
+    const isRtl = useMemo(() => document.documentElement.dir === "rtl", []);
 
     const toggleColorScheme = () => {
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
@@ -20,8 +22,8 @@ export default function FixedPlugin(props) {
             className="rounded-full"
             style={{
                 position: "fixed",
-                right: document.documentElement.dir === "rtl" ? undefined : 35,
-                left: document.documentElement.dir === "rtl" ? 35 : undefined,
+                right: isRtl ? undefined : 35,
+                left: isRtl ? 35 : undefined,
                 bottom: 30,
                 zIndex: 50,
                 width: 56,

@@ -43,13 +43,17 @@ router.get('/discord/callback', (req, res, next) => {
 
 // Sign out
 router.post('/signout', (req, res) => {
+    const userId = req.user?.id || null;
     req.logout((err) => {
         if (err) {
-            req.log?.error('signout_failed', { error: err, userId: req.user?.id || null });
+            req.log?.error('signout_failed', { error: err, userId });
             return res.status(500).json({ error: 'Logout failed' });
         }
-        req.session.destroy(() => {
-            req.log?.info('signout_success', { userId: req.user?.id || null });
+        req.session.destroy((destroyErr) => {
+            if (destroyErr) {
+                req.log?.warn('session_destroy_failed', { error: destroyErr.message, userId });
+            }
+            req.log?.info('signout_success', { userId });
             res.clearCookie('connect.sid');
             res.sendStatus(200);
         });

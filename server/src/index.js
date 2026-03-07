@@ -69,7 +69,7 @@ if (IS_PRODUCTION) {
     app.set('trust proxy', 1);
 }
 
-// Security — CSP headers (unsafe-inline required for style-src because Mantine v7 injects inline styles at runtime)
+// Security — CSP headers (unsafe-inline required for style-src because runtime CSS-in-JS and inline styles)
 app.use(helmet({
     contentSecurityPolicy: IS_PRODUCTION ? {
         directives: {

@@ -32,7 +32,7 @@ export default function Banner(props) {
                 {name}
             </p>
             <p className="text-(--text-secondary) text-sm text-center">
-                <Locale zh="????" en="Welcome back to" /> {config.name}
+                <Locale zh="\u6B61\u8FCE\u56DE\u4F86" en="Welcome back to" /> {config.name}
             </p>
             <div className="flex w-max mx-auto mt-6.5 flex-wrap gap-8">
                 {joinedServers && (
@@ -44,7 +44,7 @@ export default function Banner(props) {
                             {joinedServers}
                         </span>
                         <span className="text-(--text-secondary) text-sm font-normal">
-                            <Locale zh="???????" en="Joined Servers" />
+                            <Locale zh="\u5DF2\u52A0\u5165\u7684\u4F3A\u670D\u5668" en="Joined Servers" />
                         </span>
                     </div>
                 )}
@@ -57,7 +57,7 @@ export default function Banner(props) {
                             {servers}
                         </span>
                         <span className="text-(--text-secondary) text-sm font-normal">
-                            <Locale zh="???????" en="Total Servers" />
+                            <Locale zh="\u5168\u90E8\u4F3A\u670D\u5668" en="Total Servers" />
                         </span>
                     </div>
                 )}

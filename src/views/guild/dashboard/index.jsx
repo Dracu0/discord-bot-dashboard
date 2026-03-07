@@ -1,7 +1,6 @@
 import React, { useContext, useMemo, useState } from "react";
 import {
     Activity,
-    ArrowRight,
     BellRing,
     CheckCircle2,
     Clock3,
@@ -16,14 +15,15 @@ import {
     Wifi,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { usePageInfo } from "../../../contexts/PageInfoContext";
 import { GuildDetailContext, ServerDetailProvider } from "../../../contexts/guild/GuildDetailContext";
 import { getServerAdvancedDetails } from "api/internal";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { FeaturesContext } from "contexts/FeaturesContext";
 import { useLocale, Locale } from "utils/Language";
-import NotificationFeed from "components/card/NotificationFeed";
 import { UserDataContext } from "contexts/UserDataContext";
+import NotificationFeed from "components/card/NotificationFeed";
 import BotStatusIndicator from "components/card/BotStatusIndicator";
 import QuickActions from "components/card/QuickActions";
 import OnboardingWizard from "components/card/OnboardingWizard";
@@ -31,11 +31,15 @@ import ActiveUsers from "components/card/ActiveUsers";
 import PageContainer from "components/layout/PageContainer";
 import PageHeader from "components/layout/PageHeader";
 import Card from "components/card/Card";
-import MetricCard from "components/card/MetricCard";
 import LeaderboardTable from "components/card/data/LeaderboardTable";
 import { Badge } from "components/ui/badge";
 import { Button } from "components/ui/button";
-import { Link } from "react-router-dom";
+import { toTitleLabel } from "./utils";
+import InsightMetricCard from "./components/InsightMetricCard";
+import HealthListItem from "./components/HealthListItem";
+import MissionSignal from "./components/MissionSignal";
+import DashboardActionHint from "./components/DashboardActionHint";
+import RecentModActionsPanel from "./components/RecentModActionsPanel";
 
 export default function Dashboard() {
     const locale = useLocale();
@@ -127,7 +131,7 @@ export function UserReports() {
             title: <Locale zh="模組覆蓋率" en="System coverage" />,
             value: <Locale zh={`已啟用 ${enabledSystems}/4`} en={`${enabledSystems}/4 enabled`} />,
             tone: enabledSystems >= 3 ? "success" : "neutral",
-            helper: <Locale zh="核心模組是否都已覆蓋到目前的營運需求。" en="Whether the core management modules cover the server’s current operating needs." />,
+            helper: <Locale zh="核心模組是否都已覆蓋到目前的營運需求。" en="Whether the core management modules cover the server's current operating needs." />,
         },
     ];
 
@@ -489,304 +493,4 @@ export function UserReports() {
             </div>
         </PageContainer>
     );
-}
-
-function InsightMetricCard({ icon, label, value, helper, tone = "default" }) {
-    return (
-        <MetricCard
-            icon={icon}
-            label={label}
-            value={value}
-            detail={helper}
-            tone={tone}
-        />
-    );
-}
-
-function HealthListItem({ title, value, tone = "neutral", helper }) {
-    const toneBadge = {
-        success: "success",
-        warning: "warning",
-        neutral: "secondary",
-    };
-
-    return (
-        <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-4 py-3.5">
-            <div className="flex items-center justify-between gap-4">
-                <span className="text-sm font-medium text-(--text-primary)">{title}</span>
-                <Badge variant={toneBadge[tone] || "secondary"}>{value}</Badge>
-            </div>
-            {helper ? <p className="mt-2 text-sm leading-6 text-(--text-secondary)">{helper}</p> : null}
-        </div>
-    );
-}
-
-function MissionSignal({ label, value, helper, progress = 0, tone = "default" }) {
-    const barTone = {
-        default: "bg-[linear-gradient(90deg,var(--accent-primary),color-mix(in_srgb,var(--accent-primary)_65%,white))]",
-        accent: "bg-[linear-gradient(90deg,#38bdf8,#818cf8)]",
-        success: "bg-[linear-gradient(90deg,#34d399,#10b981)]",
-        warning: "bg-[linear-gradient(90deg,#fb923c,#f97316)]",
-    };
-
-    return (
-        <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-4 py-3.5 shadow-(--shadow-xs)">
-            <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold text-(--text-primary)">{label}</p>
-                <span className="font-['Space_Grotesk'] text-base font-semibold text-(--text-primary)">{value}</span>
-            </div>
-            {helper ? <p className="mt-1.5 text-sm leading-6 text-(--text-secondary)">{helper}</p> : null}
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-(--surface-secondary)">
-                <div
-                    className={`h-full rounded-full ${barTone[tone] || barTone.default}`}
-                    style={{ width: `${clampPercentage(progress)}%` }}
-                />
-            </div>
-        </div>
-    );
-}
-
-function DashboardActionHint({ to, icon, title, description, badge, tone = "neutral" }) {
-    const iconTone = {
-        neutral: "text-(--accent-primary)",
-        warning: "text-orange-400",
-        success: "text-emerald-400",
-    };
-
-    const badgeTone = {
-        neutral: "secondary",
-        warning: "warning",
-        success: "success",
-    };
-
-    return (
-        <Link to={to} className="block rounded-3xl border border-(--border-subtle) bg-(--surface-primary) p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-(--border-default) hover:shadow-(--shadow-sm)">
-            <div className="flex items-start gap-3">
-                <div className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-(--surface-secondary) ${iconTone[tone] || iconTone.neutral}`}>
-                    {icon}
-                </div>
-                <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-3">
-                        <h3 className="font-['Space_Grotesk'] text-sm font-semibold text-(--text-primary)">{title}</h3>
-                        {badge ? <Badge variant={badgeTone[tone] || "secondary"}>{badge}</Badge> : null}
-                    </div>
-                    <p className="mt-1 text-sm leading-6 text-(--text-secondary)">{description}</p>
-                    <div className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-(--accent-primary)">
-                        <Locale zh="打開區塊" en="Open section" />
-                        <ArrowRight className="h-4 w-4" />
-                    </div>
-                </div>
-            </div>
-        </Link>
-    );
-}
-
-function RecentModActionsPanel({ actions, totalActions, activeModerators, latestActionAt, serverId }) {
-    const visibleActions = actions.slice(0, 5);
-
-    return (
-        <Card variant="panel" className="overflow-hidden">
-            <div className="flex flex-col gap-4 border-b border-(--border-subtle) pb-5 lg:flex-row lg:items-start lg:justify-between">
-                <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <h2 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
-                            <Locale zh="近期管理動作" en="Recent Mod Actions" />
-                        </h2>
-                        <Badge variant="secondary">
-                            <Locale zh={`顯示 ${visibleActions.length} 筆`} en={`${visibleActions.length} visible`} />
-                        </Badge>
-                    </div>
-                    <p className="mt-2 max-w-3xl text-sm leading-6 text-(--text-secondary)">
-                        <Locale zh="這裡改成更適合儀表板的活動面板：把最新的管理事件、責任人、原因與時間拆成可掃描的卡片，而不是硬塞成會互相擠壓的資料表。" en="This section now uses a dashboard-style activity layout: the latest moderation events, owners, reasons, and timestamps are split into scannable cards instead of being squeezed into a collapsing table." />
-                    </p>
-                </div>
-
-                <div className="flex shrink-0 flex-wrap gap-2">
-                    <Button asChild variant="outline" size="sm">
-                        <Link to={`/guild/${serverId}/audit-log`}>
-                            <Locale zh="開啟審計紀錄" en="Open audit log" />
-                        </Link>
-                    </Button>
-                    <Button asChild variant="ghost" size="sm">
-                        <Link to={`/guild/${serverId}/features`}>
-                            <Locale zh="管理紀錄設定" en="Review logging setup" />
-                        </Link>
-                    </Button>
-                </div>
-            </div>
-
-            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
-                <ModerationSnapshot
-                    label={<Locale zh="已顯示動作" en="Visible actions" />}
-                    value={visibleActions.length}
-                    helper={<Locale zh={`總共已記錄 ${totalActions} 筆管理事件`} en={`${totalActions} moderation events recorded overall`} />}
-                />
-                <ModerationSnapshot
-                    label={<Locale zh="活躍管理員" en="Active moderators" />}
-                    value={activeModerators}
-                    helper={<Locale zh="這批近期事件中實際出手的人數" en="Distinct moderators represented in this recent activity slice" />}
-                />
-                <ModerationSnapshot
-                    label={<Locale zh="最近一次動作" en="Latest action" />}
-                    value={formatRecentActionTime(latestActionAt)}
-                    helper={<Locale zh="方便快速判斷管理活動是否還在持續發生" en="A quick way to see whether moderation activity is still happening right now" />}
-                />
-            </div>
-
-            {visibleActions.length > 0 ? (
-                <div className="mt-5 grid grid-cols-1 gap-3 2xl:grid-cols-2">
-                    {visibleActions.map((action, index) => (
-                        <ModerationActivityCard key={`${action?.createdAt || "unknown"}-${action?.targetId || index}`} action={action} />
-                    ))}
-                </div>
-            ) : (
-                <div className="mt-5 rounded-3xl border border-dashed border-(--border-subtle) bg-(--surface-primary) px-5 py-8 text-center">
-                    <p className="font-medium text-(--text-primary)">
-                        <Locale zh="目前還沒有近期管理事件" en="No recent moderation activity yet" />
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
-                        <Locale zh="等到有新的警告、禁言、踢除或其他管理事件後，這裡就會開始建立最近活動脈絡。" en="Once warns, timeouts, kicks, bans, or other moderation actions arrive, this panel will start building a recent activity trail." />
-                    </p>
-                </div>
-            )}
-        </Card>
-    );
-}
-
-function ModerationSnapshot({ label, value, helper }) {
-    return (
-        <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-primary) px-4 py-3.5 shadow-(--shadow-xs)">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-(--text-muted)">{label}</p>
-            <p className="mt-2 font-['Space_Grotesk'] text-2xl font-semibold text-(--text-primary)">{value}</p>
-            <p className="mt-1.5 text-sm leading-6 text-(--text-secondary)">{helper}</p>
-        </div>
-    );
-}
-
-function ModerationActivityCard({ action }) {
-    const tone = getModerationTone(action?.action);
-
-    return (
-        <div className="rounded-3xl border border-(--border-subtle) bg-(--surface-primary) p-4 shadow-(--shadow-xs) transition-all duration-200 hover:border-(--border-default) hover:shadow-(--shadow-sm)">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant={tone.badge}>{toTitleLabel(action?.action) || "Action"}</Badge>
-                        <span className={`inline-flex h-2.5 w-2.5 rounded-full ${tone.dot}`} />
-                        <span className="text-xs font-medium uppercase tracking-[0.12em] text-(--text-muted)">
-                            <Locale zh="管理事件" en="Moderation event" />
-                        </span>
-                    </div>
-                    <p className="mt-3 text-sm leading-6 text-(--text-primary)">
-                        {action?.reason || <Locale zh="未提供理由" en="No reason provided" />}
-                    </p>
-                </div>
-
-                <div className="shrink-0 rounded-2xl bg-(--surface-secondary) px-3 py-2 text-left sm:text-right">
-                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)">
-                        <Locale zh="時間" en="Time" />
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-(--text-primary)">{formatActionDate(action?.createdAt)}</p>
-                    <p className="text-xs text-(--text-muted)">{formatActionClock(action?.createdAt)}</p>
-                </div>
-            </div>
-
-            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-                <ModerationMetaBlock
-                    label={<Locale zh="處理對象" en="Target" />}
-                    value={action?.targetId}
-                    helper={<Locale zh="受影響的成員或紀錄識別碼" en="The member or record affected by this action" />}
-                />
-                <ModerationMetaBlock
-                    label={<Locale zh="執行管理員" en="Moderator" />}
-                    value={action?.moderatorId}
-                    helper={<Locale zh="這次動作的執行者" en="The moderator who carried out the action" />}
-                />
-            </div>
-        </div>
-    );
-}
-
-function ModerationMetaBlock({ label, value, helper }) {
-    return (
-        <div className="rounded-2xl bg-(--surface-secondary)/60 px-3.5 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-(--text-muted)">{label}</p>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-                <span
-                    className="inline-flex items-center rounded-full bg-(--surface-primary) px-2.5 py-1 text-sm font-semibold text-(--text-primary)"
-                    style={{ fontFamily: "var(--font-mono)" }}
-                    title={value || "—"}
-                >
-                    {shortenDiscordId(value)}
-                </span>
-            </div>
-            <p className="mt-2 text-sm leading-6 text-(--text-secondary)">{helper}</p>
-        </div>
-    );
-}
-
-function clampPercentage(value) {
-    if (!Number.isFinite(value)) return 0;
-    return Math.max(0, Math.min(100, Math.round(value)));
-}
-
-function toTitleLabel(value) {
-    return String(value || "")
-        .replace(/[._-]+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
-function shortenDiscordId(value) {
-    if (!value) return "—";
-    const text = String(value);
-    if (text.length <= 10) return text;
-    return `${text.slice(0, 4)}…${text.slice(-4)}`;
-}
-
-function getModerationTone(action) {
-    const normalized = String(action || "").toLowerCase();
-
-    if (["ban", "kick"].includes(normalized)) {
-        return { badge: "destructive", dot: "bg-rose-400" };
-    }
-
-    if (["mute", "timeout"].includes(normalized)) {
-        return { badge: "warning", dot: "bg-orange-400" };
-    }
-
-    if (["warn"].includes(normalized)) {
-        return { badge: "secondary", dot: "bg-amber-300" };
-    }
-
-    return { badge: "outline", dot: "bg-(--accent-primary)" };
-}
-
-function formatRecentActionTime(value) {
-    if (!value) {
-        return "—";
-    }
-
-    const now = Date.now();
-    const diffMinutes = Math.max(0, Math.round((now - value) / 60000));
-
-    if (diffMinutes < 1) return "Now";
-    if (diffMinutes < 60) return `${diffMinutes}m ago`;
-
-    const diffHours = Math.round(diffMinutes / 60);
-    if (diffHours < 24) return `${diffHours}h ago`;
-
-    const diffDays = Math.round(diffHours / 24);
-    return `${diffDays}d ago`;
-}
-
-function formatActionDate(value) {
-    if (!value) return "—";
-    return new Date(value).toLocaleDateString();
-}
-
-function formatActionClock(value) {
-    if (!value) return "";
-    return new Date(value).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }

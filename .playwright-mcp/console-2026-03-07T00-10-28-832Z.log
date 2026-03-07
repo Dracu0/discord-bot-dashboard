@@ -1,2 +1,0 @@
-[  440279ms] [ERROR] WebSocket connection to 'ws://localhost:8080/ws' failed: Error during WebSocket handshake: Unexpected response code: 404 @ http://localhost:3000/src/hooks/useWebSocket.js?t=1772842654699:39
-[  440279ms] [WARNING] [WS] Connection error Event @ http://localhost:3000/src/hooks/useWebSocket.js?t=1772842654699:79

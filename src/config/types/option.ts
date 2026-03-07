@@ -5,6 +5,7 @@ export type Option =
     BooleanOption | TextOption | EnumOption | NumberOption
     | ColorOption | MessageCreateOption
     | ArrayOption | IdEnumOption | EmojiOption | PairOption
+    | PreviewOption | DurationOption
 
 type IOption = {
     /**
@@ -45,7 +46,7 @@ type TextOption = IOption & {
 
 type EnumOption = IOption & {
     type: "enum"
-    choice: string[]
+    choices: string[]
     multiple: boolean
     value: string | string[]
 }
@@ -101,15 +102,13 @@ type ArrayOption = IOption & {
 type IdEnumOption = IOption & {
     type: "id_enum"
     placeholder?: string
-    choices: [
-        {
-            id: number
-            name: string
-            color?: string
-            icon: "channel" | "role" | any
-        }
-    ]
-    value: number
+    choices: Array<{
+        id: string
+        name: string
+        color?: string
+        icon: "channel" | "role" | string
+    }>
+    value: string
 }
 
 type EmojiOption = IOption & {
@@ -124,4 +123,14 @@ type PairOption = IOption & {
         second: DataItem
     }
     value: [first: any, second: any]
+}
+
+type PreviewOption = IOption & {
+    type: "preview"
+    component: React.ComponentType<any>
+}
+
+type DurationOption = IOption & {
+    type: "duration"
+    value: number
 }

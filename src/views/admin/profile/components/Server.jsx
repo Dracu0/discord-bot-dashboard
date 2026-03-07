@@ -29,7 +29,7 @@ export default function Server({ server, ...rest }) {
                         </span>
                         {server.exist && (
                             <Badge variant="green">
-                                <Locale zh="???" en="Joined" />
+                                <Locale zh="\u5DF2\u52A0\u5165" en="Joined" />
                             </Badge>
                         )}
                     </div>
@@ -44,7 +44,7 @@ function InviteButton() {
     return (
         <Button variant="outline" size="sm" asChild>
             <Link to="/invite" target="_blank">
-                <Locale zh="??????" en="Invite to Server" />
+                <Locale zh="\u9080\u8ACB\u5230\u4F3A\u670D\u5668" en="Invite to Server" />
             </Link>
         </Button>
     );
@@ -54,7 +54,7 @@ function ConfigButton({ server }) {
     return (
         <Button variant="default" size="sm" asChild>
             <Link to={`/guild/${server.id}`}>
-                <Locale zh="?????" en="Customize" />
+                <Locale zh="\u81EA\u5B9A\u7FA9\u8A2D\u5B9A" en="Customize" />
             </Link>
         </Button>
     );

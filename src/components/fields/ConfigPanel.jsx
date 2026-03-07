@@ -19,7 +19,7 @@ export function useConfigValue(id) {
     return ctx.getValue(id);
 }
 
-function runValidation(option, value) {
+export function runValidation(option, value) {
     if (option.validate) {
         return option.validate(value) || null;
     }
@@ -31,9 +31,9 @@ function runValidation(option, value) {
 
 // --- Reducer-based state management with undo/redo ---
 
-const MAX_HISTORY = 30;
+export const MAX_HISTORY = 30;
 
-function configReducer(state, action) {
+export function configReducer(state, action) {
     switch (action.type) {
         case 'SET_VALUE': {
             const { id, value, options } = action;

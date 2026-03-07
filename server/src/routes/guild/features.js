@@ -2,6 +2,7 @@ const router = require('express').Router({ mergeParams: true });
 const GuildConfiguration = require('../../models/GuildConfiguration');
 const AuditLog = require('../../models/AuditLog');
 const { publishConfigInvalidation } = require('../../utils/redis');
+const logger = require('../../utils/logger');
 const CustomCommand = require('../../models/CustomCommand');
 const ScheduledMessage = require('../../models/ScheduledMessage');
 const TempRole = require('../../models/TempRole');
@@ -175,7 +176,7 @@ router.patch('/:featureId/enabled', async (req, res) => {
             category: 'feature.toggle',
             action: enabled ? 'enable' : 'disable',
             target: featureId,
-        }).catch(err => console.warn('Audit log write failed:', err.message));
+        }).catch(err => logger.warn('audit_log_write_failed', { error: err.message, guildId, featureId }));
 
         req.log?.info('feature_toggle_updated', {
             guildId,
@@ -443,7 +444,7 @@ router.patch('/:featureId', async (req, res) => {
             action: 'update',
             target: Object.keys(updates).join(', '),
             after: updates,
-        }).catch(err => console.warn('Audit log write failed:', err.message));
+        }).catch(err => logger.warn('audit_log_write_failed', { error: err.message, guildId, featureId }));
 
         req.log?.info('feature_config_updated', {
             guildId,
