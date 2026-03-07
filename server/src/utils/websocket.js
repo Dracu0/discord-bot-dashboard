@@ -3,6 +3,7 @@ const logger = require('./logger');
 const { getSubscriber } = require('./redis');
 
 let wss = null;
+let latestBotStatus = null;
 // Track active presence: Map<guildId, Map<sessionId, { userId, username, avatar, page, lastSeen }>>
 const guildPresence = new Map();
 
@@ -97,6 +98,13 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
         ws.on('message', (raw) => {
             try {
                 const msg = JSON.parse(raw);
+                if (msg.type === 'bot:status:request') {
+                    if (latestBotStatus) {
+                        safeSend(ws, { type: 'bot:status', data: latestBotStatus });
+                    }
+                    return;
+                }
+
                 if (msg.type === 'subscribe_guild' && typeof msg.guildId === 'string' && /^\d{17,20}$/.test(msg.guildId)) {
                     // Verify user has access to the guild (MANAGE_GUILD or ADMINISTRATOR)
                     const guild = ws.userGuilds.find(g => g.id === msg.guildId);
@@ -126,6 +134,9 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
 
         // Send an initial connected event
         safeSend(ws, { type: 'connected', timestamp: Date.now() });
+        if (latestBotStatus) {
+            safeSend(ws, { type: 'bot:status', data: latestBotStatus });
+        }
     });
 
     // Heartbeat: detect dead connections every 30s
@@ -157,7 +168,8 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
             sub.on('message', (channel, message) => {
                 if (channel === 'bot:status') {
                     // Bot status goes to all clients
-                    broadcast({ type: 'bot:status', data: tryParse(message) });
+                    latestBotStatus = tryParse(message);
+                    broadcast({ type: 'bot:status', data: latestBotStatus });
                 } else if (channel === 'config:invalidate') {
                     // Config invalidation — only send to clients subscribed to this guild
                     broadcastToGuild(message, { type: 'config:invalidate', guildId: message });
@@ -257,6 +269,7 @@ function stopWebSocketServer() {
         wss.close();
         wss = null;
     }
+    latestBotStatus = null;
 }
 
 module.exports = { startWebSocketServer, stopWebSocketServer, broadcast };

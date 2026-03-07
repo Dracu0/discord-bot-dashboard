@@ -45,6 +45,7 @@ function connect() {
 
     ws.onopen = () => {
         reconnectDelay = WS_RECONNECT_DELAY;
+        wsSend({ type: 'bot:status:request' });
         // Re-subscribe to any guilds after reconnect
         for (const guildId of subscribedGuilds) {
             wsSend({ type: 'subscribe_guild', guildId });
