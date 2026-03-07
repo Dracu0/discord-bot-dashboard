@@ -220,7 +220,7 @@ export default function Analytics() {
                 title={<Locale zh="關鍵指標" en="Key Metrics" />}
                 description={<Locale zh="快速掌握最近期間內最值得關注的統計數字。" en="Start with the headline numbers before diving into the detailed charts below." />}
             >
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
                     <StatCard
                         label={<Locale zh="審核操作" en="Mod Actions" />}
                         value={(data.moderation?.byDay || []).reduce((s, d) => s + d.count, 0)}

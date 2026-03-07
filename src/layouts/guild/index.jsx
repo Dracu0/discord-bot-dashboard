@@ -33,11 +33,9 @@ function RouteWrapper({ children }) {
                 <a href="#main-content" className="skip-to-content">Skip to content</a>
                 <Sidebar routes={routes} />
                 <div
-                    className="min-h-screen relative transition-[margin-left] duration-250"
+                    className="min-h-screen relative transition-[margin-left] duration-250 ml-0 xl:ml-(--sidebar-w)"
                     data-guild-shell
-                    style={{
-                        marginLeft: sidebarW,
-                    }}
+                    style={{ "--sidebar-w": `${sidebarW}px` }}
                 >
 
 

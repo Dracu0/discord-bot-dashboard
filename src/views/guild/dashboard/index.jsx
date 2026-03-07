@@ -367,7 +367,7 @@ export function UserReports() {
                 </div>
             </Card>
 
-            <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1.28fr)_minmax(350px,0.9fr)]">
+            <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1.28fr)_minmax(280px,0.9fr)]">
                 <div className="min-w-0 space-y-6">
                     <QuickActions />
 

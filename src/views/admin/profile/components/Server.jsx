@@ -13,7 +13,7 @@ export default function Server({ server, ...rest }) {
     return (
         <Card className="p-4" {...rest}>
             <div className="flex items-center flex-col md:flex-row gap-4">
-                <Avatar className="w-20 h-20 shrink-0 rounded-md">
+                <Avatar className="w-14 h-14 sm:w-20 sm:h-20 shrink-0 rounded-md">
                     <AvatarImage src={icon && iconToUrl(id, icon)} alt={name} />
                     <AvatarFallback className="rounded-md text-lg">
                         {name?.charAt(0)}

@@ -68,7 +68,7 @@ export function Task({ task }) {
                 </div>
             </Modal>
 
-            <div className="flex flex-row gap-1">
+            <div className="flex flex-wrap gap-2">
                 <div className="flex flex-col items-start gap-0">
                     <span className="text-lg font-bold">
                         {task.name}

@@ -3,28 +3,21 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "compon
 import { AlertTriangle, Undo2, Redo2 } from "lucide-react";
 import { cn } from "lib/utils";
 import { Locale } from "../../utils/Language";
-import { useContext } from "react";
-import { SettingsContext } from "../../contexts/SettingsContext";
-import { contentWidthCalc, SIDEBAR_FULL, SIDEBAR_COLLAPSED } from "../../utils/layout-tokens";
 
 function BaseAlert({ isOpen, children }) {
-    const { sidebarCollapsed } = useContext(SettingsContext);
-    const width = contentWidthCalc(sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL);
-
     return (
         <div
             role="status"
             aria-live="polite"
             className={cn(
-                "fixed bottom-10 left-1/2 -translate-x-1/2 z-40 max-w-[95vw]",
-                "flex flex-row items-center gap-3 px-4 py-3",
+                "fixed bottom-10 left-1/2 -translate-x-1/2 z-40 w-[calc(100vw-2rem)] sm:w-auto sm:max-w-[95vw]",
+                "flex flex-wrap items-center gap-3 px-4 py-3",
                 "transition-all duration-200 ease-out",
                 isOpen
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-4 pointer-events-none"
             )}
             style={{
-                width,
                 backdropFilter: "blur(16px)",
                 backgroundColor: "var(--surface-overlay)",
                 color: "var(--text-primary)",
