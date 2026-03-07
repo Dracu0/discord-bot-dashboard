@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Link } from "react-router-dom";
 import Card from "components/card/Card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "components/ui/tooltip";
@@ -120,18 +120,20 @@ export function CardMetric({
   );
 }
 
-export function CardPill({ className, children }) {
+export const CardPill = forwardRef(function CardPill({ className, children, ...props }, ref) {
   return (
     <div
+      ref={ref}
       className={cn(
         "inline-flex items-center gap-2 rounded-full border border-(--border-subtle) bg-(--surface-primary) px-3 py-1.5 shadow-(--shadow-xs)",
         className
       )}
+      {...props}
     >
       {children}
     </div>
   );
-}
+});
 
 export function AccentCardLink({
   to,

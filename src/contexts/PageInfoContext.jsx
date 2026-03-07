@@ -98,7 +98,9 @@ export function usePageInfo(name) {
     const signature = JSON.stringify(normalized);
 
     useEffect(() => {
-        setInfo(normalized)
+        if (typeof setInfo === "function") {
+            setInfo(normalized);
+        }
     }, [setInfo, signature])
 }
 

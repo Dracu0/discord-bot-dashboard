@@ -39,16 +39,16 @@ export default function QuickActions() {
   const locale = useLocale();
 
   return (
-    <Card variant="panel" className="h-full">
+    <Card variant="panel">
       <CardSectionHeader
         title={<Locale zh="工作區捷徑" en="Workspace shortcuts" />}
         description={<Locale zh="把最常用的管理入口維持在同一塊視圖內，減少來回切換。" en="Keep the most-used control surfaces together so you can move between operations without hunting through the sidebar." />}
         action={<Badge variant="secondary">3 <Locale zh="個樞紐" en="hubs" /></Badge>}
       />
-      <div className="mt-5 grid grid-cols-1 gap-3 xl:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
         {actions.map(({ icon: Icon, label, description, path, badge, eyebrow }) => (
           <Link key={path} to={`/guild/${serverId}/${path}`} className="group">
-            <Card variant="interactive" className="h-full p-4.5">
+            <Card variant="interactive" className="h-full min-h-52 p-5">
               <div className="flex h-full flex-col gap-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-(--border-subtle) bg-(--surface-secondary) text-(--accent-primary)">

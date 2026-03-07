@@ -43,7 +43,55 @@ export default function DataTable({ name, data, columns, description }) {
         action={<Badge variant="secondary">{(data || []).length} {t("common.rows")}</Badge>}
       />
 
-      <div className="overflow-x-auto px-3 md:px-4 py-4">
+      <div className="px-3 py-4 md:hidden">
+        {page.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+            <div className="rounded-full bg-(--surface-secondary) p-3">
+              <TableProperties className="h-5 w-5 text-(--accent-primary)" />
+            </div>
+            <span className="text-(--text-primary) text-base font-semibold">
+              {t("common.noData")}
+            </span>
+            <span className="text-sm text-(--text-muted)">
+              {t("common.tableEmptyHint")}
+            </span>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {page.map((row, index) => {
+              prepareRow(row);
+              return (
+                <div
+                  key={row.id || index}
+                  className="rounded-2xl border border-(--border-subtle) bg-(--surface-primary) p-4 shadow-(--shadow-xs)"
+                  style={{ background: index % 2 === 1 ? "color-mix(in srgb, var(--surface-secondary) 28%, var(--surface-primary))" : "var(--surface-primary)" }}
+                >
+                  <div className="space-y-3">
+                    {row.cells.map((cell, i) => (
+                      <div key={cell.column.id || i} className="space-y-1.5 rounded-xl bg-(--surface-secondary)/45 px-3 py-2.5">
+                        <div className="text-[11px] font-bold uppercase tracking-[0.12em] text-(--text-muted)">
+                          {cell.column.render("header")}
+                        </div>
+                        <div className="min-w-0 text-(--text-primary)">
+                          {cell.column.wrapper ? (
+                            cell.column.wrapper(cell.value)
+                          ) : (
+                            <span className="text-sm font-semibold leading-6 break-words">
+                              {cell.value || "—"}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="hidden overflow-x-auto px-3 py-4 md:block md:px-4">
       <table {...getTableProps()} className="w-full min-w-160 border-separate border-spacing-0">
         <thead>
           {headerGroups.map((headerGroup, index) => (
@@ -52,9 +100,9 @@ export default function DataTable({ name, data, columns, description }) {
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   key={i}
-                  className="px-3 md:px-4 py-3 cursor-pointer select-none text-left border-y border-(--border-subtle) bg-(--surface-secondary) first:rounded-s-xl first:border-s last:rounded-e-xl last:border-e"
+                  className="cursor-pointer select-none border-y border-(--border-subtle) bg-(--surface-secondary) px-3 py-3 text-left first:rounded-s-xl first:border-s last:rounded-e-xl last:border-e md:px-4"
                 >
-                  <div className="flex justify-between items-center gap-2 text-[11px] lg:text-xs text-(--text-muted) font-bold uppercase tracking-[0.12em]">
+                  <div className="flex items-center justify-between gap-2 text-[11px] font-bold uppercase tracking-[0.12em] text-(--text-muted) lg:text-xs">
                     <span>{column.render("header")}</span>
                     {column.isSorted ? (
                       column.isSortedDesc ? (
@@ -73,7 +121,7 @@ export default function DataTable({ name, data, columns, description }) {
           {page.length === 0 ? (
             <tr>
               <td colSpan={columns.length} className="border-none">
-                <div className="flex flex-col items-center justify-center py-10 gap-2 text-center">
+                <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
                   <div className="rounded-full bg-(--surface-secondary) p-3">
                     <TableProperties className="h-5 w-5 text-(--accent-primary)" />
                   </div>
@@ -100,12 +148,12 @@ export default function DataTable({ name, data, columns, description }) {
                     <td
                       {...cell.getCellProps()}
                       key={i}
-                      className="text-(--text-primary) text-sm min-w-24 border-b border-(--border-subtle) px-3 md:px-4 py-4 align-top"
+                      className="min-w-24 border-b border-(--border-subtle) px-3 py-4 align-top text-sm text-(--text-primary) md:px-4"
                     >
                       {cell.column.wrapper ? (
                         cell.column.wrapper(cell.value)
                       ) : (
-                        <span className="text-sm md:text-[15px] font-semibold leading-6">
+                        <span className="text-sm font-semibold leading-6 md:text-[15px]">
                           {cell.value}
                         </span>
                       )}
