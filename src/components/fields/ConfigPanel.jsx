@@ -1,11 +1,62 @@
-import React, { createContext, useCallback, useContext, useReducer } from "react";
-import { OptionPanel } from "./OptionPanel";
+import React, { createContext, useCallback, useContext, useMemo, useReducer } from "react";
+import { OptionPanel, ToggleRow } from "./OptionPanel";
+import { OptionTypes } from "../../variables/type";
 import { SaveAlert } from "components/alert/SaveAlert";
 import ErrorModal from "../modal/ErrorModal";
 import { useMutation } from "@tanstack/react-query";
 import { Skeleton } from "components/ui/skeleton";
 import { useHotkeys } from "hooks/useHotkeys";
 import logger from "utils/logger";
+
+// --- Section grouping ---
+const GROUP_ORDER = ['switches', 'channels_roles', 'configuration', 'rules_lists', 'management'];
+const GROUP_LABELS = {
+    switches: 'Switches',
+    channels_roles: 'Channels & Roles',
+    configuration: 'Configuration',
+    rules_lists: 'Rules & Lists',
+    management: 'Management',
+};
+
+function inferGroup(option) {
+    if (option.group) return option.group;
+    if (option.fullWidth && option.type === "preview") return 'management';
+    switch (option.type) {
+        case OptionTypes.Boolean: return 'switches';
+        case OptionTypes.Advanced_Enum: return 'channels_roles';
+        case OptionTypes.Array:
+        case OptionTypes.Pair: return 'rules_lists';
+        default: return 'configuration';
+    }
+}
+
+function groupOptionsByType(options) {
+    const groups = new Map();
+    for (const option of options) {
+        const group = inferGroup(option);
+        if (!groups.has(group)) groups.set(group, []);
+        groups.get(group).push(option);
+    }
+    const sorted = [];
+    for (const key of GROUP_ORDER) {
+        if (groups.has(key)) sorted.push([key, groups.get(key)]);
+    }
+    for (const [key, opts] of groups) {
+        if (!GROUP_ORDER.includes(key)) sorted.push([key, opts]);
+    }
+    return sorted;
+}
+
+function SectionLabel({ label }) {
+    return (
+        <div className="flex items-center gap-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--text-muted) whitespace-nowrap">
+                {label}
+            </p>
+            <div className="h-px flex-1 bg-(--border-subtle)" />
+        </div>
+    );
+}
 
 const ConfigValuesContext = createContext(null);
 
@@ -99,18 +150,44 @@ function useConfigSaveState(save, onSaved, getInitialState) {
 }
 
 export function ConfigItemListAnimated({ options, changes, errors, onChange }) {
-    return (options || []).map((option) => (
-        <div key={option.id} className={`w-full h-full${option.fullWidth ? " lg:col-span-2" : ""}`}>
-            <OptionPanel
-                option={option}
-                value={
-                    changes && changes.has(option.id) ? changes.get(option.id) : option.value
-                }
-                error={errors && errors.get(option.id)}
-                onChange={(v) => onChange(option.id, v)}
-            />
-        </div>
-    ))
+    const grouped = useMemo(() => groupOptionsByType(options || []), [options]);
+
+    return grouped.map(([groupKey, sectionOptions]) => {
+        const label = GROUP_LABELS[groupKey] || sectionOptions[0]?.groupLabel || groupKey;
+        const isToggles = groupKey === 'switches';
+
+        return (
+            <div key={groupKey} className="space-y-3">
+                <SectionLabel label={label} />
+                {isToggles ? (
+                    <div className="flex flex-col gap-2.5">
+                        {sectionOptions.map((option) => (
+                            <ToggleRow
+                                key={option.id}
+                                option={option}
+                                value={changes?.has(option.id) ? changes.get(option.id) : option.value}
+                                error={errors?.get(option.id)}
+                                onChange={(v) => onChange(option.id, v)}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                        {sectionOptions.map((option) => (
+                            <div key={option.id} className={`w-full h-full${option.fullWidth ? " lg:col-span-2" : ""}`}>
+                                <OptionPanel
+                                    option={option}
+                                    value={changes?.has(option.id) ? changes.get(option.id) : option.value}
+                                    error={errors?.get(option.id)}
+                                    onChange={(v) => onChange(option.id, v)}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    });
 }
 
 export function ConfigGridSkeleton() {
@@ -126,7 +203,7 @@ export function ConfigGridSkeleton() {
 
 export function ConfigGrid(props) {
     return (
-        <div className="mt-1.5 grid grid-cols-1 gap-5 md:mt-2.5 lg:grid-cols-2">
+        <div className="mt-1.5 flex flex-col gap-8 md:mt-2.5">
             <ConfigPanel {...props} />
         </div>
     );

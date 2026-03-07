@@ -63,6 +63,8 @@ export const MinecraftFeature = {
         // Per-server alert & live embed settings
         servers.forEach((server, i) => {
             const tag = `[${server.name || `Server ${i + 1}`}]`;
+            const serverGroup = `server_${i}`;
+            const serverGroupLabel = server.name || `Server ${i + 1}`;
 
             opts.push(
                 {
@@ -74,6 +76,8 @@ export const MinecraftFeature = {
                     choices: channelChoices,
                     element: { type: "channel" },
                     value: server.alertChannelId || "",
+                    group: serverGroup,
+                    groupLabel: serverGroupLabel,
                 },
                 {
                     id: `mcServer_${i}_alertRoleId`,
@@ -84,6 +88,8 @@ export const MinecraftFeature = {
                     choices: roleChoices,
                     element: { type: "role" },
                     value: server.alertRoleId || "",
+                    group: serverGroup,
+                    groupLabel: serverGroupLabel,
                 },
                 {
                     id: `mcServer_${i}_alertPingMode`,
@@ -93,6 +99,8 @@ export const MinecraftFeature = {
                     type: "enum",
                     choices: PING_MODE_CHOICES,
                     value: server.alertPingMode || "both",
+                    group: serverGroup,
+                    groupLabel: serverGroupLabel,
                 },
                 {
                     id: `mcServer_${i}_liveEmbedChannelId`,
@@ -103,6 +111,8 @@ export const MinecraftFeature = {
                     choices: channelChoices,
                     element: { type: "channel" },
                     value: server.liveEmbedChannelId || "",
+                    group: serverGroup,
+                    groupLabel: serverGroupLabel,
                 },
                 {
                     id: `mcServer_${i}_liveEmbedMode`,
@@ -112,6 +122,8 @@ export const MinecraftFeature = {
                     type: "enum",
                     choices: EMBED_MODE_CHOICES,
                     value: server.liveEmbedMode || "edit",
+                    group: serverGroup,
+                    groupLabel: serverGroupLabel,
                 }
             );
         });

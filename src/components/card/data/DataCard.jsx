@@ -10,9 +10,9 @@ import InformationMap from "./InformationMap";
 import LeaderboardTable from "./LeaderboardTable";
 
 export function DataList({items}) {
-    return (items || []).map((item, key) => {
+    return (items || []).map((item, i) => {
 
-        return <DataCard key={key} {...item} />
+        return <DataCard key={item.name || item.id || i} {...item} />
     })
 }
 
@@ -74,7 +74,7 @@ export default function DataCard({name, value, type, ...optional}) {
             case DataTypes.Group: {
                 const groupItems = value || [];
                 return <div className={`grid grid-cols-1 xl:grid-cols-${groupItems.length} gap-5`}>
-                    {groupItems.map((item, key) => <DataCard key={key} {...item} />)}
+                    {groupItems.map((item, i) => <DataCard key={item.name || item.id || i} {...item} />)}
                 </div>
             }
 

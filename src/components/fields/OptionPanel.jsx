@@ -89,6 +89,30 @@ export function OptionPanel({ value, onChange, option, error }) {
   );
 }
 
+export function ToggleRow({ value, onChange, option, error }) {
+    return (
+        <div className="flex items-center justify-between gap-4 rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-5 py-3.5">
+            <div className="min-w-0 flex-1">
+                <p className="font-['Space_Grotesk'] text-base font-semibold leading-tight text-(--text-primary)">
+                    {option.name}
+                </p>
+                {option.description && (
+                    <p className="mt-1 text-sm leading-5 text-(--text-secondary)">{option.description}</p>
+                )}
+                {error && (
+                    <p className="mt-1 text-xs font-medium leading-5 text-(--status-error)">{error}</p>
+                )}
+            </div>
+            <div className="shrink-0">
+                <Switch
+                    checked={value}
+                    onCheckedChange={(checked) => onChange(checked)}
+                />
+            </div>
+        </div>
+    );
+}
+
 export function useInput(value, onChange, option, error) {
     let field = useMemo(
         () => getInput(value, onChange, option, error),
