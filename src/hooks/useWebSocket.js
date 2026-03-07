@@ -11,6 +11,10 @@ let botStatus = null;
 let statusListeners = new Set();
 let reconnectTimer = null;
 let reconnectDelay = WS_RECONNECT_DELAY;
+let lastStatusTime = 0;
+let stalenessTimer = null;
+const STALENESS_THRESHOLD = 45_000; // 3x the bot's 15s publish interval
+const STALENESS_CHECK_INTERVAL = 15_000;
 let subscribedGuilds = new Set();
 // Presence state
 let presenceByGuild = {}; // { [guildId]: [{userId, username, avatar, page}] }
@@ -58,6 +62,7 @@ function connect() {
 
         if (data.type === 'bot:status') {
             botStatus = data.data;
+            lastStatusTime = Date.now();
             for (const fn of statusListeners) fn();
         }
 
@@ -90,10 +95,31 @@ function scheduleReconnect() {
     }, reconnectDelay);
 }
 
+function startStalenessCheck() {
+    if (stalenessTimer) return;
+    stalenessTimer = setInterval(() => {
+        if (lastStatusTime > 0 && Date.now() - lastStatusTime > STALENESS_THRESHOLD) {
+            const wasStale = botStatus?.stale;
+            if (!wasStale) {
+                botStatus = { status: 'offline', stale: true };
+                for (const fn of statusListeners) fn();
+            }
+        }
+    }, STALENESS_CHECK_INTERVAL);
+}
+
+function stopStalenessCheck() {
+    if (stalenessTimer) {
+        clearInterval(stalenessTimer);
+        stalenessTimer = null;
+    }
+}
+
 function ensureConnected() {
     if (!ws || ws.readyState > WebSocket.OPEN) {
         connect();
     }
+    startStalenessCheck();
 }
 
 function wsSend(payload) {
@@ -129,6 +155,7 @@ export function useWebSocket(callback) {
         return () => {
             listeners.delete(handler);
             if (listeners.size === 0 && statusListeners.size === 0) {
+                stopStalenessCheck();
                 if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
                 if (ws) { ws.close(); ws = null; }
             }
@@ -143,6 +170,7 @@ const subscribeBotStatus = (onStoreChange) => {
     return () => {
         statusListeners.delete(onStoreChange);
         if (listeners.size === 0 && statusListeners.size === 0) {
+            stopStalenessCheck();
             if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
             if (ws) { ws.close(); ws = null; }
         }

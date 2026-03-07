@@ -6,6 +6,8 @@ import { CardPill } from "components/card/primitives";
 
 const STATUS_MAP = {
   online: { color: "green", label: { zh: "在線", en: "Online" } },
+  ok: { color: "green", label: { zh: "在線", en: "Online" } },
+  degraded: { color: "yellow", label: { zh: "降級", en: "Degraded" } },
   idle: { color: "yellow", label: { zh: "閒置", en: "Idle" } },
   dnd: { color: "red", label: { zh: "請勿打擾", en: "Busy" } },
   offline: { color: "gray", label: { zh: "離線", en: "Offline" } },
@@ -25,6 +27,7 @@ export default function BotStatusIndicator() {
   const cfg = STATUS_MAP[status] || STATUS_MAP.unknown;
   const ping = botStatus?.ping;
   const hasLiveStatus = Boolean(botStatus?.status);
+  const isStale = Boolean(botStatus?.stale);
 
   return (
     <div className="flex items-center gap-2">
@@ -38,9 +41,11 @@ export default function BotStatusIndicator() {
             </CardPill>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            {hasLiveStatus
-              ? (ping != null ? `Ping: ${ping}ms` : "Live status received")
-              : "Waiting for live bot telemetry"}
+            {isStale
+              ? "Bot not responding"
+              : hasLiveStatus
+                ? (ping != null ? `Ping: ${ping}ms` : "Live status received")
+                : "Waiting for live bot telemetry"}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
