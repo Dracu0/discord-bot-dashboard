@@ -1,4 +1,18 @@
 import { Locale } from "../../utils/Language";
+import ItemManager from "../../components/fields/ItemManager";
+
+function formatTimeLeft(dateStr) {
+    if (!dateStr) return "Unknown";
+    const d = new Date(dateStr);
+    const now = new Date();
+    if (d <= now) return "Ended";
+    const diff = d - now;
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    if (days > 0) return `${days}d ${hours}h left`;
+    return hours > 0 ? `${hours}h ${mins}m left` : `${mins}m left`;
+}
 
 export const GiveawaysFeature = {
     name: {
@@ -6,51 +20,45 @@ export const GiveawaysFeature = {
     },
     description: (
         <Locale
-            en="Run reaction-based giveaways with automatic winner selection. Use /giveaway in Discord to start, end, reroll, or list giveaways."
+            en="Run reaction-based giveaways with automatic winner selection. Create, manage, and end giveaways from this panel."
         />
     ),
     options: (values, { data }) => {
-        const channelChoices = (data?.channels || []).map((ch) => ({
-            id: ch.id,
-            name: `#${ch.name}`,
-        }));
+        const channelChoices = (data?.channels || [])
+            .filter((ch) => ch.type === 0 || ch.type === 5)
+            .map((ch) => ({ id: ch.id, name: `#${ch.name}`, icon: "channel" }));
 
-        const active = (values.giveaways || []).filter((g) => !g.ended);
-        const ended = (values.giveaways || []).filter((g) => g.ended).slice(0, 5);
+        const giveaways = values?.giveaways || [];
 
-        const activeLines = active.map((g) => {
-            const channelName = channelChoices.find((c) => c.id === g.channelId)?.name || g.channelId;
-            const endsAt = g.endsAt ? new Date(g.endsAt).toLocaleString() : "Unknown";
-            return `🎉 **${g.prize}** — ${channelName} — ends ${endsAt}`;
-        });
+        const columns = [
+            { key: "prize", label: "Prize" },
+            { key: "channelId", label: "Channel", render: (v) => channelChoices.find((c) => c.id === v)?.name || v },
+            { key: "winnersCount", label: "Winners" },
+            { key: "endsAt", label: "Ends", render: (v, item) => item.ended ? "✅ Ended" : formatTimeLeft(v) },
+        ];
 
-        const endedLines = ended.map((g) => {
-            const winners = (g.winnerIds || []).map((id) => `<@${id}>`).join(", ") || "No winners";
-            return `✅ **${g.prize}** — ${winners}`;
-        });
+        const formFields = [
+            { id: "channelId", label: "Channel", type: "channel", required: true, choices: channelChoices, description: "The channel where the giveaway message will be posted." },
+            { id: "prize", label: "Prize", type: "string", required: true, placeholder: "Nitro Classic", description: "What participants can win (max 256 chars).", validate: (v) => { if (v && v.length > 256) return "Max 256 characters"; } },
+            { id: "winnersCount", label: "Number of Winners", type: "number", defaultValue: 1, description: "How many winners to pick (1–20).", validate: (v) => { if (v < 1 || v > 20) return "Must be between 1 and 20"; } },
+            { id: "duration", label: "Duration", type: "duration", required: true, defaultValue: 86400000, description: "How long the giveaway lasts (1 min – 30 days).", duration: { duration: { baseUnit: "milliseconds", units: ["minutes", "hours", "days"], min: 60000, max: 30 * 24 * 60 * 60 * 1000 } } },
+        ];
 
-        const options = [];
-
-        options.push({
-            id: "_activeGiveaways",
-            name: "Active Giveaways",
-            description: activeLines.length > 0
-                ? activeLines.join("\n")
-                : "No active giveaways. Use `/giveaway start` in Discord to create one.",
-            type: "boolean",
-            value: activeLines.length > 0,
-        });
-
-        if (endedLines.length > 0) {
-            options.push({
-                id: "_recentGiveaways",
-                name: "Recent Giveaways",
-                description: endedLines.join("\n"),
-                type: "boolean",
-                value: true,
-            });
-        }
-
-        return options;
+        return [
+            {
+                id: "_giveawaysManager",
+                type: "preview",
+                fullWidth: true,
+                render: () => (
+                    <ItemManager
+                        featureId="giveaways"
+                        items={giveaways}
+                        columns={columns}
+                        formFields={formFields}
+                        itemLabel="Giveaway"
+                    />
+                ),
+            },
+        ];
     },
 };

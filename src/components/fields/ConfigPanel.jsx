@@ -100,7 +100,7 @@ function useConfigSaveState(save, onSaved, getInitialState) {
 
 export function ConfigItemListAnimated({ options, changes, errors, onChange }) {
     return (options || []).map((option) => (
-        <div key={option.id} className="w-full h-full">
+        <div key={option.id} className={`w-full h-full${option.fullWidth ? " lg:col-span-2" : ""}`}>
             <OptionPanel
                 option={option}
                 value={

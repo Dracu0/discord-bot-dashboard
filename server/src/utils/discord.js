@@ -102,6 +102,61 @@ async function fetchGuildMembers(guildId, limit = 100) {
     }
 }
 
+/**
+ * Add a role to a guild member
+ */
+async function addGuildMemberRole(guildId, userId, roleId, reason) {
+    try {
+        await rest.put(Routes.guildMemberRole(guildId, userId, roleId), {
+            reason: reason || 'Dashboard: temporary role assigned',
+        });
+        return true;
+    } catch (err) {
+        logger.error('discord_api_add_role_failed', { guildId, userId, roleId, error: err.message, status: err.status });
+        throw err;
+    }
+}
+
+/**
+ * Remove a role from a guild member
+ */
+async function removeGuildMemberRole(guildId, userId, roleId, reason) {
+    try {
+        await rest.delete(Routes.guildMemberRole(guildId, userId, roleId), {
+            reason: reason || 'Dashboard: temporary role removed',
+        });
+        return true;
+    } catch (err) {
+        logger.error('discord_api_remove_role_failed', { guildId, userId, roleId, error: err.message, status: err.status });
+        throw err;
+    }
+}
+
+/**
+ * Send a message to a channel
+ */
+async function sendChannelMessage(channelId, body) {
+    try {
+        return await rest.post(Routes.channelMessages(channelId), { body });
+    } catch (err) {
+        logger.error('discord_api_send_message_failed', { channelId, error: err.message, status: err.status });
+        throw err;
+    }
+}
+
+/**
+ * Add a reaction to a message
+ */
+async function addMessageReaction(channelId, messageId, emoji) {
+    try {
+        await rest.put(Routes.channelMessageOwnReaction(channelId, messageId, encodeURIComponent(emoji)));
+        return true;
+    } catch (err) {
+        logger.error('discord_api_add_reaction_failed', { channelId, messageId, emoji, error: err.message, status: err.status });
+        throw err;
+    }
+}
+
 module.exports = {
     fetchGuild,
     fetchBotGuildIds,
@@ -109,4 +164,8 @@ module.exports = {
     fetchGuildRoles,
     fetchGuildMember,
     fetchGuildMembers,
+    addGuildMemberRole,
+    removeGuildMemberRole,
+    sendChannelMessage,
+    addMessageReaction,
 };

@@ -1,4 +1,5 @@
 import { Locale } from "../../utils/Language";
+import ItemManager from "../../components/fields/ItemManager";
 
 export const ReactionRolesFeature = {
     name: {
@@ -6,7 +7,7 @@ export const ReactionRolesFeature = {
     },
     description: (
         <Locale
-            en="Configure self-assignable roles via message reactions. Use the /reactionrole command in Discord to add or remove reaction-role mappings."
+            en="Configure self-assignable roles via message reactions. Add, edit, or remove reaction-role mappings below."
         />
     ),
     options: (values, { data }) => {
@@ -17,28 +18,48 @@ export const ReactionRolesFeature = {
             icon: "role",
         }));
 
-        const channelChoices = (data?.channels || []).map((ch) => ({
-            id: ch.id,
-            name: `#${ch.name}`,
-            icon: "channel",
+        const channelChoices = (data?.channels || [])
+            .filter((ch) => ch.type === 0 || ch.type === 5)
+            .map((ch) => ({
+                id: ch.id,
+                name: `#${ch.name}`,
+                icon: "channel",
+            }));
+
+        // Add synthetic _id based on index for ItemManager
+        const items = (values.reactionRoles || []).map((rr, i) => ({
+            _id: String(i),
+            ...rr,
         }));
 
-        // Build a readable list from the stored reaction roles
-        const entries = (values.reactionRoles || []).map((rr) => {
-            const roleName = roleChoices.find((r) => r.id === rr.roleId)?.name || rr.roleId;
-            const channelName = channelChoices.find((c) => c.id === rr.channelId)?.name || rr.channelId;
-            return `${rr.emoji} → ${roleName} (in ${channelName})`;
-        });
+        const columns = [
+            { key: "emoji", label: "Emoji" },
+            { key: "roleId", label: "Role", render: (v) => roleChoices.find((r) => r.id === v)?.name || v },
+            { key: "channelId", label: "Channel", render: (v) => channelChoices.find((c) => c.id === v)?.name || v },
+            { key: "messageId", label: "Message ID" },
+        ];
+
+        const formFields = [
+            { id: "channelId", label: "Channel", type: "channel", required: true, choices: channelChoices, description: "The channel containing the message." },
+            { id: "messageId", label: "Message ID", type: "string", required: true, placeholder: "123456789012345678", description: "Right-click a message → Copy Message ID.", validate: (v) => { if (v && !/^\d{17,20}$/.test(v)) return "Must be a valid Discord ID (17–20 digits)"; } },
+            { id: "emoji", label: "Emoji", type: "string", required: true, placeholder: "🎮 or a custom emoji", description: "The emoji users react with to receive the role." },
+            { id: "roleId", label: "Role", type: "role", required: true, choices: roleChoices, description: "The role to assign when a member reacts." },
+        ];
 
         return [
             {
-                id: "_reactionRolesInfo",
-                name: "Current Reaction Roles",
-                description: entries.length > 0
-                    ? entries.join("\n")
-                    : "No reaction roles configured. Use `/reactionrole add` in Discord to set them up.",
-                type: "boolean",
-                value: (values.reactionRoles || []).length > 0,
+                id: "_reactionRolesManager",
+                type: "preview",
+                fullWidth: true,
+                render: () => (
+                    <ItemManager
+                        featureId="reaction_roles"
+                        items={items}
+                        columns={columns}
+                        formFields={formFields}
+                        itemLabel="Reaction Role"
+                    />
+                ),
             },
         ];
     },

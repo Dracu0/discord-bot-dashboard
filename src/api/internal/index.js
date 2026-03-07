@@ -72,6 +72,37 @@ export function updateFeatureOptions(serverId, featureId, options) {
 }
 
 /**
+ * Create a new item in a collection-based feature
+ */
+export function createFeatureItem(serverId, featureId, data) {
+  return fetchAuto(`/guild/${serverId}/feature/${featureId}/items`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    toJson: true
+  })
+}
+
+/**
+ * Update an existing item in a collection-based feature
+ */
+export function updateFeatureItem(serverId, featureId, itemId, data) {
+  return fetchAuto(`/guild/${serverId}/feature/${featureId}/items/${itemId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    toJson: true
+  })
+}
+
+/**
+ * Delete an item from a collection-based feature
+ */
+export function deleteFeatureItem(serverId, featureId, itemId) {
+  return fetchAuto(`/guild/${serverId}/feature/${featureId}/items/${itemId}`, {
+    method: "DELETE",
+  })
+}
+
+/**
  * Get configuration settings values of a server
  * @return {values: any}
  */
