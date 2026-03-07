@@ -38,6 +38,9 @@ COPY --from=frontend-build /app/build ./build
 RUN addgroup -S app && adduser -S -G app app && chown -R app:app /app
 USER app
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD wget -qO- http://localhost:8080/health || exit 1
+
 ENV NODE_ENV=production
 ENV PORT=8080
 

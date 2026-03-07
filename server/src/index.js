@@ -150,10 +150,10 @@ function initializeConnectedApp() {
         store: MongoStore.create({
             client: mongoose.connection.getClient(),
             collectionName: 'dashboard_sessions',
-            ttl: 7 * 24 * 60 * 60, // 7 days
+            ttl: 2 * 24 * 60 * 60, // 48 hours
         }),
         cookie: {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge: 2 * 24 * 60 * 60 * 1000,
             httpOnly: true,
             sameSite: 'lax',
             secure: IS_PRODUCTION,

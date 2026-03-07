@@ -5,6 +5,7 @@
 
 app = 'discord-bot-dashboard'
 primary_region = 'cdg'
+kill_timeout = 35
 
 [build]
 

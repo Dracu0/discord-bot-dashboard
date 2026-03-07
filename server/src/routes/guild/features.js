@@ -8,7 +8,7 @@ const ScheduledMessage = require('../../models/ScheduledMessage');
 const TempRole = require('../../models/TempRole');
 const Giveaway = require('../../models/Giveaway');
 const { fetchGuildChannels, fetchGuildRoles, addGuildMemberRole, removeGuildMemberRole, sendChannelMessage, addMessageReaction } = require('../../utils/discord');
-const { isObject } = require('./helpers');
+const { isObject, isValidObjectId } = require('./helpers');
 
 // Feature ID to config field mapping
 const FEATURE_FIELDS = {
@@ -463,6 +463,7 @@ router.patch('/:featureId', async (req, res) => {
 // ─── Collection-based CRUD for virtual features ─────────────────────────
 
 const DISCORD_ID_RE = /^\d{17,20}$/;
+const CUSTOM_EMOJI_RE = /^<a?:\w{2,32}:\d{17,20}>$/;
 const VALID_INTERVALS = {
     'Every 1 hour':     3600000,
     'Every 2 hours':    7200000,
@@ -627,6 +628,10 @@ router.post('/:featureId/items', async (req, res) => {
                 if (!emoji || typeof emoji !== 'string' || !emoji.trim()) {
                     return res.status(400).json({ error: 'Emoji is required' });
                 }
+                const trimmedEmoji = emoji.trim();
+                if (trimmedEmoji.length > 60 && !CUSTOM_EMOJI_RE.test(trimmedEmoji)) {
+                    return res.status(400).json({ error: 'Invalid emoji format' });
+                }
                 if (!roleId || !DISCORD_ID_RE.test(roleId)) {
                     return res.status(400).json({ error: 'Valid role is required' });
                 }
@@ -670,6 +675,9 @@ router.post('/:featureId/items', async (req, res) => {
     }
 });
 
+// Features that store items in dedicated MongoDB collections (use ObjectId)
+const OBJECTID_FEATURES = new Set(['custom_commands', 'announcements', 'temp_roles', 'giveaways']);
+
 // PATCH /guild/:id/feature/:featureId/items/:itemId — Update item
 router.patch('/:featureId/items/:itemId', async (req, res) => {
     try {
@@ -680,6 +688,10 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
 
         if (!isObject(body)) {
             return res.status(400).json({ error: 'Body must be a JSON object' });
+        }
+
+        if (OBJECTID_FEATURES.has(featureId) && !isValidObjectId(itemId)) {
+            return res.status(400).json({ error: 'Invalid item ID' });
         }
 
         let updated;
@@ -775,7 +787,11 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
                     return res.status(404).json({ error: 'Reaction role not found' });
                 }
                 if (body.emoji && typeof body.emoji === 'string') {
-                    config.reactionRoles[idx].emoji = body.emoji.trim();
+                    const trimmed = body.emoji.trim();
+                    if (trimmed.length > 60 && !CUSTOM_EMOJI_RE.test(trimmed)) {
+                        return res.status(400).json({ error: 'Invalid emoji format' });
+                    }
+                    config.reactionRoles[idx].emoji = trimmed;
                 }
                 if (body.roleId && DISCORD_ID_RE.test(body.roleId)) {
                     config.reactionRoles[idx].roleId = body.roleId;
@@ -822,6 +838,10 @@ router.delete('/:featureId/items/:itemId', async (req, res) => {
         const featureId = req.params.featureId;
         const itemId = req.params.itemId;
 
+        if (OBJECTID_FEATURES.has(featureId) && !isValidObjectId(itemId)) {
+            return res.status(400).json({ error: 'Invalid item ID' });
+        }
+
         let deleted;
 
         switch (featureId) {
@@ -844,7 +864,7 @@ router.delete('/:featureId/items/:itemId', async (req, res) => {
                 // Remove the role from the member
                 try {
                     await removeGuildMemberRole(guildId, deleted.userId, deleted.roleId, `Dashboard: temp role removed by ${req.user?.username || 'unknown'}`);
-                } catch (_) { /* member might have left */ }
+                } catch (err) { logger.warn('temp_role_remove_failed', { guildId, userId: deleted.userId, roleId: deleted.roleId, error: err.message }); }
                 break;
             }
 

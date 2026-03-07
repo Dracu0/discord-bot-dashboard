@@ -36,7 +36,7 @@ export class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div className="flex items-center justify-center h-screen p-6">
-          <div className="flex flex-col items-center gap-4 max-w-[480px]">
+          <div className="flex flex-col items-center gap-4 max-w-120">
             <AlertTriangle size={48} className="text-red-500" />
             <h2 className="text-2xl font-bold text-center">Something went wrong</h2>
             <p className="text-center text-sm" style={{ color: "var(--text-secondary)" }}>
@@ -44,7 +44,7 @@ export class ErrorBoundary extends React.Component {
             </p>
             {this.state.error?.message && (
               <p
-                className="text-sm text-center p-3 w-full break-words text-red-400"
+                className="text-sm text-center p-3 w-full wrap-break-word text-red-400"
                 style={{
                   backgroundColor: "var(--status-error-bg)",
                   borderRadius: "var(--radius-md)",

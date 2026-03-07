@@ -4,6 +4,7 @@ import Sidebar from "components/sidebar/Sidebar";
 import { PageInfoProvider } from "contexts/PageInfoContext";
 import React, { useContext, useEffect } from "react";
 import { Navigate, Outlet, Route, useParams } from "react-router-dom";
+import { ErrorBoundary } from "../../components/ErrorBoundary";
 import { UserDataProvider } from "contexts/UserDataContext";
 import { FeaturesProvider } from "contexts/FeaturesContext";
 import { SettingsContext } from "contexts/SettingsContext";
@@ -49,7 +50,9 @@ function RouteWrapper({ children }) {
                             animation: "fadeSlideUp 0.3s ease both",
                         }}
                     >
-                        {children}
+                        <ErrorBoundary>
+                            {children}
+                        </ErrorBoundary>
                     </main>
                     <div>
                         <AdminFooter />
