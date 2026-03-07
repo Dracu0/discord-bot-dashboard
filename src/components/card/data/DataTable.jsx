@@ -76,7 +76,7 @@ export default function DataTable({ name, data, columns, description }) {
                           {cell.column.wrapper ? (
                             cell.column.wrapper(cell.value)
                           ) : (
-                            <span className="text-sm font-semibold leading-6 break-words">
+                            <span className="text-sm font-semibold leading-6 wrap-break-word">
                               {cell.value || "—"}
                             </span>
                           )}

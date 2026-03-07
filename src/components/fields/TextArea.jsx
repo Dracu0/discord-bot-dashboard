@@ -8,7 +8,7 @@ export default function TextArea({ error, className, ...props }) {
         placeholder="Enter text"
         rows={3}
         className={cn(
-          "min-h-[80px] resize-y",
+          "min-h-20 resize-y",
           error && "border-(--status-error)",
           className
         )}
