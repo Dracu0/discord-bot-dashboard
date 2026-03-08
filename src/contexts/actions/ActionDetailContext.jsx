@@ -13,12 +13,12 @@ export const ActionDetailContext = createContext({
     setPage: () => {},
 })
 
-export function ActionDetailProvider({children}) {
+export function ActionDetailProvider({children, filters = {}}) {
     const {id: guild, action} = useParams();
     const [page, setPage] = useState(1);
     const query = useQuery({
-        queryKey: ["action_detail", guild, action, page],
-        queryFn: () => getActionDetail(guild, action, page),
+        queryKey: ["action_detail", guild, action, page, filters],
+        queryFn: () => getActionDetail(guild, action, page, filters),
         placeholderData: (prev) => prev,
     })
 

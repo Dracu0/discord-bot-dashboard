@@ -14,8 +14,12 @@ export async function getActionsData(serverId) {
 /**
  * @returns {Promise<{tasks: Array<{createdAt: Date, id: number, status: string}>, total: number, page: number, totalPages: number}>} paginated tasks
  */
-export function getActionDetail(serverId, actionId, page = 1) {
-    return fetchAuto(`/guild/${serverId}/action/${actionId}?page=${page}`,
+export function getActionDetail(serverId, actionId, page = 1, filters = {}) {
+    const params = new URLSearchParams({ page: String(page) });
+    for (const [key, value] of Object.entries(filters)) {
+        if (value) params.set(key, value);
+    }
+    return fetchAuto(`/guild/${serverId}/action/${actionId}?${params}`,
         { toJson: true }
     )
 }

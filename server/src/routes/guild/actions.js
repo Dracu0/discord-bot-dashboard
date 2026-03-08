@@ -76,17 +76,35 @@ router.get('/:actionId', async (req, res) => {
                 totalPages: Math.ceil(total / limit),
             });
         } else if (actionId === 'mod_history') {
+            // Build filter for mod history
+            const filter = { guildId };
+            const validActions = ['warn', 'kick', 'ban', 'unban', 'timeout', 'untimeout'];
+            if (req.query.action && validActions.includes(req.query.action)) {
+                filter.action = req.query.action;
+            }
+            if (req.query.targetId && /^\d{17,20}$/.test(req.query.targetId)) {
+                filter.targetId = req.query.targetId;
+            }
+            if (req.query.moderatorId && /^\d{17,20}$/.test(req.query.moderatorId)) {
+                filter.moderatorId = req.query.moderatorId;
+            }
+
             const [logs, total] = await Promise.all([
-                ModLog.find({ guildId })
+                ModLog.find(filter)
                     .sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
-                ModLog.countDocuments({ guildId }),
+                ModLog.countDocuments(filter),
             ]);
 
             res.json({
                 tasks: logs.map(l => ({
                     id: l._id.toString(),
-                    name: `${l.action} - ${l.targetId} by ${l.moderatorId}`,
+                    name: `${l.action.charAt(0).toUpperCase() + l.action.slice(1)} — ${l.targetId}`,
                     status: l.action,
+                    action: l.action,
+                    targetId: l.targetId,
+                    moderatorId: l.moderatorId,
+                    reason: l.reason || '',
+                    duration: l.duration || 0,
                     createdAt: l.createdAt,
                 })),
                 total,
@@ -132,24 +150,24 @@ router.get('/:actionId/:taskId', async (req, res) => {
             });
         } else if (actionId === 'mod_history') {
             if (!isValidObjectId(taskId)) {
-                return res.status(400).json({ error: 'Invalid task ID format' });
+                return res.status(400).json({ error: 'Invalid entry ID format' });
             }
             const log = await ModLog.findById(taskId).lean();
 
             if (!log || log.guildId !== guildId) {
-                return res.status(404).json({ error: 'Log entry not found' });
+                return res.status(404).json({ error: 'Moderation log entry not found' });
             }
 
             res.json({
                 id: log._id.toString(),
-                name: `${log.action} - ${log.targetId} by ${log.moderatorId}`,
+                name: `${log.action.charAt(0).toUpperCase() + log.action.slice(1)} — ${log.targetId}`,
                 createdAt: log.createdAt,
                 values: {
                     action: log.action,
                     targetId: log.targetId,
                     moderatorId: log.moderatorId,
-                    reason: log.reason,
-                    duration: log.duration,
+                    reason: log.reason || '',
+                    duration: log.duration || 0,
                 },
             });
         } else {
@@ -216,6 +234,44 @@ router.patch('/:actionId/:taskId', async (req, res) => {
                     content: suggestion.content,
                     status: suggestion.status,
                     reason: suggestion.reason,
+                },
+            });
+        } else if (actionId === 'mod_history') {
+            if (!isValidObjectId(taskId)) {
+                return res.status(400).json({ error: 'Invalid entry ID format' });
+            }
+            const log = await ModLog.findById(taskId);
+            if (!log || log.guildId !== guildId) {
+                return res.status(404).json({ error: 'Moderation log entry not found' });
+            }
+
+            // Only the reason field can be updated on mod history entries
+            if (options.reason !== undefined) {
+                if (typeof options.reason !== 'string' || options.reason.length > 2000) {
+                    return res.status(400).json({ error: 'Reason must be a string (max 2000 chars)' });
+                }
+                log.reason = options.reason;
+            }
+            await log.save();
+
+            req.log?.info('modlog_entry_updated', {
+                guildId,
+                actionId,
+                taskId,
+                actorId: req.user?.id || null,
+                updatedKeys: Object.keys(options),
+            });
+
+            res.json({
+                id: log._id.toString(),
+                name: `${log.action.charAt(0).toUpperCase() + log.action.slice(1)} — ${log.targetId}`,
+                createdAt: log.createdAt,
+                values: {
+                    action: log.action,
+                    targetId: log.targetId,
+                    moderatorId: log.moderatorId,
+                    reason: log.reason || '',
+                    duration: log.duration || 0,
                 },
             });
         } else {
@@ -313,12 +369,12 @@ router.delete('/:actionId/:taskId', async (req, res) => {
             res.sendStatus(200);
         } else if (actionId === 'mod_history') {
             if (!isValidObjectId(taskId)) {
-                return res.status(400).json({ error: 'Invalid task ID format' });
+                return res.status(400).json({ error: 'Invalid entry ID format' });
             }
             const log = await ModLog.findById(taskId).lean();
 
             if (!log || log.guildId !== guildId) {
-                return res.status(404).json({ error: 'Log entry not found' });
+                return res.status(404).json({ error: 'Moderation log entry not found' });
             }
 
             await ModLog.findByIdAndDelete(taskId);

@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useContext, useMemo, useState} from "react";
 
 import {usePageInfo} from "contexts/PageInfoContext";
 import {config} from "config/config";
@@ -8,16 +8,28 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import ErrorModal from "components/modal/ErrorModal";
 import {SubmitAlert} from "components/alert/SaveAlert";
 import {ConfigItemListAnimated} from "components/fields/ConfigPanel";
-import {useNavigate, useParams} from "react-router-dom";
+import {Navigate, useNavigate, useParams} from "react-router-dom";
 import {addTask} from "api/internal";
 import NameInput from "../components/NameInput";
 import {usePageState} from "utils/State";
 import {Locale, useLocale} from "utils/Language";
 import PageSection from "components/layout/PageSection";
+import {GuildContext} from "contexts/guild/GuildContext";
 
 export default function SubmitTaskBoard() {
-    useBanner()
+    const {action} = useParams();
+    const {id: guild} = useContext(GuildContext);
+    const info = useActionInfo();
 
+    if (info?.readOnly) {
+        return <Navigate to={`/guild/${guild}/actions/${action}`} replace />;
+    }
+
+    return <SubmitTaskContent />
+}
+
+function SubmitTaskContent() {
+    useBanner()
     return <SubmitTask />
 }
 

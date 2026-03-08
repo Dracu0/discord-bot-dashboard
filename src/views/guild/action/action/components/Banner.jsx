@@ -4,12 +4,19 @@ import {GuildContext} from "contexts/guild/GuildContext";
 import CreateButton from "./CreateButton";
 import {useActionBanner} from "../../components/ActionBanner";
 import BackNavButton from "components/navigation/BackNavButton";
+import {useActionInfo} from "contexts/actions/ActionDetailContext";
 
 export function useBanner() {
     const { id: serverId } = useContext(GuildContext);
+    const info = useActionInfo();
 
-    useActionBanner([
+    const items = [
         <BackNavButton to={`/guild/${serverId}/actions`} zh="返回動作" en="Back to Actions" ariaLabel="Back to Actions" />,
-        <CreateButton />,
-    ])
+    ];
+
+    if (!info?.readOnly) {
+        items.push(<CreateButton />);
+    }
+
+    useActionBanner(items)
 }

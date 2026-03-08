@@ -47,19 +47,24 @@ export function OptionPanel({ value, onChange, option, error }) {
   }
 
   const inline = option.type === OptionTypes.Boolean;
+  const isReadOnly = option.readOnly === true;
+
+  const displayValue = isReadOnly
+    ? <span className="text-sm text-(--text-secondary) select-all">{value || "—"}</span>
+    : input;
 
   return (
         <Card className="rounded-[28px] border border-(--border-subtle) bg-[linear-gradient(180deg,var(--surface-card)_0%,var(--surface-primary)_100%)] p-5 shadow-(--shadow-sm) md:p-6">
             <div className={cn(
                 "h-full text-left",
-                inline
+                inline && !isReadOnly
                     ? "flex flex-col items-start gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-5"
                     : "space-y-4"
             )}>
                 <div className="min-w-0 flex-1 text-left">
                     <div className="space-y-2">
                         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--text-muted)">
-                            {inline ? "Toggle" : "Configuration"}
+                            {isReadOnly ? "Read Only" : inline ? "Toggle" : "Configuration"}
                         </p>
                         <p className="font-['Space_Grotesk'] text-xl font-semibold leading-tight text-(--text-primary)">
                             {option.name}
@@ -69,7 +74,7 @@ export function OptionPanel({ value, onChange, option, error }) {
                         )}
                     </div>
 
-                    {!inline && <div className="pt-1">{input}</div>}
+                    {(!inline || isReadOnly) && <div className="pt-1">{displayValue}</div>}
 
                     {option.helper && (
                         <p className="mt-3 text-xs leading-5 text-(--text-muted)">
@@ -83,7 +88,7 @@ export function OptionPanel({ value, onChange, option, error }) {
                     )}
                 </div>
 
-                                {inline && <div className="shrink-0 self-start pt-1 sm:pt-0">{input}</div>}
+                                {inline && !isReadOnly && <div className="shrink-0 self-start pt-1 sm:pt-0">{input}</div>}
             </div>
     </Card>
   );
