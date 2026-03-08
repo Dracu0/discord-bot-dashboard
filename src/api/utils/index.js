@@ -2,6 +2,7 @@ import {config} from "../../config/config";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {setFeatureEnabled} from "../internal";
 import logger from "utils/logger";
+import { toast } from "sonner";
 
 // CSRF token management — fetched once per session, included in all state-changing requests
 let csrfToken = null;
@@ -123,9 +124,11 @@ export function useEnableFeatureMutation(serverId, featureId) {
 
             client.invalidateQueries({ queryKey: ["features", serverId] })
             client.invalidateQueries({ queryKey: ["server_detail", serverId] })
+            toast.success(enabled ? "Feature enabled" : "Feature disabled");
         },
         onError(error) {
             logger.error('feature_toggle_failed', { serverId, featureId, error: error.message })
+            toast.error("Failed to toggle feature");
         }
     })
 }

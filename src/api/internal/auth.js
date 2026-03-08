@@ -1,6 +1,7 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {fetchAuto, resetCsrfToken} from "../utils";
 import logger from "utils/logger";
+import {toast} from "sonner";
 
 export function hasLoggedIn() {
     return fetchAuto(
@@ -30,10 +31,12 @@ export function useLogout() {
         onSuccess() {
             logger.info('logged_out')
             resetCsrfToken()
+            toast.success("Signed out successfully");
             return client.invalidateQueries({ queryKey: ["logged_in"] })
         },
         onError(error) {
             logger.error('logout_failed', { error: error.message })
+            toast.error("Failed to sign out");
         }
     })
 }

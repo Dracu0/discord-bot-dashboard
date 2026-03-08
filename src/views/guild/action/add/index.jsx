@@ -15,6 +15,7 @@ import {usePageState} from "utils/State";
 import {Locale, useLocale} from "utils/Language";
 import PageSection from "components/layout/PageSection";
 import {GuildContext} from "contexts/guild/GuildContext";
+import {toast} from "sonner";
 
 export default function SubmitTaskBoard() {
     const {action} = useParams();
@@ -76,8 +77,11 @@ function ConfigPanel() {
                 data
             )
             client.invalidateQueries({ queryKey: ["action_detail", guild, action] })
-
+            toast.success("Task created");
             navigate(`/guild/${guild}/actions/${action}/task/${data.id}`)
+        },
+        onError() {
+            toast.error("Failed to create task");
         }
     })
 

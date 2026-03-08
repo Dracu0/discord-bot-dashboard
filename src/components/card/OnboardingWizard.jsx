@@ -10,6 +10,7 @@ import { Badge } from "components/ui/badge";
 import { Checkbox } from "components/ui/checkbox";
 import { Stepper, StepperStep } from "components/ui/stepper";
 import Card from "components/card/Card";
+import { toast } from "sonner";
 
 const RECOMMENDED_FEATURES = ["welcome", "xp", "modlog", "automod"];
 
@@ -43,8 +44,10 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
         await Promise.all(
           [...selected].map(featureId => setFeatureEnabled(serverId, featureId, true))
         );
+        toast.success(`${selected.size} feature${selected.size > 1 ? "s" : ""} enabled`);
       } catch (err) {
         console.error("Failed to enable onboarding features:", err);
+        toast.error("Failed to enable some features");
       } finally {
         setSaving(false);
       }

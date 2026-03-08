@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Skeleton } from "components/ui/skeleton";
 import { useHotkeys } from "hooks/useHotkeys";
 import logger from "utils/logger";
+import { toast } from "sonner";
 
 // --- Section grouping ---
 const GROUP_ORDER = ['switches', 'channels_roles', 'configuration', 'rules_lists', 'management'];
@@ -139,10 +140,12 @@ function useConfigSaveState(save, onSaved, getInitialState) {
         onSuccess(data) {
             logger.info('config_saved', { fields: [...(data instanceof Map ? data.keys() : Object.keys(data || {}))] })
             dispatch({ type: 'RESET', initial: getInitialState() });
+            toast.success("Changes saved successfully");
             return onSaved && onSaved(data)
         },
         onError(error) {
             logger.error('config_save_failed', { error: error.message })
+            toast.error("Failed to save changes");
         }
     })
 

@@ -11,6 +11,7 @@ import IdSelectField from "./impl/IdSelectField";
 import DurationField from "./impl/DurationField";
 import { SelectField } from "./SelectField";
 import ErrorModal from "../modal/ErrorModal";
+import { toast } from "sonner";
 
 /**
  * Reusable CRUD manager for collection-based features.
@@ -33,20 +34,20 @@ export default function ItemManager({ featureId, items, columns, formFields, ite
 
     const createMut = useMutation({
         mutationFn: (data) => createFeatureItem(serverId, featureId, transformSubmit ? transformSubmit(data) : data),
-        onSuccess: () => { invalidate(); setMode("list"); },
-        onError: (err) => setError(err?.message || "Failed to create"),
+        onSuccess: () => { invalidate(); setMode("list"); toast.success(`${itemLabel} created`); },
+        onError: (err) => { setError(err?.message || "Failed to create"); toast.error(`Failed to create ${itemLabel.toLowerCase()}`); },
     });
 
     const updateMut = useMutation({
         mutationFn: ({ itemId, data }) => updateFeatureItem(serverId, featureId, itemId, transformSubmit ? transformSubmit(data) : data),
-        onSuccess: () => { invalidate(); setMode("list"); },
-        onError: (err) => setError(err?.message || "Failed to update"),
+        onSuccess: () => { invalidate(); setMode("list"); toast.success(`${itemLabel} updated`); },
+        onError: (err) => { setError(err?.message || "Failed to update"); toast.error(`Failed to update ${itemLabel.toLowerCase()}`); },
     });
 
     const deleteMut = useMutation({
         mutationFn: (itemId) => deleteFeatureItem(serverId, featureId, itemId),
-        onSuccess: () => invalidate(),
-        onError: (err) => setError(err?.message || "Failed to delete"),
+        onSuccess: () => { invalidate(); toast.success(`${itemLabel} deleted`); },
+        onError: (err) => { setError(err?.message || "Failed to delete"); toast.error(`Failed to delete ${itemLabel.toLowerCase()}`); },
     });
 
     if (mode === "add" || mode === "edit") {

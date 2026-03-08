@@ -9,6 +9,7 @@ import { Locale } from "utils/Language";
 import Modal from "components/modal/Modal";
 import { useActionInfo } from "contexts/actions/ActionDetailContext";
 import { ACTION_COLORS, ACTION_LABELS } from "config/actions/ModHistory";
+import { toast } from "sonner";
 
 function useDeleteMutation(guild, action, task) {
     const client = useQueryClient();
@@ -16,6 +17,7 @@ function useDeleteMutation(guild, action, task) {
     return useMutation({
         mutationFn: () => deleteTask(guild, action, task),
         onSuccess() {
+            toast.success("Entry deleted");
             return client.setQueryData(
                 ["action_detail", guild, action],
                 (data) =>
@@ -23,6 +25,9 @@ function useDeleteMutation(guild, action, task) {
                         ? { ...data, tasks: data.tasks.filter((t) => t.id !== task) }
                         : data
             );
+        },
+        onError() {
+            toast.error("Failed to delete entry");
         },
     });
 }

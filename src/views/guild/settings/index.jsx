@@ -1,5 +1,5 @@
-import React, {useContext, useMemo, useState, useCallback} from "react";
-import { CheckCircle2, LayoutPanelTop, MonitorCog, Palette, Settings2, Sidebar } from "lucide-react";
+import React, {useContext, useMemo, useCallback} from "react";
+import { LayoutPanelTop, MonitorCog, Palette, Settings2, Sidebar } from "lucide-react";
 import {usePageInfo} from "contexts/PageInfoContext";
 import {SettingsContext} from "../../../contexts/SettingsContext";
 import {ConfigGrid} from "components/fields/ConfigPanel";
@@ -65,7 +65,6 @@ export default function SettingsPanel() {
 
 function SettingsConfigPanel() {
     const appSettings = useContext(SettingsContext);
-    const [saved, setSaved] = useState(false);
 
     const options = useMemo(
         () => config.settings({
@@ -86,19 +85,10 @@ function SettingsConfigPanel() {
         return Promise.resolve(updates);
     }, [appSettings]);
 
-    const onSaved = useCallback(() => {
-        setSaved(true);
-        setTimeout(() => setSaved(false), 1500);
-    }, []);
+    const onSaved = useCallback(() => {}, []);
 
     return (
         <div className="space-y-4">
-            {saved && (
-                <div className="flex items-center gap-2 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                    <Locale zh="偏好設定已儲存。" en="Your preferences were saved." />
-                </div>
-            )}
             <ConfigGrid options={options} onSave={onSave} onSaved={onSaved} />
         </div>
     );
