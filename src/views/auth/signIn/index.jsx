@@ -16,7 +16,7 @@ function SignIn({ loading = false }) {
 
     return (
         <DefaultAuth illustrationBackground={illustration} image={illustration}>
-            <div className="flex flex-col items-center justify-center text-center max-w-[440px] w-full">
+            <div className="flex flex-col items-center justify-center text-center max-w-110 w-full">
                 {/* Brand Logo */}
                 <span
                     className="text-[40px] md:text-[48px] font-extrabold tracking-[-0.03em] mb-1"
@@ -57,7 +57,7 @@ function SignIn({ loading = false }) {
                         onClick={onSignIn}
                         disabled={loading}
                         className={cn(
-                            "w-full h-[52px] rounded-(--radius-md) text-base font-semibold text-white",
+                            "w-full h-13 rounded-md text-base font-semibold text-white",
                             "inline-flex items-center justify-center gap-2",
                             "transition-all duration-150 cursor-pointer",
                             "hover:-translate-y-px active:scale-[0.98]",
@@ -66,7 +66,7 @@ function SignIn({ loading = false }) {
                         style={{ backgroundColor: "#5865F2" }}
                     >
                         {loading ? (
-                            <Loader2 className="h-[22px] w-[22px] animate-spin" />
+                            <Loader2 className="h-5.5 w-5.5 animate-spin" />
                         ) : (
                             <DiscordIcon size={22} />
                         )}

@@ -9,21 +9,24 @@
     },
     "dependencies": {
         "connect-mongo": "^5.1.0",
-        "cors": "^2.8.5",
+        "cors": "^2.8.6",
         "discord.js": "^14.25.1",
         "dotenv": "^17.3.1",
-        "express": "^4.21.2",
-        "express-rate-limit": "^7.5.0",
-        "express-session": "^1.18.1",
+        "express": "^4.22.1",
+        "express-rate-limit": "^7.5.1",
+        "express-session": "^1.19.0",
         "helmet": "^8.1.0",
         "ioredis": "^5.10.0",
-        "mongoose": "^8.14.3",
+        "mongoose": "^8.23.0",
         "passport": "^0.7.0",
         "passport-oauth2": "^1.8.0",
         "ws": "^8.19.0"
     },
     "devDependencies": {
-        "@types/node": "^24.5.2",
+        "@types/node": "^24.12.0",
         "nodemon": "^3.1.14"
+    },
+    "overrides": {
+        "undici": "^6.23.0"
     }
 }
