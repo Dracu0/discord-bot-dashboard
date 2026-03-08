@@ -18,13 +18,7 @@ function useDeleteMutation(guild, action, task) {
         mutationFn: () => deleteTask(guild, action, task),
         onSuccess() {
             toast.success("Entry deleted");
-            return client.setQueryData(
-                ["action_detail", guild, action],
-                (data) =>
-                    data
-                        ? { ...data, tasks: data.tasks.filter((t) => t.id !== task) }
-                        : data
-            );
+            return client.invalidateQueries({ queryKey: ["action_detail", guild, action] });
         },
         onError() {
             toast.error("Failed to delete entry");

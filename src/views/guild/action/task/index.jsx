@@ -67,7 +67,7 @@ export function Config({detail}) {
     const client = useQueryClient()
 
     const onSaved = data => {
-        client.invalidateQueries(["action_detail", guild, action])
+        client.invalidateQueries({ queryKey: ["action_detail", guild, action] })
         return client.setQueryData(["task_detail", guild, action, task], data)
     }
 

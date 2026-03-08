@@ -174,7 +174,7 @@ export default function AuditLogPage() {
     const query = useQuery({
         queryKey: ["audit_log", serverId, page, category, action],
         queryFn: () => getAuditLog(serverId, { page, category, action }),
-        keepPreviousData: true,
+        placeholderData: (prev) => prev,
     });
 
     const { entries = [], total = 0, totalPages = 0 } = query.data || {};
