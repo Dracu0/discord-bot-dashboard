@@ -163,6 +163,14 @@ app.get('/api/guild/:id/leaderboard', (_req, res) => res.json({
 // ── Actions ───────────────────────────────────────────────────
 app.get('/api/guild/:id/actions', (_req, res) => res.json({ actions: [] }));
 app.get('/api/guild/:id/action/:actionId', (_req, res) => res.json({ tasks: [], total: 0, page: 1, totalPages: 1 }));
+app.get('/api/guild/:id/action/:actionId/:taskId', (req, res) => res.json({
+  id: req.params.taskId, name: 'Mock Task', options: {}, actionId: req.params.actionId,
+}));
+app.post('/api/guild/:id/action/:actionId', (req, res) => res.json({
+  id: `mock-${Date.now()}`, name: req.body.name || 'New Task', options: req.body.options || {},
+}));
+app.patch('/api/guild/:id/action/:actionId/:taskId', (req, res) => res.json(req.body));
+app.delete('/api/guild/:id/action/:actionId/:taskId', (_req, res) => res.sendStatus(200));
 
 // ── Start ─────────────────────────────────────────────────────
 app.listen(8080, () => console.log('Mock API server running on http://localhost:8080'));

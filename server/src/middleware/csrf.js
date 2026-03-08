@@ -10,7 +10,13 @@ const CSRF_HEADER = 'x-csrf-token';
 function generateCsrfToken(req, res) {
     const token = crypto.randomBytes(32).toString('hex');
     req.session.csrfToken = token;
-    res.json({ token });
+    req.session.save((err) => {
+        if (err) {
+            req.log?.error('csrf_session_save_failed', { error: err.message });
+            return res.status(500).json({ error: 'Failed to generate CSRF token' });
+        }
+        res.json({ token });
+    });
 }
 
 /**

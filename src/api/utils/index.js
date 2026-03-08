@@ -46,14 +46,20 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
         ? ensureCsrfToken().then(token => doFetch(token))
         : doFetch(null);
 
-    return request.then(res => {
+    return request.then(async res => {
         // On CSRF failure, re-fetch token and retry once
+        // Only retry if the 403 is actually a CSRF rejection, not a permission error
         if (needsCsrf && res.status === 403) {
-            csrfToken = null;
-            return fetchCsrfToken().then(newToken => {
-                if (!newToken) return res;
-                return doFetch(newToken);
-            });
+            const clone = res.clone();
+            const body = await clone.json().catch(() => ({}));
+            const isCsrfError = typeof body.error === 'string' && body.error.includes('CSRF');
+            if (isCsrfError) {
+                csrfToken = null;
+                return fetchCsrfToken().then(newToken => {
+                    if (!newToken) return res;
+                    return doFetch(newToken);
+                });
+            }
         }
         return res;
     }).then(res => {
