@@ -16,6 +16,7 @@ function generateCsrfToken(req, res) {
 /**
  * Double-submit validation: the x-csrf-token header must match the session token.
  * Only applies to state-changing methods (POST, PATCH, PUT, DELETE).
+ * The token is stable for the session lifetime — no per-request rotation.
  */
 function csrfProtection(req, res, next) {
     if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
@@ -42,11 +43,6 @@ function csrfProtection(req, res, next) {
         req.log?.warn('csrf_rejected_mismatch', { path: req.originalUrl });
         return res.status(403).json({ error: 'Invalid CSRF token' });
     }
-
-    // Rotate token after successful validation
-    const newToken = crypto.randomBytes(32).toString('hex');
-    req.session.csrfToken = newToken;
-    res.setHeader(CSRF_HEADER, newToken);
 
     next();
 }

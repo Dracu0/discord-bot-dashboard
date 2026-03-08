@@ -3,13 +3,11 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {setFeatureEnabled} from "../internal";
 import logger from "utils/logger";
 
-// CSRF token management — fetched once, included in all state-changing requests
+// CSRF token management — fetched once per session, included in all state-changing requests
 let csrfToken = null;
 let csrfFetching = null;
-let csrfMutex = Promise.resolve();
 
-async function ensureCsrfToken() {
-    if (csrfToken) return csrfToken;
+async function fetchCsrfToken() {
     if (csrfFetching) return csrfFetching;
     csrfFetching = fetch(`${config.serverUrl}/csrf-token`, { credentials: 'include' })
         .then(r => r.json())
@@ -18,13 +16,9 @@ async function ensureCsrfToken() {
     return csrfFetching;
 }
 
-/**
- * Serialize state-changing requests so CSRF token rotation doesn't cause
- * race conditions when multiple mutations fire concurrently.
- */
-function withCsrfMutex(fn) {
-    csrfMutex = csrfMutex.then(fn, fn);
-    return csrfMutex;
+async function ensureCsrfToken() {
+    if (csrfToken) return csrfToken;
+    return fetchCsrfToken();
 }
 
 // Reset CSRF token on auth change (e.g. logout)
@@ -48,16 +42,20 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
     });
 
     const request = needsCsrf
-        ? withCsrfMutex(() => ensureCsrfToken().then(token => doFetch(token)))
+        ? ensureCsrfToken().then(token => doFetch(token))
         : doFetch(null);
 
     return request.then(res => {
-        // Update CSRF token from response header (server rotates after each use)
-        const newCsrf = res.headers.get('x-csrf-token');
-        if (newCsrf) {
-            csrfToken = newCsrf;
+        // On CSRF failure, re-fetch token and retry once
+        if (needsCsrf && res.status === 403) {
+            csrfToken = null;
+            return fetchCsrfToken().then(newToken => {
+                if (!newToken) return res;
+                return doFetch(newToken);
+            });
         }
-
+        return res;
+    }).then(res => {
         if (res.ok || !throwError) {
             logger.info('api_request_ok', {
                 requestId,
