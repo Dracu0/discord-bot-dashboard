@@ -10,17 +10,6 @@ let presenceCleanupInterval = null;
 // Track active presence: Map<guildId, Map<sessionId, { userId, username, avatar, page, lastSeen }>>
 const guildPresence = new Map();
 
-// Clean up stale presence entries every 60 seconds
-presenceCleanupInterval = setInterval(() => {
-    const now = Date.now();
-    for (const [guildId, sessions] of guildPresence) {
-        for (const [sessionId, info] of sessions) {
-            if (now - info.lastSeen > 300_000) sessions.delete(sessionId);
-        }
-        if (sessions.size === 0) guildPresence.delete(guildId);
-    }
-}, 60_000);
-
 /**
  * Parse the session from the HTTP upgrade request using the same
  * session middleware the Express app uses. Returns the session or null.
@@ -224,6 +213,17 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
     }
 
     logger.info('websocket_server_started', { path: '/ws' });
+
+    // Clean up stale presence entries every 60 seconds
+    presenceCleanupInterval = setInterval(() => {
+        const now = Date.now();
+        for (const [guildId, sessions] of guildPresence) {
+            for (const [sessionId, info] of sessions) {
+                if (now - info.lastSeen > 300_000) sessions.delete(sessionId);
+            }
+            if (sessions.size === 0) guildPresence.delete(guildId);
+        }
+    }, 60_000);
 }
 
 /** Broadcast to all connected clients */

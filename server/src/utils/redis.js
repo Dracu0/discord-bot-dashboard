@@ -7,7 +7,7 @@ let subscriber = null;
 function getRedis() {
     if (!redis && process.env.REDIS_URL) {
         redis = new Redis(process.env.REDIS_URL, {
-            maxRetriesPerRequest: 3,
+            maxRetriesPerRequest: null,
             retryStrategy(times) {
                 return Math.min(times * 500, 5000);
             },
@@ -22,7 +22,7 @@ function getRedis() {
 function getSubscriber() {
     if (!subscriber && process.env.REDIS_URL) {
         subscriber = new Redis(process.env.REDIS_URL, {
-            maxRetriesPerRequest: 3,
+            maxRetriesPerRequest: null,
             retryStrategy(times) {
                 return Math.min(times * 500, 5000);
             },

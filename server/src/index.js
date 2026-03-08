@@ -182,7 +182,17 @@ function initializeConnectedApp() {
 
     // Health check
     app.get('/health', (req, res) => {
-        res.json({ status: 'ok' });
+        const dbReady = mongoose.connection.readyState === 1;
+        const { getRedis } = require('./utils/redis');
+        const redisClient = getRedis();
+        const redisReady = redisClient?.status === 'ready';
+        const healthy = dbReady && (redisReady || !process.env.REDIS_URL);
+
+        res.status(healthy ? 200 : 503).json({
+            status: healthy ? 'ok' : 'degraded',
+            database: dbReady ? 'connected' : 'disconnected',
+            redis: process.env.REDIS_URL ? (redisReady ? 'connected' : 'disconnected') : 'not_configured',
+        });
     });
 
     // --- Production: serve React build ---

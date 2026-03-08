@@ -9,9 +9,11 @@ const ticketSchema = new Schema({
     claimedBy: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
     closedAt: { type: Date, default: null },
+    deleteAfter: { type: Date, default: null },
 });
 
 ticketSchema.index({ guildId: 1, userId: 1 });
 ticketSchema.index({ guildId: 1, status: 1 });
+ticketSchema.index({ deleteAfter: 1 }, { expireAfterSeconds: 0, partialFilterExpression: { deleteAfter: { $ne: null } } }); // TTL for closed tickets (matches bot)
 
 module.exports = model('Ticket', ticketSchema);
