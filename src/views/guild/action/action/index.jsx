@@ -18,6 +18,7 @@ import {
     PaginationPrevious, PaginationNext,
 } from "components/ui/pagination";
 import { SelectField } from "components/fields/SelectField";
+import { Button } from "components/ui/button";
 
 export default function ActionTasks() {
     const info = useActionInfo()
@@ -57,13 +58,20 @@ function TasksPanel() {
         actions={
             <div className="flex items-center gap-2 flex-wrap">
                 {info.filterOptions && (
-                    <div className="w-40">
-                        <SelectField
-                            options={info.filterOptions.map(o => ({ label: o.label, value: o.value }))}
-                            value={actionFilter}
-                            onChange={setActionFilter}
-                            placeholder="Filter type"
-                        />
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-40">
+                            <SelectField
+                                options={info.filterOptions.map(o => ({ label: o.label, value: o.value }))}
+                                value={actionFilter}
+                                onChange={setActionFilter}
+                                placeholder="All types"
+                            />
+                        </div>
+                        {actionFilter && (
+                            <Button variant="ghost" size="sm" onClick={() => setActionFilter("")}>
+                                <Locale zh="清除" en="Clear" />
+                            </Button>
+                        )}
                     </div>
                 )}
                 <SearchInput value={filter} onChange={setFilter} bg="var(--surface-secondary)" groupStyle={{ maw: "20rem" }} />

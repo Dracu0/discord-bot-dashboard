@@ -1,7 +1,6 @@
 import { Locale } from "utils/Language";
 
 const ACTION_TYPES = [
-    { label: "All", value: "" },
     { label: "Warn", value: "warn" },
     { label: "Kick", value: "kick" },
     { label: "Ban", value: "ban" },
@@ -47,7 +46,7 @@ export const ModHistoryAction = {
             name: "Action Type",
             description: "The type of moderation action",
             type: "enum",
-            choices: ACTION_TYPES.filter(t => t.value),
+            choices: ACTION_TYPES,
             value: values ? values.action : "",
             readOnly: true,
         },
