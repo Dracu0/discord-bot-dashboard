@@ -7,6 +7,7 @@ const CustomCommand = require('../../models/CustomCommand');
 const ScheduledMessage = require('../../models/ScheduledMessage');
 const TempRole = require('../../models/TempRole');
 const Giveaway = require('../../models/Giveaway');
+const AutoResponder = require('../../models/AutoResponder');
 const { fetchGuildChannels, fetchGuildRoles, addGuildMemberRole, removeGuildMemberRole, sendChannelMessage, addMessageReaction } = require('../../utils/discord');
 const { isObject, isValidObjectId } = require('./helpers');
 
@@ -69,6 +70,15 @@ const FEATURE_FIELDS = {
         virtual: true,
     },
     giveaways: {
+        enableCheck: () => true,
+        fields: [],
+        virtual: true,
+    },
+    music: {
+        enableCheck: (c) => c.musicEnabled !== false,
+        fields: ['musicEnabled', 'musicDJRoleId', 'musicDefaultVolume', 'musicMaxQueueSize'],
+    },
+    auto_responder: {
         enableCheck: () => true,
         fields: [],
         virtual: true,
@@ -166,6 +176,9 @@ router.patch('/:featureId/enabled', async (req, res) => {
             case 'tickets':
                 config.ticketEnabled = enabled;
                 break;
+            case 'music':
+                config.musicEnabled = enabled;
+                break;
             default:
                 break;
         }
@@ -225,6 +238,8 @@ router.get('/:featureId', async (req, res) => {
             values.tempRoles = await TempRole.find({ guildId }).sort({ expiresAt: 1 }).lean();
         } else if (featureId === 'giveaways') {
             values.giveaways = await Giveaway.find({ guildId }).sort({ createdAt: -1 }).limit(20).lean();
+        } else if (featureId === 'auto_responder') {
+            values.autoResponders = await AutoResponder.find({ guildId }).sort({ name: 1 }).lean();
         }
 
         res.json({ values });
@@ -385,10 +400,22 @@ router.patch('/:featureId', async (req, res) => {
                 }
                 config[key] = value.filter(v => typeof v === 'string' && v.length <= 100).map(v => v.trim()).filter(Boolean);
             }
+            else if (key === 'musicDefaultVolume' && typeof value === 'number' && Number.isFinite(value)) {
+                if (value < 0 || value > 100) {
+                    return res.status(400).json({ error: 'Default volume must be between 0 and 100' });
+                }
+                config[key] = Math.round(value);
+            }
+            else if (key === 'musicMaxQueueSize' && typeof value === 'number' && Number.isFinite(value)) {
+                if (value < 1 || value > 500) {
+                    return res.status(400).json({ error: 'Max queue size must be between 1 and 500' });
+                }
+                config[key] = Math.round(value);
+            }
             else if (typeof value === 'boolean' && [
                 'pingEnabled', 'welcomeEmbed', 'xpDisableLevelUpMessages',
                 'automodEnabled', 'automodBlockInvites', 'automodBlockLinks', 'automodAntiSpamEnabled',
-                'starboardEnabled', 'ticketEnabled',
+                'starboardEnabled', 'ticketEnabled', 'musicEnabled',
             ].includes(key)) {
                 config[key] = value;
             }
@@ -622,6 +649,43 @@ router.post('/:featureId/items', async (req, res) => {
                 break;
             }
 
+            case 'auto_responder': {
+                const { name, trigger, matchMode, response, ignoreBots, cooldownMs, enabled } = body;
+                if (!name || typeof name !== 'string' || name.length > 32) {
+                    return res.status(400).json({ error: 'Name is required (max 32 chars)' });
+                }
+                if (!trigger || typeof trigger !== 'string' || trigger.length > 200) {
+                    return res.status(400).json({ error: 'Trigger is required (max 200 chars)' });
+                }
+                const VALID_MATCH_MODES = ['contains', 'exact', 'startsWith', 'regex'];
+                if (!matchMode || !VALID_MATCH_MODES.includes(matchMode)) {
+                    return res.status(400).json({ error: 'Match mode must be one of: contains, exact, startsWith, regex' });
+                }
+                if (!response || typeof response !== 'string' || response.length > 2000) {
+                    return res.status(400).json({ error: 'Response is required (max 2000 chars)' });
+                }
+                const count = await AutoResponder.countDocuments({ guildId });
+                if (count >= 25) {
+                    return res.status(400).json({ error: 'Maximum 25 auto-responders per server' });
+                }
+                const existingAR = await AutoResponder.findOne({ guildId, name: name.trim() });
+                if (existingAR) {
+                    return res.status(409).json({ error: `Auto-responder "${name.trim()}" already exists` });
+                }
+                created = await AutoResponder.create({
+                    guildId,
+                    name: name.trim().slice(0, 32),
+                    trigger: trigger.slice(0, 200),
+                    matchMode,
+                    response: response.slice(0, 2000),
+                    enabled: enabled !== false,
+                    ignoreBots: ignoreBots !== false,
+                    cooldownMs: Math.max(0, Math.min(300000, Math.round(Number(cooldownMs) || 5000))),
+                    createdBy: req.user?.id || '',
+                });
+                break;
+            }
+
             case 'reaction_roles': {
                 const { messageId, channelId, emoji, roleId } = body;
                 if (!messageId || !DISCORD_ID_RE.test(messageId)) {
@@ -681,7 +745,7 @@ router.post('/:featureId/items', async (req, res) => {
 });
 
 // Features that store items in dedicated MongoDB collections (use ObjectId)
-const OBJECTID_FEATURES = new Set(['custom_commands', 'announcements', 'temp_roles', 'giveaways', 'reaction_roles']);
+const OBJECTID_FEATURES = new Set(['custom_commands', 'announcements', 'temp_roles', 'giveaways', 'reaction_roles', 'auto_responder']);
 
 // PATCH /guild/:id/feature/:featureId/items/:itemId — Update item
 router.patch('/:featureId/items/:itemId', async (req, res) => {
@@ -785,6 +849,39 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
                 break;
             }
 
+            case 'auto_responder': {
+                const arDoc = await AutoResponder.findOne({ _id: itemId, guildId });
+                if (!arDoc) return res.status(404).json({ error: 'Auto-responder not found' });
+
+                if (body.trigger !== undefined) {
+                    if (typeof body.trigger !== 'string' || body.trigger.length > 200) {
+                        return res.status(400).json({ error: 'Trigger must be a string (max 200 chars)' });
+                    }
+                    arDoc.trigger = body.trigger;
+                }
+                if (body.response !== undefined) {
+                    if (typeof body.response !== 'string' || body.response.length > 2000) {
+                        return res.status(400).json({ error: 'Response must be a string (max 2000 chars)' });
+                    }
+                    arDoc.response = body.response;
+                }
+                if (body.matchMode !== undefined) {
+                    const VALID_MATCH_MODES = ['contains', 'exact', 'startsWith', 'regex'];
+                    if (!VALID_MATCH_MODES.includes(body.matchMode)) {
+                        return res.status(400).json({ error: 'Invalid match mode' });
+                    }
+                    arDoc.matchMode = body.matchMode;
+                }
+                if (body.enabled !== undefined) arDoc.enabled = !!body.enabled;
+                if (body.ignoreBots !== undefined) arDoc.ignoreBots = !!body.ignoreBots;
+                if (body.cooldownMs !== undefined) {
+                    arDoc.cooldownMs = Math.max(0, Math.min(300000, Math.round(Number(body.cooldownMs) || 0)));
+                }
+                await arDoc.save();
+                updated = arDoc;
+                break;
+            }
+
             case 'reaction_roles': {
                 let config = await GuildConfiguration.findOne({ guildId });
                 const rr = config?.reactionRoles?.id(itemId);
@@ -876,6 +973,12 @@ router.delete('/:featureId/items/:itemId', async (req, res) => {
             case 'giveaways': {
                 deleted = await Giveaway.findOneAndDelete({ _id: itemId, guildId });
                 if (!deleted) return res.status(404).json({ error: 'Giveaway not found' });
+                break;
+            }
+
+            case 'auto_responder': {
+                deleted = await AutoResponder.findOneAndDelete({ _id: itemId, guildId });
+                if (!deleted) return res.status(404).json({ error: 'Auto-responder not found' });
                 break;
             }
 

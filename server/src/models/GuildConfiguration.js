@@ -233,6 +233,24 @@ const guildConfigurationSchema = new Schema({
     ticketMaxOpen: {
         type: Number,
         default: 3,
-    },});
+    },
+    // Music
+    musicEnabled: {
+        type: Boolean,
+        default: true,
+    },
+    musicDJRoleId: {
+        type: String,
+        default: '',
+    },
+    musicDefaultVolume: {
+        type: Number,
+        default: 50,
+    },
+    musicMaxQueueSize: {
+        type: Number,
+        default: 100,
+    },
+});
 
 module.exports = model('GuildConfiguration', guildConfigurationSchema);

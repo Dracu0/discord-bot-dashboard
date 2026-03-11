@@ -12,6 +12,8 @@ import { CustomCommandsFeature } from "./features/customcommands";
 import { AnnouncementsFeature } from "./features/announcements";
 import { TempRolesFeature } from "./features/temproles";
 import { GiveawaysFeature } from "./features/giveaways";
+import { MusicFeature } from "./features/music";
+import { AutoResponderFeature } from "./features/autoresponder";
 import { ManageSuggestionsAction } from "./actions/ManageSuggestions";
 import { ModHistoryAction } from "./actions/ModHistory";
 
@@ -96,6 +98,8 @@ export const config = {
         "announcements": AnnouncementsFeature,
         "temp_roles": TempRolesFeature,
         "giveaways": GiveawaysFeature,
+        "music": MusicFeature,
+        "auto_responder": AutoResponderFeature,
     },
     tutorialUrl: "https://github.com/Dracu0/Discord-Bot-v0.3.4",
     serverUrl: import.meta.env.PROD ? "/api" : "http://localhost:8080/api",
