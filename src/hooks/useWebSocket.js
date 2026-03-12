@@ -13,6 +13,8 @@ let reconnectTimer = null;
 let reconnectDelay = WS_RECONNECT_DELAY;
 let lastStatusTime = 0;
 let stalenessTimer = null;
+let forcedReconnectTimer = null;
+let forcedReconnectInFlight = false;
 const STALENESS_THRESHOLD = 45_000; // 3x the bot's 15s publish interval
 const STALENESS_CHECK_INTERVAL = 15_000;
 let subscribedGuilds = new Set();
@@ -43,6 +45,11 @@ function connect() {
     try {
         ws = new WebSocket(getWsUrl());
     } catch {
+        if (forcedReconnectTimer) {
+            clearTimeout(forcedReconnectTimer);
+            forcedReconnectTimer = null;
+        }
+        forcedReconnectInFlight = false;
         scheduleReconnect();
         return;
     }
@@ -95,6 +102,32 @@ function scheduleReconnect() {
     }, reconnectDelay);
 }
 
+function forceReconnect() {
+    if (forcedReconnectInFlight) return;
+    forcedReconnectInFlight = true;
+
+    if (reconnectTimer) {
+        clearTimeout(reconnectTimer);
+        reconnectTimer = null;
+    }
+
+    if (ws) {
+        try {
+            ws.close();
+        } catch {
+            // no-op
+        }
+        ws = null;
+    }
+
+    forcedReconnectTimer = setTimeout(() => {
+        forcedReconnectTimer = null;
+        reconnectDelay = WS_RECONNECT_DELAY;
+        connect();
+        forcedReconnectInFlight = false;
+    }, 500);
+}
+
 function startStalenessCheck() {
     if (stalenessTimer) return;
     stalenessTimer = setInterval(() => {
@@ -103,6 +136,9 @@ function startStalenessCheck() {
             if (!wasStale) {
                 botStatus = { status: 'offline', stale: true };
                 for (const fn of statusListeners) fn();
+                if (listeners.size > 0 || statusListeners.size > 0) {
+                    forceReconnect();
+                }
             }
         }
     }, STALENESS_CHECK_INTERVAL);
@@ -113,6 +149,11 @@ function stopStalenessCheck() {
         clearInterval(stalenessTimer);
         stalenessTimer = null;
     }
+    if (forcedReconnectTimer) {
+        clearTimeout(forcedReconnectTimer);
+        forcedReconnectTimer = null;
+    }
+    forcedReconnectInFlight = false;
 }
 
 function ensureConnected() {

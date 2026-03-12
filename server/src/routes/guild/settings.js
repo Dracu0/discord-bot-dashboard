@@ -4,6 +4,7 @@ const AuditLog = require('../../models/AuditLog');
 const logger = require('../../utils/logger');
 const { publishConfigInvalidation } = require('../../utils/redis');
 const { isObject, colorToHex } = require('./helpers');
+const { badRequest, sendApiError } = require('../../utils/apiError');
 
 // GET /guild/:id/settings
 router.get('/', async (req, res) => {
@@ -26,7 +27,7 @@ router.get('/', async (req, res) => {
         });
     } catch (err) {
         req.log?.error('settings_fetch_failed', { guildId: req.params.id, error: err });
-        res.status(500).json({ error: 'Failed to fetch settings' });
+        sendApiError(res, err, 'Failed to fetch settings');
     }
 });
 
@@ -37,7 +38,10 @@ router.patch('/', async (req, res) => {
         const updates = req.body;
 
         if (!isObject(updates)) {
-            return res.status(400).json({ error: 'Body must be a JSON object' });
+            return sendApiError(res, badRequest('Body must be a JSON object', {
+                field: 'body',
+                expected: 'object',
+            }));
         }
 
         let config = await GuildConfiguration.findOne({ guildId });
@@ -56,19 +60,31 @@ router.patch('/', async (req, res) => {
 
             if (key === 'welcomeMessage' || key === 'goodbyeMessage') {
                 if (typeof value !== 'string' || value.length > 2000) {
-                    return res.status(400).json({ error: `${key} must be a string (max 2000 chars)` });
+                    return sendApiError(res, badRequest(`${key} must be a string (max 2000 chars)`, {
+                        field: key,
+                        expected: 'string<=2000',
+                    }));
                 }
             } else if (key === 'welcomeEmbed') {
                 if (typeof value !== 'boolean') {
-                    return res.status(400).json({ error: 'welcomeEmbed must be a boolean' });
+                    return sendApiError(res, badRequest('welcomeEmbed must be a boolean', {
+                        field: 'welcomeEmbed',
+                        expected: 'boolean',
+                    }));
                 }
             } else if (key === 'welcomeColor' || key === 'goodbyeColor') {
                 if (typeof value !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(value)) {
-                    return res.status(400).json({ error: `${key} must be a hex color string (#RRGGBB)` });
+                    return sendApiError(res, badRequest(`${key} must be a hex color string (#RRGGBB)`, {
+                        field: key,
+                        expected: 'hex-color',
+                    }));
                 }
             } else if (key === 'suggestionCooldownMs') {
-                if (typeof value !== 'number' || value < 0 || value > 86400) {
-                    return res.status(400).json({ error: 'Suggestion cooldown must be between no cooldown and 24 hours' });
+                if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 86400) {
+                    return sendApiError(res, badRequest('Suggestion cooldown must be between no cooldown and 24 hours', {
+                        field: 'suggestionCooldownMs',
+                        expected: 'number(0..86400)',
+                    }));
                 }
             }
 
@@ -111,7 +127,7 @@ router.patch('/', async (req, res) => {
         });
     } catch (err) {
         req.log?.error('settings_update_failed', { guildId: req.params.id, error: err });
-        res.status(500).json({ error: 'Failed to update settings' });
+        sendApiError(res, err, 'Failed to update settings');
     }
 });
 

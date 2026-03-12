@@ -7,6 +7,7 @@ import { toast } from "sonner";
 // CSRF token management — fetched once per session, included in all state-changing requests
 let csrfToken = null;
 let csrfFetching = null;
+const DEFAULT_API_TIMEOUT_MS = 30_000;
 
 async function fetchCsrfToken() {
     if (csrfFetching) return csrfFetching;
@@ -25,22 +26,78 @@ async function ensureCsrfToken() {
 // Reset CSRF token on auth change (e.g. logout)
 export function resetCsrfToken() { csrfToken = null; }
 
+function getRequestTimeoutMs() {
+    const raw = Number(import.meta.env.VITE_API_TIMEOUT_MS);
+    if (Number.isFinite(raw) && raw >= 1000) {
+        return Math.round(raw);
+    }
+    return DEFAULT_API_TIMEOUT_MS;
+}
+
+async function parseErrorBody(res) {
+    const text = await res.text().catch(() => '');
+    if (!text) {
+        return {
+            message: `Request failed with status ${res.status}`,
+            details: null,
+        };
+    }
+
+    try {
+        const parsed = JSON.parse(text);
+        if (parsed && typeof parsed === 'object') {
+            if (typeof parsed.message === 'string' && parsed.message) {
+                return { message: parsed.message, details: parsed };
+            }
+            if (typeof parsed.error === 'string' && parsed.error) {
+                return { message: parsed.error, details: parsed };
+            }
+        }
+    } catch {
+        // fallback to plain text below
+    }
+
+    return {
+        message: text,
+        details: null,
+    };
+}
+
 export function fetchAuto(url, {toJson = false, throwError = true, ...options} = {}) {
     const requestId = logger.createRequestId()
     const startedAt = Date.now()
     const method = (options.method || 'GET').toUpperCase();
     const needsCsrf = !['GET', 'HEAD', 'OPTIONS'].includes(method);
+    const timeoutMs = getRequestTimeoutMs();
 
-    const doFetch = (token) => fetch(`${config.serverUrl}${url}`, {
-        credentials: "include",
-        headers: {
-            'content-type': 'application/json',
-            'x-request-id': requestId,
-            ...(token ? { 'x-csrf-token': token } : {}),
-            ...(options.headers || {})
-        },
-        ...options
-    });
+    const doFetch = (token) => {
+        const controller = new AbortController();
+        const timeoutHandle = setTimeout(() => {
+            controller.abort(new DOMException(`Request timed out after ${timeoutMs}ms`, 'AbortError'));
+        }, timeoutMs);
+
+        if (options.signal) {
+            if (options.signal.aborted) {
+                controller.abort(options.signal.reason);
+            } else {
+                options.signal.addEventListener('abort', () => controller.abort(options.signal.reason), { once: true });
+            }
+        }
+
+        return fetch(`${config.serverUrl}${url}`, {
+            credentials: "include",
+            headers: {
+                'content-type': 'application/json',
+                'x-request-id': requestId,
+                ...(token ? { 'x-csrf-token': token } : {}),
+                ...(options.headers || {})
+            },
+            ...options,
+            signal: controller.signal,
+        }).finally(() => {
+            clearTimeout(timeoutHandle);
+        });
+    };
 
     const request = needsCsrf
         ? ensureCsrfToken().then(token => doFetch(token))
@@ -74,33 +131,49 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
 
             return toJson ? res.json() : res
         } else {
-            return res.text().then(s => {
+            return parseErrorBody(res).then(({ message, details }) => {
                 logger.error('api_request_failed', {
                     requestId,
                     url,
                     method: options.method || 'GET',
                     status: res.status,
                     durationMs: Date.now() - startedAt,
-                    error: s,
+                    error: message,
+                    details,
                 })
-                const error = new Error(s);
+                const error = new Error(message);
+                error.status = res.status;
+                if (details) {
+                    error.details = details;
+                }
                 throw error
             })
         }
     }).catch(err => {
-        if (!(err instanceof Error) || err.message !== 'Failed to fetch') {
+        if (!(err instanceof Error)) {
             throw err
         }
+
+        const isTimeout = err.name === 'AbortError' || /timed out/i.test(err.message);
+        const isNetwork = err.message === 'Failed to fetch' || isTimeout;
+        if (!isNetwork) {
+            throw err;
+        }
+
+        const message = isTimeout ? `Request timed out after ${timeoutMs}ms` : err.message;
 
         logger.error('api_network_error', {
             requestId,
             url,
             method: options.method || 'GET',
             durationMs: Date.now() - startedAt,
-            error: err.message,
+            error: message,
+            timeoutMs,
         })
 
-        throw err
+        const networkError = new Error(message);
+        networkError.code = isTimeout ? 'REQUEST_TIMEOUT' : 'NETWORK_ERROR';
+        throw networkError;
     })
 }
 

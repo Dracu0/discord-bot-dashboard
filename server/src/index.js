@@ -13,6 +13,7 @@ const { requestContext } = require('./middleware/requestContext');
 const { csrfProtection, generateCsrfToken } = require('./middleware/csrf');
 const { startWebSocketServer, stopWebSocketServer } = require('./utils/websocket');
 const { closeRedis } = require('./utils/redis');
+const { sendApiError } = require('./utils/apiError');
 
 const configurePassport = require('./auth/passport');
 const authRoutes = require('./routes/auth');
@@ -210,9 +211,15 @@ function initializeConnectedApp() {
     app.use((err, req, res, _next) => {
         const log = req?.log || logger;
         log.error('unhandled_server_error', { error: err });
-        const status = err.status || 500;
-        const message = IS_PRODUCTION ? 'Internal server error' : (err.message || 'Internal server error');
-        res.status(status).json({ error: message });
+        const safeErr = IS_PRODUCTION
+            ? {
+                status: err?.status,
+                code: err?.code,
+                details: err?.details,
+                message: err?.status && err.status < 500 ? err.message : 'Internal server error',
+            }
+            : err;
+        sendApiError(res, safeErr, 'Internal server error');
     });
 
     appInitialized = true;
