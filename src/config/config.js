@@ -29,7 +29,7 @@ import { ModHistoryAction } from "./actions/ModHistory";
  * @type ConfigType
  */
 export const config = {
-    name: "Mocotron",
+    name: "Cinnetron",
     footer: [
         {
             name: { en: "GitHub" },

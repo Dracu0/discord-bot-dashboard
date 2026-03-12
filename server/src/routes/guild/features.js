@@ -10,6 +10,7 @@ const Giveaway = require('../../models/Giveaway');
 const AutoResponder = require('../../models/AutoResponder');
 const { fetchGuildChannels, fetchGuildRoles, addGuildMemberRole, removeGuildMemberRole, sendChannelMessage, addMessageReaction } = require('../../utils/discord');
 const { isObject, isValidObjectId } = require('./helpers');
+const { badRequest, notFound, sendApiError } = require('../../utils/apiError');
 
 // Feature ID to config field mapping
 const FEATURE_FIELDS = {
@@ -117,7 +118,7 @@ router.get('/', async (req, res) => {
         });
     } catch (err) {
         req.log?.error('features_fetch_failed', { guildId: req.params.id, error: err });
-        res.status(500).json({ error: 'Failed to fetch features' });
+        sendApiError(res, err, 'Failed to fetch features');
     }
 });
 
@@ -128,18 +129,23 @@ router.patch('/:featureId/enabled', async (req, res) => {
         const featureId = req.params.featureId;
 
         if (!isObject(req.body) || typeof req.body.enabled !== 'boolean') {
-            return res.status(400).json({ error: 'Body must be { enabled: boolean }' });
+            return sendApiError(res, badRequest('Body must be { enabled: boolean }', {
+                field: 'enabled',
+                expected: 'boolean',
+            }));
         }
         const { enabled } = req.body;
 
         const featureDef = FEATURE_FIELDS[featureId];
         if (!featureDef) {
-            return res.status(404).json({ error: 'Unknown feature' });
+            return sendApiError(res, notFound('Unknown feature', { featureId }));
         }
 
         // Virtual features (custom_commands, announcements, etc.) have no enable/disable toggle
         if (featureDef.virtual) {
-            return res.status(400).json({ error: 'This feature cannot be toggled — it is always available' });
+            return sendApiError(res, badRequest('This feature cannot be toggled — it is always available', {
+                featureId,
+            }));
         }
 
         let config = await GuildConfiguration.findOne({ guildId });
@@ -205,7 +211,7 @@ router.patch('/:featureId/enabled', async (req, res) => {
         res.sendStatus(200);
     } catch (err) {
         req.log?.error('feature_toggle_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
-        res.status(500).json({ error: 'Failed to toggle feature' });
+        sendApiError(res, err, 'Failed to toggle feature');
     }
 });
 
@@ -217,7 +223,7 @@ router.get('/:featureId', async (req, res) => {
 
         const featureDef = FEATURE_FIELDS[featureId];
         if (!featureDef) {
-            return res.status(404).json({ error: 'Unknown feature' });
+            return sendApiError(res, notFound('Unknown feature', { featureId }));
         }
 
         let config = await GuildConfiguration.findOne({ guildId });
@@ -245,7 +251,7 @@ router.get('/:featureId', async (req, res) => {
         res.json({ values });
     } catch (err) {
         req.log?.error('feature_detail_fetch_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
-        res.status(500).json({ error: 'Failed to fetch feature detail' });
+        sendApiError(res, err, 'Failed to fetch feature detail');
     }
 });
 
@@ -257,12 +263,15 @@ router.patch('/:featureId', async (req, res) => {
         const updates = req.body;
 
         if (!isObject(updates)) {
-            return res.status(400).json({ error: 'Body must be a JSON object' });
+            return sendApiError(res, badRequest('Body must be a JSON object', {
+                field: 'body',
+                expected: 'object',
+            }));
         }
 
         const featureDef = FEATURE_FIELDS[featureId];
         if (!featureDef) {
-            return res.status(404).json({ error: 'Unknown feature' });
+            return sendApiError(res, notFound('Unknown feature', { featureId }));
         }
 
         let config = await GuildConfiguration.findOne({ guildId });
@@ -482,7 +491,7 @@ router.patch('/:featureId', async (req, res) => {
         res.json(values);
     } catch (err) {
         req.log?.error('feature_config_update_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
-        res.status(500).json({ error: 'Failed to update feature' });
+        sendApiError(res, err, 'Failed to update feature');
     }
 });
 
@@ -508,7 +517,10 @@ router.post('/:featureId/items', async (req, res) => {
         const body = req.body;
 
         if (!isObject(body)) {
-            return res.status(400).json({ error: 'Body must be a JSON object' });
+            return sendApiError(res, badRequest('Body must be a JSON object', {
+                field: 'body',
+                expected: 'object',
+            }));
         }
 
         let created;
@@ -714,7 +726,7 @@ router.post('/:featureId/items', async (req, res) => {
             }
 
             default:
-                return res.status(400).json({ error: 'This feature does not support item creation' });
+                return sendApiError(res, badRequest('This feature does not support item creation', { featureId }));
         }
 
         AuditLog.create({
@@ -731,10 +743,10 @@ router.post('/:featureId/items', async (req, res) => {
         res.status(201).json(created);
     } catch (err) {
         if (err.code === 11000) {
-            return res.status(409).json({ error: 'An item with that identifier already exists' });
+            return sendApiError(res, { status: 409, code: 'CONFLICT', message: 'An item with that identifier already exists' });
         }
         req.log?.error('feature_item_create_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
-        res.status(500).json({ error: 'Failed to create item' });
+        sendApiError(res, err, 'Failed to create item');
     }
 });
 
@@ -750,11 +762,17 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
         const body = req.body;
 
         if (!isObject(body)) {
-            return res.status(400).json({ error: 'Body must be a JSON object' });
+            return sendApiError(res, badRequest('Body must be a JSON object', {
+                field: 'body',
+                expected: 'object',
+            }));
         }
 
         if (OBJECTID_FEATURES.has(featureId) && !isValidObjectId(itemId)) {
-            return res.status(400).json({ error: 'Invalid item ID' });
+            return sendApiError(res, badRequest('Invalid item ID', {
+                field: 'itemId',
+                expected: 'ObjectId',
+            }));
         }
 
         let updated;
@@ -909,7 +927,7 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
             }
 
             default:
-                return res.status(400).json({ error: 'This feature does not support item updates' });
+                return sendApiError(res, badRequest('This feature does not support item updates', { featureId }));
         }
 
         AuditLog.create({
@@ -926,7 +944,7 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
         res.json(updated);
     } catch (err) {
         req.log?.error('feature_item_update_failed', { guildId: req.params.id, featureId: req.params.featureId, itemId: req.params.itemId, error: err });
-        res.status(500).json({ error: 'Failed to update item' });
+        sendApiError(res, err, 'Failed to update item');
     }
 });
 
@@ -938,7 +956,10 @@ router.delete('/:featureId/items/:itemId', async (req, res) => {
         const itemId = req.params.itemId;
 
         if (OBJECTID_FEATURES.has(featureId) && !isValidObjectId(itemId)) {
-            return res.status(400).json({ error: 'Invalid item ID' });
+            return sendApiError(res, badRequest('Invalid item ID', {
+                field: 'itemId',
+                expected: 'ObjectId',
+            }));
         }
 
         let deleted;
@@ -1005,7 +1026,7 @@ router.delete('/:featureId/items/:itemId', async (req, res) => {
             }
 
             default:
-                return res.status(400).json({ error: 'This feature does not support item deletion' });
+                return sendApiError(res, badRequest('This feature does not support item deletion', { featureId }));
         }
 
         AuditLog.create({
@@ -1022,7 +1043,7 @@ router.delete('/:featureId/items/:itemId', async (req, res) => {
         res.sendStatus(204);
     } catch (err) {
         req.log?.error('feature_item_delete_failed', { guildId: req.params.id, featureId: req.params.featureId, itemId: req.params.itemId, error: err });
-        res.status(500).json({ error: 'Failed to delete item' });
+        sendApiError(res, err, 'Failed to delete item');
     }
 });
 

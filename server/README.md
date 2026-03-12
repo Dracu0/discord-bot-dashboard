@@ -1,6 +1,6 @@
-# Discord Bot Dashboard - Backend Server
+# Cinnetron Dashboard - Backend Server
 
-Express.js API server that bridges the Dashboard frontend with the Discord Bot's MongoDB database and the Discord API.
+Express.js API server that bridges the dashboard frontend with the Cinnetron bot's MongoDB database and the Discord API.
 
 ## Prerequisites
 

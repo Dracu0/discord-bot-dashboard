@@ -38,6 +38,10 @@ function forbidden(message = 'Forbidden', details) {
     return new ApiError(403, 'FORBIDDEN', message, details);
 }
 
+function unauthorized(message = 'Not authenticated', details) {
+    return new ApiError(401, 'UNAUTHORIZED', message, details);
+}
+
 function notFound(message = 'Not found', details) {
     return new ApiError(404, 'NOT_FOUND', message, details);
 }
@@ -51,6 +55,7 @@ module.exports = {
     toErrorPayload,
     sendApiError,
     badRequest,
+    unauthorized,
     forbidden,
     notFound,
     internalError,

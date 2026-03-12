@@ -1,4 +1,5 @@
 const { hasManageGuild } = require('../utils/permissions');
+const { badRequest, unauthorized, forbidden, sendApiError } = require('../utils/apiError');
 
 /**
  * Middleware: Require the user to be authenticated
@@ -8,7 +9,7 @@ function requireAuth(req, res, next) {
         return next();
     }
     req.log?.warn('auth_required_rejected', { path: req.originalUrl });
-    return res.status(401).json({ error: 'Not authenticated' });
+    return sendApiError(res, unauthorized('Not authenticated'));
 }
 
 const GUILDS_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
@@ -47,13 +48,16 @@ async function refreshUserGuilds(req) {
 async function requireGuildAccess(req, res, next) {
     if (!req.isAuthenticated()) {
         req.log?.warn('guild_access_rejected_unauthenticated', { path: req.originalUrl });
-        return res.status(401).json({ error: 'Not authenticated' });
+        return sendApiError(res, unauthorized('Not authenticated'));
     }
 
     const guildId = req.params.id;
     if (!/^\d{17,20}$/.test(guildId)) {
         req.log?.warn('guild_access_rejected_invalid_guild_id', { guildId });
-        return res.status(400).json({ error: 'Invalid guild ID format' });
+        return sendApiError(res, badRequest('Invalid guild ID format', {
+            field: 'id',
+            expected: 'discord-guild-id',
+        }));
     }
 
     // Refresh guilds if stale
@@ -65,7 +69,7 @@ async function requireGuildAccess(req, res, next) {
 
     if (!guild) {
         req.log?.warn('guild_access_rejected_not_member', { guildId, userId: req.user?.id || null });
-        return res.status(403).json({ error: 'You are not a member of this guild' });
+        return sendApiError(res, forbidden('You are not a member of this guild'));
     }
 
     if (!hasManageGuild(guild.permissions)) {
@@ -74,7 +78,7 @@ async function requireGuildAccess(req, res, next) {
             userId: req.user?.id || null,
             permissions: guild.permissions,
         });
-        return res.status(403).json({ error: 'You do not have permission to manage this guild' });
+        return sendApiError(res, forbidden('You do not have permission to manage this guild'));
     }
 
     req.guild = guild;

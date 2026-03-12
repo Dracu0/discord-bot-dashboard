@@ -1,7 +1,7 @@
 {
-    "name": "discord-bot-dashboard-server",
+    "name": "cinnetron-dashboard-server",
     "version": "1.0.0",
-    "description": "Backend API server for the Discord Bot Dashboard",
+    "description": "Backend API server for the Cinnetron Dashboard",
     "main": "src/index.js",
     "scripts": {
         "start": "node src/index.js",

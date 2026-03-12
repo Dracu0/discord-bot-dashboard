@@ -74,7 +74,7 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
               <Rocket className="h-8 w-8 text-violet-500" />
             </div>
             <h3 className="text-(--text-primary) font-['Space_Grotesk'] text-center m-0 text-lg font-semibold">
-              <Locale zh="歡迎使用 Mocotron 儀表板！" en="Welcome to the Mocotron Dashboard!" />
+              <Locale zh="歡迎使用 Cinnetron 儀表板！" en="Welcome to the Cinnetron Dashboard!" />
             </h3>
             <p className="text-(--text-secondary) text-sm text-center max-w-125 m-0">
               <Locale

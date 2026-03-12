@@ -1,11 +1,11 @@
-# Discord Bot Dashboard
+# Cinnetron Dashboard
 
-Dashboard and API server for managing `Discord Bot v0.3.4` guild configuration, moderation workflows, analytics, and real-time bot status.
+Dashboard and API server for managing the `Cinnetron` Discord bot's guild configuration, moderation workflows, analytics, and real-time bot status.
 
 ## Monorepo layout
 
 ```text
-Discord Bot Dashboard/
+Cinnetron Dashboard/
 ├─ src/                # React dashboard (Vite)
 ├─ server/             # Express + MongoDB API server
 ├─ e2e/                # Playwright end-to-end tests

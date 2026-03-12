@@ -63,6 +63,14 @@ if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_BOT_TOKEN || !DATAB
     process.exit(1);
 }
 
+if (String(SESSION_SECRET).length < 32) {
+    logger.error('weak_session_secret', {
+        minLength: 32,
+        actualLength: String(SESSION_SECRET).length,
+    });
+    process.exit(1);
+}
+
 const app = express();
 
 // Trust Fly.io proxy (required for secure cookies, rate limiting, etc.)
@@ -72,6 +80,11 @@ if (IS_PRODUCTION) {
 
 // Security — CSP headers (unsafe-inline required for style-src because runtime CSS-in-JS and inline styles)
 app.use(helmet({
+    hsts: IS_PRODUCTION ? {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: false,
+    } : false,
     contentSecurityPolicy: IS_PRODUCTION ? {
         directives: {
             defaultSrc: ["'self'"],
@@ -87,6 +100,7 @@ app.use(helmet({
 const authLimiter = rateLimit({ windowMs: 60000, max: 20, standardHeaders: true, legacyHeaders: false });
 const guildLimiter = rateLimit({ windowMs: 60000, max: 60, standardHeaders: true, legacyHeaders: false });
 const userLimiter = rateLimit({ windowMs: 60000, max: 30, standardHeaders: true, legacyHeaders: false });
+const healthLimiter = rateLimit({ windowMs: 10000, max: 20, standardHeaders: true, legacyHeaders: false });
 app.use('/api/auth', authLimiter);
 app.use('/auth', authLimiter);
 app.use('/api/guild', guildLimiter);
@@ -182,7 +196,7 @@ function initializeConnectedApp() {
     app.use('/api/guilds', csrfProtection, userRoutes);
 
     // Health check
-    app.get('/health', (req, res) => {
+    app.get('/health', healthLimiter, (req, res) => {
         const dbReady = mongoose.connection.readyState === 1;
         const { getRedis } = require('./utils/redis');
         const redisClient = getRedis();

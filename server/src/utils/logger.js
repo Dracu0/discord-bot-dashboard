@@ -51,4 +51,4 @@ function createLogger(baseMeta = {}) {
     };
 }
 
-module.exports = createLogger({ service: 'discord-dashboard-server' });
+module.exports = createLogger({ service: 'cinnetron-dashboard-server' });

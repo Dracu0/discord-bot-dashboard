@@ -27,10 +27,10 @@ function SignIn({ loading = false }) {
                         WebkitTextFillColor: "transparent",
                     }}
                 >
-                    {config.name || "Mocotron"}
+                    {config.name || "Cinnetron"}
                 </span>
                 <p className="text-(--text-muted) text-sm font-normal mb-6">
-                    <Locale zh="Discord \u6A5F\u5668\u4EBA\u63A7\u5236\u53F0" en="Discord Bot Dashboard" />
+                    <Locale zh="Discord \u6A5F\u5668\u4EBA\u63A7\u5236\u53F0" en="Cinnetron Dashboard" />
                 </p>
 
                 {/* Card */}

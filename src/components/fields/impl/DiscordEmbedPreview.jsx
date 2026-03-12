@@ -40,7 +40,7 @@ export default function DiscordEmbedPreview({ message, color, isEmbed }) {
               }}
             />
             <span className="text-sm font-medium" style={{ color: textPrimary }}>
-              Mocotron
+              Cinnetron
             </span>
             <span className="text-xs" style={{ color: textMuted }}>
               BOT
@@ -74,7 +74,7 @@ export default function DiscordEmbedPreview({ message, color, isEmbed }) {
             }}
           />
           <span className="text-sm font-medium" style={{ color: textPrimary }}>
-            Mocotron
+            Cinnetron
           </span>
           <span className="text-xs" style={{ color: textMuted }}>
             BOT

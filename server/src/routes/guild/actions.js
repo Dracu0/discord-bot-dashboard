@@ -3,6 +3,7 @@ const { randomUUID } = require('crypto');
 const ModLog = require('../../models/ModLog');
 const Suggestion = require('../../models/Suggestion');
 const { isObject, isValidObjectId, VALID_SUGGESTION_STATUSES } = require('./helpers');
+const { badRequest, notFound, sendApiError } = require('../../utils/apiError');
 
 // GET /guild/:id/actions
 router.get('/', async (req, res) => {
@@ -45,7 +46,7 @@ router.get('/', async (req, res) => {
         });
     } catch (err) {
         req.log?.error('actions_fetch_failed', { guildId: req.params.id, error: err });
-        res.status(500).json({ error: 'Failed to fetch actions data' });
+        sendApiError(res, err, 'Failed to fetch actions data');
     }
 });
 
@@ -112,11 +113,11 @@ router.get('/:actionId', async (req, res) => {
                 totalPages: Math.ceil(total / limit),
             });
         } else {
-            res.status(404).json({ error: 'Unknown action' });
+            sendApiError(res, notFound('Unknown action', { actionId }));
         }
     } catch (err) {
         req.log?.error('action_detail_fetch_failed', { guildId: req.params.id, actionId: req.params.actionId, error: err });
-        res.status(500).json({ error: 'Failed to fetch action detail' });
+        sendApiError(res, err, 'Failed to fetch action detail');
     }
 });
 
@@ -132,7 +133,7 @@ router.get('/:actionId/:taskId', async (req, res) => {
             }).lean();
 
             if (!suggestion) {
-                return res.status(404).json({ error: 'Suggestion not found' });
+                return sendApiError(res, notFound('Suggestion not found', { actionId, taskId }));
             }
 
             res.json({
@@ -150,12 +151,15 @@ router.get('/:actionId/:taskId', async (req, res) => {
             });
         } else if (actionId === 'mod_history') {
             if (!isValidObjectId(taskId)) {
-                return res.status(400).json({ error: 'Invalid entry ID format' });
+                return sendApiError(res, badRequest('Invalid entry ID format', {
+                    field: 'taskId',
+                    expected: 'ObjectId',
+                }));
             }
             const log = await ModLog.findById(taskId).lean();
 
             if (!log || log.guildId !== guildId) {
-                return res.status(404).json({ error: 'Moderation log entry not found' });
+                return sendApiError(res, notFound('Moderation log entry not found', { actionId, taskId }));
             }
 
             res.json({
@@ -171,7 +175,7 @@ router.get('/:actionId/:taskId', async (req, res) => {
                 },
             });
         } else {
-            res.status(404).json({ error: 'Unknown action' });
+            sendApiError(res, notFound('Unknown action', { actionId }));
         }
     } catch (err) {
         req.log?.error('task_detail_fetch_failed', {
@@ -180,7 +184,7 @@ router.get('/:actionId/:taskId', async (req, res) => {
             taskId: req.params.taskId,
             error: err,
         });
-        res.status(500).json({ error: 'Failed to fetch task detail' });
+        sendApiError(res, err, 'Failed to fetch task detail');
     }
 });
 
@@ -190,7 +194,10 @@ router.patch('/:actionId/:taskId', async (req, res) => {
         const { id: guildId, actionId, taskId } = req.params;
 
         if (!isObject(req.body) || !isObject(req.body.options)) {
-            return res.status(400).json({ error: 'Body must contain { options: {} }' });
+            return sendApiError(res, badRequest('Body must contain { options: {} }', {
+                field: 'body.options',
+                expected: 'object',
+            }));
         }
         const { options } = req.body;
 
@@ -201,18 +208,24 @@ router.patch('/:actionId/:taskId', async (req, res) => {
             });
 
             if (!suggestion) {
-                return res.status(404).json({ error: 'Suggestion not found' });
+                return sendApiError(res, notFound('Suggestion not found', { actionId, taskId }));
             }
 
             if (options.status) {
                 if (!VALID_SUGGESTION_STATUSES.includes(options.status)) {
-                    return res.status(400).json({ error: 'Invalid status value' });
+                    return sendApiError(res, badRequest('Invalid status value', {
+                        field: 'options.status',
+                        expected: VALID_SUGGESTION_STATUSES,
+                    }));
                 }
                 suggestion.status = options.status;
             }
             if (options.reason !== undefined) {
                 if (typeof options.reason !== 'string' || options.reason.length > 2000) {
-                    return res.status(400).json({ error: 'Reason must be a string (max 2000 chars)' });
+                    return sendApiError(res, badRequest('Reason must be a string (max 2000 chars)', {
+                        field: 'options.reason',
+                        expected: 'string<=2000',
+                    }));
                 }
                 suggestion.reason = options.reason;
             }
@@ -238,17 +251,23 @@ router.patch('/:actionId/:taskId', async (req, res) => {
             });
         } else if (actionId === 'mod_history') {
             if (!isValidObjectId(taskId)) {
-                return res.status(400).json({ error: 'Invalid entry ID format' });
+                return sendApiError(res, badRequest('Invalid entry ID format', {
+                    field: 'taskId',
+                    expected: 'ObjectId',
+                }));
             }
             const log = await ModLog.findById(taskId);
             if (!log || log.guildId !== guildId) {
-                return res.status(404).json({ error: 'Moderation log entry not found' });
+                return sendApiError(res, notFound('Moderation log entry not found', { actionId, taskId }));
             }
 
             // Only the reason field can be updated on mod history entries
             if (options.reason !== undefined) {
                 if (typeof options.reason !== 'string' || options.reason.length > 2000) {
-                    return res.status(400).json({ error: 'Reason must be a string (max 2000 chars)' });
+                    return sendApiError(res, badRequest('Reason must be a string (max 2000 chars)', {
+                        field: 'options.reason',
+                        expected: 'string<=2000',
+                    }));
                 }
                 log.reason = options.reason;
             }
@@ -275,7 +294,7 @@ router.patch('/:actionId/:taskId', async (req, res) => {
                 },
             });
         } else {
-            res.status(404).json({ error: 'Action does not support updates' });
+            sendApiError(res, notFound('Action does not support updates', { actionId }));
         }
     } catch (err) {
         req.log?.error('action_task_update_failed', {
@@ -284,7 +303,7 @@ router.patch('/:actionId/:taskId', async (req, res) => {
             taskId: req.params.taskId,
             error: err,
         });
-        res.status(500).json({ error: 'Failed to update task' });
+        sendApiError(res, err, 'Failed to update task');
     }
 });
 
@@ -294,20 +313,32 @@ router.post('/:actionId', async (req, res) => {
         const { id: guildId, actionId } = req.params;
 
         if (!isObject(req.body)) {
-            return res.status(400).json({ error: 'Body must be a JSON object' });
+            return sendApiError(res, badRequest('Body must be a JSON object', {
+                field: 'body',
+                expected: 'object',
+            }));
         }
         const { name, options } = req.body;
 
         if (actionId === 'manage_suggestions') {
             if (!isObject(options)) {
-                return res.status(400).json({ error: 'Body must contain { options: {} }' });
+                return sendApiError(res, badRequest('Body must contain { options: {} }', {
+                    field: 'body.options',
+                    expected: 'object',
+                }));
             }
             const content = options.content || name || '';
             if (!content || typeof content !== 'string' || content.length > 4000) {
-                return res.status(400).json({ error: 'Content is required (max 4000 chars)' });
+                return sendApiError(res, badRequest('Content is required (max 4000 chars)', {
+                    field: 'options.content',
+                    expected: 'string<=4000',
+                }));
             }
             if (options.status && !VALID_SUGGESTION_STATUSES.includes(options.status)) {
-                return res.status(400).json({ error: 'Invalid status value' });
+                return sendApiError(res, badRequest('Invalid status value', {
+                    field: 'options.status',
+                    expected: VALID_SUGGESTION_STATUSES,
+                }));
             }
             const suggestion = await Suggestion.create({
                 guildId,
@@ -336,11 +367,11 @@ router.post('/:actionId', async (req, res) => {
                 },
             });
         } else {
-            res.status(404).json({ error: 'Action does not support creation' });
+            sendApiError(res, notFound('Action does not support creation', { actionId }));
         }
     } catch (err) {
         req.log?.error('action_task_create_failed', { guildId: req.params.id, actionId: req.params.actionId, error: err });
-        res.status(500).json({ error: 'Failed to create task' });
+        sendApiError(res, err, 'Failed to create task');
     }
 });
 
@@ -356,7 +387,7 @@ router.delete('/:actionId/:taskId', async (req, res) => {
             });
 
             if (!result) {
-                return res.status(404).json({ error: 'Suggestion not found' });
+                return sendApiError(res, notFound('Suggestion not found', { actionId, taskId }));
             }
 
             req.log?.info('action_task_deleted', {
@@ -369,12 +400,15 @@ router.delete('/:actionId/:taskId', async (req, res) => {
             res.sendStatus(200);
         } else if (actionId === 'mod_history') {
             if (!isValidObjectId(taskId)) {
-                return res.status(400).json({ error: 'Invalid entry ID format' });
+                return sendApiError(res, badRequest('Invalid entry ID format', {
+                    field: 'taskId',
+                    expected: 'ObjectId',
+                }));
             }
             const log = await ModLog.findById(taskId).lean();
 
             if (!log || log.guildId !== guildId) {
-                return res.status(404).json({ error: 'Moderation log entry not found' });
+                return sendApiError(res, notFound('Moderation log entry not found', { actionId, taskId }));
             }
 
             await ModLog.findByIdAndDelete(taskId);
@@ -386,7 +420,7 @@ router.delete('/:actionId/:taskId', async (req, res) => {
             });
             res.sendStatus(200);
         } else {
-            res.status(404).json({ error: 'Unknown action' });
+            sendApiError(res, notFound('Unknown action', { actionId }));
         }
     } catch (err) {
         req.log?.error('action_task_delete_failed', {
@@ -395,7 +429,7 @@ router.delete('/:actionId/:taskId', async (req, res) => {
             taskId: req.params.taskId,
             error: err,
         });
-        res.status(500).json({ error: 'Failed to delete task' });
+        sendApiError(res, err, 'Failed to delete task');
     }
 });
 
