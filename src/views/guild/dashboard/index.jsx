@@ -78,12 +78,6 @@ export function UserReports() {
     const trackedXpUsers = advanced?.xp?.totalTrackedUsers || 0;
     const totalModerationActions = advanced?.moderation?.totalActions || 0;
     const queuePressure = totalSuggestions > 0 ? Math.round((pendingSuggestions / totalSuggestions) * 100) : 0;
-    const latestEventLabel = useMemo(() => {
-        if (!latestModerationAt) return "No recent event";
-        return new Date(latestModerationAt).toLocaleString();
-    }, [latestModerationAt]);
-    const queueState = pendingSuggestions > 0 ? "Backlog" : "Stable";
-    const queueStateTone = pendingSuggestions > 0 ? "warning" : "success";
     const enabledFeatureLabels = useMemo(
         () => enabledFeatures.slice(0, 6).map(toTitleLabel),
         [enabledFeatures],
@@ -101,6 +95,12 @@ export function UserReports() {
 
         return timestamps.length > 0 ? Math.max(...timestamps) : null;
     }, [recentActions]);
+    const latestEventLabel = useMemo(() => {
+        if (!latestModerationAt) return "No recent event";
+        return new Date(latestModerationAt).toLocaleString();
+    }, [latestModerationAt]);
+    const queueState = pendingSuggestions > 0 ? "Backlog" : "Stable";
+    const queueStateTone = pendingSuggestions > 0 ? "warning" : "success";
 
     const healthItems = [
         {
