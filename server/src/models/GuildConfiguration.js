@@ -243,10 +243,6 @@ const guildConfigurationSchema = new Schema({
         type: String,
         default: '',
     },
-    musicDefaultVolume: {
-        type: Number,
-        default: 50,
-    },
     musicMaxQueueSize: {
         type: Number,
         default: 100,

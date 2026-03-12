@@ -23,24 +23,11 @@ export const MusicFeature = {
                 id: "musicDJRoleId",
                 name: "DJ Role",
                 description:
-                    "Only members with this role can control playback (skip, stop, volume, etc.). Leave empty to allow everyone.",
+                    "Only members with this role can control playback (skip, stop, shuffle, etc.). Leave empty to allow everyone.",
                 type: "id_enum",
                 choices: roleChoices,
                 element: { type: "role" },
                 value: values.musicDJRoleId || "",
-            },
-            {
-                id: "musicDefaultVolume",
-                name: "Default Volume",
-                description:
-                    "Initial playback volume when the bot joins a voice channel (0–100).",
-                type: "number",
-                value: values.musicDefaultVolume ?? 50,
-                validate: (v) => {
-                    if (!Number.isInteger(v) || v < 0)
-                        return "Volume must be at least 0";
-                    if (v > 100) return "Maximum volume is 100";
-                },
             },
             {
                 id: "musicMaxQueueSize",

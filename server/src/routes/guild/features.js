@@ -76,7 +76,7 @@ const FEATURE_FIELDS = {
     },
     music: {
         enableCheck: (c) => c.musicEnabled !== false,
-        fields: ['musicEnabled', 'musicDJRoleId', 'musicDefaultVolume', 'musicMaxQueueSize'],
+        fields: ['musicEnabled', 'musicDJRoleId', 'musicMaxQueueSize'],
     },
     auto_responder: {
         enableCheck: () => true,
@@ -399,12 +399,6 @@ router.patch('/:featureId', async (req, res) => {
                     return res.status(400).json({ error: `Maximum ${limit} entries for ${key}` });
                 }
                 config[key] = value.filter(v => typeof v === 'string' && v.length <= 100).map(v => v.trim()).filter(Boolean);
-            }
-            else if (key === 'musicDefaultVolume' && typeof value === 'number' && Number.isFinite(value)) {
-                if (value < 0 || value > 100) {
-                    return res.status(400).json({ error: 'Default volume must be between 0 and 100' });
-                }
-                config[key] = Math.round(value);
             }
             else if (key === 'musicMaxQueueSize' && typeof value === 'number' && Number.isFinite(value)) {
                 if (value < 1 || value > 500) {
