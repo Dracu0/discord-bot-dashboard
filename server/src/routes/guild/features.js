@@ -739,7 +739,7 @@ router.post('/:featureId/items', async (req, res) => {
 });
 
 // Features that store items in dedicated MongoDB collections (use ObjectId)
-const OBJECTID_FEATURES = new Set(['custom_commands', 'announcements', 'temp_roles', 'giveaways', 'reaction_roles', 'auto_responder']);
+const OBJECTID_FEATURES = new Set(['custom_commands', 'announcements', 'temp_roles', 'giveaways', 'auto_responder']);
 
 // PATCH /guild/:id/feature/:featureId/items/:itemId — Update item
 router.patch('/:featureId/items/:itemId', async (req, res) => {
@@ -878,7 +878,10 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
 
             case 'reaction_roles': {
                 let config = await GuildConfiguration.findOne({ guildId });
-                const rr = config?.reactionRoles?.id(itemId);
+                let rr = config?.reactionRoles?.id(itemId);
+                if (!rr && /^\d+$/.test(itemId)) {
+                    rr = config?.reactionRoles?.[Number(itemId)] || null;
+                }
                 if (!config || !rr) {
                     return res.status(404).json({ error: 'Reaction role not found' });
                 }
@@ -901,7 +904,7 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
                 config.markModified('reactionRoles');
                 await config.save();
                 publishConfigInvalidation(guildId);
-                updated = { _id: rr._id.toString(), ...rr.toObject() };
+                updated = { _id: rr._id ? rr._id.toString() : itemId, ...rr.toObject() };
                 break;
             }
 
@@ -978,12 +981,23 @@ router.delete('/:featureId/items/:itemId', async (req, res) => {
 
             case 'reaction_roles': {
                 let config = await GuildConfiguration.findOne({ guildId });
-                const rr = config?.reactionRoles?.id(itemId);
-                if (!config || !rr) {
+                if (!config) {
                     return res.status(404).json({ error: 'Reaction role not found' });
                 }
-                deleted = rr.toObject();
-                config.reactionRoles.pull(itemId);
+                let rr = config.reactionRoles?.id(itemId);
+                if (rr) {
+                    deleted = rr.toObject();
+                    config.reactionRoles.pull(itemId);
+                } else if (/^\d+$/.test(itemId)) {
+                    const index = Number(itemId);
+                    if (!Number.isInteger(index) || index < 0 || index >= config.reactionRoles.length) {
+                        return res.status(404).json({ error: 'Reaction role not found' });
+                    }
+                    deleted = config.reactionRoles[index]?.toObject?.() || config.reactionRoles[index];
+                    config.reactionRoles.splice(index, 1);
+                } else {
+                    return res.status(404).json({ error: 'Reaction role not found' });
+                }
                 config.markModified('reactionRoles');
                 await config.save();
                 publishConfigInvalidation(guildId);

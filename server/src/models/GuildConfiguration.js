@@ -25,7 +25,7 @@ const reactionRoleSchema = new Schema({
     channelId: { type: String, required: true },
     emoji: { type: String, required: true },
     roleId: { type: String, required: true },
-}, { _id: false });
+});
 
 const xpMultiplierSchema = new Schema({
     targetId: { type: String, required: true },

@@ -26,9 +26,9 @@ export const ReactionRolesFeature = {
                 icon: "channel",
             }));
 
-        // Add synthetic _id based on index for ItemManager
+        // Use persisted _id from backend; fallback to index for legacy entries.
         const items = (values.reactionRoles || []).map((rr, i) => ({
-            _id: String(i),
+            _id: rr._id ? String(rr._id) : String(i),
             ...rr,
         }));
 
