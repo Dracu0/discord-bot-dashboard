@@ -46,7 +46,7 @@ function SubmitTask() {
 
     return <PageSection
         title={<Locale zh="\u5275\u5efa\u65b0\u4efb\u52d9" en="New Task" />}
-        description={<Locale zh="\u5efa\u7acb\u4e00\u500b\u65b0\u7684\u52d5\u4f5c\u4efb\u52d9\uff0c\u4e26\u5728\u5efa\u7acb\u524d\u5148\u586b\u5beb\u521d\u59cb\u8a2d\u5b9a\u3002" en="Create a new task for this action and configure its initial settings before saving." />}
+            description={<Locale zh="建立任務並設定初始選項。" en="Create a task and set initial options." />}
         className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
     >
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

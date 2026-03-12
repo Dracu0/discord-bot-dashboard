@@ -207,7 +207,7 @@ export default function Analytics() {
             <PageHeader
                 icon={<BarChart3 size={24} />}
                 title={<Locale zh="數據分析" en="Analytics" />}
-                description={<Locale zh="掌握審核活動、建議流程、等級分佈與工單效率的近期趨勢。" en="Track moderation, suggestions, XP progression, and ticket performance over the period that matters to you." />}
+                description={<Locale zh="查看審核、建議、XP 與工單指標。" en="View moderation, suggestions, XP, and ticket metrics." />}
                 meta={<>
                     <span><Locale zh={`最近 ${days} 天`} en={`Last ${days} days`} /></span>
                     <span className="h-1 w-1 rounded-full bg-(--text-muted)" />
@@ -218,7 +218,7 @@ export default function Analytics() {
 
             <PageSection
                 title={<Locale zh="關鍵指標" en="Key Metrics" />}
-                description={<Locale zh="快速掌握最近期間內最值得關注的統計數字。" en="Start with the headline numbers before diving into the detailed charts below." />}
+                description={<Locale zh="主要統計摘要。" en="Top-line operational metrics." />}
             >
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
                     <StatCard
@@ -244,7 +244,7 @@ export default function Analytics() {
 
             <PageSection
                 title={<Locale zh="活動與審核" en="Activity & Moderation" />}
-                description={<Locale zh="用趨勢圖與類型分佈理解近期的管理負載。" en="Understand how moderation workload evolves and which action types dominate the queue." />}
+                description={<Locale zh="審核趨勢與操作分佈。" en="Moderation trend and action distribution." />}
             >
                 <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                     <Card variant="panel" className="flex flex-col">
@@ -265,7 +265,7 @@ export default function Analytics() {
 
             <PageSection
                 title={<Locale zh="成長與流程" en="Growth & Workflow" />}
-                description={<Locale zh="觀察使用者成長曲線與建議處理狀態，找出瓶頸。" en="Review leveling progress and suggestion throughput to spot friction before it piles up." />}
+                description={<Locale zh="查看等級與建議流程狀態。" en="Review leveling and suggestion pipeline status." />}
             >
                 <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                     <Card variant="panel" className="flex flex-col">
@@ -287,7 +287,7 @@ export default function Analytics() {
             {(data.audit?.byCategory || []).length > 0 && (
                 <PageSection
                     title={<Locale zh="儀表板活動" en="Dashboard Activity" />}
-                    description={<Locale zh="查看管理操作最常集中在哪些類別。" en="See which configuration areas are generating the most dashboard activity." />}
+                    description={<Locale zh="各分類操作次數。" en="Activity count by category." />}
                 >
                     <Card variant="panel" className="flex flex-col">
                         <span className="mb-3 text-lg font-bold text-(--text-primary)">

@@ -207,7 +207,7 @@ export default function AuditLogPage() {
             <PageHeader
                 icon={<History size={24} />}
                 title={<Locale zh="審計日誌" en="Audit Log" />}
-                description={<Locale zh="追蹤誰在何時修改了哪些設定，並查看每次變更的前後差異。" en="Track who changed what, when it happened, and inspect the before-and-after details for each update." />}
+                description={<Locale zh="追蹤設定變更與差異。" en="Track configuration changes and diffs." />}
                 meta={total > 0 ? <Badge variant="secondary">{total}</Badge> : null}
                 actions={<Button
                     variant="ghost"
@@ -274,7 +274,7 @@ export default function AuditLogPage() {
             {entries.length > 0 && (
                 <PageSection
                     title={<Locale zh="活動紀錄" en="Activity Feed" />}
-                    description={<Locale zh="展開任一列即可檢視更詳細的差異內容。" en="Expand any row to inspect the detailed change diff for that event." />}
+                    description={<Locale zh="展開列可查看完整差異。" en="Expand rows to view detailed diffs." />}
                 >
                     <div className="overflow-x-auto rounded-xl border border-(--border-subtle) bg-(--surface-card) shadow-(--shadow-sm)">
                         <Table className="min-w-175 overflow-hidden rounded-md">

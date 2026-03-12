@@ -9,7 +9,7 @@ export default function ActionsList() {
     return (
         <PageSection
             title={<Locale zh="動作列表" en="Action Library" />}
-            description={<Locale zh="集中管理審核、建議與伺服器工作流程。" en="Open the tools that drive moderation, suggestions, and other server workflows in one place." />}
+            description={<Locale zh="管理審核、建議與工作流程。" en="Manage moderation, suggestions, and workflows." />}
             className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
         >
             <div className="flex flex-col gap-4">

@@ -24,8 +24,8 @@ function Content() {
     en: "Bot Features"
   })
   const description = locale({
-    zh: `\u555f\u7528\u4e26\u914d\u7f6e${config.name}\u5728\u6b64\u4f3a\u670d\u5668\u7684\u529f\u80fd`,
-    en: `Enable and configure ${config.name}'s features for this server`
+    zh: `管理此伺服器的 ${config.name} 功能`,
+    en: `Manage ${config.name} features for this server`
   })
   const dataList = useMemo(
     () => (config.data.features ? <DataList items={config.data.features(data)} /> : null),
@@ -50,6 +50,6 @@ function TutorialButton() {
     leftIcon={<Compass size={20} />}
     url={config.tutorialUrl}
   >
-    <Locale zh="\u767c\u73fe\u5b83\u5011" en="Discover" />
+    <Locale zh="查看指南" en="Open Guide" />
   </BannerButton>
 }

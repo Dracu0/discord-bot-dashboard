@@ -39,7 +39,7 @@ export default function Overview() {
             <PageHeader
                 icon={<LayoutPanelTop size={24} />}
                 title={<Locale zh="Cinnetron 控制中心" en="Cinnetron Control Center" />}
-                description={<Locale zh="您的品牌化管理入口：檢視身份、快速啟動伺服器管理，並集中操作 Cinnetron。" en="Your branded command hub: review identity, launch server management quickly, and run everything from one Cinnetron home." />}
+                description={<Locale zh="管理帳號狀態並進入伺服器儀表板。" en="Manage account status and access server dashboards." />}
                 meta={
                     totalCount != null ? (
                         <>
@@ -57,7 +57,7 @@ export default function Overview() {
 
             <PageSection
                 title={<Locale zh="品牌與身份" en="Brand & Identity" />}
-                description={<Locale zh="以 Cinnetron 為核心查看帳號與品牌狀態。" en="Keep your account and brand state centered around Cinnetron." />}
+                description={<Locale zh="帳號與品牌狀態概覽。" en="Account and brand status overview." />}
             >
                 <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                     <Banner
@@ -86,8 +86,8 @@ function BrandControlCard({ managedGuildId }) {
                     </p>
                     <p className="text-sm text-(--text-secondary)">
                         <Locale
-                            zh="快速前往最常用功能：進入伺服器儀表板、邀請機器人、擴充管理範圍。"
-                            en="Jump into what matters most: open a server dashboard, invite the bot, and expand your management footprint."
+                            zh="快速操作：開啟儀表板與邀請機器人。"
+                            en="Quick actions: open dashboards and invite the bot."
                         />
                     </p>
                 </div>
@@ -96,12 +96,12 @@ function BrandControlCard({ managedGuildId }) {
                     <FeatureRow
                         icon={<Bot size={16} />}
                         title={<Locale zh="品牌一致性" en="Brand Consistency" />}
-                        text={<Locale zh="所有入口與文案已對齊 Cinnetron 品牌命名。" en="All key entry points now align with Cinnetron naming." />}
+                        text={<Locale zh="介面與文案使用一致品牌命名。" en="UI labels and copy use consistent branding." />}
                     />
                     <FeatureRow
                         icon={<ShieldCheck size={16} />}
                         title={<Locale zh="安全預設" en="Secure Defaults" />}
-                        text={<Locale zh="儀表板維持安全標頭與穩健連線行為。" en="Dashboard defaults include hardened headers and resilient connectivity." />}
+                        text={<Locale zh="預設啟用安全標頭與穩健連線策略。" en="Security headers and resilient connection defaults are enabled." />}
                     />
                 </div>
 

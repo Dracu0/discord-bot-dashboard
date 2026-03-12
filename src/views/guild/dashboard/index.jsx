@@ -103,8 +103,8 @@ export function UserReports() {
             value: detail?.welcomeEnabled ? <Locale zh="已啟用" en="Enabled" /> : <Locale zh="尚未設定" en="Needs setup" />,
             tone: detail?.welcomeEnabled ? "success" : "warning",
             helper: detail?.welcomeEnabled
-                ? <Locale zh="新成員入站體驗已經就位。" en="New-member onboarding is already wired up." />
-                : <Locale zh="尚未設定歡迎頻道或訊息。" en="A welcome channel or message still needs configuration." />,
+                ? <Locale zh="歡迎流程已啟用。" en="Welcome flow is active." />
+                : <Locale zh="請設定歡迎頻道與訊息。" en="Set a welcome channel and message." />,
         },
         {
             id: "xp",
@@ -112,8 +112,8 @@ export function UserReports() {
             value: detail?.xpEnabled ? <Locale zh="已啟用" en="Enabled" /> : <Locale zh="已停用" en="Disabled" />,
             tone: detail?.xpEnabled ? "success" : "neutral",
             helper: detail?.xpEnabled
-                ? <Locale zh={`目前追蹤 ${trackedXpUsers} 位成員`} en={`Tracking ${trackedXpUsers} members right now`} />
-                : <Locale zh="尚未讓等級系統開始累積互動。" en="Leveling is not contributing engagement signals yet." />,
+                ? <Locale zh={`目前追蹤 ${trackedXpUsers} 位成員`} en={`Tracking ${trackedXpUsers} members`} />
+                : <Locale zh="XP 尚未開始累積資料。" en="XP is not collecting data yet." />,
         },
         {
             id: "suggestions",
@@ -123,15 +123,15 @@ export function UserReports() {
                 : <Locale zh="沒有待處理項目" en="Queue clear" />,
             tone: pendingSuggestions > 0 ? "warning" : "success",
             helper: pendingSuggestions > 0
-                ? <Locale zh="建議隊列需要你近期處理。" en="The review queue currently needs attention." />
-                : <Locale zh="目前沒有卡住的建議等待決策。" en="There are no blocked suggestions waiting on review." />,
+                ? <Locale zh="有待審項目。" en="Pending items require review." />
+                : <Locale zh="目前沒有待審建議。" en="No pending suggestions." />,
         },
         {
             id: "coverage",
             title: <Locale zh="模組覆蓋率" en="System coverage" />,
             value: <Locale zh={`已啟用 ${enabledSystems}/4`} en={`${enabledSystems}/4 enabled`} />,
             tone: enabledSystems >= 3 ? "success" : "neutral",
-            helper: <Locale zh="核心模組是否都已覆蓋到目前的營運需求。" en="Whether the core management modules cover the server's current operating needs." />,
+            helper: <Locale zh="核心模組啟用狀態。" en="Core module coverage." />,
         },
     ];
 
@@ -142,7 +142,7 @@ export function UserReports() {
                 to: `/guild/${serverId}/actions`,
                 icon: <BellRing className="h-4.5 w-4.5" />,
                 title: <Locale zh="優先清理建議佇列" en="Clear the suggestion queue" />,
-                description: <Locale zh={`目前有 ${pendingSuggestions} 筆建議等待審核，這是最直接的待辦壓力來源。`} en={`${pendingSuggestions} suggestions are still waiting for review, making this the clearest immediate queue pressure.`} />,
+                description: <Locale zh={`目前有 ${pendingSuggestions} 筆待審建議。`} en={`${pendingSuggestions} suggestions are pending review.`} />,
                 badge: <Locale zh="需要處理" en="Needs attention" />,
                 tone: "warning",
             }
@@ -150,8 +150,8 @@ export function UserReports() {
                 id: "queue-clear",
                 to: `/guild/${serverId}/actions`,
                 icon: <CheckCircle2 className="h-4.5 w-4.5" />,
-                title: <Locale zh="審核隊列維持清爽" en="Keep the queue clear" />,
-                description: <Locale zh="目前沒有待審建議，可以把重心放在功能優化與伺服器設定。" en="There are no pending suggestions right now, so you can focus on tuning features and server settings." />,
+                title: <Locale zh="審核隊列正常" en="Queue is clear" />,
+                description: <Locale zh="目前沒有待審建議。" en="No pending suggestions." />,
                 badge: <Locale zh="狀態良好" en="Healthy" />,
                 tone: "success",
             },
@@ -161,7 +161,7 @@ export function UserReports() {
                 to: `/guild/${serverId}/features`,
                 icon: <Sparkles className="h-4.5 w-4.5" />,
                 title: <Locale zh="補齊新成員體驗" en="Finish new-member onboarding" />,
-                description: <Locale zh="歡迎流程尚未完整設定，這通常是最容易立即提升體驗的地方。" en="The welcome flow is still incomplete, which is usually the fastest way to improve first impressions." />,
+                description: <Locale zh="歡迎流程尚未完成。" en="Welcome flow is incomplete." />,
                 badge: <Locale zh="推薦" en="Recommended" />,
                 tone: "warning",
             }
@@ -171,8 +171,8 @@ export function UserReports() {
                 icon: <Trophy className="h-4.5 w-4.5" />,
                 title: <Locale zh="檢查社群互動動能" en="Review engagement momentum" />,
                 description: trackedXpUsers > 0
-                    ? <Locale zh={`目前有 ${trackedXpUsers} 位成員被 XP 系統追蹤，適合快速檢查排行榜變化。`} en={`${trackedXpUsers} members are currently tracked by XP, making the leaderboard a good pulse check.`} />
-                    : <Locale zh="XP 目前沒有明顯資料，可能值得重新檢查等級系統設定。" en="XP does not have much data yet, which may be a sign to revisit leveling setup." />,
+                    ? <Locale zh={`目前追蹤 ${trackedXpUsers} 位 XP 成員。`} en={`${trackedXpUsers} members are tracked by XP.`} />
+                    : <Locale zh="XP 資料不足。" en="XP data is limited." />,
                 badge: <Locale zh="互動" en="Engagement" />,
                 tone: "neutral",
             },
@@ -182,7 +182,7 @@ export function UserReports() {
                 to: `/guild/${serverId}/features`,
                 icon: <ShieldAlert className="h-4.5 w-4.5" />,
                 title: <Locale zh="啟用管理紀錄" en="Turn on moderation logging" />,
-                description: <Locale zh="少了 mod log 之後，很多管理事件在回頭追查時都會變得模糊。" en="Without mod logging, it becomes much harder to reconstruct moderation decisions later." />,
+                description: <Locale zh="管理紀錄目前未啟用。" en="Moderation logging is disabled." />,
                 badge: <Locale zh="可改善" en="Improve" />,
                 tone: "warning",
             }
@@ -191,7 +191,7 @@ export function UserReports() {
                 to: `/guild/${serverId}/audit-log`,
                 icon: <Clock3 className="h-4.5 w-4.5" />,
                 title: <Locale zh="回顧近期變更" en="Audit recent changes" />,
-                description: <Locale zh="前往審計與管理紀錄，快速確認最近是否有需要追蹤的動作。" en="Review the audit trail and moderation history to confirm whether any recent changes need follow-up." />,
+                description: <Locale zh="檢查最近的審計與管理紀錄。" en="Review recent audit and moderation events." />,
                 badge: <Locale zh="追蹤" en="Track" />,
                 tone: "neutral",
             },
@@ -200,7 +200,7 @@ export function UserReports() {
             to: `/guild/${serverId}/settings`,
             icon: <Settings className="h-4.5 w-4.5" />,
             title: <Locale zh="同步基礎偏好設定" en="Review core preferences" />,
-            description: <Locale zh="如果功能都已大致就位，接下來最值得看的通常是語言、偏好與伺服器基礎設定。" en="If the main systems are in decent shape, the next best stop is usually language, preferences, and other foundational settings." />,
+            description: <Locale zh="檢查語言與介面偏好。" en="Review language and interface preferences." />,
             badge: <Locale zh="維護" en="Maintain" />,
             tone: "neutral",
         },
@@ -215,13 +215,13 @@ export function UserReports() {
                 title={
                     user
                         ? <Locale zh={`歡迎回來，${user.username}`} en={`Welcome back, ${user.username}`} />
-                        : <Locale zh="伺服器指揮中心" en="Server mission control" />
+                        : <Locale zh="伺服器儀表板" en="Server Dashboard" />
                 }
-                description={<Locale zh="重新整理後的儀表板把關鍵健康訊號、待處理項目、核心捷徑與報表壓縮進更有層次的工作視圖。" en="The refreshed dashboard packs health signals, queue pressure, core shortcuts, and detailed reports into a denser operational workspace." />}
+                description={<Locale zh="查看系統健康、待處理項目、捷徑與近期活動。" en="Monitor system health, pending work, shortcuts, and recent activity." />}
                 meta={<>
                     <span><Locale zh="任務導向版面" en="Task-first layout" /></span>
                     <span className="h-1 w-1 rounded-full bg-(--text-muted)" />
-                    <span><Locale zh="讓重點內容在一個畫面內更容易找到" en="Designed to keep the most important content within one working view" /></span>
+                    <span><Locale zh="重點集中於單一畫面" en="Key metrics in one view" /></span>
                 </>}
                 actions={<>
                     <ActiveUsers guildId={serverId} page="Dashboard" />
@@ -245,10 +245,10 @@ export function UserReports() {
                             </Badge>
                             <div className="space-y-2">
                                 <h2 className="font-['Space_Grotesk'] text-2xl font-bold tracking-tight text-(--text-primary) md:text-[32px]">
-                                    <Locale zh="把重要內容收進同一個工作畫面" en="Keep the important work in one view" />
+                                    <Locale zh="營運快照" en="Operations Snapshot" />
                                 </h2>
                                 <p className="max-w-4xl text-sm leading-6 text-(--text-secondary) md:text-[15px]">
-                                    <Locale zh="這個區塊把社群規模、在線狀態、核心模組完整度與建議佇列壓力放到最前面，讓你更快判斷下一步。" en="This surface puts community size, live presence, core-system readiness, and suggestion pressure up front so the next move is easier to spot." />
+                                    <Locale zh="顯示成員規模、在線率、核心模組狀態與待審壓力。" en="View member size, online rate, core module status, and queue pressure." />
                                 </p>
                             </div>
                         </div>
@@ -311,7 +311,7 @@ export function UserReports() {
                                         <Locale zh="即時訊號" en="Live signals" />
                                     </p>
                                     <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                        <Locale zh="用三個核心刻度快速感受目前的運作壓力。" en="Use three quick gauges to feel the current operating pressure." />
+                                        <Locale zh="三個即時指標。" en="Three live operating gauges." />
                                     </p>
                                 </div>
                                 <Gauge className="mt-0.5 h-5 w-5 text-(--accent-primary)" />
@@ -349,7 +349,7 @@ export function UserReports() {
                                         <Locale zh="核心系統" en="Core systems" />
                                     </p>
                                     <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                        <Locale zh="這些是最直接影響伺服器日常體驗的四個關鍵區塊。" en="These four areas have the clearest impact on day-to-day server operations." />
+                                        <Locale zh="四個核心模組狀態。" en="Status of four core systems." />
                                     </p>
                                 </div>
                                 <Badge variant={enabledSystems >= 3 ? "success" : "secondary"}>
@@ -376,7 +376,7 @@ export function UserReports() {
                         users={leaderboard}
                         compact
                         showViewAll
-                        description={<Locale zh="互動熱度與 XP 成長節奏放在這裡，能更快看出誰正在帶動整個社群。" en="Keep engagement leaders and XP momentum visible here so it is easier to spot who is driving community activity." />}
+                        description={<Locale zh="追蹤 XP 前段成員與互動表現。" en="Track top XP members and engagement." />}
                     />
 
                     <RecentModActionsPanel
@@ -396,7 +396,7 @@ export function UserReports() {
                                     <Locale zh="社群脈動" en="Community pulse" />
                                 </h2>
                                 <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                    <Locale zh="把目前最能反映互動與管理負載的三個數字放在同一張卡裡。" en="Keep the clearest signals of engagement and moderation load in one compact rail card." />
+                                    <Locale zh="互動與管理負載摘要。" en="Snapshot of engagement and moderation load." />
                                 </p>
                             </div>
                             <Badge variant="secondary">{enabledFeatures.length} <Locale zh="個已啟用功能" en="live features" /></Badge>
@@ -433,7 +433,7 @@ export function UserReports() {
                                         <Locale zh="目前已上線的功能" en="Currently live features" />
                                     </p>
                                     <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                        <Locale zh="用這裡快速確認現在真正處於啟用狀態的功能組合。" en="Use this to quickly confirm which parts of the bot are actually active right now." />
+                                        <Locale zh="目前啟用中的功能清單。" en="List of features currently enabled." />
                                     </p>
                                 </div>
                                 <Button asChild variant="ghost" size="sm">
@@ -473,7 +473,7 @@ export function UserReports() {
                                     <Locale zh="焦點看板" en="Focus board" />
                                 </h2>
                                 <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                    <Locale zh="這一欄把最值得你現在處理的入口與原因直接排好，不用自己再重新判斷順序。" en="This rail lines up the most relevant next stops and explains why they deserve attention right now." />
+                                    <Locale zh="優先處理項目與入口。" en="Prioritized next actions." />
                                 </p>
                             </div>
                             <Badge variant={attentionCount > 0 ? "warning" : "success"}>

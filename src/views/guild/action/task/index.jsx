@@ -38,10 +38,10 @@ export default function TaskBoard() {
     return <PageSection
         title={<Locale zh={isReadOnly ? "\u8a73\u60c5" : "\u4fee\u6539\u4efb\u52d9"} en={isReadOnly ? "Entry Details" : "Modify Task"} />}
         description={<Locale
-            zh={isReadOnly ? "\u6aa2\u8996\u6b64\u6a21\u7d44\u65e5\u8a8c\u689d\u76ee\u7684\u8a73\u7d30\u8cc7\u8a0a\u3002" : "\u66f4\u65b0\u6b64\u4efb\u52d9\u7684\u540d\u7a31\u8207\u8a2d\u5b9a\uff0c\u8b8a\u66f4\u6703\u5728\u5132\u5b58\u5f8c\u540c\u6b65\u5230\u4f3a\u670d\u5668\u3002"}
+            zh={isReadOnly ? "\u6aa2\u8996\u6b64\u689d\u76ee\u5167\u5bb9\u3002" : "\u66f4\u65b0\u4efb\u52d9\u540d\u7a31\u8207\u8a2d\u5b9a\u3002"}
             en={isReadOnly
-                ? "View the details of this moderation log entry. Only the reason field can be edited."
-                : "Update the task name and settings here; changes will sync back to the server when saved."
+                ? "View entry details."
+                : "Update task name and settings."
             }
         />}
         className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"

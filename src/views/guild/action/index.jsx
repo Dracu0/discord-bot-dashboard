@@ -19,8 +19,8 @@ export default function ActionsBoard() {
         en: "Server Actions"
     })
     const bannerDescription = locale({
-        zh: "\u5be9\u6838\u5efa\u8b70\u3001\u67e5\u770b\u5be9\u6838\u6b77\u53f2\u4e26\u7ba1\u7406\u4f3a\u670d\u5668\u4efb\u52d9",
-        en: "Review suggestions, view moderation history, and manage server tasks"
+        zh: "管理建議、審核紀錄與伺服器任務",
+        en: "Manage suggestions, moderation history, and server tasks"
     })
     const dataList = useMemo(
         () => (config.data.actions ? <ActionsData /> : null),

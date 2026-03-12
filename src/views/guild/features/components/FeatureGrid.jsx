@@ -13,7 +13,7 @@ export default function FeatureGrid() {
     return (
         <PageSection
             title={<Locale zh="功能列表" en="Feature Library" />}
-            description={<Locale zh="快速檢視、啟用並配置每個伺服器功能。" en="Browse each server feature, review what it does, and jump straight into configuration." />}
+            description={<Locale zh="檢視、啟用與設定伺服器功能。" en="Browse, enable, and configure server features." />}
             className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
         >
             <div className="flex flex-col gap-4">

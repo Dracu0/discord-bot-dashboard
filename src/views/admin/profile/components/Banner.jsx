@@ -22,7 +22,7 @@ export default function Banner({ banner, avatar, name, joinedServers, servers })
                     {name}
                 </p>
                 <p className="text-center text-sm text-(--text-secondary)">
-                    <Locale zh="歡迎回來" en="Welcome back to" /> {config.name}
+                    <Locale zh="目前工作區" en="Current workspace:" /> {config.name}
                 </p>
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-8">
                     {joinedServers != null && (

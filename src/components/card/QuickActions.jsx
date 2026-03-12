@@ -11,7 +11,7 @@ const actions = [
   {
     icon: Puzzle,
     label: { zh: "管理功能", en: "Manage Features" },
-    description: { zh: "集中調整歡迎、XP、自動化與其餘核心模組。", en: "Adjust welcome, XP, automation, and the rest of the feature stack from one hub." },
+    description: { zh: "設定與維護所有功能模組。", en: "Configure and maintain feature modules." },
     path: "features",
     badge: "blue",
     eyebrow: { zh: "模組", en: "Modules" },
@@ -19,7 +19,7 @@ const actions = [
   {
     icon: Hand,
     label: { zh: "管理動作", en: "Manage Actions" },
-    description: { zh: "處理建議、工作流與需要你即時決策的佇列。", en: "Handle suggestion reviews, workflows, and the queues that need attention right now." },
+    description: { zh: "處理建議審核與工作流程。", en: "Manage suggestion reviews and workflows." },
     path: "actions",
     badge: "orange",
     eyebrow: { zh: "佇列", en: "Queue" },
@@ -27,7 +27,7 @@ const actions = [
   {
     icon: Settings,
     label: { zh: "伺服器設定", en: "Server Settings" },
-    description: { zh: "更新語言、偏好與影響整體體驗的基礎配置。", en: "Update language, preferences, and the foundational settings that shape the whole server experience." },
+    description: { zh: "管理語言、介面與伺服器偏好。", en: "Manage language, interface, and server preferences." },
     path: "settings",
     badge: "secondary",
     eyebrow: { zh: "偏好", en: "Preferences" },
@@ -42,7 +42,7 @@ export default function QuickActions() {
     <Card variant="panel">
       <CardSectionHeader
         title={<Locale zh="工作區捷徑" en="Workspace shortcuts" />}
-        description={<Locale zh="把最常用的管理入口維持在同一塊視圖內，減少來回切換。" en="Keep the most-used control surfaces together so you can move between operations without hunting through the sidebar." />}
+        description={<Locale zh="常用管理入口。" en="Most-used management entry points." />}
         action={<Badge variant="secondary">3 <Locale zh="個樞紐" en="hubs" /></Badge>}
       />
       <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">

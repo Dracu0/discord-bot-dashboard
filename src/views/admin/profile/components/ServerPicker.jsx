@@ -33,7 +33,7 @@ export default function ServerPicker({ query }) {
     return (
         <PageSection
             title={<Locale zh="您的伺服器" en="Your Servers" />}
-            description={<Locale zh="瀏覽已連線的伺服器，快速進入管理面板或邀請機器人。" en="Browse connected servers, jump into a dashboard, or invite the bot to new communities." />}
+            description={<Locale zh="選擇伺服器以開啟儀表板或邀請機器人。" en="Select a server to open its dashboard or send an invite." />}
             actions={
                 <div className="flex flex-wrap items-end gap-3">
                     <SearchInput value={filter} onChange={setFilter} groupStyle={{ maxWidth: 260 }} />

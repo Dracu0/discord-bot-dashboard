@@ -38,24 +38,24 @@ export default function SettingsPanel() {
             <PageHeader
                 icon={<Settings2 size={24} />}
                 title={<Locale zh="設定" en="Settings" />}
-                description={<Locale zh="調整儀表板語言與體驗偏好，讓每次管理都更順手。" en="Personalize the dashboard experience with language and interface preferences that stick across sessions." />}
+                description={<Locale zh="管理語言、主題與工作區偏好。" en="Manage language, theme, and workspace preferences." />}
                 meta={<SettingsHeaderMeta />}
             />
             <PageSection
                 title={<Locale zh="體驗概覽" en="Experience overview" />}
-                description={<Locale zh="快速查看目前的語言、主題、側欄與品牌強調色設定。" en="Quickly review the current language, theme, sidebar behavior, and accent styling before making changes." />}
+                description={<Locale zh="目前介面設定摘要。" en="Current interface configuration summary." />}
             >
                 <SettingsOverview />
             </PageSection>
             <PageSection
                 title={<Locale zh="工作區偏好" en="Workspace preferences" />}
-                description={<Locale zh="在這裡調整外觀與操作模式，變更會自動同步到本機與帳號偏好。" en="Tune the interface style and workspace behavior here. Changes sync to local storage and your saved account preferences." />}
+                description={<Locale zh="更新外觀與操作偏好。" en="Update appearance and behavior preferences." />}
             >
                 <SettingsConfigPanel />
             </PageSection>
             <PageSection
                 title={<Locale zh="設定提示" en="Settings guidance" />}
-                description={<Locale zh="一些小提醒，幫助你更快理解哪些設定最值得先調整。" en="A few practical notes to help you decide which preferences are worth adjusting first." />}
+                description={<Locale zh="常用設定建議。" en="Recommended setting adjustments." />}
             >
                 <SettingsGuidance />
             </PageSection>
@@ -117,25 +117,25 @@ function SettingsOverview() {
                 icon={<MonitorCog className="h-5 w-5" />}
                 label={<Locale zh="顯示主題" en="Display theme" />}
                 value={locale(THEME_LABELS[appSettings.colorScheme] || THEME_LABELS.system)}
-                detail={<Locale zh="同步你的亮/暗色偏好與整體視覺氛圍。" en="Controls how the dashboard follows your light or dark viewing preference." />}
+                detail={<Locale zh="亮色、暗色或跟隨系統。" en="Set light, dark, or system mode." />}
             />
             <OverviewCard
                 icon={<Palette className="h-5 w-5" />}
                 label={<Locale zh="強調色" en="Accent color" />}
                 value={locale(ACCENT_LABELS[appSettings.accentColor] || ACCENT_LABELS.brand)}
-                detail={<Locale zh="套用在按鈕、焦點狀態與重要提示上的主色調。" en="Used across call-to-action buttons, focus states, and highlight surfaces." />}
+                detail={<Locale zh="套用主要操作與焦點樣式。" en="Used for primary actions and focus states." />}
             />
             <OverviewCard
                 icon={<Sidebar className="h-5 w-5" />}
                 label={<Locale zh="側欄模式" en="Sidebar mode" />}
                 value={locale(appSettings.sidebarCollapsed ? { zh: "預設精簡", en: "Compact by default" } : { zh: "預設展開", en: "Expanded by default" })}
-                detail={<Locale zh="決定你開啟儀表板時要保留更多內容空間，或維持完整導覽。" en="Choose whether to prioritize more content space or keep the full navigation visible." />}
+                detail={<Locale zh="設定預設精簡或展開導覽。" en="Set compact or expanded navigation by default." />}
             />
             <OverviewCard
                 icon={<LayoutPanelTop className="h-5 w-5" />}
                 label={<Locale zh="介面語言" en="Interface language" />}
                 value={appSettings.language === "zh" ? "中文" : "English"}
-                detail={<Locale zh="切換頁面文案與系統介面語言。" en="Switch the language used across dashboard labels and helper copy." />}
+                detail={<Locale zh="切換介面語言。" en="Change dashboard language." />}
             />
         </div>
     );
@@ -165,21 +165,21 @@ function SettingsGuidance() {
                             <Locale zh="建議的第一步" en="Recommended first tweaks" />
                         </h3>
                         <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                            <Locale zh="如果你剛完成整體 UI 更新，這三項設定最值得先微調。" en="If you are dialing in the refreshed UI, these are the three preferences most worth adjusting first." />
+                            <Locale zh="先完成這三項即可快速校正工作區。" en="Start with these three settings for a quick baseline." />
                         </p>
                     </div>
                     <div className="grid gap-3 md:grid-cols-3">
                         <GuidanceTile
                             title={<Locale zh="主題" en="Theme" />}
-                            description={<Locale zh="先確認亮/暗色是否和你的工作環境一致，頁面層次會更舒服。" en="Start by matching the theme to your workspace lighting so depth and contrast feel right." />}
+                            description={<Locale zh="先設定符合環境的亮暗模式。" en="Match theme to your workspace lighting." />}
                         />
                         <GuidanceTile
                             title={<Locale zh="強調色" en="Accent" />}
-                            description={<Locale zh="更換品牌色可以立刻改變整個面板的視覺性格。" en="Changing the accent color is the fastest way to shift the personality of the interface." />}
+                            description={<Locale zh="設定主要操作色彩。" en="Set the color for primary actions." />}
                         />
                         <GuidanceTile
                             title={<Locale zh="側欄模式" en="Sidebar" />}
-                            description={<Locale zh="若你常在小螢幕操作，精簡側欄能替內容區騰出不少空間。" en="If you work on narrower screens, a compact sidebar frees up a surprising amount of room." />}
+                            description={<Locale zh="小螢幕建議使用精簡側欄。" en="Use compact sidebar on smaller screens." />}
                         />
                     </div>
                 </div>
@@ -190,9 +190,9 @@ function SettingsGuidance() {
                         <Locale zh="同步與儲存" en="Sync & persistence" />
                     </h3>
                     <ul className="space-y-2 text-sm leading-6 text-(--text-secondary)">
-                        <li><Locale zh="偏好設定會先套用到目前工作階段，再同步到帳號偏好。" en="Preference changes apply immediately in the current session, then sync back to your saved account profile." /></li>
-                        <li><Locale zh="如果你切換裝置或瀏覽器，已儲存的設定仍會盡可能恢復。" en="Saved settings are designed to follow you across sessions and browsers whenever the account sync is available." /></li>
-                        <li><Locale zh="任何欄位改動後都能使用底部儲存條快速復原、重做或儲存。" en="Whenever a field changes, the save bar lets you undo, redo, save, or discard without leaving the page." /></li>
+                        <li><Locale zh="變更會立即套用，並同步到帳號偏好。" en="Changes apply immediately and sync to account settings." /></li>
+                        <li><Locale zh="已儲存設定可在可用時跨裝置同步。" en="Saved settings sync across devices when available." /></li>
+                        <li><Locale zh="可用底部儲存列進行復原、重做、儲存或捨棄。" en="Use the save bar to undo, redo, save, or discard changes." /></li>
                     </ul>
                 </div>
             </Card>

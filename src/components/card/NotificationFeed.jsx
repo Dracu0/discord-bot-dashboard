@@ -134,7 +134,7 @@ export default function NotificationFeed() {
       <CardSectionHeader
         className="mb-4"
         title={<Locale zh="通知中心" en="Notification stream" />}
-        description={<Locale zh="在儀表板上直接查看最新提醒，快速判斷現在最需要你處理的是什麼。" en="Keep the most recent alerts visible on the dashboard so you can tell what needs attention right now." />}
+        description={<Locale zh="最新提醒與待處理事項。" en="Latest alerts and pending items." />}
         action={
           <Button
             variant="outline"

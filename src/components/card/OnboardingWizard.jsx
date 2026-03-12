@@ -74,17 +74,17 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
               <Rocket className="h-8 w-8 text-violet-500" />
             </div>
             <h3 className="text-(--text-primary) font-['Space_Grotesk'] text-center m-0 text-lg font-semibold">
-              <Locale zh="歡迎使用 Cinnetron 儀表板！" en="Welcome to the Cinnetron Dashboard!" />
+              <Locale zh="初始化設定" en="Initial Setup" />
             </h3>
             <p className="text-(--text-secondary) text-sm text-center max-w-125 m-0">
               <Locale
-                zh="看起來您還沒有為此伺服器配置任何功能。讓我們幫您快速設置！"
-                en="It looks like you haven't configured any features for this server yet. Let's get you set up quickly!"
+                zh="此伺服器尚未啟用功能，請先選擇要啟用的模組。"
+                en="No features are configured for this server yet. Select the modules to enable."
               />
             </p>
             <div className="flex items-center gap-3 mt-4">
               <Button size="lg" onClick={() => setStep(1)}>
-                <Locale zh="開始設置" en="Get Started" />
+                <Locale zh="開始" en="Start" />
               </Button>
               <Button variant="ghost" onClick={onDismiss}>
                 <Locale zh="稍後再說" en="Maybe Later" />
@@ -101,8 +101,8 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
           <div className="py-4">
             <p className="text-sm text-(--text-secondary) mb-4 m-0">
               <Locale
-                zh="選擇要啟用的功能。您可以隨時在功能面板中更改。"
-                en="Select which features you'd like to enable. You can always change this later in the Features panel."
+                zh="選擇要啟用的功能，可稍後再調整。"
+                en="Select features to enable. You can adjust them later."
               />
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -181,17 +181,17 @@ export default function OnboardingWizard({ enabledFeatures, onDismiss }) {
               <Settings className="h-8 w-8 text-green-500" />
             </div>
             <h3 className="text-(--text-primary) font-['Space_Grotesk'] text-center m-0 text-lg font-semibold">
-              <Locale zh="準備就緒！" en="You're All Set!" />
+              <Locale zh="設定完成" en="Setup Complete" />
             </h3>
             <p className="text-(--text-secondary) text-sm text-center max-w-125 m-0">
               {selected.size > 0 ? (
                 <Locale
-                  zh={`您選擇了 ${selected.size} 個功能。前往功能面板啟用並配置它們。`}
-                  en={`You've selected ${selected.size} feature(s). Head to the Features panel to enable and configure them.`}
+                  zh={`已選擇 ${selected.size} 個功能。前往功能面板完成設定。`}
+                  en={`${selected.size} feature(s) selected. Open Features to finish configuration.`}
                 />
               ) : (
                 <Locale
-                  zh="您可以隨時在功能面板中啟用功能。"
+                  zh="可隨時在功能面板啟用功能。"
                   en="You can enable features anytime from the Features panel."
                 />
               )}
