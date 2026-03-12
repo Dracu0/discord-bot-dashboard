@@ -1,12 +1,10 @@
-import {useCallback, useContext} from "react";
-import {SettingsContext} from "../contexts/SettingsContext";
-import { en, zh } from "../locales";
+import { useCallback } from "react";
+import { en } from "../locales";
 
-const locales = { en, zh };
+const locales = { en };
 
 export const Languages = [
-    { label: "Chinese", value: "zh"},
-    { label: "English", value: "en"}
+    { label: "English", value: "en" }
 ]
 
 /**
@@ -21,16 +19,14 @@ export function locale(lang, props) {
     if (typeof props === "string")
         return props
 
-    return props[lang] || props["en"]
+    return props["en"]
 }
 
 /**
  * @return {(props: string | {[key: string]: string}) => string}
  */
 export function useLocale() {
-    const {language} = useContext(SettingsContext)
-
-    return (props) => locale(language, props)
+    return (props) => locale("en", props)
 }
 
 /**
@@ -38,9 +34,7 @@ export function useLocale() {
  * @constructor
  */
 export function Locale(props) {
-    const {language} = useContext(SettingsContext)
-
-    return props[language] || props["en"]
+    return props["en"]
 }
 
 /**
@@ -50,8 +44,7 @@ export function Locale(props) {
  * @return {{ t: (key: string, params?: Record<string, string|number>) => string, language: string }}
  */
 export function useTranslation() {
-    const {language} = useContext(SettingsContext)
-    const messages = locales[language] || locales.en;
+    const messages = locales.en;
     const fallback = locales.en;
 
     const t = useCallback((key, params) => {
@@ -64,5 +57,5 @@ export function useTranslation() {
         return text;
     }, [messages, fallback]);
 
-    return { t, language };
+    return { t, language: "en" };
 }

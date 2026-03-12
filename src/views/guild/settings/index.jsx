@@ -38,7 +38,7 @@ export default function SettingsPanel() {
             <PageHeader
                 icon={<Settings2 size={24} />}
                 title={<Locale zh="設定" en="Settings" />}
-                description={<Locale zh="管理語言、主題與工作區偏好。" en="Manage language, theme, and workspace preferences." />}
+                description={<Locale zh="管理主題與工作區偏好。" en="Manage theme and workspace preferences." />}
                 meta={<SettingsHeaderMeta />}
             />
             <PageSection
@@ -100,7 +100,7 @@ function SettingsHeaderMeta() {
 
     return (
         <>
-            <Badge variant="secondary">{locale({ zh: `語言 · ${appSettings.language === "zh" ? "中文" : "English"}`, en: `Language · ${appSettings.language === "zh" ? "Chinese" : "English"}` })}</Badge>
+            <Badge variant="secondary">{locale({ zh: "語言 · English", en: "Language · English" })}</Badge>
             <Badge variant="secondary">{locale({ zh: `主題 · ${locale(THEME_LABELS[appSettings.colorScheme] || THEME_LABELS.system)}`, en: `Theme · ${locale(THEME_LABELS[appSettings.colorScheme] || THEME_LABELS.system)}` })}</Badge>
             <Badge variant="secondary">{locale({ zh: `側欄 · ${appSettings.sidebarCollapsed ? "精簡" : "展開"}`, en: `Sidebar · ${appSettings.sidebarCollapsed ? "Compact" : "Expanded"}` })}</Badge>
         </>
@@ -134,8 +134,8 @@ function SettingsOverview() {
             <OverviewCard
                 icon={<LayoutPanelTop className="h-5 w-5" />}
                 label={<Locale zh="介面語言" en="Interface language" />}
-                value={appSettings.language === "zh" ? "中文" : "English"}
-                detail={<Locale zh="切換介面語言。" en="Change dashboard language." />}
+                value="English"
+                detail={<Locale zh="介面語言固定為 English。" en="Dashboard language is fixed to English." />}
             />
         </div>
     );

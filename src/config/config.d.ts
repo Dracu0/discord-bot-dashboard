@@ -8,7 +8,7 @@ export type PageState = {
     /**
      * User's Language
      */
-    lang: "en" | "zh"
+    lang: "en"
     /**
      * Color scheme determined by the resolved theme
      */

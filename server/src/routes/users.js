@@ -4,7 +4,7 @@ const { fetchBotGuildIds } = require('../utils/discord');
 const { hasManageGuild } = require('../utils/permissions');
 const UserPreference = require('../models/UserPreference');
 
-const ALLOWED_PREF_KEYS = ['colorScheme', 'accentColor', 'language', 'sidebarCollapsed'];
+const ALLOWED_PREF_KEYS = ['colorScheme', 'accentColor', 'sidebarCollapsed'];
 const ALLOWED_COLOR_SCHEMES = ['light', 'dark', 'auto', 'system'];
 const ALLOWED_ACCENTS = ['brand', 'blue', 'teal', 'green', 'orange', 'pink'];
 
@@ -32,7 +32,7 @@ router.get('/preferences', requireAuth, async (req, res) => {
         res.json({
             colorScheme: prefs.colorScheme,
             accentColor: prefs.accentColor,
-            language: prefs.language,
+            language: 'en',
             sidebarCollapsed: prefs.sidebarCollapsed,
         });
     } catch (err) {
@@ -58,9 +58,6 @@ router.patch('/preferences', requireAuth, async (req, res) => {
         if (updates.accentColor && !ALLOWED_ACCENTS.includes(updates.accentColor)) {
             return res.status(400).json({ error: 'Invalid accentColor' });
         }
-        if (updates.language && (typeof updates.language !== 'string' || updates.language.length > 10)) {
-            return res.status(400).json({ error: 'Invalid language' });
-        }
         if ('sidebarCollapsed' in updates && typeof updates.sidebarCollapsed !== 'boolean') {
             return res.status(400).json({ error: 'Invalid sidebarCollapsed' });
         }
@@ -80,7 +77,7 @@ router.patch('/preferences', requireAuth, async (req, res) => {
         res.json({
             colorScheme: prefs.colorScheme,
             accentColor: prefs.accentColor,
-            language: prefs.language,
+            language: 'en',
             sidebarCollapsed: prefs.sidebarCollapsed,
         });
     } catch (err) {

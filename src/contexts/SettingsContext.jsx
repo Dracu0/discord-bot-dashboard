@@ -51,7 +51,7 @@ function applyAccentPalette(accent) {
 }
 
 export const SettingsContext = createContext({
-    updateSettings: (settings) => {},
+    updateSettings: (_settings) => {},
     language: "en",
     colorScheme: "system",
     sidebarCollapsed: false,
@@ -65,14 +65,15 @@ export function SettingsProvider({children}) {
     const isInitialMerge = useRef(true);
 
     const [settings, setSetting] = useState(() => ({
-        language: getItem("lang", "en"),
+        language: "en",
         colorScheme: getItem("colorScheme", "system"),
         sidebarCollapsed: getItem("sidebarCollapsed", false),
         accentColor: getItem("accentColor", "brand"),
         updateSettings: (v) => {
             setSetting(prev => ({
                 ...prev,
-                ...v
+                ...v,
+                language: "en",
             }))
         }
     }))
@@ -90,8 +91,8 @@ export function SettingsProvider({children}) {
                         ...prev,
                         ...(prefs.colorScheme ? { colorScheme: prefs.colorScheme } : {}),
                         ...(prefs.accentColor ? { accentColor: prefs.accentColor } : {}),
-                        ...(prefs.language ? { language: prefs.language } : {}),
                         ...(typeof prefs.sidebarCollapsed === "boolean" ? { sidebarCollapsed: prefs.sidebarCollapsed } : {}),
+                        language: "en",
                     }));
                 }
             })
@@ -103,7 +104,7 @@ export function SettingsProvider({children}) {
     // Persist to localStorage + theme immediately, debounce server save
     useEffect(() => {
             try {
-                localStorage.setItem("lang", settings.language)
+                localStorage.setItem("lang", "en")
                 localStorage.setItem("colorScheme", JSON.stringify(settings.colorScheme))
                 localStorage.setItem("sidebarCollapsed", JSON.stringify(settings.sidebarCollapsed))
                 localStorage.setItem("accentColor", JSON.stringify(settings.accentColor))
@@ -129,7 +130,6 @@ export function SettingsProvider({children}) {
                 saveUserPreferences({
                     colorScheme: settings.colorScheme,
                     accentColor: settings.accentColor,
-                    language: settings.language,
                     sidebarCollapsed: settings.sidebarCollapsed,
                 }).catch(() => {});
             }, 500);

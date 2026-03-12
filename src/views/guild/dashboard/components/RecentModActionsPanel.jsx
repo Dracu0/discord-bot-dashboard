@@ -22,7 +22,7 @@ export default function RecentModActionsPanel({ actions, totalActions, activeMod
                         </Badge>
                     </div>
                     <p className="mt-2 max-w-3xl text-sm leading-6 text-(--text-secondary)">
-                        <Locale zh="這裡改成更適合儀表板的活動面板：把最新的管理事件、責任人、原因與時間拆成可掃描的卡片，而不是硬塞成會互相擠壓的資料表。" en="This section now uses a dashboard-style activity layout: the latest moderation events, owners, reasons, and timestamps are split into scannable cards instead of being squeezed into a collapsing table." />
+                        <Locale zh="顯示近期管理事件，包含執行者、對象、原因與時間。" en="Shows recent moderation events with actor, target, reason, and timestamp." />
                     </p>
                 </div>
 
@@ -49,12 +49,12 @@ export default function RecentModActionsPanel({ actions, totalActions, activeMod
                 <ModerationSnapshot
                     label={<Locale zh="活躍管理員" en="Active moderators" />}
                     value={activeModerators}
-                    helper={<Locale zh="這批近期事件中實際出手的人數" en="Distinct moderators represented in this recent activity slice" />}
+                    helper={<Locale zh="此時間範圍內的不同管理員數" en="Distinct moderators in this window" />}
                 />
                 <ModerationSnapshot
                     label={<Locale zh="最近一次動作" en="Latest action" />}
                     value={formatRecentActionTime(latestActionAt)}
-                    helper={<Locale zh="方便快速判斷管理活動是否還在持續發生" en="A quick way to see whether moderation activity is still happening right now" />}
+                    helper={<Locale zh="最近一筆管理事件的時間" en="Most recent moderation event time" />}
                 />
             </div>
 
@@ -70,7 +70,7 @@ export default function RecentModActionsPanel({ actions, totalActions, activeMod
                         <Locale zh="目前還沒有近期管理事件" en="No recent moderation activity yet" />
                     </p>
                     <p className="mt-2 text-sm leading-6 text-(--text-secondary)">
-                        <Locale zh="等到有新的警告、禁言、踢除或其他管理事件後，這裡就會開始建立最近活動脈絡。" en="Once warns, timeouts, kicks, bans, or other moderation actions arrive, this panel will start building a recent activity trail." />
+                        <Locale zh="記錄到警告、禁言、踢除、封鎖等管理動作後，事件會顯示在此。" en="Events appear here after warns, timeouts, kicks, bans, or other moderation actions are recorded." />
                     </p>
                 </div>
             )}

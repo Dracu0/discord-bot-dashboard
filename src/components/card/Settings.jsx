@@ -2,8 +2,7 @@
 import Card from "components/card/Card";
 import { useContext } from "react";
 import { SettingsContext } from "contexts/SettingsContext";
-import { SelectField } from "components/fields/SelectField";
-import { Languages, Locale, useLocale } from "utils/Language";
+import { Locale } from "utils/Language";
 import { SegmentedControl } from "components/ui/segmented-control";
 import { Button } from "components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
@@ -19,11 +18,10 @@ const ACCENT_COLORS = [
 ];
 
 export default function Settings({ ...rest }) {
-  const { updateSettings, language, colorScheme, accentColor } = useContext(SettingsContext);
-  const locale = useLocale();
+  const { updateSettings, colorScheme, accentColor } = useContext(SettingsContext);
 
   const handleExportSettings = () => {
-    const data = { language, colorScheme, accentColor };
+    const data = { language: "en", colorScheme, accentColor };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -38,7 +36,7 @@ export default function Settings({ ...rest }) {
       <CardSectionHeader
         className="mb-7.5"
         title={<Locale zh="用戶設置" en="Settings" />}
-        description={<Locale zh="調整個人化外觀、語言與匯出偏好設定。" en="Personalize appearance, language, and exported dashboard preferences." />}
+        description={<Locale zh="調整個人化外觀與匯出偏好設定。" en="Personalize appearance and exported dashboard preferences." />}
       />
 
       {/* Appearance */}
@@ -88,22 +86,6 @@ export default function Settings({ ...rest }) {
             </div>
           </TooltipProvider>
         </div>
-      </div>
-
-      {/* Language */}
-      <div className="flex flex-col gap-2 mb-5">
-        <span className="text-sm font-semibold text-(--text-muted) uppercase tracking-[0.5px]">
-          <Locale zh="語言" en="Language" />
-        </span>
-        <SelectField
-          value={language}
-          options={Languages}
-          onChange={(lang) =>
-            updateSettings({
-              language: lang,
-            })
-          }
-        />
       </div>
 
       {/* Data */}

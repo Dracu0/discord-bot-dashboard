@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import {
     Activity,
     BellRing,
@@ -78,6 +78,12 @@ export function UserReports() {
     const trackedXpUsers = advanced?.xp?.totalTrackedUsers || 0;
     const totalModerationActions = advanced?.moderation?.totalActions || 0;
     const queuePressure = totalSuggestions > 0 ? Math.round((pendingSuggestions / totalSuggestions) * 100) : 0;
+    const latestEventLabel = useMemo(() => {
+        if (!latestModerationAt) return "No recent event";
+        return new Date(latestModerationAt).toLocaleString();
+    }, [latestModerationAt]);
+    const queueState = pendingSuggestions > 0 ? "Backlog" : "Stable";
+    const queueStateTone = pendingSuggestions > 0 ? "warning" : "success";
     const enabledFeatureLabels = useMemo(
         () => enabledFeatures.slice(0, 6).map(toTitleLabel),
         [enabledFeatures],
@@ -169,7 +175,7 @@ export function UserReports() {
                 id: "xp",
                 to: `/guild/${serverId}/leaderboard`,
                 icon: <Trophy className="h-4.5 w-4.5" />,
-                title: <Locale zh="檢查社群互動動能" en="Review engagement momentum" />,
+                title: <Locale zh="檢查 XP 活動" en="Review XP activity" />,
                 description: trackedXpUsers > 0
                     ? <Locale zh={`目前追蹤 ${trackedXpUsers} 位 XP 成員。`} en={`${trackedXpUsers} members are tracked by XP.`} />
                     : <Locale zh="XP 資料不足。" en="XP data is limited." />,
@@ -229,6 +235,54 @@ export function UserReports() {
                 </>}
             />
 
+            <Card variant="panel" className="mb-6">
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <h2 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
+                            <Locale zh="即時狀態" en="Live status" />
+                        </h2>
+                        <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
+                            <Locale zh="顯示目前營運狀態與最近事件時間。" en="Current operational state and latest event timing." />
+                        </p>
+                    </div>
+                    <Badge variant={queueStateTone}>{queueState}</Badge>
+                </div>
+
+                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                    <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-primary) p-3.5">
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)">
+                            <Activity className="h-4 w-4" />
+                            <Locale zh="管理事件總數" en="Total mod events" />
+                        </div>
+                        <p className="mt-2 font-['Space_Grotesk'] text-2xl font-semibold text-(--text-primary)">{totalModerationActions}</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-primary) p-3.5">
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)">
+                            <BellRing className="h-4 w-4" />
+                            <Locale zh="待審建議" en="Pending queue" />
+                        </div>
+                        <p className="mt-2 font-['Space_Grotesk'] text-2xl font-semibold text-(--text-primary)">{pendingSuggestions}</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-primary) p-3.5">
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)">
+                            <Users className="h-4 w-4" />
+                            <Locale zh="活躍管理員" en="Active moderators" />
+                        </div>
+                        <p className="mt-2 font-['Space_Grotesk'] text-2xl font-semibold text-(--text-primary)">{activeModerators}</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-primary) p-3.5">
+                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)">
+                            <Clock3 className="h-4 w-4" />
+                            <Locale zh="最近事件" en="Latest event" />
+                        </div>
+                        <p className="mt-2 text-sm font-semibold text-(--text-primary)">{latestEventLabel}</p>
+                    </div>
+                </div>
+            </Card>
+
             {!wizardDismissed && enabledFeatures.length === 0 && featuresQuery?.data && (
                 <OnboardingWizard
                     enabledFeatures={enabledFeatures}
@@ -248,7 +302,7 @@ export function UserReports() {
                                     <Locale zh="營運快照" en="Operations Snapshot" />
                                 </h2>
                                 <p className="max-w-4xl text-sm leading-6 text-(--text-secondary) md:text-[15px]">
-                                    <Locale zh="顯示成員規模、在線率、核心模組狀態與待審壓力。" en="View member size, online rate, core module status, and queue pressure." />
+                                    <Locale zh="顯示成員數、在線率、核心模組狀態與建議佇列比例。" en="View member count, online rate, core module status, and suggestion queue ratio." />
                                 </p>
                             </div>
                         </div>
@@ -284,7 +338,7 @@ export function UserReports() {
                             icon={<Wifi className="h-5 w-5" />}
                             label={<Locale zh="在線比例" en="Presence rate" />}
                             value={`${onlineRatio}%`}
-                            helper={<Locale zh="以目前在線成員計算" en="Calculated from active members right now" />}
+                            helper={<Locale zh="由在線成員數計算" en="Calculated from active member count" />}
                             tone="accent"
                         />
                         <InsightMetricCard
@@ -311,7 +365,7 @@ export function UserReports() {
                                         <Locale zh="即時訊號" en="Live signals" />
                                     </p>
                                     <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                        <Locale zh="三個即時指標。" en="Three live operating gauges." />
+                                        <Locale zh="三個即時系統指標。" en="Three real-time system metrics." />
                                     </p>
                                 </div>
                                 <Gauge className="mt-0.5 h-5 w-5 text-(--accent-primary)" />
@@ -321,14 +375,14 @@ export function UserReports() {
                                 <MissionSignal
                                     label={<Locale zh="在線覆蓋" en="Presence coverage" />}
                                     value={`${onlineRatio}%`}
-                                    helper={<Locale zh="成員目前的在線比例" en="How much of the server is currently active" />}
+                                    helper={<Locale zh="目前在線成員占比" en="Share of members currently online" />}
                                     progress={onlineRatio}
                                     tone="accent"
                                 />
                                 <MissionSignal
                                     label={<Locale zh="設置完整度" en="Setup completion" />}
                                     value={`${setupCompletion}%`}
-                                    helper={<Locale zh="核心模組完成情況" en="How complete the core setup currently feels" />}
+                                    helper={<Locale zh="核心模組啟用比例" en="Core module enablement rate" />}
                                     progress={setupCompletion}
                                     tone="success"
                                 />
@@ -393,10 +447,10 @@ export function UserReports() {
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <h2 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
-                                    <Locale zh="社群脈動" en="Community pulse" />
+                                    <Locale zh="社群指標" en="Community metrics" />
                                 </h2>
                                 <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                    <Locale zh="互動與管理負載摘要。" en="Snapshot of engagement and moderation load." />
+                                    <Locale zh="互動與管理負載摘要。" en="Engagement and moderation summary." />
                                 </p>
                             </div>
                             <Badge variant="secondary">{enabledFeatures.length} <Locale zh="個已啟用功能" en="live features" /></Badge>
@@ -407,14 +461,14 @@ export function UserReports() {
                                 icon={<Activity className="h-5 w-5" />}
                                 label={<Locale zh="XP 追蹤成員" en="Tracked XP users" />}
                                 value={trackedXpUsers}
-                                helper={<Locale zh="目前參與等級系統的成員數" en="Members currently participating in leveling" />}
+                                helper={<Locale zh="由 XP 系統追蹤的成員數" en="Members tracked by the XP system" />}
                                 tone="default"
                             />
                             <InsightMetricCard
                                 icon={<ShieldAlert className="h-5 w-5" />}
                                 label={<Locale zh="管理動作總數" en="Moderation load" />}
                                 value={totalModerationActions}
-                                helper={<Locale zh="已記錄的管理動作總量" en="Total moderation actions currently recorded" />}
+                                helper={<Locale zh="已記錄的管理動作總數" en="Total recorded moderation actions" />}
                                 tone="warning"
                             />
                             <InsightMetricCard
@@ -430,10 +484,10 @@ export function UserReports() {
                             <div className="flex items-start justify-between gap-3">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-(--text-muted)">
-                                        <Locale zh="目前已上線的功能" en="Currently live features" />
+                                        <Locale zh="已啟用功能" en="Enabled features" />
                                     </p>
                                     <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                                        <Locale zh="目前啟用中的功能清單。" en="List of features currently enabled." />
+                                        <Locale zh="此伺服器已啟用的功能。" en="Features enabled on this server." />
                                     </p>
                                 </div>
                                 <Button asChild variant="ghost" size="sm">
@@ -459,7 +513,7 @@ export function UserReports() {
                                     </>
                                 ) : (
                                     <p className="text-sm leading-6 text-(--text-secondary)">
-                                        <Locale zh="目前尚未啟用任何功能，啟用第一個模組後這裡就會開始出現狀態。" en="No features are enabled yet. Once the first module goes live, it will appear here." />
+                                        <Locale zh="尚未啟用任何功能。啟用後會顯示在此。" en="No features enabled. Enabled modules will appear here." />
                                     </p>
                                 )}
                             </div>

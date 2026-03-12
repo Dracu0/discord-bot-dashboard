@@ -1,3 +1,5 @@
+import reactPlugin from "eslint-plugin-react";
+
 export default [
     {
         ignores: [
@@ -9,6 +11,14 @@ export default [
     },
     {
         files: ['**/*.{js,jsx,cjs,mjs}'],
+        plugins: {
+            react: reactPlugin,
+        },
+        settings: {
+            react: {
+                version: 'detect',
+            },
+        },
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
@@ -48,6 +58,8 @@ export default [
         rules: {
             'no-undef': 'error',
             'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+            'react/jsx-uses-vars': 'error',
+            'react/jsx-uses-react': 'off',
             'no-empty': ['error', { allowEmptyCatch: true }],
             'no-console': 'off'
         }

@@ -38,14 +38,6 @@ export const config = {
     ],
     settings: (currentSettings) => [
         {
-            id: "language",
-            name: "Language",
-            description: "Dashboard display language",
-            type: "enum",
-            choices: ["en", "zh"],
-            value: currentSettings.language || "en",
-        },
-        {
             id: "colorScheme",
             name: "Color scheme",
             description: "Choose whether the dashboard follows your system, stays light, or stays dark.",
