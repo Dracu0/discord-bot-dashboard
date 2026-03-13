@@ -170,6 +170,7 @@ function ItemForm({ fields, initialValues, onSubmit, onCancel, saving, label, is
 
     const handleSubmit = () => {
         const newErrors = {};
+        const fieldIds = new Set(fields.map((f) => f.id));
         for (const f of fields) {
             if (f.type === "custom") continue;
             if (isEdit && f.immutable) continue;
@@ -192,6 +193,15 @@ function ItemForm({ fields, initialValues, onSubmit, onCancel, saving, label, is
             if (isEdit && f.immutable) continue;
             data[f.id] = values[f.id];
         }
+
+        // Include additional values set by custom fields (e.g. response editors).
+        // Temporary UI-only keys should be prefixed with "_" and are excluded.
+        for (const [key, value] of Object.entries(values)) {
+            if (fieldIds.has(key)) continue;
+            if (key.startsWith("_")) continue;
+            data[key] = value;
+        }
+
         onSubmit(data);
     };
 
