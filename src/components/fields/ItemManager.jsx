@@ -146,7 +146,7 @@ function ItemRow({ item, columns, onEdit, onDelete, deleting }) {
 
 function ItemForm({ fields, initialValues, onSubmit, onCancel, saving, label, isEdit }) {
     const [values, setValues] = useState(() => {
-        const init = {};
+        const init = initialValues ? { ...initialValues } : {};
         for (const f of fields) {
             if (initialValues && initialValues[f.id] !== undefined) {
                 init[f.id] = initialValues[f.id];
