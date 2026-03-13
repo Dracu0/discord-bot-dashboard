@@ -245,7 +245,8 @@ router.get('/:featureId', async (req, res) => {
         } else if (featureId === 'giveaways') {
             values.giveaways = await Giveaway.find({ guildId }).sort({ createdAt: -1 }).limit(20).lean();
         } else if (featureId === 'auto_responder') {
-            values.autoResponders = await AutoResponder.find({ guildId }).sort({ name: 1 }).lean();
+            values.autoResponders = (await AutoResponder.find({ guildId }).sort({ name: 1 }).lean())
+                .map((item) => normalizeAutoResponderOutput(item));
         }
 
         res.json({ values });
@@ -510,20 +511,46 @@ const VALID_INTERVALS = {
 };
 
 function normalizeAutoResponderResponses(body) {
+    return normalizeAutoResponderResponseList(body?.responses, body?.response);
+}
+
+function normalizeAutoResponderResponseList(listLike, fallback = '') {
     let responses = [];
 
-    if (Array.isArray(body.responses)) {
-        responses = body.responses
+    if (Array.isArray(listLike)) {
+        responses = listLike
             .map((v) => (typeof v === 'string' ? v.trim() : ''))
             .filter(Boolean)
             .slice(0, 20)
             .map((v) => v.slice(0, 2000));
-    } else if (typeof body.response === 'string') {
-        const single = body.response.trim();
+    }
+
+    if (!responses.length && typeof fallback === 'string') {
+        const single = fallback.trim();
         if (single) responses = [single.slice(0, 2000)];
     }
 
     return responses;
+}
+
+function normalizeAutoResponderOutput(docLike) {
+    const source = docLike?.toObject ? docLike.toObject() : { ...(docLike || {}) };
+    const responses = normalizeAutoResponderResponseList(source.responses, source.response);
+    return {
+        ...source,
+        responses,
+        response: responses[0] || '',
+    };
+}
+
+function getRegexValidationError(pattern) {
+    try {
+        // Validation-only compile. Runtime behavior remains in bot side.
+        new RegExp(pattern, 'i');
+        return null;
+    } catch (err) {
+        return err?.message || 'Invalid regex pattern';
+    }
 }
 
 // POST /guild/:id/feature/:featureId/items — Create item
@@ -675,26 +702,54 @@ router.post('/:featureId/items', async (req, res) => {
             case 'auto_responder': {
                 const { name, trigger, matchMode, ignoreBots, cooldownMs, enabled, randomizeResponses } = body;
                 if (!name || typeof name !== 'string' || name.length > 32) {
-                    return res.status(400).json({ error: 'Name is required (max 32 chars)' });
+                    return sendApiError(res, badRequest('Name is required (max 32 chars)', {
+                        field: 'name',
+                        maxLength: 32,
+                    }));
                 }
                 if (!trigger || typeof trigger !== 'string' || trigger.length > 200) {
-                    return res.status(400).json({ error: 'Trigger is required (max 200 chars)' });
+                    return sendApiError(res, badRequest('Trigger is required (max 200 chars)', {
+                        field: 'trigger',
+                        maxLength: 200,
+                    }));
                 }
                 const VALID_MATCH_MODES = ['contains', 'exact', 'startsWith', 'regex'];
                 if (!matchMode || !VALID_MATCH_MODES.includes(matchMode)) {
-                    return res.status(400).json({ error: 'Match mode must be one of: contains, exact, startsWith, regex' });
+                    return sendApiError(res, badRequest('Match mode must be one of: contains, exact, startsWith, regex', {
+                        field: 'matchMode',
+                        expected: VALID_MATCH_MODES,
+                    }));
+                }
+                if (matchMode === 'regex') {
+                    const regexErr = getRegexValidationError(trigger);
+                    if (regexErr) {
+                        return sendApiError(res, badRequest('Invalid regex pattern', {
+                            field: 'trigger',
+                            reason: regexErr,
+                        }));
+                    }
                 }
                 const responses = normalizeAutoResponderResponses(body);
                 if (!responses.length) {
-                    return res.status(400).json({ error: 'At least one response is required (max 2000 chars each)' });
+                    return sendApiError(res, badRequest('At least one response is required (max 2000 chars each)', {
+                        field: 'responses',
+                    }));
                 }
                 const count = await AutoResponder.countDocuments({ guildId });
                 if (count >= 25) {
-                    return res.status(400).json({ error: 'Maximum 25 auto-responders per server' });
+                    return sendApiError(res, badRequest('Maximum 25 auto-responders per server', {
+                        field: 'autoResponders',
+                        limit: 25,
+                    }));
                 }
                 const existingAR = await AutoResponder.findOne({ guildId, name: name.trim() });
                 if (existingAR) {
-                    return res.status(409).json({ error: `Auto-responder "${name.trim()}" already exists` });
+                    return sendApiError(res, {
+                        status: 409,
+                        code: 'CONFLICT',
+                        message: `Auto-responder "${name.trim()}" already exists`,
+                        details: { field: 'name' },
+                    });
                 }
                 created = await AutoResponder.create({
                     guildId,
@@ -709,6 +764,7 @@ router.post('/:featureId/items', async (req, res) => {
                     cooldownMs: Math.max(0, Math.min(300000, Math.round(Number(cooldownMs) || 5000))),
                     createdBy: req.user?.id || '',
                 });
+                created = normalizeAutoResponderOutput(created);
                 break;
             }
 
@@ -883,27 +939,49 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
 
             case 'auto_responder': {
                 const arDoc = await AutoResponder.findOne({ _id: itemId, guildId });
-                if (!arDoc) return res.status(404).json({ error: 'Auto-responder not found' });
+                if (!arDoc) {
+                    return sendApiError(res, notFound('Auto-responder not found', {
+                        featureId,
+                        itemId,
+                    }));
+                }
 
                 if (body.trigger !== undefined) {
                     if (typeof body.trigger !== 'string' || body.trigger.length > 200) {
-                        return res.status(400).json({ error: 'Trigger must be a string (max 200 chars)' });
+                        return sendApiError(res, badRequest('Trigger must be a string (max 200 chars)', {
+                            field: 'trigger',
+                            maxLength: 200,
+                        }));
                     }
                     arDoc.trigger = body.trigger;
                 }
                 if (body.response !== undefined) {
                     if (typeof body.response !== 'string' || body.response.length > 2000) {
-                        return res.status(400).json({ error: 'Response must be a string (max 2000 chars)' });
+                        return sendApiError(res, badRequest('Response must be a string (max 2000 chars)', {
+                            field: 'response',
+                            maxLength: 2000,
+                        }));
                     }
-                    arDoc.response = body.response;
+                    const normalizedSingle = normalizeAutoResponderResponseList(undefined, body.response);
+                    if (!normalizedSingle.length) {
+                        return sendApiError(res, badRequest('At least one response is required', {
+                            field: 'response',
+                        }));
+                    }
+                    arDoc.responses = normalizedSingle;
+                    arDoc.response = normalizedSingle[0];
                 }
                 if (body.responses !== undefined) {
                     if (!Array.isArray(body.responses)) {
-                        return res.status(400).json({ error: 'responses must be an array of strings' });
+                        return sendApiError(res, badRequest('responses must be an array of strings', {
+                            field: 'responses',
+                        }));
                     }
                     const normalized = normalizeAutoResponderResponses(body);
                     if (!normalized.length) {
-                        return res.status(400).json({ error: 'At least one response is required' });
+                        return sendApiError(res, badRequest('At least one response is required', {
+                            field: 'responses',
+                        }));
                     }
                     arDoc.responses = normalized;
                     arDoc.response = normalized[0];
@@ -914,17 +992,33 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
                 if (body.matchMode !== undefined) {
                     const VALID_MATCH_MODES = ['contains', 'exact', 'startsWith', 'regex'];
                     if (!VALID_MATCH_MODES.includes(body.matchMode)) {
-                        return res.status(400).json({ error: 'Invalid match mode' });
+                        return sendApiError(res, badRequest('Invalid match mode', {
+                            field: 'matchMode',
+                            expected: VALID_MATCH_MODES,
+                        }));
                     }
                     arDoc.matchMode = body.matchMode;
                 }
+
+                const nextMatchMode = body.matchMode !== undefined ? body.matchMode : arDoc.matchMode;
+                const nextTrigger = body.trigger !== undefined ? body.trigger : arDoc.trigger;
+                if (nextMatchMode === 'regex') {
+                    const regexErr = getRegexValidationError(nextTrigger);
+                    if (regexErr) {
+                        return sendApiError(res, badRequest('Invalid regex pattern', {
+                            field: 'trigger',
+                            reason: regexErr,
+                        }));
+                    }
+                }
+
                 if (body.enabled !== undefined) arDoc.enabled = !!body.enabled;
                 if (body.ignoreBots !== undefined) arDoc.ignoreBots = !!body.ignoreBots;
                 if (body.cooldownMs !== undefined) {
                     arDoc.cooldownMs = Math.max(0, Math.min(300000, Math.round(Number(body.cooldownMs) || 0)));
                 }
                 await arDoc.save();
-                updated = arDoc;
+                updated = normalizeAutoResponderOutput(arDoc);
                 break;
             }
 
