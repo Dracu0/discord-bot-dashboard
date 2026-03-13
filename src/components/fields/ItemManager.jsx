@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GuildContext } from "contexts/guild/GuildContext";
 import { createFeatureItem, updateFeatureItem, deleteFeatureItem } from "api/internal";
@@ -171,6 +171,7 @@ function ItemForm({ fields, initialValues, onSubmit, onCancel, saving, label, is
     const handleSubmit = () => {
         const newErrors = {};
         for (const f of fields) {
+            if (f.type === "custom") continue;
             if (isEdit && f.immutable) continue;
             if (f.required && (values[f.id] === "" || values[f.id] == null)) {
                 newErrors[f.id] = `${f.label} is required`;
@@ -187,6 +188,7 @@ function ItemForm({ fields, initialValues, onSubmit, onCancel, saving, label, is
         // Only send changed fields on edit, all fields on create
         const data = {};
         for (const f of fields) {
+            if (f.type === "custom") continue;
             if (isEdit && f.immutable) continue;
             data[f.id] = values[f.id];
         }
@@ -216,12 +218,23 @@ function ItemForm({ fields, initialValues, onSubmit, onCancel, saving, label, is
                             {f.description && (
                                 <p className="mb-2 text-xs text-(--text-muted)">{f.description}</p>
                             )}
-                            <FormField
-                                field={f}
-                                value={values[f.id]}
-                                onChange={(v) => setValue(f.id, v)}
-                                disabled={disabled}
-                            />
+                            {f.type === "custom" && typeof f.render === "function" ? (
+                                f.render({
+                                    field: f,
+                                    values,
+                                    setValue,
+                                    value: values[f.id],
+                                    onChange: (v) => setValue(f.id, v),
+                                    disabled,
+                                })
+                            ) : (
+                                <FormField
+                                    field={f}
+                                    value={values[f.id]}
+                                    onChange={(v) => setValue(f.id, v)}
+                                    disabled={disabled}
+                                />
+                            )}
                             {errors[f.id] && (
                                 <p className="mt-1 text-xs text-(--status-error)">{errors[f.id]}</p>
                             )}

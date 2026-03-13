@@ -47,6 +47,30 @@ async function fetchGuildRoles(guildId) {
 }
 
 /**
+ * Fetch guild custom emojis via the Discord Bot API
+ */
+async function fetchGuildEmojis(guildId) {
+    try {
+        return await rest.get(Routes.guildEmojis(guildId));
+    } catch (err) {
+        logger.error('discord_api_fetch_emojis_failed', { guildId, error: err.message, status: err.status });
+        return [];
+    }
+}
+
+/**
+ * Fetch guild stickers via the Discord Bot API
+ */
+async function fetchGuildStickers(guildId) {
+    try {
+        return await rest.get(Routes.guildStickers(guildId));
+    } catch (err) {
+        logger.error('discord_api_fetch_stickers_failed', { guildId, error: err.message, status: err.status });
+        return [];
+    }
+}
+
+/**
  * Fetch all guild IDs the bot is in (paginated), with 5-minute cache.
  */
 async function fetchBotGuildIds() {
@@ -162,6 +186,8 @@ module.exports = {
     fetchBotGuildIds,
     fetchGuildChannels,
     fetchGuildRoles,
+    fetchGuildEmojis,
+    fetchGuildStickers,
     fetchGuildMember,
     fetchGuildMembers,
     addGuildMemberRole,

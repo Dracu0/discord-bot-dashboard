@@ -5,7 +5,21 @@ const ModLog = require('../../models/ModLog');
 const Suggestion = require('../../models/Suggestion');
 const AuditLog = require('../../models/AuditLog');
 const Ticket = require('../../models/Ticket');
-const { fetchGuild, fetchGuildChannels, fetchGuildRoles } = require('../../utils/discord');
+const { fetchGuild, fetchGuildEmojis, fetchGuildStickers } = require('../../utils/discord');
+
+function stickerExtension(formatType) {
+    switch (Number(formatType)) {
+        case 1: // PNG
+        case 2: // APNG
+            return 'png';
+        case 3: // LOTTIE
+            return 'json';
+        case 4: // GIF
+            return 'gif';
+        default:
+            return 'png';
+    }
+}
 
 // GET /guild/:id
 router.get('/', async (req, res) => {
@@ -51,6 +65,40 @@ router.get('/detail', async (req, res) => {
     } catch (err) {
         req.log?.error('guild_detail_fetch_failed', { guildId: req.params.id, error: err });
         res.status(500).json({ error: 'Failed to fetch server details' });
+    }
+});
+
+// GET /guild/:id/assets
+router.get('/assets', async (req, res) => {
+    try {
+        const guildId = req.params.id;
+
+        const [emojis, stickers] = await Promise.all([
+            fetchGuildEmojis(guildId),
+            fetchGuildStickers(guildId),
+        ]);
+
+        res.json({
+            emojis: (emojis || []).map((emoji) => ({
+                id: emoji.id,
+                name: emoji.name,
+                animated: !!emoji.animated,
+                available: emoji.available !== false,
+                url: `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? 'gif' : 'png'}?size=64&quality=lossless`,
+            })),
+            stickers: (stickers || []).map((sticker) => ({
+                id: sticker.id,
+                name: sticker.name,
+                formatType: sticker.format_type,
+                type: sticker.type,
+                available: sticker.available !== false,
+                tags: sticker.tags || '',
+                url: `https://cdn.discordapp.com/stickers/${sticker.id}.${stickerExtension(sticker.format_type)}`,
+            })),
+        });
+    } catch (err) {
+        req.log?.error('guild_assets_fetch_failed', { guildId: req.params.id, error: err });
+        res.status(500).json({ error: 'Failed to fetch guild assets' });
     }
 });
 

@@ -1,5 +1,12 @@
 import { Locale } from "../../utils/Language";
 import ItemManager from "../../components/fields/ItemManager";
+import GuildAssetsPicker from "../../components/fields/impl/GuildAssetsPicker";
+
+function appendResponseToken(existing, token) {
+    const current = String(existing || "");
+    const spacer = current.length > 0 && !/\s$/.test(current) ? " " : "";
+    return `${current}${spacer}${token}`;
+}
 
 const columns = [
     {
@@ -69,10 +76,22 @@ const formFields = [
         type: "long_string",
         required: true,
         placeholder: "Hey there! Welcome to the server.",
-        description: "The message the bot replies with (max 2000 chars).",
+        description: "The message the bot replies with (max 2000 chars). Supports custom emoji mentions, GIF URLs, and {{sticker:ID}} tokens.",
         validate: (v) => {
             if (v && v.length > 2000) return "Max 2000 characters";
         },
+    },
+    {
+        id: "_guildAssetsPicker",
+        label: "Guild Assets",
+        type: "custom",
+        description: "Insert server emojis/stickers directly into the response.",
+        render: ({ values, setValue, disabled }) => (
+            <GuildAssetsPicker
+                disabled={disabled}
+                onInsert={(token) => setValue("response", appendResponseToken(values.response, token))}
+            />
+        ),
     },
     {
         id: "ignoreBots",

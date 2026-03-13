@@ -145,6 +145,15 @@ export async function getServerAdvancedDetails(serverId) {
 }
 
 /**
+ * Get guild assets (custom emojis and stickers)
+ */
+export async function getGuildAssets(serverId) {
+  return fetchAuto(`/guild/${serverId}/assets`, {
+    toJson: true
+  })
+}
+
+/**
  * get Notifications of server
  */
 export async function getNotifications(serverId) {
