@@ -84,10 +84,6 @@ app.get('/api/guild/:id/detail/advanced', (_req, res) => res.json({
 }));
 
 // ── Features ──────────────────────────────────────────────────
-const FEATURES = ['welcome', 'xp', 'suggestions', 'minecraft', 'modlog',
-  'reaction_roles', 'automod', 'starboard', 'tickets', 'custom_commands',
-  'announcements', 'temp_roles', 'giveaways'];
-
 app.get('/api/guild/:id/features', (_req, res) => res.json({
   enabled: ['welcome', 'xp', 'modlog', 'automod'],
   data: {},

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { configReducer, runValidation, MAX_HISTORY } from '../ConfigPanel';
+import { configReducer, MAX_HISTORY } from '../ConfigPanel';
 
 function createInitialState(values = {}) {
     const changes = new Map(Object.entries(values));

@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-const GUILD = "987654321098765432";
-
 test.describe("Auth & Sign-in", () => {
     test("unauthenticated user sees sign-in page", async ({ page }) => {
         // Mock server always returns 200 for /api/auth, so the user is always logged in.

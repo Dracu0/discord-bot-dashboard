@@ -4,7 +4,6 @@ import illustration from "assets/img/auth/Banner.jpg";
 import { DiscordIcon } from "components/icons/DiscordIcon";
 import { config } from "config/config";
 import { Locale } from "../../../utils/Language";
-import { Button } from "components/ui/button";
 import { Loader2 } from "lucide-react";
 import { cn } from "lib/utils";
 

@@ -74,12 +74,18 @@ function parseChildren(children) {
 }
 
 export function ErrorPanel({ error, onRetry }) {
+  const detail =
+    typeof error === "string"
+      ? error
+      : error?.message || error?.statusText || null;
+
   return (
     <div className="flex min-h-50 items-center justify-center">
       <div className="flex flex-col items-center gap-2">
         <span>
           <Locale zh="\u52a0\u8f09\u5931\u6557" en="Failed to load" />
         </span>
+        {detail ? <p className="max-w-xl text-center text-sm text-(--text-secondary)">{detail}</p> : null}
         <Button onClick={onRetry}>
           <Locale zh="\u518d\u8a66\u4e00\u6b21" en="Try Again" />
         </Button>

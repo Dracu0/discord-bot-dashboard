@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "components/ui/button";
 import { Locale, useLocale } from "utils/Language";
 
-export function EmptyModal({ children, isOpen, onClose, size, scrollBehavior, ...props }) {
+export function EmptyModal({ children, isOpen, onClose, size, ...props }) {
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent

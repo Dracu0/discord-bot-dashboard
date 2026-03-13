@@ -1,8 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { gotoGuild, detectHorizontalOverflow } from "./helpers.js";
 
-const GUILD = "987654321098765432";
-
 test.describe("Dashboard", () => {
     test.beforeEach(async ({ page }) => {
         await gotoGuild(page, "/dashboard");

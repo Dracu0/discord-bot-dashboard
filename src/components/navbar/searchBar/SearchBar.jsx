@@ -10,7 +10,7 @@ import { Action } from "../../card/Action";
 import { Locale, useLocale } from "../../../utils/Language";
 import Modal from "../../modal/Modal";
 
-export function SearchBar({ className, ...rest }) {
+export function SearchBar({ className: _className, ...rest }) {
     const [opened, { open, close }] = useDisclosure();
 
     const [search, setSearch] = useState("");

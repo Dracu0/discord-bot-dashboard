@@ -244,6 +244,11 @@ function ResponseEditor({ values, setValue, disabled }) {
 
 const columns = [
     {
+        key: "order",
+        label: "Order",
+        render: (v, item) => String((Number.isFinite(Number(v)) ? Number(v) : Number(item?.order) || 0) + 1),
+    },
+    {
         key: "name",
         label: "Name",
         render: (v) => v,
@@ -471,6 +476,7 @@ export const AutoResponderFeature = {
                             formFields={formFields}
                             itemLabel="Auto-Responder"
                             transformSubmit={transformSubmit}
+                            reorderable
                         />
                     </div>
                 ),

@@ -57,7 +57,7 @@ export default [
         },
         rules: {
             'no-undef': 'error',
-            'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+            'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_|React$' }],
             'react/jsx-uses-vars': 'error',
             'react/jsx-uses-react': 'off',
             'no-empty': ['error', { allowEmptyCatch: true }],

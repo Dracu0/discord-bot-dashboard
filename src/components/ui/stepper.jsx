@@ -44,7 +44,7 @@ function Stepper({ active = 0, children, className }) {
   );
 }
 
-function StepperStep({ label, children }) {
+function StepperStep({ label: _label, children }) {
   return <div>{children}</div>;
 }
 

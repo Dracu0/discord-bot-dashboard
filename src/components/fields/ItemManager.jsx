@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GuildContext } from "contexts/guild/GuildContext";
-import { createFeatureItem, updateFeatureItem, deleteFeatureItem } from "api/internal";
+import { createFeatureItem, updateFeatureItem, deleteFeatureItem, reorderFeatureItems } from "api/internal";
 import { Button } from "components/ui/button";
 import Card from "components/card/Card";
 import { Switch } from "components/ui/switch";
@@ -23,12 +23,17 @@ import { toast } from "sonner";
  * @param {string}   itemLabel   - Display name ("Custom Command")
  * @param {Function} [transformSubmit] - Optional transform before POST/PATCH
  */
-export default function ItemManager({ featureId, items, columns, formFields, itemLabel, transformSubmit }) {
+export default function ItemManager({ featureId, items, columns, formFields, itemLabel, transformSubmit, reorderable = false }) {
     const { id: serverId } = useContext(GuildContext);
     const queryClient = useQueryClient();
     const [mode, setMode] = useState("list"); // "list" | "add" | "edit"
     const [editItem, setEditItem] = useState(null);
     const [error, setError] = useState(null);
+    const [orderedItems, setOrderedItems] = useState(Array.isArray(items) ? items : []);
+
+    useEffect(() => {
+        setOrderedItems(Array.isArray(items) ? items : []);
+    }, [items]);
 
     const invalidate = () => queryClient.invalidateQueries({ queryKey: ["feature_detail", serverId, featureId] });
 
@@ -49,6 +54,38 @@ export default function ItemManager({ featureId, items, columns, formFields, ite
         onSuccess: () => { invalidate(); toast.success(`${itemLabel} deleted`); },
         onError: (err) => { setError(err?.message || "Failed to delete"); toast.error(`Failed to delete ${itemLabel.toLowerCase()}`); },
     });
+
+    const reorderMut = useMutation({
+        mutationFn: (itemIds) => reorderFeatureItems(serverId, featureId, itemIds),
+        onSuccess: () => {
+            invalidate();
+            toast.success(`${itemLabel}s reordered`);
+        },
+        onError: (err) => {
+            setError(err?.message || "Failed to reorder");
+            toast.error(`Failed to reorder ${itemLabel.toLowerCase()}s`);
+            setOrderedItems(Array.isArray(items) ? items : []);
+        },
+    });
+
+    const commitReorder = (nextItems) => {
+        if (!reorderable) return;
+        const ids = nextItems.map((item) => item?._id).filter(Boolean);
+        if (!ids.length) return;
+        reorderMut.mutate(ids);
+    };
+
+    const applyReorder = (fromIndex, toIndex) => {
+        if (!reorderable) return;
+        if (fromIndex === toIndex) return;
+        if (fromIndex < 0 || toIndex < 0 || fromIndex >= orderedItems.length || toIndex >= orderedItems.length) return;
+
+        const next = [...orderedItems];
+        const [moved] = next.splice(fromIndex, 1);
+        next.splice(toIndex, 0, moved);
+        setOrderedItems(next);
+        commitReorder(next);
+    };
 
     if (mode === "add" || mode === "edit") {
         return (
@@ -82,7 +119,7 @@ export default function ItemManager({ featureId, items, columns, formFields, ite
                         </p>
                         <p className="font-['Space_Grotesk'] text-xl font-semibold leading-tight text-(--text-primary)">
                             {itemLabel}s
-                            <span className="ml-2 text-sm font-normal text-(--text-muted)">({items.length})</span>
+                            <span className="ml-2 text-sm font-normal text-(--text-muted)">({orderedItems.length})</span>
                         </p>
                     </div>
                     <Button onClick={() => { setEditItem(null); setMode("add"); }}>
@@ -90,17 +127,28 @@ export default function ItemManager({ featureId, items, columns, formFields, ite
                     </Button>
                 </div>
 
-                {items.length === 0 ? (
+                {orderedItems.length === 0 ? (
                     <p className="py-8 text-center text-sm text-(--text-muted)">
                         No {itemLabel.toLowerCase()}s yet. Click &quot;Add {itemLabel}&quot; to create one.
                     </p>
                 ) : (
                     <div className="space-y-2">
-                        {items.map((item) => (
+                        {orderedItems.map((item, index) => (
                             <ItemRow
                                 key={item._id}
                                 item={item}
+                                index={index}
+                                total={orderedItems.length}
                                 columns={columns}
+                                reorderable={reorderable}
+                                reordering={reorderMut.isPending}
+                                onDragReorder={(fromIndex, toIndex) => applyReorder(fromIndex, toIndex)}
+                                onMoveUp={() => applyReorder(index, index - 1)}
+                                onMoveDown={() => applyReorder(index, index + 1)}
+                                onMoveToPosition={(position) => {
+                                    const target = Number(position) - 1;
+                                    applyReorder(index, target);
+                                }}
                                 onEdit={() => { setEditItem(item); setMode("edit"); }}
                                 onDelete={() => {
                                     if (window.confirm(`Delete this ${itemLabel.toLowerCase()}?`)) {
@@ -117,11 +165,59 @@ export default function ItemManager({ featureId, items, columns, formFields, ite
     );
 }
 
-function ItemRow({ item, columns, onEdit, onDelete, deleting }) {
+function ItemRow({
+    item,
+    index,
+    total,
+    columns,
+    reorderable,
+    reordering,
+    onDragReorder,
+    onMoveUp,
+    onMoveDown,
+    onMoveToPosition,
+    onEdit,
+    onDelete,
+    deleting,
+}) {
+    const [moveTo, setMoveTo] = useState(String(index + 1));
+
+    useEffect(() => {
+        setMoveTo(String(index + 1));
+    }, [index]);
+
+    const disabledReorder = !reorderable || reordering;
+
     return (
-        <div className="flex items-center gap-3 rounded-xl border border-(--border-subtle) bg-(--surface-primary) px-4 py-3 transition-colors hover:bg-(--surface-secondary)">
+        <div
+            draggable={reorderable && !reordering}
+            onDragStart={(event) => {
+                if (!reorderable) return;
+                event.dataTransfer.setData("text/plain", String(index));
+                event.dataTransfer.effectAllowed = "move";
+            }}
+            onDragOver={(event) => {
+                if (!reorderable) return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+            }}
+            onDrop={(event) => {
+                if (!reorderable) return;
+                event.preventDefault();
+                const fromIndex = Number(event.dataTransfer.getData("text/plain"));
+                if (!Number.isInteger(fromIndex)) return;
+                onDragReorder?.(fromIndex, index);
+            }}
+            className="flex items-center gap-3 rounded-xl border border-(--border-subtle) bg-(--surface-primary) px-4 py-3 transition-colors hover:bg-(--surface-secondary)"
+        >
             <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap gap-x-4 gap-y-1">
+                    {reorderable && (
+                        <div className="min-w-0">
+                            <span className="text-[10px] font-semibold uppercase tracking-wider text-(--text-muted)">Order</span>
+                            <p className="truncate text-sm text-(--text-primary)">#{index + 1}</p>
+                        </div>
+                    )}
                     {columns.map((col) => (
                         <div key={col.key} className="min-w-0">
                             <span className="text-[10px] font-semibold uppercase tracking-wider text-(--text-muted)">
@@ -135,6 +231,40 @@ function ItemRow({ item, columns, onEdit, onDelete, deleting }) {
                 </div>
             </div>
             <div className="flex shrink-0 gap-2">
+                {reorderable && (
+                    <>
+                        <Button variant="outline" size="sm" onClick={onMoveUp} disabled={disabledReorder || index === 0}>
+                            ↑
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={onMoveDown} disabled={disabledReorder || index >= total - 1}>
+                            ↓
+                        </Button>
+                        <div className="flex items-center gap-1 rounded-md border border-(--border-subtle) px-1.5">
+                            <input
+                                type="number"
+                                min={1}
+                                max={total}
+                                value={moveTo}
+                                disabled={disabledReorder}
+                                onChange={(event) => setMoveTo(event.target.value)}
+                                className="w-12 bg-transparent text-center text-xs text-(--text-primary) outline-none"
+                                aria-label="Move to position"
+                            />
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                disabled={disabledReorder}
+                                onClick={() => {
+                                    const target = Number(moveTo);
+                                    if (!Number.isInteger(target) || target < 1 || target > total) return;
+                                    onMoveToPosition?.(target);
+                                }}
+                            >
+                                Go
+                            </Button>
+                        </div>
+                    </>
+                )}
                 <Button variant="ghost" size="sm" onClick={onEdit}>Edit</Button>
                 <Button variant="destructive" size="sm" onClick={onDelete} disabled={deleting}>
                     Delete

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { gotoGuild, detectHorizontalOverflow } from "./helpers.js";
+import { gotoGuild } from "./helpers.js";
 
 test.describe("Navigation & Layout", () => {
     test("sidebar is hidden below xl breakpoint", async ({ page }) => {

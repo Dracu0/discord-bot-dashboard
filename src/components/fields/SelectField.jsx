@@ -60,7 +60,7 @@ function normalizeOption(opt) {
   };
 }
 
-export function SelectField({ value, onChange, options, isMulti, placeholder, error, ...props }) {
+export function SelectField({ value, onChange, options, isMulti, placeholder, error }) {
   const data = Array.isArray(options)
     ? options.map(normalizeOption)
     : [];

@@ -19,6 +19,7 @@ const autoResponderSchema = new Schema({
         },
     },
     randomizeResponses: { type: Boolean, default: false },
+    order: { type: Number, default: 0, min: 0 },
     enabled: { type: Boolean, default: true },
     ignoreBots: { type: Boolean, default: true },
     allowedChannelIds: { type: [String], default: [] },
@@ -30,5 +31,6 @@ const autoResponderSchema = new Schema({
 
 autoResponderSchema.index({ guildId: 1, enabled: 1 });
 autoResponderSchema.index({ guildId: 1, name: 1 }, { unique: true });
+autoResponderSchema.index({ guildId: 1, order: 1, name: 1 });
 
 module.exports = model('AutoResponder', autoResponderSchema);

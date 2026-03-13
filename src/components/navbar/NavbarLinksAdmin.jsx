@@ -3,7 +3,6 @@ import { Button } from "components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuTrigger,
-    DropdownMenuContent,
 } from "components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "components/ui/avatar";
 import { useDisclosure } from "hooks/useDisclosure";

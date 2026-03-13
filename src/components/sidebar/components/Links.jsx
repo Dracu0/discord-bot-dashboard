@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLocale } from "utils/Language";
-import { ChevronRight, Circle } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import {
   Tooltip,
   TooltipTrigger,

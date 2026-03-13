@@ -245,8 +245,15 @@ router.get('/:featureId', async (req, res) => {
         } else if (featureId === 'giveaways') {
             values.giveaways = await Giveaway.find({ guildId }).sort({ createdAt: -1 }).limit(20).lean();
         } else if (featureId === 'auto_responder') {
-            values.autoResponders = (await AutoResponder.find({ guildId }).sort({ name: 1 }).lean())
-                .map((item) => normalizeAutoResponderOutput(item));
+            values.autoResponders = (await AutoResponder.find({ guildId }).sort({ order: 1, createdAt: 1, name: 1 }).lean())
+                .map((item, index) => {
+                    const normalized = normalizeAutoResponderOutput(item);
+                    const order = Number(normalized?.order);
+                    return {
+                        ...normalized,
+                        order: Number.isFinite(order) && order >= 0 ? order : index,
+                    };
+                });
         }
 
         res.json({ values });
@@ -500,15 +507,6 @@ router.patch('/:featureId', async (req, res) => {
 
 const DISCORD_ID_RE = /^\d{17,20}$/;
 const CUSTOM_EMOJI_RE = /^<a?:\w{2,32}:\d{17,20}>$/;
-const VALID_INTERVALS = {
-    'Every 1 hour':     3600000,
-    'Every 2 hours':    7200000,
-    'Every 4 hours':    14400000,
-    'Every 6 hours':    21600000,
-    'Every 8 hours':    28800000,
-    'Every 12 hours':   43200000,
-    'Every 24 hours':   86400000,
-};
 
 function normalizeAutoResponderResponses(body) {
     return normalizeAutoResponderResponseList(body?.responses, body?.response);
@@ -639,7 +637,7 @@ router.post('/:featureId/items', async (req, res) => {
                 // Assign the role via Discord API
                 try {
                     await addGuildMemberRole(guildId, userId, roleId, `Dashboard temp role by ${req.user?.username || 'unknown'}`);
-                } catch (apiErr) {
+                } catch {
                     return res.status(502).json({ error: 'Failed to assign role — check bot permissions and verify the user is in the server' });
                 }
 
@@ -678,14 +676,14 @@ router.post('/:featureId/items', async (req, res) => {
                             timestamp: endsAt.toISOString(),
                         }],
                     });
-                } catch (apiErr) {
+                } catch {
                     return res.status(502).json({ error: 'Failed to send giveaway message — check bot permissions in the target channel' });
                 }
 
                 // Add reaction
                 try {
                     await addMessageReaction(channelId, msg.id, '🎉');
-                } catch (_) { /* non-critical */ }
+                } catch { /* non-critical */ }
 
                 created = await Giveaway.create({
                     guildId,
@@ -751,6 +749,14 @@ router.post('/:featureId/items', async (req, res) => {
                         details: { field: 'name' },
                     });
                 }
+                const highestOrder = await AutoResponder.findOne({ guildId })
+                    .sort({ order: -1, createdAt: -1 })
+                    .select('order')
+                    .lean();
+                const highestOrderValue = Number(highestOrder?.order);
+                const fallbackCount = await AutoResponder.countDocuments({ guildId });
+                const nextOrder = Number.isFinite(highestOrderValue) ? highestOrderValue + 1 : fallbackCount;
+
                 created = await AutoResponder.create({
                     guildId,
                     name: name.trim().slice(0, 32),
@@ -759,6 +765,7 @@ router.post('/:featureId/items', async (req, res) => {
                     response: responses[0],
                     responses,
                     randomizeResponses: !!randomizeResponses,
+                    order: nextOrder,
                     enabled: enabled !== false,
                     ignoreBots: ignoreBots !== false,
                     cooldownMs: Math.max(0, Math.min(300000, Math.round(Number(cooldownMs) || 5000))),
@@ -823,6 +830,88 @@ router.post('/:featureId/items', async (req, res) => {
         }
         req.log?.error('feature_item_create_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
         sendApiError(res, err, 'Failed to create item');
+    }
+});
+
+// PATCH /guild/:id/feature/:featureId/items/reorder — Reorder collection items
+router.patch('/:featureId/items/reorder', async (req, res) => {
+    try {
+        const { id: guildId } = req.params;
+        const featureId = req.params.featureId;
+
+        if (!isObject(req.body) || !Array.isArray(req.body.itemIds)) {
+            return sendApiError(res, badRequest('Body must be { itemIds: string[] }', {
+                field: 'itemIds',
+                expected: 'string[]',
+            }));
+        }
+
+        if (featureId !== 'auto_responder') {
+            return sendApiError(res, badRequest('This feature does not support custom ordering', { featureId }));
+        }
+
+        const itemIds = req.body.itemIds.map((id) => String(id));
+        if (!itemIds.length) {
+            return sendApiError(res, badRequest('itemIds cannot be empty', {
+                field: 'itemIds',
+            }));
+        }
+
+        if (new Set(itemIds).size !== itemIds.length) {
+            return sendApiError(res, badRequest('itemIds must not contain duplicates', {
+                field: 'itemIds',
+            }));
+        }
+
+        if (itemIds.some((id) => !isValidObjectId(id))) {
+            return sendApiError(res, badRequest('All itemIds must be valid ObjectIds', {
+                field: 'itemIds',
+                expected: 'ObjectId[]',
+            }));
+        }
+
+        const existing = await AutoResponder.find({ guildId, _id: { $in: itemIds } })
+            .select('_id')
+            .lean();
+
+        if (existing.length !== itemIds.length) {
+            return sendApiError(res, badRequest('One or more items were not found for this guild', {
+                field: 'itemIds',
+            }));
+        }
+
+        await AutoResponder.bulkWrite(
+            itemIds.map((id, index) => ({
+                updateOne: {
+                    filter: { guildId, _id: id },
+                    update: { $set: { order: index } },
+                },
+            })),
+            { ordered: true },
+        );
+
+        const ordered = (await AutoResponder.find({ guildId, _id: { $in: itemIds } })
+            .sort({ order: 1, createdAt: 1, name: 1 })
+            .lean())
+            .map((item) => normalizeAutoResponderOutput(item));
+
+        publishConfigInvalidation(guildId);
+
+        AuditLog.create({
+            guildId,
+            actorId: req.user?.id || 'unknown',
+            actorTag: req.user?.username || '',
+            source: 'dashboard',
+            category: `items.${featureId}`,
+            action: 'reorder',
+            target: itemIds.join(','),
+            after: itemIds,
+        }).catch(err => logger.warn('audit_log_write_failed', { error: err.message, guildId, featureId }));
+
+        res.json({ items: ordered });
+    } catch (err) {
+        req.log?.error('feature_items_reorder_failed', { guildId: req.params.id, featureId: req.params.featureId, error: err });
+        sendApiError(res, err, 'Failed to reorder items');
     }
 });
 

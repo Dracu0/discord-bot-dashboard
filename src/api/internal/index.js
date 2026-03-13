@@ -103,6 +103,17 @@ export function deleteFeatureItem(serverId, featureId, itemId) {
 }
 
 /**
+ * Reorder items for a collection-based feature.
+ */
+export function reorderFeatureItems(serverId, featureId, itemIds) {
+  return fetchAuto(`/guild/${serverId}/feature/${featureId}/items/reorder`, {
+    method: "PATCH",
+    body: JSON.stringify({ itemIds }),
+    toJson: true,
+  })
+}
+
+/**
  * Get configuration settings values of a server
  * @return {values: any}
  */

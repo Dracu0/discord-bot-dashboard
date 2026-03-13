@@ -1,6 +1,4 @@
-﻿import { Link } from "react-router-dom";
-import Card from "components/card/Card";
-import React, { useCallback, useContext } from "react";
+﻿import React, { useCallback, useContext } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getFeatureDetail } from "api/internal";
 import { GuildContext } from "../../contexts/guild/GuildContext";
@@ -10,7 +8,7 @@ import { Switch } from "components/ui/switch";
 import { Badge } from "components/ui/badge";
 import { AccentCardLink } from "components/card/primitives";
 
-export default function Feature({ banner, name, description, id: featureId, enabled, canToggle, onToggle, isToggling }) {
+export default function Feature({ name, description, id: featureId, enabled, canToggle, onToggle, isToggling }) {
   const { id: serverId } = useContext(GuildContext);
   const configUrl = `/guild/${serverId}/features/${featureId}`;
   const locale = useLocale();

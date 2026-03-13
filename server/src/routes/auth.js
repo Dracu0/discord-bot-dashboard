@@ -25,7 +25,7 @@ router.get('/discord', (req, res, next) => {
 });
 
 // Discord OAuth2 callback
-router.get('/discord/callback', (req, res, next) => {
+router.get('/discord/callback', (req, res) => {
     // Validate OAuth2 state parameter to prevent CSRF
     if (!req.query.state || req.query.state !== req.session.oauthState) {
         req.log?.warn('oauth_state_mismatch');
