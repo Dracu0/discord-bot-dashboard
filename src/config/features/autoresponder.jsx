@@ -8,28 +8,107 @@ function appendResponseToken(existing, token) {
     return `${current}${spacer}${token}`;
 }
 
-function toResponseListText(item) {
-    const list = Array.isArray(item?.responses) && item.responses.length
-        ? item.responses
-        : (item?.response ? [item.response] : []);
-    return list.join("\n");
-}
+function normalizeResponses(listLike, fallback = "") {
+    if (!Array.isArray(listLike)) {
+        const single = String(fallback || "").trim();
+        return single ? [single] : [];
+    }
 
-function transformSubmit(data) {
-    const responseListText = String(data.responsesText || "");
-    const responses = responseListText
-        .split(/\r?\n/)
-        .map((line) => line.trim())
+    const list = listLike
+        .map((line) => String(line || "").trim())
         .filter(Boolean)
         .slice(0, 20)
         .map((line) => line.slice(0, 2000));
+
+    if (list.length > 0) return list;
+    const single = String(fallback || "").trim();
+    return single ? [single] : [];
+}
+
+function transformSubmit(data) {
+    const randomize = !!data.randomizeResponses;
+    const responses = randomize
+        ? normalizeResponses(data.responses, data.response)
+        : normalizeResponses([], data.response);
 
     return {
         ...data,
         response: responses[0] || "",
         responses,
-        randomizeResponses: !!data.randomizeResponses,
+        randomizeResponses: randomize,
     };
+}
+
+function ResponseEditor({ values, setValue, disabled }) {
+    const randomize = !!values.randomizeResponses;
+    const currentResponse = String(values.response || "");
+    const responses = normalizeResponses(values.responses, currentResponse);
+
+    if (!randomize) {
+        return (
+            <textarea
+                className="w-full min-h-28 rounded-xl border border-(--border-subtle) bg-(--surface-primary) px-3 py-2 text-sm text-(--text-primary) focus:border-(--accent-primary) focus:outline-none"
+                placeholder="Hey there! Welcome to the server."
+                value={currentResponse}
+                disabled={disabled}
+                onChange={(e) => {
+                    const value = String(e.target.value || "").slice(0, 2000);
+                    setValue("response", value);
+                    setValue("responses", value.trim() ? [value.trim()] : []);
+                }}
+            />
+        );
+    }
+
+    const list = responses.length > 0 ? responses : [""];
+
+    const setList = (next) => {
+        const capped = next.slice(0, 20).map((v) => String(v || "").slice(0, 2000));
+        const normalized = normalizeResponses(capped);
+        setValue("responses", capped);
+        setValue("response", normalized[0] || "");
+    };
+
+    return (
+        <div className="space-y-2.5">
+            {list.map((entry, index) => (
+                <div key={`response-${index}`} className="rounded-xl border border-(--border-subtle) bg-(--surface-primary) p-2.5">
+                    <div className="mb-1 flex items-center justify-between">
+                        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-(--text-muted)">
+                            Response {index + 1}
+                        </span>
+                        <button
+                            type="button"
+                            className="text-xs text-(--status-error) disabled:opacity-50"
+                            disabled={disabled || list.length <= 1}
+                            onClick={() => setList(list.filter((_, i) => i !== index))}
+                        >
+                            Remove
+                        </button>
+                    </div>
+                    <textarea
+                        className="w-full min-h-20 rounded-lg border border-(--border-subtle) bg-(--surface-card) px-3 py-2 text-sm text-(--text-primary) focus:border-(--accent-primary) focus:outline-none"
+                        value={entry}
+                        disabled={disabled}
+                        onChange={(e) => {
+                            const next = [...list];
+                            next[index] = String(e.target.value || "").slice(0, 2000);
+                            setList(next);
+                        }}
+                    />
+                </div>
+            ))}
+
+            <button
+                type="button"
+                className="text-sm font-medium text-(--accent-primary) disabled:opacity-50"
+                disabled={disabled || list.length >= 20}
+                onClick={() => setList([...list, ""])}
+            >
+                + Add response ({list.length}/20)
+            </button>
+        </div>
+    );
 }
 
 const columns = [
@@ -110,21 +189,13 @@ const formFields = [
             "How the trigger text is matched against messages.",
     },
     {
-        id: "responsesText",
-        label: "Responses (one per line)",
-        type: "long_string",
-        required: true,
-        placeholder: "Hey there! Welcome to the server.",
-        description: "Each non-empty line is one possible response (max 20 lines). Supports custom emoji mentions, GIF URLs, and {{sticker:ID}} tokens.",
-        validate: (v) => {
-            const lines = String(v || "")
-                .split(/\r?\n/)
-                .map((line) => line.trim())
-                .filter(Boolean);
-            if (lines.length === 0) return "At least one response is required";
-            if (lines.length > 20) return "Maximum 20 responses";
-            if (lines.some((line) => line.length > 2000)) return "Each response line must be 2000 chars or less";
-        },
+        id: "_responseEditor",
+        label: "Response Text",
+        type: "custom",
+        description: "Single response when randomize is off. Dynamic response list (up to 20 fields) when randomize is on.",
+        render: ({ values, setValue, disabled }) => (
+            <ResponseEditor values={values} setValue={setValue} disabled={disabled} />
+        ),
     },
     {
         id: "_guildAssetsPicker",
@@ -134,7 +205,20 @@ const formFields = [
         render: ({ values, setValue, disabled }) => (
             <GuildAssetsPicker
                 disabled={disabled}
-                onInsert={(token) => setValue("responsesText", appendResponseToken(values.responsesText, token))}
+                onInsert={(token) => {
+                    if (values.randomizeResponses) {
+                        const currentList = normalizeResponses(values.responses, values.response);
+                        const next = currentList.length > 0 ? [...currentList] : [""];
+                        next[0] = appendResponseToken(next[0], token);
+                        setValue("responses", next);
+                        setValue("response", next[0]);
+                        return;
+                    }
+
+                    const nextResponse = appendResponseToken(values.response, token);
+                    setValue("response", nextResponse);
+                    setValue("responses", nextResponse.trim() ? [nextResponse.trim()] : []);
+                }}
             />
         ),
     },
@@ -183,7 +267,7 @@ export const AutoResponderFeature = {
     options: (values) => {
         const responders = (values?.autoResponders || []).map((item) => ({
             ...item,
-            responsesText: toResponseListText(item),
+            responses: normalizeResponses(item.responses, item.response),
         }));
 
         return [
