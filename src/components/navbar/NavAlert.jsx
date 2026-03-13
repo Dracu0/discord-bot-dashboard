@@ -76,16 +76,19 @@ export default function NavAlert({ rootText, childText, children, clip = true })
             style={{
                 backdropFilter: "blur(20px) saturate(180%)",
                 borderRadius: "var(--radius-lg)",
-                border: `1px solid ${scrolled ? "var(--navbar-border)" : "transparent"}`,
+                border: `1px solid ${scrolled ? "var(--navbar-border)" : "color-mix(in srgb, var(--navbar-border) 45%, transparent)"}`,
                 transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
                 lineHeight: "25.6px",
                 background: "var(--navbar-bg)",
+                boxShadow: scrolled
+                    ? "var(--shadow-md)"
+                    : "0 10px 28px color-mix(in srgb, var(--accent-primary) 8%, transparent)",
                 left: clip ? `${sidebarWidth + 20}px` : "5vw",
                 right: clip ? "20px" : "5vw",
             }}
         >
             <div className="flex w-full flex-col md:flex-row xl:items-center">
-                <div className="mb-2 md:mb-0">
+                <div className="mb-2 min-w-0 md:mb-0">
                     <nav aria-label="Breadcrumb" className="mb-1.25 min-w-0 overflow-hidden">
                         <ol className="flex items-center gap-1 text-sm">
                             {breadcrumbItems.map((item, i) => (
@@ -116,11 +119,12 @@ export default function NavAlert({ rootText, childText, children, clip = true })
                     </p>
                 </div>
                 <div
-                    className="flex items-center flex-row ms-auto w-full md:w-auto p-2.5 gap-1.5 flex-wrap md:flex-nowrap"
+                    className="ms-auto flex w-full flex-row flex-wrap items-center gap-1.5 p-2 md:w-auto md:flex-nowrap"
                     style={{
                         borderRadius: "var(--radius-lg)",
-                        background: "var(--surface-primary)",
+                        background: "color-mix(in srgb, var(--surface-primary) 86%, transparent)",
                         border: "1px solid var(--border-subtle)",
+                        boxShadow: "var(--shadow-xs)",
                         overflow: "visible",
                     }}
                 >

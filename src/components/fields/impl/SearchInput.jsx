@@ -19,7 +19,7 @@ export default function SearchInput({ value, onSearch, onChange, groupStyle, cla
         aria-label="Search"
         onClick={onSearch}
       >
-        <Search className="h-[15px] w-[15px] text-(--text-muted)" />
+        <Search className="h-3.75 w-3.75 text-(--text-muted)" />
       </div>
       <Input
         className="pl-9 pr-16 rounded-full bg-(--surface-secondary) text-(--text-primary) text-sm font-medium"

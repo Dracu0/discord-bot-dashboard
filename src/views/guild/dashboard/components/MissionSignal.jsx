@@ -12,11 +12,11 @@ export default function MissionSignal({ label, value, helper, progress = 0, tone
     return (
         <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-card) px-4 py-3.5 shadow-(--shadow-xs)">
             <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold text-(--text-primary)">{label}</p>
-                <span className="font-['Space_Grotesk'] text-base font-semibold text-(--text-primary)">{value}</span>
+                <p className="text-sm font-semibold tracking-tight text-(--text-primary)">{label}</p>
+                <span className="font-['Space_Grotesk'] text-base font-semibold tracking-tight text-(--text-primary)">{value}</span>
             </div>
             {helper ? <p className="mt-1.5 text-sm leading-6 text-(--text-secondary)">{helper}</p> : null}
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-(--surface-secondary)">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-(--surface-secondary)" aria-hidden="true">
                 <div
                     className={`h-full rounded-full ${barTone[tone] || barTone.default}`}
                     style={{ width: `${clampPercentage(progress)}%` }}

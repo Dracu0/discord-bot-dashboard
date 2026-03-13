@@ -52,7 +52,7 @@ export function Task({ task }) {
     const createdAt = new Date(Date.parse(task.createdAt));
 
     return (
-        <Card className="p-1 gap-1">
+        <Card className="gap-2 rounded-2xl border border-(--border-subtle) bg-(--surface-primary) p-4 shadow-(--shadow-xs)">
             <Modal
                 isOpen={confirmOpen}
                 onClose={() => setConfirmOpen(false)}
@@ -88,11 +88,11 @@ export function Task({ task }) {
                 </div>
             </Modal>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
                 <div className="flex flex-col items-start gap-1">
                     <div className="flex items-center gap-2 flex-wrap">
                         {isModHistory && task.action && <ActionBadge action={task.action} />}
-                        <span className="text-lg font-bold">
+                        <span className="text-lg font-bold text-(--text-primary)">
                             {task.name}
                         </span>
                     </div>
@@ -103,8 +103,8 @@ export function Task({ task }) {
                             {task.reason && <span className="truncate max-w-50">Reason: {task.reason}</span>}
                         </div>
                     )}
-                    <div className="flex items-center gap-2">
-                        <span className="min-w-fit font-bold text-sm">
+                    <div className="flex items-center gap-2 text-(--text-secondary)">
+                        <span className="min-w-fit font-bold text-sm text-(--text-primary)">
                             <Locale zh="創建於: " en="Created At: " />
                         </span>
                         <span className="text-sm">{createdAt.toLocaleString()}</span>
@@ -122,7 +122,7 @@ export function Task({ task }) {
                 </Button>
             </div>
             <div className="w-full md:w-fit">
-                <Button variant="secondary" className="w-full px-2.5" asChild>
+                <Button variant="secondary" className="w-full rounded-full px-3" asChild>
                     <Link to={configUrl}>
                         <Locale zh={isReadOnly ? "查看詳情" : "修改選項"} en={isReadOnly ? "View Details" : "Modify Options"} />
                     </Link>

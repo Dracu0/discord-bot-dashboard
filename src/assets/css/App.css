@@ -69,6 +69,55 @@
 
 /* ── Semantic tokens — Light Mode ─────────────────────── */
 :root {
+  /* ── Reference token aliases (design-system layer) ────────────── */
+  --ref-color-brand-50: var(--color-brand-50);
+  --ref-color-brand-100: var(--color-brand-100);
+  --ref-color-brand-200: var(--color-brand-200);
+  --ref-color-brand-300: var(--color-brand-300);
+  --ref-color-brand-400: var(--color-brand-400);
+  --ref-color-brand-500: var(--color-brand-500);
+  --ref-color-brand-600: var(--color-brand-600);
+  --ref-color-brand-700: var(--color-brand-700);
+  --ref-color-brand-800: var(--color-brand-800);
+  --ref-color-brand-900: var(--color-brand-900);
+  --ref-color-brand-950: var(--color-brand-950);
+
+  --ref-space-1: var(--space-xs);
+  --ref-space-2: var(--space-sm);
+  --ref-space-4: var(--space-md);
+  --ref-space-6: var(--space-lg);
+  --ref-space-8: var(--space-xl);
+
+  --ref-radius-sm: var(--radius-sm);
+  --ref-radius-md: var(--radius-md);
+  --ref-radius-lg: var(--radius-lg);
+
+  /* ── System tokens (semantic, context-aware) ─────────────────── */
+  --sys-color-surface-base: var(--surface-primary);
+  --sys-color-surface-subtle: var(--surface-secondary);
+  --sys-color-surface-elevated: var(--surface-elevated);
+  --sys-color-text-primary: var(--text-primary);
+  --sys-color-text-secondary: var(--text-secondary);
+  --sys-color-text-muted: var(--text-muted);
+  --sys-color-border-default: var(--border-default);
+  --sys-color-border-subtle: var(--border-subtle);
+  --sys-color-accent: var(--accent-primary);
+
+  --sys-focus-ring-color: color-mix(in srgb, var(--accent-primary) 92%, white);
+  --sys-focus-ring-soft: color-mix(in srgb, var(--accent-primary) 22%, transparent);
+  --sys-focus-ring-offset-color: var(--surface-primary);
+  --sys-focus-ring-width: 2px;
+  --sys-focus-ring-offset: 2px;
+
+  /* ── Component tokens (initial rollout) ──────────────────────── */
+  --comp-interactive-min-target: 24px;
+  --comp-interactive-min-target-coarse: 40px;
+
+  /* Back-compat aliases consumed by existing components */
+  --focus-ring-color: var(--sys-focus-ring-color);
+  --focus-ring-soft: var(--sys-focus-ring-soft);
+  --focus-ring-offset-color: var(--sys-focus-ring-offset-color);
+
   /* Surfaces */
   --surface-primary: #ffffff;
   --surface-secondary: #f1f5f9;
@@ -163,6 +212,11 @@
   --accent-primary: var(--color-brand-400);
   --accent-secondary: var(--color-brand-600);
   --accent-glow: var(--color-accent-400);
+
+  /* Focus visuals (WCAG 2.2-friendly) */
+  --sys-focus-ring-color: color-mix(in srgb, var(--accent-primary) 88%, white);
+  --sys-focus-ring-soft: color-mix(in srgb, var(--accent-primary) 28%, transparent);
+  --sys-focus-ring-offset-color: var(--surface-primary);
 
   /* Status — same hues, slightly more visible bg */
   --status-success-bg: rgba(16, 185, 129, 0.12);
@@ -311,6 +365,23 @@ form {
 
 /* Focus-visible ring for all interactive elements */
 :focus-visible {
-  outline: 2px solid var(--accent-primary);
-  outline-offset: 2px;
+  outline: var(--sys-focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--sys-focus-ring-offset);
+}
+
+:where(button, [role="button"], a, input, select, textarea, [tabindex]):focus-visible {
+  box-shadow: 0 0 0 2px var(--focus-ring-offset-color), 0 0 0 4px var(--focus-ring-soft);
+}
+
+/* Minimum target helpers (WCAG 2.2 target-size aware) */
+.touch-target {
+  min-width: var(--comp-interactive-min-target);
+  min-height: var(--comp-interactive-min-target);
+}
+
+@media (pointer: coarse) {
+  .touch-target {
+    min-width: var(--comp-interactive-min-target-coarse);
+    min-height: var(--comp-interactive-min-target-coarse);
+  }
 }

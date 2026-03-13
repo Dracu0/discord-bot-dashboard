@@ -12,9 +12,10 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "c
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "components/ui/tooltip";
 import { Collapsible, CollapsibleContent } from "components/ui/collapsible";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "components/ui/select";
+import { Input } from "components/ui/input";
 import {
     Pagination, PaginationContent, PaginationItem, PaginationLink,
-    PaginationPrevious, PaginationNext,
+    PaginationPrevious, PaginationNext, PaginationEllipsis,
 } from "components/ui/pagination";
 import PageContainer from "components/layout/PageContainer";
 import PageHeader from "components/layout/PageHeader";
@@ -60,18 +61,30 @@ function formatActionLabel(action) {
 function DiffView({ before, after }) {
     if (before == null && after == null) return null;
 
+    const renderValue = (value) => {
+        if (value == null) return "—";
+        if (typeof value === "object") return JSON.stringify(value, null, 2);
+        return String(value);
+    };
+
     return (
-        <div className="mt-1 flex items-center gap-1.5">
-            {before != null && (
-                <code className="max-w-[45%] break-all rounded bg-red-500/10 px-1.5 py-0.5 font-mono text-xs text-red-400">
-                    - {typeof before === "object" ? JSON.stringify(before) : String(before)}
-                </code>
-            )}
-            {after != null && (
-                <code className="max-w-[45%] break-all rounded bg-emerald-500/10 px-1.5 py-0.5 font-mono text-xs text-emerald-400">
-                    + {typeof after === "object" ? JSON.stringify(after) : String(after)}
-                </code>
-            )}
+        <div className="mt-2 grid grid-cols-1 gap-3 lg:grid-cols-2">
+            <div className="rounded-lg border border-red-500/20 bg-red-500/6 p-3">
+                <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.08em] text-red-300">
+                    <Locale zh="變更前" en="Before" />
+                </span>
+                <pre className="max-h-56 overflow-auto whitespace-pre-wrap break-all text-xs text-red-300/90">
+{renderValue(before)}
+                </pre>
+            </div>
+            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/8 p-3">
+                <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.08em] text-emerald-300">
+                    <Locale zh="變更後" en="After" />
+                </span>
+                <pre className="max-h-56 overflow-auto whitespace-pre-wrap break-all text-xs text-emerald-300/90">
+{renderValue(after)}
+                </pre>
+            </div>
         </div>
     );
 }
@@ -88,7 +101,7 @@ function AuditLogRow({ entry }) {
     return (
         <>
             <TableRow
-                className={hasDiff ? "cursor-pointer" : "cursor-default"}
+                className={hasDiff ? "cursor-pointer hover:bg-(--surface-secondary)/70" : "cursor-default hover:bg-(--surface-secondary)/40"}
                 style={{ cursor: hasDiff ? "pointer" : "default" }}
                 onClick={() => hasDiff && setExpanded((p) => !p)}
             >
@@ -139,7 +152,7 @@ function AuditLogRow({ entry }) {
                 </TableCell>
                 <TableCell>
                     {hasDiff && (
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={(e) => e.stopPropagation()}>
                             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         </Button>
                     )}
@@ -169,15 +182,56 @@ export default function AuditLogPage() {
     const [page, setPage] = useState(1);
     const [category, setCategory] = useState(null);
     const [action, setAction] = useState(null);
+    const [source, setSource] = useState(null);
+    const [keyword, setKeyword] = useState("");
     const [showFilters, setShowFilters] = useState(false);
 
     const query = useQuery({
-        queryKey: ["audit_log", serverId, page, category, action],
-        queryFn: () => getAuditLog(serverId, { page, category, action }),
+        queryKey: ["audit_log", serverId, page, category, action, source],
+        queryFn: () => getAuditLog(serverId, { page, category, action, source }),
         placeholderData: (prev) => prev,
     });
 
     const { entries = [], total = 0, totalPages = 0 } = query.data || {};
+
+    const sourceOptions = useMemo(() => [
+        { value: "__all__", label: locale({ zh: "全部來源", en: "All Sources" }) },
+        { value: "dashboard", label: "Dashboard" },
+        { value: "bot", label: "Bot" },
+    ], [locale]);
+
+    const filteredEntries = useMemo(() => {
+        const q = keyword.trim().toLowerCase();
+        if (!q) return entries;
+
+        return entries.filter((entry) => {
+            const haystack = [
+                entry.actorTag,
+                entry.actorId,
+                entry.category,
+                entry.action,
+                entry.source,
+                entry.target,
+                entry.details,
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+            return haystack.includes(q);
+        });
+    }, [entries, keyword]);
+
+    const hasActiveFilters = Boolean(category || action || source || keyword.trim());
+
+    const paginationWindow = useMemo(() => {
+        if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+
+        const pages = new Set([1, totalPages, page - 1, page, page + 1]);
+        return Array.from(pages)
+            .filter((n) => n >= 1 && n <= totalPages)
+            .sort((a, b) => a - b);
+    }, [page, totalPages]);
 
     const categoryOptions = useMemo(() => [
         { value: "__all__", label: locale({ zh: "全部分類", en: "All Categories" }) },
@@ -223,6 +277,13 @@ export default function AuditLogPage() {
                 <CollapsibleContent>
                     <Card variant="panel" className="mb-2 bg-(--surface-card)">
                         <div className="flex flex-wrap items-center gap-3">
+                            <div className="w-full md:w-72">
+                                <Input
+                                    value={keyword}
+                                    onChange={(e) => setKeyword(e.target.value)}
+                                    placeholder={locale({ zh: "搜尋操作者、分類或目標", en: "Search actor, category, or target" })}
+                                />
+                            </div>
                             <Select
                                 value={category || "__all__"}
                                 onValueChange={(val) => { setCategory(val === "__all__" ? null : val); setPage(1); }}
@@ -249,7 +310,44 @@ export default function AuditLogPage() {
                                     ))}
                                 </SelectContent>
                             </Select>
+                            <Select
+                                value={source || "__all__"}
+                                onValueChange={(val) => { setSource(val === "__all__" ? null : val); setPage(1); }}
+                            >
+                                <SelectTrigger className="w-44">
+                                    <SelectValue placeholder={locale({ zh: "來源", en: "Source" })} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {sourceOptions.map((opt) => (
+                                        <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {hasActiveFilters && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setCategory(null);
+                                        setAction(null);
+                                        setSource(null);
+                                        setKeyword("");
+                                        setPage(1);
+                                    }}
+                                >
+                                    <Locale zh="清除篩選" en="Clear Filters" />
+                                </Button>
+                            )}
                         </div>
+
+                        {hasActiveFilters && (
+                            <div className="mt-3 flex flex-wrap items-center gap-2">
+                                {category && <Badge variant="secondary">{formatCategoryLabel(category)}</Badge>}
+                                {action && <Badge variant="secondary">{formatActionLabel(action)}</Badge>}
+                                {source && <Badge variant="secondary">{formatSourceLabel(source)}</Badge>}
+                                {keyword.trim() && <Badge variant="outline">{keyword.trim()}</Badge>}
+                            </div>
+                        )}
                     </Card>
                 </CollapsibleContent>
             </Collapsible>
@@ -260,7 +358,7 @@ export default function AuditLogPage() {
                 </div>
             )}
 
-            {!query.isLoading && entries.length === 0 && (
+            {!query.isLoading && filteredEntries.length === 0 && (
                 <PageSection>
                     <div className="flex flex-col items-center rounded-[28px] border border-dashed border-(--border-subtle) bg-(--surface-card) py-12">
                         <History size={48} className="text-(--text-secondary) opacity-40" />
@@ -271,14 +369,14 @@ export default function AuditLogPage() {
                 </PageSection>
             )}
 
-            {entries.length > 0 && (
+            {filteredEntries.length > 0 && (
                 <PageSection
                     title={<Locale zh="活動紀錄" en="Activity Feed" />}
                     description={<Locale zh="展開列可查看完整差異。" en="Expand rows to view detailed diffs." />}
                 >
                     <div className="overflow-x-auto rounded-xl border border-(--border-subtle) bg-(--surface-card) shadow-(--shadow-sm)">
                         <Table className="min-w-175 overflow-hidden rounded-md">
-                            <TableHeader className="bg-(--surface-secondary)">
+                            <TableHeader className="sticky top-0 z-10 bg-(--surface-secondary)">
                                 <TableRow>
                                     <TableHead className="text-[11px] font-bold uppercase tracking-[0.12em]"><Locale zh="時間" en="Time" /></TableHead>
                                     <TableHead className="text-[11px] font-bold uppercase tracking-[0.12em]"><Locale zh="操作者" en="Actor" /></TableHead>
@@ -290,7 +388,7 @@ export default function AuditLogPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {entries.map((entry) => (
+                                {filteredEntries.map((entry) => (
                                     <AuditLogRow key={entry.id} entry={entry} />
                                 ))}
                             </TableBody>
@@ -307,17 +405,24 @@ export default function AuditLogPage() {
                                             disabled={page <= 1}
                                         />
                                     </PaginationItem>
-                                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                                        const pageNum = i + 1;
+                                    {paginationWindow.map((pageNum, idx) => {
+                                        const prev = paginationWindow[idx - 1];
                                         return (
-                                            <PaginationItem key={pageNum}>
-                                                <PaginationLink
-                                                    isActive={page === pageNum}
-                                                    onClick={() => setPage(pageNum)}
-                                                >
-                                                    {pageNum}
-                                                </PaginationLink>
-                                            </PaginationItem>
+                                            <React.Fragment key={pageNum}>
+                                                {idx > 0 && prev != null && pageNum - prev > 1 && (
+                                                    <PaginationItem>
+                                                        <PaginationEllipsis />
+                                                    </PaginationItem>
+                                                )}
+                                                <PaginationItem>
+                                                    <PaginationLink
+                                                        isActive={page === pageNum}
+                                                        onClick={() => setPage(pageNum)}
+                                                    >
+                                                        {pageNum}
+                                                    </PaginationLink>
+                                                </PaginationItem>
+                                            </React.Fragment>
                                         );
                                     })}
                                     <PaginationItem>

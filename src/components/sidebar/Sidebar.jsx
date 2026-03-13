@@ -22,10 +22,11 @@ function Sidebar({ routes }) {
   return (
     <div className="fixed inset-y-0 left-0 z-20 hidden xl:block">
       <div
-        className="flex h-screen min-h-full flex-col overflow-hidden border-r border-(--sidebar-border) bg-(--sidebar-bg) shadow-[24px_0_60px_rgba(2,6,23,0.12)]"
+        className="flex h-screen min-h-full flex-col overflow-hidden border-r border-(--sidebar-border) bg-(--sidebar-bg)"
         style={{
           width,
           transition: "width 0.25s cubic-bezier(.4,0,.2,1)",
+          boxShadow: "24px 0 64px color-mix(in srgb, var(--accent-primary) 8%, rgba(2,6,23,0.14))",
         }}
       >
         <div className="flex-1 overflow-y-auto">
@@ -34,6 +35,10 @@ function Sidebar({ routes }) {
 
         <div
           className="flex items-center justify-center border-t border-(--sidebar-border) px-4 py-3"
+          style={{
+            background:
+              "linear-gradient(180deg, color-mix(in srgb, var(--accent-primary) 5%, transparent) 0%, transparent 100%)",
+          }}
         >
           <TooltipProvider>
             <Tooltip>
@@ -41,7 +46,7 @@ function Sidebar({ routes }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-9 w-9 rounded-full bg-(--surface-secondary) text-(--text-muted) hover:bg-(--surface-primary)"
+                  className="h-9 w-9 rounded-full border border-(--border-subtle) bg-(--surface-primary) text-(--text-secondary) hover:bg-(--surface-secondary)"
                   onClick={toggle}
                   aria-label={
                     sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"

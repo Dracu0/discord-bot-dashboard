@@ -33,7 +33,7 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-full bg-(--surface-secondary) text-(--text-muted) hover:bg-(--surface-primary)"
+                className="h-8 w-8 rounded-full border border-(--border-subtle) bg-(--surface-primary) text-(--text-secondary) hover:bg-(--surface-secondary)"
                 onClick={handleBack}
                 aria-label="Back to servers"
               >

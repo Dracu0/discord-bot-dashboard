@@ -30,15 +30,25 @@ function BaseAlert({ isOpen, children }) {
     );
 }
 
-export function SaveAlert({ saving, visible, disabled, onSave, onDiscard, canUndo, canRedo, onUndo, onRedo }) {
+export function SaveAlert({ saving, visible, disabled, errorCount = 0, changeCount = 0, onSave, onDiscard, canUndo, canRedo, onUndo, onRedo }) {
     return (
         <BaseAlert isOpen={visible}>
-            <span>
-                {disabled
-                    ? <Locale zh="\u8acb\u4fee\u6b63\u6240\u6709\u932f\u8aa4\u540e\u518d\u4fdd\u5b58" en="Please fix errors before saving" />
-                    : <Locale zh="\u60a8\u6709\u4e00\u4e9b\u672a\u4fdd\u5b58\u7684\u66f4\u6539" en="You have some unsaved Changes" />
-                }
-            </span>
+            <div className="min-w-0">
+                <span className="block text-sm font-medium">
+                    {disabled
+                        ? <Locale zh="\u8acb\u4fee\u6b63\u932f\u8aa4\u5f8c\u518d\u4fdd\u5b58" en="Fix validation errors before saving" />
+                        : <Locale zh="\u60a8\u6709\u672a\u4fdd\u5b58\u7684\u8b8a\u66f4" en="You have unsaved changes" />
+                    }
+                </span>
+                <span className="block text-xs text-(--text-secondary)">
+                    {disabled
+                        ? `${errorCount} error${errorCount === 1 ? "" : "s"} detected`
+                        : `${changeCount} field${changeCount === 1 ? "" : "s"} changed`
+                    }
+                    {" · "}
+                    <Locale zh="快捷鍵：Ctrl+S 保存" en="Shortcut: Ctrl+S to save" />
+                </span>
+            </div>
 
             <div className="flex items-center gap-1.5 ml-auto">
                 <TooltipProvider>

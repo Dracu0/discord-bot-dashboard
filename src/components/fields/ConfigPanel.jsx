@@ -59,6 +59,29 @@ function SectionLabel({ label }) {
     );
 }
 
+function ErrorSummary({ errors, options }) {
+    if (!errors || errors.size === 0) return null;
+
+    const topErrors = Array.from(errors.entries()).slice(0, 5);
+    const getLabel = (id) => options.find((o) => o.id === id)?.name || id;
+
+    return (
+        <div className="rounded-xl border border-red-500/25 bg-red-500/8 p-3">
+            <p className="mb-2 text-sm font-semibold text-red-300">Please resolve the following issues</p>
+            <ul className="list-disc space-y-1 ps-5 text-xs text-red-200/95">
+                {topErrors.map(([id, message]) => (
+                    <li key={id}>
+                        <span className="font-semibold">{getLabel(id)}:</span> {message}
+                    </li>
+                ))}
+                {errors.size > topErrors.length && (
+                    <li>{errors.size - topErrors.length} more issue(s) not shown</li>
+                )}
+            </ul>
+        </div>
+    );
+}
+
 const ConfigValuesContext = createContext(null);
 
 /**
@@ -160,7 +183,7 @@ export function ConfigItemListAnimated({ options, changes, errors, onChange }) {
         const isToggles = groupKey === 'switches';
 
         return (
-            <div key={groupKey} className="space-y-3">
+            <div key={groupKey} className="space-y-3 rounded-2xl border border-(--border-subtle) bg-(--surface-card) p-3.5 md:p-4.5">
                 <SectionLabel label={label} />
                 {isToggles ? (
                     <div className="flex flex-col gap-2.5">
@@ -242,6 +265,9 @@ export function MultiConfigPanel({ groups, onSave: save, onSaved }) {
     }
 
     const hasErrors = errors.size > 0;
+    const changeCount = Array.isArray(changes)
+        ? changes.reduce((acc, item) => acc + (item instanceof Map ? item.size : 0), 0)
+        : 0;
 
     return (
         <>
@@ -265,6 +291,8 @@ export function MultiConfigPanel({ groups, onSave: save, onSaved }) {
                 visible={Array.isArray(changes) && changes.some(item => item instanceof Map && item.size > 0)}
                 saving={mutation.isPending}
                 disabled={hasErrors}
+                errorCount={errors.size}
+                changeCount={changeCount}
                 onSave={() => mutation.mutate(changes)}
                 onDiscard={() => dispatch({ type: 'RESET', initial: getInitial() })}
             />
@@ -312,10 +340,13 @@ export function ConfigPanel({ options, onDiscard, onSave: save, onSaved }) {
                 errors={errors}
                 onChange={onChange}
             />
+            <ErrorSummary errors={errors} options={options} />
             <SaveAlert
                 visible={hasChanges}
                 saving={mutation.isPending}
                 disabled={hasErrors}
+                errorCount={errors.size}
+                changeCount={changes.size}
                 canUndo={past.length > 0}
                 canRedo={future.length > 0}
                 onUndo={() => dispatch({ type: 'UNDO' })}

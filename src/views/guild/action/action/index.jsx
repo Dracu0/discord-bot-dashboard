@@ -15,7 +15,7 @@ import PageSection from "components/layout/PageSection";
 import { useParams } from "react-router-dom";
 import {
     Pagination, PaginationContent, PaginationItem, PaginationLink,
-    PaginationPrevious, PaginationNext,
+    PaginationPrevious, PaginationNext, PaginationEllipsis,
 } from "components/ui/pagination";
 import { SelectField } from "components/fields/SelectField";
 import { Button } from "components/ui/button";
@@ -89,6 +89,13 @@ function TasksContent({includes}) {
     const {tasks, page, totalPages, setPage} = useContext(ActionDetailContext)
     const info = useActionInfo()
     const isReadOnly = info?.readOnly === true
+    const filteredTasks = tasks.filter((task) => includes(task.name))
+
+    const pageWindow = (() => {
+        if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+        const pages = new Set([1, totalPages, page - 1, page, page + 1]);
+        return Array.from(pages).filter((n) => n >= 1 && n <= totalPages).sort((a, b) => a - b);
+    })();
 
     return tasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-4">
@@ -113,12 +120,19 @@ function TasksContent({includes}) {
                 </span>
             </div>
         </div>
+    ) : filteredTasks.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 gap-3">
+            <div className="flex items-center justify-center h-12 w-12 rounded-full" style={{ background: "var(--surface-secondary)" }}>
+                <Inbox className="h-6 w-6 text-(--text-muted)" />
+            </div>
+            <span className="text-sm font-medium text-(--text-primary)">
+                <Locale zh="沒有符合搜尋條件的項目" en="No tasks match your current filters" />
+            </span>
+        </div>
     ) : (
         <div className="animate-in slide-in-from-bottom duration-300">
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                {tasks
-                    .filter((task) => includes(task.name))
-                    .map((task) => (
+                {filteredTasks.map((task) => (
                         <Task key={task.id} task={task} />
                     ))}
             </div>
@@ -132,17 +146,24 @@ function TasksContent({includes}) {
                                     disabled={page <= 1}
                                 />
                             </PaginationItem>
-                            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                                const pageNum = i + 1;
+                            {pageWindow.map((pageNum, idx) => {
+                                const prev = pageWindow[idx - 1];
                                 return (
-                                    <PaginationItem key={pageNum}>
-                                        <PaginationLink
-                                            isActive={page === pageNum}
-                                            onClick={() => setPage(pageNum)}
-                                        >
-                                            {pageNum}
-                                        </PaginationLink>
-                                    </PaginationItem>
+                                    <React.Fragment key={pageNum}>
+                                        {idx > 0 && prev != null && pageNum - prev > 1 && (
+                                            <PaginationItem>
+                                                <PaginationEllipsis />
+                                            </PaginationItem>
+                                        )}
+                                        <PaginationItem>
+                                            <PaginationLink
+                                                isActive={page === pageNum}
+                                                onClick={() => setPage(pageNum)}
+                                            >
+                                                {pageNum}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    </React.Fragment>
                                 );
                             })}
                             <PaginationItem>

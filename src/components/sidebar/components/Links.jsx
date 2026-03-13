@@ -163,7 +163,7 @@ function Item({ active, name, path, icon, collapsed, onNavigate, nested = false 
       className={({ isActive }) => cn(
         collapsed ? "block" : "block rounded-2xl",
         isActive
-          ? "bg-(--sidebar-active) shadow-[inset_0_0_0_1px_rgba(99,102,241,0.12)]"
+          ? "bg-(--sidebar-active) shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent-primary)_20%,transparent)]"
           : "hover:bg-(--sidebar-hover)"
       )}
     >

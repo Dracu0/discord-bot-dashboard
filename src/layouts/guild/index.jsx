@@ -29,22 +29,30 @@ function RouteWrapper({ children }) {
     const sidebarW = sidebarCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_FULL;
 
     return (
-        <div className="min-h-screen bg-(--surface-secondary)">
+        <div className="min-h-screen bg-(--surface-secondary) text-(--text-primary)">
             <PageInfoProvider>
                 <a href="#main-content" className="skip-to-content">Skip to content</a>
                 <Sidebar routes={routes} />
                 <div
-                    className="min-h-screen relative transition-[margin-left] duration-250 ml-0 xl:ml-(--sidebar-w)"
+                    className="relative min-h-screen overflow-x-clip transition-[margin-left] duration-250 ml-0 xl:ml-(--sidebar-w)"
                     data-guild-shell
                     style={{ "--sidebar-w": `${sidebarW}px` }}
                 >
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-64"
+                        style={{
+                            background:
+                                "linear-gradient(180deg, color-mix(in srgb, var(--accent-primary) 10%, transparent) 0%, transparent 72%)",
+                        }}
+                    />
 
 
                     <Navbar />
 
                     <main
                         id="main-content"
-                        className="mx-auto min-h-screen px-4 pb-6 sm:px-5 md:px-6 md:pb-7 xl:px-7.5"
+                        className="relative z-1 mx-auto min-h-screen w-full max-w-420 px-4 pb-8 sm:px-5 md:px-6 md:pb-10 xl:px-8"
                         data-guild-content
                         style={{
                             animation: "fadeSlideUp 0.3s ease both",
