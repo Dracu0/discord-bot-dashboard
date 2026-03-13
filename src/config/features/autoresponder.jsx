@@ -8,6 +8,30 @@ function appendResponseToken(existing, token) {
     return `${current}${spacer}${token}`;
 }
 
+function toResponseListText(item) {
+    const list = Array.isArray(item?.responses) && item.responses.length
+        ? item.responses
+        : (item?.response ? [item.response] : []);
+    return list.join("\n");
+}
+
+function transformSubmit(data) {
+    const responseListText = String(data.responsesText || "");
+    const responses = responseListText
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .slice(0, 20)
+        .map((line) => line.slice(0, 2000));
+
+    return {
+        ...data,
+        response: responses[0] || "",
+        responses,
+        randomizeResponses: !!data.randomizeResponses,
+    };
+}
+
 const columns = [
     {
         key: "name",
@@ -28,6 +52,21 @@ const columns = [
         key: "enabled",
         label: "Enabled",
         render: (v) => (v !== false ? "Yes" : "No"),
+    },
+    {
+        key: "responses",
+        label: "Responses",
+        render: (_v, item) => {
+            const list = Array.isArray(item?.responses) && item.responses.length
+                ? item.responses
+                : (item?.response ? [item.response] : []);
+            return String(list.length || 0);
+        },
+    },
+    {
+        key: "randomizeResponses",
+        label: "Random",
+        render: (v) => (v ? "Yes" : "No"),
     },
 ];
 
@@ -71,14 +110,20 @@ const formFields = [
             "How the trigger text is matched against messages.",
     },
     {
-        id: "response",
-        label: "Response Text",
+        id: "responsesText",
+        label: "Responses (one per line)",
         type: "long_string",
         required: true,
         placeholder: "Hey there! Welcome to the server.",
-        description: "The message the bot replies with (max 2000 chars). Supports custom emoji mentions, GIF URLs, and {{sticker:ID}} tokens.",
+        description: "Each non-empty line is one possible response (max 20 lines). Supports custom emoji mentions, GIF URLs, and {{sticker:ID}} tokens.",
         validate: (v) => {
-            if (v && v.length > 2000) return "Max 2000 characters";
+            const lines = String(v || "")
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean);
+            if (lines.length === 0) return "At least one response is required";
+            if (lines.length > 20) return "Maximum 20 responses";
+            if (lines.some((line) => line.length > 2000)) return "Each response line must be 2000 chars or less";
         },
     },
     {
@@ -89,9 +134,15 @@ const formFields = [
         render: ({ values, setValue, disabled }) => (
             <GuildAssetsPicker
                 disabled={disabled}
-                onInsert={(token) => setValue("response", appendResponseToken(values.response, token))}
+                onInsert={(token) => setValue("responsesText", appendResponseToken(values.responsesText, token))}
             />
         ),
+    },
+    {
+        id: "randomizeResponses",
+        label: "Randomize responses",
+        type: "boolean",
+        defaultValue: false,
     },
     {
         id: "ignoreBots",
@@ -130,7 +181,10 @@ export const AutoResponderFeature = {
         />
     ),
     options: (values) => {
-        const responders = values?.autoResponders || [];
+        const responders = (values?.autoResponders || []).map((item) => ({
+            ...item,
+            responsesText: toResponseListText(item),
+        }));
 
         return [
             {
@@ -144,6 +198,7 @@ export const AutoResponderFeature = {
                         columns={columns}
                         formFields={formFields}
                         itemLabel="Auto-Responder"
+                        transformSubmit={transformSubmit}
                     />
                 ),
             },

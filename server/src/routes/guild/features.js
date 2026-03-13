@@ -509,6 +509,23 @@ const VALID_INTERVALS = {
     'Every 24 hours':   86400000,
 };
 
+function normalizeAutoResponderResponses(body) {
+    let responses = [];
+
+    if (Array.isArray(body.responses)) {
+        responses = body.responses
+            .map((v) => (typeof v === 'string' ? v.trim() : ''))
+            .filter(Boolean)
+            .slice(0, 20)
+            .map((v) => v.slice(0, 2000));
+    } else if (typeof body.response === 'string') {
+        const single = body.response.trim();
+        if (single) responses = [single.slice(0, 2000)];
+    }
+
+    return responses;
+}
+
 // POST /guild/:id/feature/:featureId/items — Create item
 router.post('/:featureId/items', async (req, res) => {
     try {
@@ -656,7 +673,7 @@ router.post('/:featureId/items', async (req, res) => {
             }
 
             case 'auto_responder': {
-                const { name, trigger, matchMode, response, ignoreBots, cooldownMs, enabled } = body;
+                const { name, trigger, matchMode, ignoreBots, cooldownMs, enabled, randomizeResponses } = body;
                 if (!name || typeof name !== 'string' || name.length > 32) {
                     return res.status(400).json({ error: 'Name is required (max 32 chars)' });
                 }
@@ -667,8 +684,9 @@ router.post('/:featureId/items', async (req, res) => {
                 if (!matchMode || !VALID_MATCH_MODES.includes(matchMode)) {
                     return res.status(400).json({ error: 'Match mode must be one of: contains, exact, startsWith, regex' });
                 }
-                if (!response || typeof response !== 'string' || response.length > 2000) {
-                    return res.status(400).json({ error: 'Response is required (max 2000 chars)' });
+                const responses = normalizeAutoResponderResponses(body);
+                if (!responses.length) {
+                    return res.status(400).json({ error: 'At least one response is required (max 2000 chars each)' });
                 }
                 const count = await AutoResponder.countDocuments({ guildId });
                 if (count >= 25) {
@@ -683,7 +701,9 @@ router.post('/:featureId/items', async (req, res) => {
                     name: name.trim().slice(0, 32),
                     trigger: trigger.slice(0, 200),
                     matchMode,
-                    response: response.slice(0, 2000),
+                    response: responses[0],
+                    responses,
+                    randomizeResponses: !!randomizeResponses,
                     enabled: enabled !== false,
                     ignoreBots: ignoreBots !== false,
                     cooldownMs: Math.max(0, Math.min(300000, Math.round(Number(cooldownMs) || 5000))),
@@ -876,6 +896,20 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
                         return res.status(400).json({ error: 'Response must be a string (max 2000 chars)' });
                     }
                     arDoc.response = body.response;
+                }
+                if (body.responses !== undefined) {
+                    if (!Array.isArray(body.responses)) {
+                        return res.status(400).json({ error: 'responses must be an array of strings' });
+                    }
+                    const normalized = normalizeAutoResponderResponses(body);
+                    if (!normalized.length) {
+                        return res.status(400).json({ error: 'At least one response is required' });
+                    }
+                    arDoc.responses = normalized;
+                    arDoc.response = normalized[0];
+                }
+                if (body.randomizeResponses !== undefined) {
+                    arDoc.randomizeResponses = !!body.randomizeResponses;
                 }
                 if (body.matchMode !== undefined) {
                     const VALID_MATCH_MODES = ['contains', 'exact', 'startsWith', 'regex'];
