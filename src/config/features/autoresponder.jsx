@@ -51,6 +51,7 @@ function ResponseEditor({ values, setValue, disabled }) {
                 placeholder="Hey there! Welcome to the server."
                 value={currentResponse}
                 disabled={disabled}
+                onFocus={() => setValue("_activeResponseIndex", 0)}
                 onChange={(e) => {
                     const value = String(e.target.value || "").slice(0, 2000);
                     setValue("response", value);
@@ -67,6 +68,11 @@ function ResponseEditor({ values, setValue, disabled }) {
         const normalized = normalizeResponses(capped);
         setValue("responses", capped);
         setValue("response", normalized[0] || "");
+
+        const currentIndex = Number(values._activeResponseIndex);
+        const safeIndex = Number.isInteger(currentIndex) ? currentIndex : 0;
+        const maxIndex = Math.max(0, capped.length - 1);
+        setValue("_activeResponseIndex", Math.min(Math.max(safeIndex, 0), maxIndex));
     };
 
     return (
@@ -90,6 +96,7 @@ function ResponseEditor({ values, setValue, disabled }) {
                         className="w-full min-h-20 rounded-lg border border-(--border-subtle) bg-(--surface-card) px-3 py-2 text-sm text-(--text-primary) focus:border-(--accent-primary) focus:outline-none"
                         value={entry}
                         disabled={disabled}
+                        onFocus={() => setValue("_activeResponseIndex", index)}
                         onChange={(e) => {
                             const next = [...list];
                             next[index] = String(e.target.value || "").slice(0, 2000);
@@ -209,9 +216,13 @@ const formFields = [
                     if (values.randomizeResponses) {
                         const currentList = normalizeResponses(values.responses, values.response);
                         const next = currentList.length > 0 ? [...currentList] : [""];
-                        next[0] = appendResponseToken(next[0], token);
+                        const requestedIndex = Number(values._activeResponseIndex);
+                        const activeIndex = Number.isInteger(requestedIndex) ? requestedIndex : 0;
+                        const targetIndex = Math.min(Math.max(activeIndex, 0), next.length - 1);
+                        next[targetIndex] = appendResponseToken(next[targetIndex], token);
                         setValue("responses", next);
-                        setValue("response", next[0]);
+                        setValue("response", next[0] || "");
+                        setValue("_activeResponseIndex", targetIndex);
                         return;
                     }
 
