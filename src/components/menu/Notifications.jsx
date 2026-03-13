@@ -85,7 +85,7 @@ function EmptyState() {
                 {t("notifications.noNotifications")}
             </p>
             <p className="max-w-xs text-sm leading-6 text-(--text-secondary)">
-                Nothing new is waiting here right now. Fresh moderation activity and review alerts will appear in this panel.
+                No new notifications. Moderation events and review alerts will appear here when available.
             </p>
         </div>
     );
@@ -211,7 +211,7 @@ export function Notifications() {
                                 </Badge>
                             </div>
                             <p className="max-w-sm text-sm leading-6 text-(--text-secondary)">
-                                Review the latest moderation activity, suggestion queue updates, and dashboard alerts in one place.
+                                Displays moderation activity, suggestion queue updates, and dashboard alerts.
                             </p>
                         </div>
 

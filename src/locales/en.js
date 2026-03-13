@@ -30,8 +30,8 @@ export default {
     "nav.leaderboard": "Leaderboard",
 
     // Dashboard
-    "dashboard.welcome": "Welcome back, {username}",
-    "dashboard.overview": "Here's an overview of your server",
+    "dashboard.welcome": "User: {username}",
+    "dashboard.overview": "Server overview",
     "dashboard.totalMembers": "Total Members",
     "dashboard.onlineMembers": "Online Members",
     "dashboard.serverOverview": "Server Overview",
@@ -53,7 +53,7 @@ export default {
 
     // Actions
     "actions.title": "Server Actions",
-    "actions.description": "Review suggestions, view moderation history, and manage server tasks",
+    "actions.description": "Review suggestions, moderation history, and server tasks",
     "actions.list": "Actions List",
     "actions.tasks": "Tasks",
     "actions.noTasks": "No Tasks running",
@@ -62,14 +62,14 @@ export default {
 
     // Onboarding
     "onboarding.welcome": "Welcome to {name}!",
-    "onboarding.welcomeDesc": "Let's set up your server. Choose which features you'd like to enable.",
+    "onboarding.welcomeDesc": "Configure server features.",
     "onboarding.chooseFeatures": "Choose Features",
-    "onboarding.letsGo": "Let's Go!",
-    "onboarding.finish": "You're All Set!",
-    "onboarding.finishDesc": "You can always change these later in the Features panel.",
+    "onboarding.letsGo": "Continue",
+    "onboarding.finish": "Setup Complete",
+    "onboarding.finishDesc": "You can change these settings later in the Features panel.",
     "onboarding.goToFeatures": "Go to Features",
     "onboarding.skip": "Skip Setup",
-    "onboarding.recommended": "Recommended",
+    "onboarding.recommended": "Default",
 
     // Audit Log
     "auditLog.title": "Audit Log",
@@ -103,14 +103,14 @@ export default {
     "leaderboard.title": "XP Leaderboard",
     "leaderboard.loadFailed": "Failed to load leaderboard",
     "leaderboard.noData": "No leaderboard data",
-    "leaderboard.description": "Track your top members, compare XP pace, and spot who is climbing the server fastest.",
-    "leaderboard.compactDescription": "Your current top performers at a glance.",
+    "leaderboard.description": "Displays top members by XP and rank progression.",
+    "leaderboard.compactDescription": "Top members by XP.",
     "leaderboard.viewFull": "View full leaderboard",
     "leaderboard.level": "Level",
     "leaderboard.levelShort": "Lv. {level}",
     "leaderboard.totalXp": "Total XP",
     "leaderboard.emptyDescription": "No ranking data has been recorded for this server yet.",
-    "leaderboard.emptyHint": "Once members start earning XP, the leaderboard will come alive here.",
+    "leaderboard.emptyHint": "Data appears after members earn XP.",
 
     // Settings
     "settings.title": "Server Settings",

@@ -27,7 +27,7 @@ export default function Overview() {
 
     const pageTitle = locale({ zh: "管理主頁", en: "Admin Home" });
     usePageInfo({
-        section: locale({ zh: "控制中心", en: "Control Center" }),
+        section: locale({ zh: "管理", en: "Admin" }),
         title: pageTitle,
         trail: [pageTitle],
     });
@@ -74,7 +74,7 @@ function BrandControlCard({ managedGuildId }) {
             <div className="flex h-full flex-col gap-4">
                 <div>
                     <p className="font-['Space_Grotesk'] text-xl font-bold text-(--text-primary)">
-                        <Locale zh="快速操作" en="Quick Actions" />
+                        <Locale zh="操作" en="Actions" />
                     </p>
                 </div>
 

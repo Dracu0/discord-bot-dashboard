@@ -94,7 +94,7 @@ export const XPFeature = {
                 id: "xpRoleMultipliers",
                 name: "Role XP Multipliers",
                 description:
-                    "Set XP multipliers per role. Members with the role get boosted/reduced XP. Format: role ID → multiplier (max 25)",
+                    "Set XP multipliers per role. Members with the role receive increased/decreased XP. Format: role ID → multiplier (max 25)",
                 type: "array",
                 element: {
                     type: "pair",

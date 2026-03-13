@@ -55,7 +55,7 @@ export default function SettingsPanel() {
             </PageSection>
             <PageSection
                 title={<Locale zh="設定提示" en="Settings guidance" />}
-                description={<Locale zh="常用設定建議。" en="Recommended setting adjustments." />}
+                description={<Locale zh="常用設定調整。" en="Common setting adjustments." />}
             >
                 <SettingsGuidance />
             </PageSection>
@@ -162,10 +162,10 @@ function SettingsGuidance() {
                 <div className="space-y-4">
                     <div>
                         <h3 className="font-['Space_Grotesk'] text-lg font-semibold text-(--text-primary)">
-                            <Locale zh="建議的第一步" en="Recommended first tweaks" />
+                            <Locale zh="初始設定步驟" en="Initial configuration steps" />
                         </h3>
                         <p className="mt-1 text-sm leading-6 text-(--text-secondary)">
-                            <Locale zh="先完成這三項即可快速校正工作區。" en="Start with these three settings for a quick baseline." />
+                            <Locale zh="先完成這三項可建立基準設定。" en="Complete these three settings to establish a baseline configuration." />
                         </p>
                     </div>
                     <div className="grid gap-3 md:grid-cols-3">
@@ -179,7 +179,7 @@ function SettingsGuidance() {
                         />
                         <GuidanceTile
                             title={<Locale zh="側欄模式" en="Sidebar" />}
-                            description={<Locale zh="小螢幕建議使用精簡側欄。" en="Use compact sidebar on smaller screens." />}
+                            description={<Locale zh="小螢幕可使用精簡側欄。" en="Use compact sidebar on smaller screens when needed." />}
                         />
                     </div>
                 </div>
