@@ -26,6 +26,18 @@ function normalizeResponses(listLike, fallback = "") {
     return single ? [single] : [];
 }
 
+function getEditableResponses(listLike, fallback = "") {
+    if (Array.isArray(listLike)) {
+        const list = listLike
+            .slice(0, 20)
+            .map((line) => String(line || "").slice(0, 2000));
+        if (list.length > 0) return list;
+    }
+
+    const single = String(fallback || "").slice(0, 2000);
+    return single ? [single] : [""];
+}
+
 function transformSubmit(data) {
     const randomize = !!data.randomizeResponses;
     const responses = randomize
@@ -69,7 +81,9 @@ function matchModeClass(mode) {
 function ResponseEditor({ values, setValue, disabled }) {
     const randomize = !!values.randomizeResponses;
     const currentResponse = String(values.response || "");
-    const responses = normalizeResponses(values.responses, currentResponse);
+    const responses = randomize
+        ? getEditableResponses(values.responses, currentResponse)
+        : normalizeResponses(values.responses, currentResponse);
 
     if (!randomize) {
         const trimmed = currentResponse.trim();
@@ -116,9 +130,9 @@ function ResponseEditor({ values, setValue, disabled }) {
 
     const setList = (next) => {
         const capped = next.slice(0, 20).map((v) => String(v || "").slice(0, 2000));
-        const normalized = normalizeResponses(capped);
+        const firstResolved = normalizeResponses(capped, "")[0] || "";
         setValue("responses", capped);
-        setValue("response", normalized[0] || "");
+        setValue("response", firstResolved);
 
         const currentIndex = Number(values._activeResponseIndex);
         const safeIndex = Number.isInteger(currentIndex) ? currentIndex : 0;
@@ -336,14 +350,14 @@ const formFields = [
                 disabled={disabled}
                 onInsert={(token) => {
                     if (values.randomizeResponses) {
-                        const currentList = normalizeResponses(values.responses, values.response);
+                        const currentList = getEditableResponses(values.responses, values.response);
                         const next = currentList.length > 0 ? [...currentList] : [""];
                         const requestedIndex = Number(values._activeResponseIndex);
                         const activeIndex = Number.isInteger(requestedIndex) ? requestedIndex : 0;
                         const targetIndex = Math.min(Math.max(activeIndex, 0), next.length - 1);
                         next[targetIndex] = appendResponseToken(next[targetIndex], token);
                         setValue("responses", next);
-                        setValue("response", next[0] || "");
+                        setValue("response", normalizeResponses(next, "")[0] || "");
                         setValue("_activeResponseIndex", targetIndex);
                         return;
                     }
@@ -419,13 +433,13 @@ export const AutoResponderFeature = {
                             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                                 <div>
                                     <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--text-muted)">
-                                        Auto-Responder Control Center
+                                        Auto-Responder
                                     </p>
                                     <h3 className="font-['Space_Grotesk'] text-2xl font-semibold text-(--text-primary)">
-                                        Build smarter trigger-reply automations
+                                        Trigger-response rules
                                     </h3>
                                     <p className="mt-1 text-sm text-(--text-secondary)">
-                                        Configure matching logic, response pools, cooldowns, and media insertion from one workflow.
+                                        Configure trigger matching, response lists, cooldowns, and asset tokens.
                                     </p>
                                 </div>
 
