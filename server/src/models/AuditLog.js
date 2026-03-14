@@ -15,5 +15,7 @@ const auditLogSchema = new Schema({
 
 auditLogSchema.index({ guildId: 1, createdAt: -1 });
 auditLogSchema.index({ guildId: 1, category: 1, createdAt: -1 });
+auditLogSchema.index({ guildId: 1, action: 1, createdAt: -1 });
+auditLogSchema.index({ guildId: 1, actorId: 1, createdAt: -1 });
 
 module.exports = model('AuditLog', auditLogSchema);

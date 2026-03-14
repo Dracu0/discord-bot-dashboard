@@ -14,5 +14,7 @@ const giveawaySchema = new Schema({
 });
 
 giveawaySchema.index({ ended: 1, endsAt: 1 });
+giveawaySchema.index({ guildId: 1, ended: 1, endsAt: 1 });
+giveawaySchema.index({ guildId: 1, createdAt: -1 });
 
 module.exports = model('Giveaway', giveawaySchema);

@@ -14,5 +14,6 @@ const scheduledMessageSchema = new Schema({
 
 scheduledMessageSchema.index({ enabled: 1, nextRunAt: 1 });
 scheduledMessageSchema.index({ guildId: 1 });
+scheduledMessageSchema.index({ guildId: 1, cronLabel: 1 });
 
 module.exports = model('ScheduledMessage', scheduledMessageSchema);

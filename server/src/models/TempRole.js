@@ -11,5 +11,6 @@ const tempRoleSchema = new Schema({
 
 tempRoleSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 7 * 24 * 60 * 60 }); // 7-day TTL safety net (matches bot)
 tempRoleSchema.index({ guildId: 1, userId: 1, roleId: 1 }, { unique: true });
+tempRoleSchema.index({ guildId: 1, expiresAt: 1 });
 
 module.exports = model('TempRole', tempRoleSchema);

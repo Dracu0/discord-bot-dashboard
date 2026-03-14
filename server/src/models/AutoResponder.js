@@ -32,5 +32,7 @@ const autoResponderSchema = new Schema({
 autoResponderSchema.index({ guildId: 1, enabled: 1 });
 autoResponderSchema.index({ guildId: 1, name: 1 }, { unique: true });
 autoResponderSchema.index({ guildId: 1, order: 1, name: 1 });
+autoResponderSchema.index({ guildId: 1, order: 1, createdAt: 1, name: 1 });
+autoResponderSchema.index({ guildId: 1, order: -1, createdAt: -1 });
 
 module.exports = model('AutoResponder', autoResponderSchema);

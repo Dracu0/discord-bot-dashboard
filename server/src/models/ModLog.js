@@ -12,6 +12,8 @@ const modLogSchema = new Schema({
 
 modLogSchema.index({ guildId: 1, targetId: 1 });
 modLogSchema.index({ guildId: 1, createdAt: -1 });
+modLogSchema.index({ guildId: 1, action: 1, createdAt: -1 });
+modLogSchema.index({ guildId: 1, moderatorId: 1, createdAt: -1 });
 modLogSchema.index({ createdAt: 1 }, { expireAfterSeconds: 90 * 24 * 60 * 60 }); // 90-day TTL (matches bot)
 
 module.exports = model('ModLog', modLogSchema);

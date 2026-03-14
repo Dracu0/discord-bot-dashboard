@@ -249,4 +249,6 @@ const guildConfigurationSchema = new Schema({
     },
 });
 
+guildConfigurationSchema.index({ guildId: 1 }, { unique: true });
+
 module.exports = model('GuildConfiguration', guildConfigurationSchema);

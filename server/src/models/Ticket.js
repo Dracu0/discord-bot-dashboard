@@ -13,7 +13,8 @@ const ticketSchema = new Schema({
 });
 
 ticketSchema.index({ guildId: 1, userId: 1 });
+ticketSchema.index({ guildId: 1, userId: 1, status: 1 });
 ticketSchema.index({ guildId: 1, status: 1 });
-ticketSchema.index({ deleteAfter: 1 }, { expireAfterSeconds: 0, partialFilterExpression: { deleteAfter: { $ne: null } } }); // TTL for closed tickets (matches bot)
+ticketSchema.index({ closedAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60, partialFilterExpression: { status: 'closed' } });
 
 module.exports = model('Ticket', ticketSchema);

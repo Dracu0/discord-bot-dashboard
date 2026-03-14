@@ -46,6 +46,8 @@ const suggestionSchema = new Schema({
 
 suggestionSchema.index({ guildId: 1 });
 suggestionSchema.index({ guildId: 1, authorId: 1 });
+suggestionSchema.index({ guildId: 1, status: 1 });
+suggestionSchema.index({ guildId: 1, authorId: 1, createdAt: -1 });
 suggestionSchema.index({ suggestionId: 1 }, { unique: true });
 
 module.exports = model('Suggestion', suggestionSchema);

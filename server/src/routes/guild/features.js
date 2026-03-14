@@ -243,15 +243,15 @@ router.get('/:featureId', async (req, res) => {
         }
 
         if (featureId === 'custom_commands') {
-            values.customCommands = await CustomCommand.find({ guildId }).sort({ name: 1 }).lean();
+            values.customCommands = await CustomCommand.find({ guildId }).sort({ name: 1 }).limit(100).lean();
         } else if (featureId === 'announcements') {
-            values.scheduledMessages = await ScheduledMessage.find({ guildId }).sort({ cronLabel: 1 }).lean();
+            values.scheduledMessages = await ScheduledMessage.find({ guildId }).sort({ cronLabel: 1 }).limit(100).lean();
         } else if (featureId === 'temp_roles') {
-            values.tempRoles = await TempRole.find({ guildId }).sort({ expiresAt: 1 }).lean();
+            values.tempRoles = await TempRole.find({ guildId }).sort({ expiresAt: 1 }).limit(100).lean();
         } else if (featureId === 'giveaways') {
             values.giveaways = await Giveaway.find({ guildId }).sort({ createdAt: -1 }).limit(20).lean();
         } else if (featureId === 'auto_responder') {
-            values.autoResponders = (await AutoResponder.find({ guildId }).sort({ order: 1, createdAt: 1, name: 1 }).lean())
+            values.autoResponders = (await AutoResponder.find({ guildId }).sort({ order: 1, createdAt: 1, name: 1 }).limit(100).lean())
                 .map((item, index) => {
                     const normalized = normalizeAutoResponderOutput(item);
                     const order = Number(normalized?.order);
@@ -762,8 +762,7 @@ router.post('/:featureId/items', async (req, res) => {
                     .select('order')
                     .lean();
                 const highestOrderValue = Number(highestOrder?.order);
-                const fallbackCount = await AutoResponder.countDocuments({ guildId });
-                const nextOrder = Number.isFinite(highestOrderValue) ? highestOrderValue + 1 : fallbackCount;
+                const nextOrder = Number.isFinite(highestOrderValue) ? highestOrderValue + 1 : count;
 
                 created = await AutoResponder.create({
                     guildId,
