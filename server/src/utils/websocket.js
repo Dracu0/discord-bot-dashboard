@@ -16,6 +16,22 @@ const guildPresence = new Map();
  */
 let _sessionMiddleware = null;
 
+function normalizeOrigin(origin) {
+    if (typeof origin !== 'string' || !origin.trim()) return null;
+    try {
+        return new URL(origin).origin;
+    } catch {
+        return null;
+    }
+}
+
+function isAllowedOrigin(origin, allowedOrigins) {
+    if (!Array.isArray(allowedOrigins) || allowedOrigins.length === 0) return true;
+    const normalized = normalizeOrigin(origin);
+    if (!normalized) return false;
+    return allowedOrigins.includes(normalized);
+}
+
 function parseSession(req) {
     return new Promise((resolve) => {
         if (!_sessionMiddleware) {
@@ -37,8 +53,11 @@ function parseSession(req) {
  *
  * @param {import('http').Server} httpServer
  */
-function startWebSocketServer(httpServer, sessionMiddleware) {
+function startWebSocketServer(httpServer, sessionMiddleware, options = {}) {
     _sessionMiddleware = sessionMiddleware || null;
+    const allowedOrigins = Array.isArray(options.allowedOrigins)
+        ? options.allowedOrigins.map(normalizeOrigin).filter(Boolean)
+        : [];
     const hasRedis = !!process.env.REDIS_URL;
     if (!hasRedis) {
         logger.info('websocket_no_redis', { reason: 'REDIS_URL not configured — WS will work without pub/sub' });
@@ -47,9 +66,20 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
     wss = new WebSocketServer({
         server: httpServer,
         path: '/ws',
+        maxPayload: 16 * 1024, // 16 KiB per message
         // Authenticate on upgrade — reject unauthenticated connections
         verifyClient: async ({ req }, done) => {
             try {
+                if (!isAllowedOrigin(req.headers.origin, allowedOrigins)) {
+                    logger.warn('ws_origin_rejected', {
+                        origin: req.headers.origin || null,
+                        allowedOrigins,
+                        ip: req.socket.remoteAddress,
+                    });
+                    done(false, 403, 'Forbidden');
+                    return;
+                }
+
                 const session = await parseSession(req);
                 if (session?.passport?.user) {
                     done(true);
@@ -66,6 +96,7 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
 
     wss.on('connection', (ws, req) => {
         ws.isAlive = true;
+        ws.messageCount = 0;
         ws.subscribedGuilds = new Set();
         ws.sessionId = req.session?.id || null;
         ws.userId = req.session?.passport?.user?.id || null;
@@ -78,7 +109,12 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
             logger.warn('ws_client_error', { error: err.message });
         });
 
+        const messageCounterInterval = setInterval(() => {
+            ws.messageCount = 0;
+        }, 10_000);
+
         ws.on('close', () => {
+            clearInterval(messageCounterInterval);
             // Clean up presence on disconnect
             for (const guildId of ws.subscribedGuilds) {
                 removePresence(guildId, ws.sessionId);
@@ -89,6 +125,17 @@ function startWebSocketServer(httpServer, sessionMiddleware) {
         // Handle client messages
         ws.on('message', (raw) => {
             try {
+                ws.messageCount += 1;
+                if (ws.messageCount > 80) {
+                    logger.warn('ws_rate_limit_exceeded', {
+                        userId: ws.userId,
+                        sessionId: ws.sessionId,
+                        ip: req.socket?.remoteAddress || null,
+                    });
+                    ws.close(1008, 'Rate limit exceeded');
+                    return;
+                }
+
                 const msg = JSON.parse(raw);
                 if (msg.type === 'bot:status:request') {
                     if (latestBotStatus) {

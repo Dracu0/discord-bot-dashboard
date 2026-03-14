@@ -6,6 +6,16 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 // In production (same-origin), use relative paths. In dev, use the separate frontend URL.
 const DASHBOARD_URL = IS_PRODUCTION ? '' : (process.env.DASHBOARD_URL || 'http://localhost:3000');
 
+function safeStateMatch(expected, received) {
+    if (typeof expected !== 'string' || typeof received !== 'string') {
+        return false;
+    }
+
+    const expectedBuf = Buffer.from(expected, 'utf8');
+    const receivedBuf = Buffer.from(received, 'utf8');
+    return expectedBuf.length === receivedBuf.length && crypto.timingSafeEqual(expectedBuf, receivedBuf);
+}
+
 // Check if user is authenticated (HEAD request from dashboard)
 router.head('/', (req, res) => {
     if (req.isAuthenticated()) {
@@ -27,7 +37,7 @@ router.get('/discord', (req, res, next) => {
 // Discord OAuth2 callback
 router.get('/discord/callback', (req, res) => {
     // Validate OAuth2 state parameter to prevent CSRF
-    if (!req.query.state || req.query.state !== req.session.oauthState) {
+    if (!safeStateMatch(req.session?.oauthState, String(req.query.state || ''))) {
         req.log?.warn('oauth_state_mismatch');
         return res.redirect(`${DASHBOARD_URL}/signin?error=invalid_state`);
     }

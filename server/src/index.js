@@ -49,6 +49,26 @@ const fullCallbackURL = CALLBACK_URL.startsWith('http')
     ? CALLBACK_URL
     : `${APP_URL || `http://localhost:${PORT}`}${CALLBACK_URL}`;
 
+function normalizeOrigin(origin) {
+    if (typeof origin !== 'string' || !origin.trim()) return null;
+    try {
+        return new URL(origin).origin;
+    } catch {
+        return null;
+    }
+}
+
+const websocketAllowedOrigins = [
+    dashboardOrigin,
+    APP_URL,
+    ...(process.env.WS_ALLOWED_ORIGINS || '')
+        .split(',')
+        .map((v) => v.trim())
+        .filter(Boolean),
+]
+    .map(normalizeOrigin)
+    .filter(Boolean);
+
 // Validate environment
 if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_BOT_TOKEN || !DATABASE_TOKEN || !SESSION_SECRET) {
     logger.error('missing_required_env_vars', {
@@ -252,7 +272,9 @@ async function startServer() {
         });
 
         // Attach WebSocket server
-        startWebSocketServer(server, sessionMiddleware);
+        startWebSocketServer(server, sessionMiddleware, {
+            allowedOrigins: websocketAllowedOrigins,
+        });
     });
 }
 
