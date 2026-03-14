@@ -10,6 +10,10 @@ function toTitleLabel(value) {
         .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+function featureStatus(enabled) {
+    return enabled ? "✅ Enabled" : "❌ Disabled";
+}
+
 function shortenDiscordId(value) {
     if (!value) return "—";
     const text = String(value);
@@ -81,15 +85,15 @@ export const dashboardData = [
                 value: [
                     {
                         name: "Welcome System",
-                        value: detail.welcomeEnabled ? "✅ Enabled" : "❌ Disabled",
+                        value: featureStatus(detail.welcomeEnabled),
                     },
                     {
                         name: "XP System",
-                        value: detail.xpEnabled ? "✅ Enabled" : "❌ Disabled",
+                        value: featureStatus(detail.xpEnabled),
                     },
                     {
                         name: "Suggestions",
-                        value: detail.suggestionsEnabled ? "✅ Enabled" : "❌ Disabled",
+                        value: featureStatus(detail.suggestionsEnabled),
                     },
                     {
                         name: "Minecraft Servers",
@@ -97,7 +101,47 @@ export const dashboardData = [
                     },
                     {
                         name: "Mod Log",
-                        value: detail.modLogEnabled ? "✅ Enabled" : "❌ Disabled",
+                        value: featureStatus(detail.modLogEnabled),
+                    },
+                    {
+                        name: "Reaction Roles",
+                        value: `${detail.reactionRolesCount || 0} configured`,
+                    },
+                    {
+                        name: "Auto-Moderation",
+                        value: featureStatus(detail.automodEnabled),
+                    },
+                    {
+                        name: "Starboard",
+                        value: featureStatus(detail.starboardEnabled),
+                    },
+                    {
+                        name: "Tickets",
+                        value: featureStatus(detail.ticketsEnabled),
+                    },
+                    {
+                        name: "Custom Commands",
+                        value: `${detail.customCommandsCount || 0} configured`,
+                    },
+                    {
+                        name: "Announcements",
+                        value: `${detail.announcementsCount || 0} configured`,
+                    },
+                    {
+                        name: "Temporary Roles",
+                        value: `${detail.activeTempRolesCount || 0} active`,
+                    },
+                    {
+                        name: "Giveaways",
+                        value: `${detail.activeGiveawaysCount || 0} active`,
+                    },
+                    {
+                        name: "Music",
+                        value: featureStatus(detail.musicEnabled),
+                    },
+                    {
+                        name: "Auto-Responder",
+                        value: `${detail.autoRespondersCount || 0} configured`,
                     },
                 ],
             },

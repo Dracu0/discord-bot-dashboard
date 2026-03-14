@@ -5,6 +5,11 @@ const ModLog = require('../../models/ModLog');
 const Suggestion = require('../../models/Suggestion');
 const AuditLog = require('../../models/AuditLog');
 const Ticket = require('../../models/Ticket');
+const CustomCommand = require('../../models/CustomCommand');
+const ScheduledMessage = require('../../models/ScheduledMessage');
+const TempRole = require('../../models/TempRole');
+const Giveaway = require('../../models/Giveaway');
+const AutoResponder = require('../../models/AutoResponder');
 const { fetchGuild, fetchGuildEmojis, fetchGuildStickers } = require('../../utils/discord');
 
 function stickerExtension(formatType) {
@@ -43,9 +48,15 @@ router.get('/', async (req, res) => {
 router.get('/detail', async (req, res) => {
     try {
         const guildId = req.params.id;
-        const [guild, config] = await Promise.all([
+        const now = new Date();
+        const [guild, config, customCommandsCount, announcementsCount, activeTempRolesCount, activeGiveawaysCount, autoRespondersCount] = await Promise.all([
             fetchGuild(guildId),
             GuildConfiguration.findOne({ guildId }),
+            CustomCommand.countDocuments({ guildId }),
+            ScheduledMessage.countDocuments({ guildId }),
+            TempRole.countDocuments({ guildId, expiresAt: { $gt: now } }),
+            Giveaway.countDocuments({ guildId, ended: false, endsAt: { $gt: now } }),
+            AutoResponder.countDocuments({ guildId }),
         ]);
 
         const totalMembers = guild.approximate_member_count || 0;
@@ -61,6 +72,16 @@ router.get('/detail', async (req, res) => {
             xpEnabled: !(config?.xpDisableLevelUpMessages ?? false),
             welcomeEnabled: !!(config?.welcomeChannelId),
             modLogEnabled: !!(config?.modLogChannelId),
+            reactionRolesCount: config?.reactionRoles?.length || 0,
+            automodEnabled: !!(config?.automodEnabled),
+            starboardEnabled: !!(config?.starboardEnabled),
+            ticketsEnabled: !!(config?.ticketEnabled),
+            customCommandsCount,
+            announcementsCount,
+            activeTempRolesCount,
+            activeGiveawaysCount,
+            musicEnabled: config?.musicEnabled !== false,
+            autoRespondersCount,
         });
     } catch (err) {
         req.log?.error('guild_detail_fetch_failed', { guildId: req.params.id, error: err });
