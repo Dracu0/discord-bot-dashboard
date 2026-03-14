@@ -12,85 +12,8 @@ const AFK = require('../../models/AFK');
 const { fetchGuildChannels, fetchGuildRoles, addGuildMemberRole, removeGuildMemberRole, sendChannelMessage, addMessageReaction } = require('../../utils/discord');
 const { isObject, isValidObjectId } = require('./helpers');
 const { badRequest, notFound, sendApiError } = require('../../utils/apiError');
-
-// Feature ID to config field mapping
-const FEATURE_FIELDS = {
-    welcome: {
-        enableCheck: (c) => !!c.welcomeChannelId,
-        fields: ['welcomeChannelId', 'welcomeMessage', 'goodbyeMessage', 'welcomeEmbed', 'welcomeColor', 'goodbyeColor', 'autoRoleIds'],
-    },
-    xp: {
-        enableCheck: (c) => !c.xpDisableLevelUpMessages,
-        fields: ['xpIgnoredChannelIds', 'xpLevelUpChannelId', 'xpDisableLevelUpMessages', 'levelRoles', 'xpChannelMultipliers', 'xpRoleMultipliers'],
-    },
-    suggestions: {
-        enableCheck: (c) => c.suggestionChannelIds.length > 0,
-        fields: ['suggestionChannelIds', 'suggestionCooldownMs'],
-    },
-    minecraft: {
-        enableCheck: (c) => c.pingEnabled,
-        fields: ['pingEnabled', 'mcServers'],
-    },
-    modlog: {
-        enableCheck: (c) => !!c.modLogChannelId,
-        fields: ['modLogChannelId', 'warnThresholds'],
-    },
-    reaction_roles: {
-        enableCheck: (c) => (c.reactionRoles || []).length > 0,
-        fields: ['reactionRoles'],
-    },
-    automod: {
-        enableCheck: (c) => !!c.automodEnabled,
-        fields: [
-            'automodEnabled', 'automodBannedWords', 'automodBlockInvites', 'automodBlockLinks',
-            'automodAllowedLinkDomains', 'automodAntiSpamEnabled', 'automodAntiSpamMaxMessages',
-            'automodAntiSpamInterval', 'automodAction', 'automodTimeoutDuration',
-            'automodExemptRoleIds', 'automodExemptChannelIds', 'automodLogChannelId',
-        ],
-    },
-    starboard: {
-        enableCheck: (c) => !!c.starboardEnabled,
-        fields: ['starboardEnabled', 'starboardChannelId', 'starboardThreshold', 'starboardEmoji'],
-    },
-    tickets: {
-        enableCheck: (c) => !!c.ticketEnabled,
-        fields: ['ticketEnabled', 'ticketCategoryId', 'ticketSupportRoleIds', 'ticketLogChannelId', 'ticketMaxOpen'],
-    },
-    custom_commands: {
-        enableCheck: () => true,
-        fields: [],
-        virtual: true,
-    },
-    announcements: {
-        enableCheck: () => true,
-        fields: [],
-        virtual: true,
-    },
-    temp_roles: {
-        enableCheck: () => true,
-        fields: [],
-        virtual: true,
-    },
-    giveaways: {
-        enableCheck: () => true,
-        fields: [],
-        virtual: true,
-    },
-    music: {
-        enableCheck: (c) => c.musicEnabled !== false,
-        fields: ['musicEnabled', 'musicDJRoleId', 'musicMaxQueueSize'],
-    },
-    auto_responder: {
-        enableCheck: () => true,
-        fields: [],
-        virtual: true,
-    },
-    afk: {
-        enableCheck: () => true,
-        fields: [],
-        virtual: true,
-    },
-};
+const { FEATURE_FIELDS, applyFeatureToggle } = require('./featureDefinitions');
+const { guildFeatureIdSchema, toggleBodySchema, reorderBodySchema, parseOrApiError } = require('../../validation/validators');
 
 // GET /guild/:id/features
 router.get('/', async (req, res) => {
@@ -132,15 +55,9 @@ router.get('/', async (req, res) => {
 router.patch('/:featureId/enabled', async (req, res) => {
     try {
         const { id: guildId } = req.params;
-        const featureId = req.params.featureId;
+        const featureId = parseOrApiError(guildFeatureIdSchema, req.params.featureId, 'Invalid feature ID');
 
-        if (!isObject(req.body) || typeof req.body.enabled !== 'boolean') {
-            return sendApiError(res, badRequest('Body must be { enabled: boolean }', {
-                field: 'enabled',
-                expected: 'boolean',
-            }));
-        }
-        const { enabled } = req.body;
+        const { enabled } = parseOrApiError(toggleBodySchema, req.body, 'Body must be { enabled: boolean }');
 
         const featureDef = FEATURE_FIELDS[featureId];
         if (!featureDef) {
@@ -159,41 +76,7 @@ router.patch('/:featureId/enabled', async (req, res) => {
             config = await GuildConfiguration.create({ guildId });
         }
 
-        switch (featureId) {
-            case 'welcome':
-                if (!enabled) config.welcomeChannelId = '';
-                break;
-            case 'xp':
-                config.xpDisableLevelUpMessages = !enabled;
-                break;
-            case 'suggestions':
-                if (!enabled) config.suggestionChannelIds = [];
-                break;
-            case 'minecraft':
-                config.pingEnabled = enabled;
-                break;
-            case 'modlog':
-                if (!enabled) config.modLogChannelId = '';
-                break;
-            case 'reaction_roles':
-                if (!enabled) config.reactionRoles = [];
-                break;
-            case 'automod':
-                config.automodEnabled = enabled;
-                break;
-            case 'starboard':
-                config.starboardEnabled = enabled;
-                if (!enabled) config.starboardChannelId = '';
-                break;
-            case 'tickets':
-                config.ticketEnabled = enabled;
-                break;
-            case 'music':
-                config.musicEnabled = enabled;
-                break;
-            default:
-                break;
-        }
+        applyFeatureToggle(config, featureId, enabled);
 
         await config.save();
         publishConfigInvalidation(guildId);
@@ -225,7 +108,7 @@ router.patch('/:featureId/enabled', async (req, res) => {
 router.get('/:featureId', async (req, res) => {
     try {
         const { id: guildId } = req.params;
-        const featureId = req.params.featureId;
+        const featureId = parseOrApiError(guildFeatureIdSchema, req.params.featureId, 'Invalid feature ID');
 
         const featureDef = FEATURE_FIELDS[featureId];
         if (!featureDef) {
@@ -275,7 +158,7 @@ router.get('/:featureId', async (req, res) => {
 router.patch('/:featureId', async (req, res) => {
     try {
         const { id: guildId } = req.params;
-        const featureId = req.params.featureId;
+        const featureId = parseOrApiError(guildFeatureIdSchema, req.params.featureId, 'Invalid feature ID');
         const updates = req.body;
 
         if (!isObject(updates)) {
@@ -563,7 +446,7 @@ function getRegexValidationError(pattern) {
 router.post('/:featureId/items', async (req, res) => {
     try {
         const { id: guildId } = req.params;
-        const featureId = req.params.featureId;
+        const featureId = parseOrApiError(guildFeatureIdSchema, req.params.featureId, 'Invalid feature ID');
         const body = req.body;
 
         if (!isObject(body)) {
@@ -861,51 +744,39 @@ router.post('/:featureId/items', async (req, res) => {
 router.patch('/:featureId/items/reorder', async (req, res) => {
     try {
         const { id: guildId } = req.params;
-        const featureId = req.params.featureId;
+        const featureId = parseOrApiError(guildFeatureIdSchema, req.params.featureId, 'Invalid feature ID');
 
-        if (!isObject(req.body) || !Array.isArray(req.body.itemIds)) {
-            return sendApiError(res, badRequest('Body must be { itemIds: string[] }', {
-                field: 'itemIds',
-                expected: 'string[]',
-            }));
-        }
+        const { itemIds } = parseOrApiError(reorderBodySchema, req.body, 'Body must be { itemIds: string[] }');
 
         if (featureId !== 'auto_responder') {
             return sendApiError(res, badRequest('This feature does not support custom ordering', { featureId }));
         }
 
-        const itemIds = req.body.itemIds.map((id) => String(id));
-        if (!itemIds.length) {
+        const normalizedIds = itemIds.map((id) => String(id));
+        if (!normalizedIds.length) {
             return sendApiError(res, badRequest('itemIds cannot be empty', {
                 field: 'itemIds',
             }));
         }
 
-        if (new Set(itemIds).size !== itemIds.length) {
+        if (new Set(normalizedIds).size !== normalizedIds.length) {
             return sendApiError(res, badRequest('itemIds must not contain duplicates', {
                 field: 'itemIds',
             }));
         }
 
-        if (itemIds.some((id) => !isValidObjectId(id))) {
-            return sendApiError(res, badRequest('All itemIds must be valid ObjectIds', {
-                field: 'itemIds',
-                expected: 'ObjectId[]',
-            }));
-        }
-
-        const existing = await AutoResponder.find({ guildId, _id: { $in: itemIds } })
+        const existing = await AutoResponder.find({ guildId, _id: { $in: normalizedIds } })
             .select('_id')
             .lean();
 
-        if (existing.length !== itemIds.length) {
+        if (existing.length !== normalizedIds.length) {
             return sendApiError(res, badRequest('One or more items were not found for this guild', {
                 field: 'itemIds',
             }));
         }
 
         await AutoResponder.bulkWrite(
-            itemIds.map((id, index) => ({
+            normalizedIds.map((id, index) => ({
                 updateOne: {
                     filter: { guildId, _id: id },
                     update: { $set: { order: index } },
@@ -914,7 +785,7 @@ router.patch('/:featureId/items/reorder', async (req, res) => {
             { ordered: true },
         );
 
-        const ordered = (await AutoResponder.find({ guildId, _id: { $in: itemIds } })
+        const ordered = (await AutoResponder.find({ guildId, _id: { $in: normalizedIds } })
             .sort({ order: 1, createdAt: 1, name: 1 })
             .lean())
             .map((item) => normalizeAutoResponderOutput(item));
@@ -928,8 +799,8 @@ router.patch('/:featureId/items/reorder', async (req, res) => {
             source: 'dashboard',
             category: `items.${featureId}`,
             action: 'reorder',
-            target: itemIds.join(','),
-            after: itemIds,
+            target: normalizedIds.join(','),
+            after: normalizedIds,
         }).catch(err => logger.warn('audit_log_write_failed', { error: err.message, guildId, featureId }));
 
         res.json({ items: ordered });
@@ -946,7 +817,7 @@ const OBJECTID_FEATURES = new Set(['custom_commands', 'announcements', 'temp_rol
 router.patch('/:featureId/items/:itemId', async (req, res) => {
     try {
         const { id: guildId } = req.params;
-        const featureId = req.params.featureId;
+        const featureId = parseOrApiError(guildFeatureIdSchema, req.params.featureId, 'Invalid feature ID');
         const itemId = req.params.itemId;
         const body = req.body;
 
@@ -1225,7 +1096,7 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
 router.delete('/:featureId/items/:itemId', async (req, res) => {
     try {
         const { id: guildId } = req.params;
-        const featureId = req.params.featureId;
+        const featureId = parseOrApiError(guildFeatureIdSchema, req.params.featureId, 'Invalid feature ID');
         const itemId = req.params.itemId;
 
         if (OBJECTID_FEATURES.has(featureId) && !isValidObjectId(itemId)) {

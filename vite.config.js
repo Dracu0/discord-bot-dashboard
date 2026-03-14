@@ -55,16 +55,38 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-radix': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-tooltip',
-            '@radix-ui/react-select',
-          ],
-          'vendor-charts': ['apexcharts', 'react-apexcharts'],
-          'vendor-emoji': ['emoji-mart'],
-          'vendor-query': ['@tanstack/react-query'],
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined;
+
+          if (id.includes('apexcharts') || id.includes('react-apexcharts')) {
+            return 'vendor-charts';
+          }
+
+          if (id.includes('@emoji-mart') || id.includes('emoji-mart')) {
+            return 'vendor-emoji';
+          }
+
+          if (id.includes('@tanstack/react-query')) {
+            return 'vendor-query';
+          }
+
+          if (id.includes('@radix-ui/')) {
+            return 'vendor-radix';
+          }
+
+          if (id.includes('react-table')) {
+            return 'vendor-table';
+          }
+
+          if (id.includes('lucide-react')) {
+            return 'vendor-icons';
+          }
+
+          if (id.includes('react-router') || id.includes('/react/') || id.includes('/react-dom/')) {
+            return 'vendor-react-core';
+          }
+
+          return undefined;
         },
       },
     },

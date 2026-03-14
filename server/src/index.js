@@ -14,6 +14,7 @@ const { csrfProtection, generateCsrfToken } = require('./middleware/csrf');
 const { startWebSocketServer, stopWebSocketServer } = require('./utils/websocket');
 const { closeRedis } = require('./utils/redis');
 const { sendApiError } = require('./utils/apiError');
+const { requestMetricsMiddleware, getSnapshot } = require('./observability/metrics');
 
 const configurePassport = require('./auth/passport');
 const authRoutes = require('./routes/auth');
@@ -41,6 +42,8 @@ const {
     CALLBACK_URL = IS_PRODUCTION ? '/auth/discord/callback' : 'http://localhost:8080/auth/discord/callback',
     APP_URL, // e.g. https://my-dashboard.fly.dev — set in Fly.io secrets
 } = process.env;
+
+const EXPECTED_INSTANCES = Math.max(1, Number.parseInt(process.env.EXPECTED_INSTANCES || '1', 10) || 1);
 
 // In production, derive the dashboard URL from APP_URL if not explicitly set
 const dashboardOrigin = DASHBOARD_URL || APP_URL || `http://localhost:${PORT}`;
@@ -91,6 +94,21 @@ if (String(SESSION_SECRET).length < 32) {
     process.exit(1);
 }
 
+if (IS_PRODUCTION && EXPECTED_INSTANCES > 1 && !process.env.REDIS_URL) {
+    logger.error('redis_required_for_multi_instance_production', {
+        expectedInstances: EXPECTED_INSTANCES,
+        reason: 'Redis is required for cross-instance real-time coherence and cache invalidation.',
+    });
+    process.exit(1);
+}
+
+if (IS_PRODUCTION && EXPECTED_INSTANCES <= 1 && !process.env.REDIS_URL) {
+    logger.warn('redis_not_configured_single_instance', {
+        expectedInstances: EXPECTED_INSTANCES,
+        mode: 'fallback_only',
+    });
+}
+
 const app = express();
 
 // Trust Fly.io proxy (required for secure cookies, rate limiting, etc.)
@@ -137,6 +155,7 @@ if (!IS_PRODUCTION) {
 
 app.use(express.json({ limit: '100kb' }));
 app.use(requestContext);
+app.use('/api', requestMetricsMiddleware);
 
 // Connect to MongoDB (same DB as the bot) with retry
 const MAX_DB_RETRIES = 3;
@@ -215,6 +234,15 @@ function initializeConnectedApp() {
     app.use('/api/guild', csrfProtection, guildRoutes);
     app.use('/api/guilds', csrfProtection, userRoutes);
 
+    app.get('/metrics', (req, res) => {
+        res.json(getSnapshot({
+            process: {
+                pid: process.pid,
+                memoryRssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
+            },
+        }));
+    });
+
     // Health check
     app.get('/health', healthLimiter, (req, res) => {
         const dbReady = mongoose.connection.readyState === 1;
@@ -227,6 +255,7 @@ function initializeConnectedApp() {
             status: healthy ? 'ok' : 'degraded',
             database: dbReady ? 'connected' : 'disconnected',
             redis: process.env.REDIS_URL ? (redisReady ? 'connected' : 'disconnected') : 'not_configured',
+            expectedInstances: EXPECTED_INSTANCES,
         });
     });
 

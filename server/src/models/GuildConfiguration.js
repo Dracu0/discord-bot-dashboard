@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { CONFIG_SCHEMA_VERSION } = require('../config/configContract');
 
 const mcServerSchema = new Schema({
     name: { type: String, required: true },
@@ -43,6 +44,11 @@ const guildConfigurationSchema = new Schema({
         type: String,
         required: true,
         unique: true,
+    },
+    configSchemaVersion: {
+        type: Number,
+        default: CONFIG_SCHEMA_VERSION,
+        min: 1,
     },
     suggestionChannelIds: {
         type: [String],
@@ -248,7 +254,5 @@ const guildConfigurationSchema = new Schema({
         default: 100,
     },
 });
-
-guildConfigurationSchema.index({ guildId: 1 }, { unique: true });
 
 module.exports = model('GuildConfiguration', guildConfigurationSchema);
