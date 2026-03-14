@@ -7,7 +7,13 @@ test.describe("Dashboard", () => {
     });
 
     test("page loads and shows welcome message", async ({ page }) => {
-        await expect(page.locator("text=Welcome back").or(page.locator("text=Server mission control")).first()).toBeVisible({ timeout: 10_000 });
+        await expect(
+            page
+                .locator("text=User: TestUser")
+                .or(page.locator("text=Server Dashboard"))
+                .or(page.locator("text=伺服器儀表板"))
+                .first(),
+        ).toBeVisible({ timeout: 10_000 });
     });
 
     test("no horizontal overflow", async ({ page }) => {
@@ -16,7 +22,12 @@ test.describe("Dashboard", () => {
     });
 
     test("insight metric cards are visible", async ({ page }) => {
-        await expect(page.locator("text=Member footprint").or(page.locator("text=成員規模")).first()).toBeVisible();
+        await expect(
+            page
+                .locator("text=Total members")
+                .or(page.locator("text=成員總數"))
+                .first(),
+        ).toBeVisible();
     });
 
     test("two-column grid does not overflow near xl breakpoint", async ({ page }) => {
