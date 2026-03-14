@@ -6,7 +6,8 @@
     "scripts": {
         "start": "node src/index.js",
         "dev": "nodemon src/index.js",
-        "check:contract": "node scripts/check-contract-sync.cjs"
+        "check:contract": "node scripts/check-contract-sync.cjs",
+        "audit:prod": "npm audit --omit=dev"
     },
     "dependencies": {
         "connect-mongo": "^5.1.0",

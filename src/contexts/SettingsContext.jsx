@@ -64,16 +64,15 @@ export function SettingsProvider({children}) {
     const hasFetchedServer = useRef(false);
     const isInitialMerge = useRef(true);
 
-    const [settings, setSetting] = useState(() => ({
-        language: "en",
+    const [settings, setSettings] = useState(() => ({
+        language: getLanguageItem(),
         colorScheme: getItem("colorScheme", "system"),
         sidebarCollapsed: getItem("sidebarCollapsed", false),
         accentColor: getItem("accentColor", "brand"),
         updateSettings: (v) => {
-            setSetting(prev => ({
+            setSettings(prev => ({
                 ...prev,
                 ...v,
-                language: "en",
             }))
         }
     }))
@@ -87,12 +86,12 @@ export function SettingsProvider({children}) {
             .then(prefs => {
                 if (prefs && typeof prefs === "object") {
                     isInitialMerge.current = true;
-                    setSetting(prev => ({
+                    setSettings(prev => ({
                         ...prev,
+                        ...(prefs.language ? { language: prefs.language } : {}),
                         ...(prefs.colorScheme ? { colorScheme: prefs.colorScheme } : {}),
                         ...(prefs.accentColor ? { accentColor: prefs.accentColor } : {}),
                         ...(typeof prefs.sidebarCollapsed === "boolean" ? { sidebarCollapsed: prefs.sidebarCollapsed } : {}),
-                        language: "en",
                     }));
                 }
             })
@@ -104,7 +103,9 @@ export function SettingsProvider({children}) {
     // Persist to localStorage + theme immediately, debounce server save
     useEffect(() => {
             try {
-                localStorage.setItem("lang", "en")
+                localStorage.setItem("language", settings.language)
+                // Backward compatibility with older key
+                localStorage.setItem("lang", settings.language)
                 localStorage.setItem("colorScheme", JSON.stringify(settings.colorScheme))
                 localStorage.setItem("sidebarCollapsed", JSON.stringify(settings.sidebarCollapsed))
                 localStorage.setItem("accentColor", JSON.stringify(settings.accentColor))
@@ -128,6 +129,7 @@ export function SettingsProvider({children}) {
             if (serverSyncTimer.current) clearTimeout(serverSyncTimer.current);
             serverSyncTimer.current = setTimeout(() => {
                 saveUserPreferences({
+                    language: settings.language,
                     colorScheme: settings.colorScheme,
                     accentColor: settings.accentColor,
                     sidebarCollapsed: settings.sidebarCollapsed,
@@ -144,6 +146,14 @@ export function SettingsProvider({children}) {
     return <SettingsContext.Provider value={settings}>
         {children}
     </SettingsContext.Provider>
+}
+
+function getLanguageItem() {
+    const stored = getItem("language", null) || getItem("lang", null);
+    if (typeof stored === "string" && stored.trim()) {
+        return "en";
+    }
+    return "en";
 }
 
 function getItem(key, initial) {

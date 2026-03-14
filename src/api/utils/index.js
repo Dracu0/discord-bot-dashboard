@@ -72,30 +72,45 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
 
     const doFetch = (token) => {
         const controller = new AbortController();
+        const externalSignal = options.signal;
+        let abortHandler = null;
         const timeoutHandle = setTimeout(() => {
             controller.abort(new DOMException(`Request timed out after ${timeoutMs}ms`, 'AbortError'));
         }, timeoutMs);
 
-        if (options.signal) {
-            if (options.signal.aborted) {
-                controller.abort(options.signal.reason);
+        if (externalSignal) {
+            if (externalSignal.aborted) {
+                controller.abort(externalSignal.reason);
             } else {
-                options.signal.addEventListener('abort', () => controller.abort(options.signal.reason), { once: true });
+                abortHandler = () => controller.abort(externalSignal.reason);
+                externalSignal.addEventListener('abort', abortHandler, { once: true });
             }
+        }
+
+        const headers = {
+            'x-request-id': requestId,
+            ...(token ? { 'x-csrf-token': token } : {}),
+            ...(options.headers || {}),
+        };
+
+        const hasBody = options.body != null;
+        const isFormDataBody = typeof globalThis.FormData !== 'undefined' && options.body instanceof globalThis.FormData;
+        const hasContentTypeHeader = Object.keys(headers).some((key) => key.toLowerCase() === 'content-type');
+
+        if (hasBody && !isFormDataBody && !hasContentTypeHeader) {
+            headers['content-type'] = 'application/json';
         }
 
         return fetch(`${config.serverUrl}${url}`, {
             credentials: "include",
-            headers: {
-                'content-type': 'application/json',
-                'x-request-id': requestId,
-                ...(token ? { 'x-csrf-token': token } : {}),
-                ...(options.headers || {})
-            },
+            headers,
             ...options,
             signal: controller.signal,
         }).finally(() => {
             clearTimeout(timeoutHandle);
+            if (externalSignal && abortHandler) {
+                externalSignal.removeEventListener('abort', abortHandler);
+            }
         });
     };
 
@@ -155,7 +170,8 @@ export function fetchAuto(url, {toJson = false, throwError = true, ...options} =
         }
 
         const isTimeout = err.name === 'AbortError' || /timed out/i.test(err.message);
-        const isNetwork = err.message === 'Failed to fetch' || isTimeout;
+        const isNetworkLikeTypeError = err.name === 'TypeError' && /fetch|network|load failed/i.test(err.message);
+        const isNetwork = err.message === 'Failed to fetch' || isNetworkLikeTypeError || isTimeout;
         if (!isNetwork) {
             throw err;
         }

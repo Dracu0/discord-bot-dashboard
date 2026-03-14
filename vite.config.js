@@ -59,11 +59,14 @@ export default defineConfig({
           if (!id.includes('node_modules')) return undefined;
 
           if (id.includes('apexcharts') || id.includes('react-apexcharts')) {
-            return 'vendor-charts';
+            return id.includes('react-apexcharts') ? 'vendor-react-apexcharts' : 'vendor-apexcharts';
           }
 
           if (id.includes('@emoji-mart') || id.includes('emoji-mart')) {
-            return 'vendor-emoji';
+            if (id.includes('@emoji-mart/data')) {
+              return 'vendor-emoji-data';
+            }
+            return 'vendor-emoji-ui';
           }
 
           if (id.includes('@tanstack/react-query')) {

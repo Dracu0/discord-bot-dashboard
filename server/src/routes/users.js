@@ -4,9 +4,10 @@ const { fetchBotGuildIds } = require('../utils/discord');
 const { hasManageGuild } = require('../utils/permissions');
 const UserPreference = require('../models/UserPreference');
 
-const ALLOWED_PREF_KEYS = ['colorScheme', 'accentColor', 'sidebarCollapsed'];
+const ALLOWED_PREF_KEYS = ['language', 'colorScheme', 'accentColor', 'sidebarCollapsed'];
 const ALLOWED_COLOR_SCHEMES = ['light', 'dark', 'auto', 'system'];
 const ALLOWED_ACCENTS = ['brand', 'blue', 'teal', 'green', 'orange', 'pink'];
+const ALLOWED_LANGUAGES = ['en'];
 
 // GET /users/@me - Get current user's account info
 router.get('/@me', requireAuth, (req, res) => {
@@ -55,6 +56,9 @@ router.patch('/preferences', requireAuth, async (req, res) => {
         if (updates.colorScheme && !ALLOWED_COLOR_SCHEMES.includes(updates.colorScheme)) {
             return res.status(400).json({ error: 'Invalid colorScheme' });
         }
+        if (updates.language && !ALLOWED_LANGUAGES.includes(updates.language)) {
+            return res.status(400).json({ error: 'Invalid language' });
+        }
         if (updates.accentColor && !ALLOWED_ACCENTS.includes(updates.accentColor)) {
             return res.status(400).json({ error: 'Invalid accentColor' });
         }
@@ -75,9 +79,9 @@ router.patch('/preferences', requireAuth, async (req, res) => {
         req.log?.info('preferences_updated', { userId: req.user.id, fields: Object.keys(updates) });
 
         res.json({
+            language: prefs.language || 'en',
             colorScheme: prefs.colorScheme,
             accentColor: prefs.accentColor,
-            language: 'en',
             sidebarCollapsed: prefs.sidebarCollapsed,
         });
     } catch (err) {

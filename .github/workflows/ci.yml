@@ -39,6 +39,16 @@ jobs:
   backend-smoke:
     name: Backend install + start smoke
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval \"db.adminCommand('ping').ok\""
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     defaults:
       run:
         working-directory: server
@@ -64,12 +74,22 @@ jobs:
           DISCORD_CLIENT_ID: test
           DISCORD_CLIENT_SECRET: test
           DISCORD_BOT_TOKEN: test
-          DATABASE_TOKEN: mongodb://127.0.0.1:27017/test
+          DATABASE_TOKEN: mongodb://127.0.0.1:27017/test?directConnection=true
           SESSION_SECRET: 0123456789abcdef0123456789abcdef
           DASHBOARD_URL: http://localhost:3000
           CALLBACK_URL: http://localhost:8080/auth/discord/callback
         run: |
           npm start &
           SERVER_PID=$!
-          sleep 5
-          kill $SERVER_PID || true
+          trap "kill $SERVER_PID || true" EXIT
+
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8080/health >/dev/null; then
+              echo "Backend health check passed"
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "Backend failed health check in time"
+          exit 1

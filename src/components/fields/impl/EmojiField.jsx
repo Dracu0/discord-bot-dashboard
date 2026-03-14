@@ -1,7 +1,5 @@
-import data from "@emoji-mart/data";
 import { InputField } from "./InputField";
 import { Popover, PopoverTrigger, PopoverContent } from "components/ui/popover";
-import { Picker } from "emoji-mart";
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -37,7 +35,7 @@ export default function EmojiField({ value, onChange: change }) {
             className="w-87.5 overflow-hidden rounded-2xl p-0"
             style={{ zIndex: 1500 }}
           >
-            <EmojiPicker data={data} onChange={onChange} />
+            <EmojiPicker onChange={onChange} />
           </PopoverContent>
         </Popover>
       </div>
@@ -45,19 +43,51 @@ export default function EmojiField({ value, onChange: change }) {
   );
 }
 
-function EmojiPicker({ data, onChange }) {
+function EmojiPicker({ onChange }) {
   const ref = useRef();
   const changeRef = useRef(onChange);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   changeRef.current = onChange;
 
   useEffect(() => {
-    if (ref.current.childNodes.length !== 0) return;
+    let mounted = true;
 
-    new Picker({
-      onEmojiSelect: (e) => changeRef.current(e),
-      data,
-      ref,
-    });
+    if (ref.current?.childNodes.length !== 0) {
+      setLoading(false);
+      return;
+    }
+
+    Promise.all([
+      import("emoji-mart"),
+      import("@emoji-mart/data"),
+    ])
+      .then(([emojiMartModule, emojiDataModule]) => {
+        if (!mounted || !ref.current) return;
+
+        const Picker = emojiMartModule?.Picker;
+        const pickerData = emojiDataModule?.default;
+
+        if (!Picker || !pickerData) {
+          throw new Error("Emoji picker modules failed to load");
+        }
+
+        new Picker({
+          onEmojiSelect: (e) => changeRef.current(e),
+          data: pickerData,
+          ref,
+        });
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setLoadError(true);
+        setLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
@@ -70,6 +100,8 @@ function EmojiPicker({ data, onChange }) {
       }}
     >
       <div ref={ref} className="w-full" />
+      {loading && <p className="px-4 py-3 text-sm text-(--text-muted)">Loading emoji picker…</p>}
+      {loadError && <p className="px-4 py-3 text-sm text-(--status-error)">Could not load emoji picker.</p>}
     </div>
   );
 }

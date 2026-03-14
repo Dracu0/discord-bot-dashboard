@@ -4,16 +4,17 @@ import { SelectField } from "components/fields/SelectField";
 import { InputField } from "./impl/InputField";
 import MessageBuildCard from "./complex/MessageBuildCard";
 import ColorField from "./impl/ColorField";
-import { createContext, useContext, useMemo } from "react";
+import { createContext, Suspense, lazy, useContext, useMemo } from "react";
 import ArrayField from "./complex/ArrayField";
 import TextArea from "./TextArea";
 import IdSelectField from "./impl/IdSelectField";
 import ImageField from "./impl/ImageField";
-import EmojiField from "./impl/EmojiField";
 import DurationField from "./impl/DurationField";
 import PairField from "./complex/PairField";
 import { OptionTypes } from "../../variables/type";
 import { cn } from "lib/utils";
+
+const EmojiField = lazy(() => import("./impl/EmojiField"));
 
 const PREVIEW_TYPE = "preview";
 
@@ -218,7 +219,9 @@ export function getInput(value, onChange, option, error) {
             )
         case OptionTypes.Emoji:
             return (
-                <EmojiField value={value} onChange={onChange} />
+                <Suspense fallback={<InputField value={value || ""} readOnly placeholder="Loading emoji picker..." />}>
+                    <EmojiField value={value} onChange={onChange} />
+                </Suspense>
             )
         case OptionTypes.Pair:
             return (
