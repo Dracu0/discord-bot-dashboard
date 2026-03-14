@@ -1,0 +1,72 @@
+name: dashboard-ci
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  frontend-quality:
+    name: Frontend lint, test, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Lint frontend
+        run: npm run lint
+
+      - name: Run frontend unit tests
+        run: npm run test:run
+
+      - name: Build frontend
+        run: npm run build
+
+  backend-smoke:
+    name: Backend install + start smoke
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Start backend briefly
+        env:
+          DISCORD_CLIENT_ID: test
+          DISCORD_CLIENT_SECRET: test
+          DISCORD_BOT_TOKEN: test
+          DATABASE_TOKEN: mongodb://127.0.0.1:27017/test
+          SESSION_SECRET: 0123456789abcdef0123456789abcdef
+          DASHBOARD_URL: http://localhost:3000
+          CALLBACK_URL: http://localhost:8080/auth/discord/callback
+        run: |
+          npm start &
+          SERVER_PID=$!
+          sleep 5
+          kill $SERVER_PID || true
