@@ -28,6 +28,17 @@ export default function Leaderboard() {
         placeholderData: (prev) => prev,
     });
 
+    const totalPages = query.data?.totalPages ?? 0;
+    const pageWindow = useMemo(() => {
+        if (totalPages <= 7) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
+        }
+        const pages = new Set([1, totalPages, page - 1, page, page + 1]);
+        return Array.from(pages)
+            .filter((n) => n >= 1 && n <= totalPages)
+            .sort((a, b) => a - b);
+    }, [totalPages, page]);
+
     if (query.isLoading && !query.data) {
         return (
             <PageContainer className="flex h-100 items-center justify-center">
@@ -47,16 +58,6 @@ export default function Leaderboard() {
     const data = query.data;
     if (!data) return null;
     const users = data.users || data.entries || [];
-
-    const pageWindow = useMemo(() => {
-        if (data.totalPages <= 7) {
-            return Array.from({ length: data.totalPages }, (_, i) => i + 1);
-        }
-        const pages = new Set([1, data.totalPages, page - 1, page, page + 1]);
-        return Array.from(pages)
-            .filter((n) => n >= 1 && n <= data.totalPages)
-            .sort((a, b) => a - b);
-    }, [data.totalPages, page]);
 
     return (
         <PageContainer>
