@@ -77,7 +77,6 @@ function TasksPanel() {
                 <SearchInput value={filter} onChange={setFilter} bg="var(--surface-secondary)" groupStyle={{ maw: "20rem" }} />
             </div>
         }
-        className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
     >
         <ActionDetailProvider filters={filters}>
             <TasksContent includes={includes} />

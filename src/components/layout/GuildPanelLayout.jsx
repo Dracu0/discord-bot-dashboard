@@ -30,7 +30,7 @@ export default function GuildPanelLayout({ pageTitle, defaultBannerImage, banner
     if (dataList) {
         return (
             <PageContainer>
-                <div className="grid grid-cols-12 gap-6 pb-2">
+                <div className="grid grid-cols-12 gap-6 pb-2 xl:gap-7">
                     <div className="col-span-12 xl:col-span-8">
                         <div className="flex flex-col gap-5">
                             <LayoutBanner banner={banner} defaultImage={defaultBannerImage} clip={bannerClip} />
@@ -38,7 +38,7 @@ export default function GuildPanelLayout({ pageTitle, defaultBannerImage, banner
                         </div>
                     </div>
                     <div className="col-span-12 xl:col-span-4">
-                        <div className="flex flex-col gap-5 xl:sticky" style={{ top: "calc(var(--page-top-offset, 96px) - 8px)" }}>
+                        <div className="flex flex-col gap-5 xl:sticky" style={{ top: "calc(var(--page-top-offset, 96px) - 4px)" }}>
                             {dataList}
                         </div>
                     </div>

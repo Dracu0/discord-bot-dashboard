@@ -247,17 +247,27 @@ export default function Analytics() {
                 description={<Locale zh="審核趨勢與操作分佈。" en="Moderation trend and action distribution." />}
             >
                 <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                    <Card variant="panel" className="flex flex-col">
-                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
-                            <Locale zh="審核趨勢" en="Moderation Trend" />
-                        </span>
+                    <Card variant="panel" className="flex flex-col border-(--border-subtle) bg-(--surface-card)">
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                            <span className="text-lg font-bold text-(--text-primary)">
+                                <Locale zh="審核趨勢" en="Moderation Trend" />
+                            </span>
+                            <Badge variant="secondary" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.12em]">
+                                <Locale zh="時間序列" en="Timeline" />
+                            </Badge>
+                        </div>
                         <ModerationTimeline data={data.moderation?.byDay || []} />
                     </Card>
 
-                    <Card variant="panel" className="flex flex-col">
-                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
-                            <Locale zh="操作類型分佈" en="Action Type Breakdown" />
-                        </span>
+                    <Card variant="panel" className="flex flex-col border-(--border-subtle) bg-(--surface-card)">
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                            <span className="text-lg font-bold text-(--text-primary)">
+                                <Locale zh="操作類型分佈" en="Action Type Breakdown" />
+                            </span>
+                            <Badge variant="secondary" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.12em]">
+                                <Locale zh="分佈" en="Distribution" />
+                            </Badge>
+                        </div>
                         <ActionBreakdown data={data.moderation?.byType || []} />
                     </Card>
                 </div>
@@ -268,17 +278,27 @@ export default function Analytics() {
                 description={<Locale zh="查看等級與建議流程狀態。" en="Review leveling and suggestion pipeline status." />}
             >
                 <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                    <Card variant="panel" className="flex flex-col">
-                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
-                            <Locale zh="等級分佈" en="Level Distribution" />
-                        </span>
+                    <Card variant="panel" className="flex flex-col border-(--border-subtle) bg-(--surface-card)">
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                            <span className="text-lg font-bold text-(--text-primary)">
+                                <Locale zh="等級分佈" en="Level Distribution" />
+                            </span>
+                            <Badge variant="secondary" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.12em]">
+                                <Locale zh="成長" en="Growth" />
+                            </Badge>
+                        </div>
                         <LevelDistribution data={data.xp?.levelDistribution || []} />
                     </Card>
 
-                    <Card variant="panel" className="flex flex-col">
-                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
-                            <Locale zh="建議狀態" en="Suggestion Status" />
-                        </span>
+                    <Card variant="panel" className="flex flex-col border-(--border-subtle) bg-(--surface-card)">
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                            <span className="text-lg font-bold text-(--text-primary)">
+                                <Locale zh="建議狀態" en="Suggestion Status" />
+                            </span>
+                            <Badge variant="secondary" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.12em]">
+                                <Locale zh="流程" en="Workflow" />
+                            </Badge>
+                        </div>
                         <SuggestionFunnel data={data.suggestions?.byStatus || []} />
                     </Card>
                 </div>
@@ -289,10 +309,15 @@ export default function Analytics() {
                     title={<Locale zh="儀表板活動" en="Dashboard Activity" />}
                     description={<Locale zh="各分類操作次數。" en="Activity count by category." />}
                 >
-                    <Card variant="panel" className="flex flex-col">
-                        <span className="mb-3 text-lg font-bold text-(--text-primary)">
-                            <Locale zh="儀表板操作記錄" en="Dashboard Activity" />
-                        </span>
+                    <Card variant="panel" className="flex flex-col border-(--border-subtle) bg-(--surface-card)">
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                            <span className="text-lg font-bold text-(--text-primary)">
+                                <Locale zh="儀表板操作記錄" en="Dashboard Activity" />
+                            </span>
+                            <Badge variant="secondary" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.12em]">
+                                <Locale zh="分類" en="Categories" />
+                            </Badge>
+                        </div>
                         <div className="flex flex-wrap items-center gap-4">
                             {(data.audit?.byCategory || []).map((d) => (
                                 <div key={d.category} className="flex items-center gap-1.5">

@@ -28,11 +28,10 @@ export default function ActionsList() {
     return (
         <PageSection
             title={<Locale zh="動作列表" en="Action Library" />}
-            description={<Locale zh="管理審核、建議與工作流程。" en="Manage moderation, suggestions, and workflows." />}
-            className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
+            description={<Locale zh="管理審核、建議與任務工作流。" en="Manage moderation, suggestions, and operational workflows." />}
             actions={
-                <div className="flex items-center gap-2">
-                    <Badge variant="secondary">{filtered.length}</Badge>
+                <div className="flex items-center gap-2 rounded-xl border border-(--border-subtle) bg-(--surface-primary) p-1.5 shadow-(--shadow-xs)">
+                    <Badge variant="secondary" className="rounded-full px-3 py-1">{filtered.length}</Badge>
                     <SearchInput
                         value={query}
                         onChange={setQuery}
@@ -44,8 +43,8 @@ export default function ActionsList() {
             <div className="flex flex-col gap-4">
                 <Actions actions={filtered} />
                 {filtered.length === 0 && (
-                    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-(--border-subtle) bg-(--surface-secondary)/60 px-4 py-10">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--surface-primary)">
+                    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-(--border-subtle) bg-(--surface-secondary)/70 px-4 py-10">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-(--border-subtle) bg-(--surface-primary)">
                             <Inbox className="h-6 w-6 text-(--text-muted)" />
                         </div>
                         <p className="text-sm font-medium text-(--text-primary)">

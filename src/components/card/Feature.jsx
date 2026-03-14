@@ -56,7 +56,7 @@ export default function Feature({ name, description, id: featureId, enabled, can
               className="scale-90 self-start sm:self-center"
             />
           )}
-          <Button size="sm" className="h-10 rounded-full px-4 text-sm font-medium shadow-(--shadow-xs)">
+          <Button size="sm" className="h-10 rounded-xl px-4 text-sm font-semibold shadow-(--shadow-xs)">
             <Locale zh="配置" en="Configure" />
           </Button>
         </>

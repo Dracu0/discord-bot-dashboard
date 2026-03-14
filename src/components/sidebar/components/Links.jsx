@@ -33,13 +33,13 @@ export function SidebarLinks({ routes, collapsed, onNavigate }) {
     if (item.type === "category") {
       if (collapsed) return null;
       return (
-        <div key={item.key} className="mt-4.5 mb-2 px-1">
+        <div key={item.key} className="mb-2 mt-4 px-1">
           <span
-            className="text-[11px] font-bold uppercase"
+            className="text-[11px] font-semibold uppercase"
             style={{
               color: "var(--text-muted)",
               fontFamily: "'Space Grotesk', 'DM Sans', sans-serif",
-              letterSpacing: "1.5px",
+              letterSpacing: "1.2px",
             }}
           >
             {item.label}
@@ -107,10 +107,10 @@ function Item({ active, name, path, icon, collapsed, onNavigate, nested = false 
       className={cn(
         "group relative my-0.5 flex w-full items-center transition-all duration-200",
         collapsed
-          ? "justify-center rounded-2xl px-0 py-3"
+          ? "justify-center rounded-xl px-0 py-2.5"
           : nested
-            ? "justify-start rounded-2xl px-3 py-2"
-            : "justify-start rounded-2xl px-3.5 py-3"
+            ? "justify-start rounded-xl px-3 py-1.75"
+            : "justify-start rounded-xl px-3.5 py-2.75"
       )}
     >
       {isActive && !collapsed && (
@@ -136,7 +136,7 @@ function Item({ active, name, path, icon, collapsed, onNavigate, nested = false 
             className={cn(
               "flex-1 truncate text-left font-['Space_Grotesk'] text-sm transition-colors duration-150",
               isActive ? "font-semibold text-(--text-primary)" : "font-medium text-(--text-secondary) group-hover:text-(--text-primary)",
-              nested && "text-[13px]"
+                nested && "text-[12.5px]"
             )}
           >
             {label}
@@ -163,7 +163,7 @@ function Item({ active, name, path, icon, collapsed, onNavigate, nested = false 
       className={({ isActive }) => cn(
         collapsed ? "block" : "block rounded-2xl",
         isActive
-          ? "bg-(--sidebar-active) shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent-primary)_20%,transparent)]"
+          ? "bg-(--sidebar-active) shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent-primary)_24%,transparent)]"
           : "hover:bg-(--sidebar-hover)"
       )}
     >

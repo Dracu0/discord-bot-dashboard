@@ -14,6 +14,7 @@ import { usePageState } from "utils/State";
 import { useLocale, Locale } from "utils/Language";
 import { usePageInfo } from "contexts/PageInfoContext";
 import useBanner from "./components/Banner";
+import PageSection from "components/layout/PageSection";
 
 export default function Feature() {
     const { feature } = useParams()
@@ -38,30 +39,35 @@ function FeaturePanel() {
     useBanner(locale(name))
 
     return (
-        <div className="flex flex-col mb-2.5">
-            {canToggle && !enabled && (
-                <div
-                    className="px-4 py-3 mb-4 text-sm font-semibold rounded-md border"
-                    style={{
-                        backgroundColor: "var(--status-warning-bg)",
-                        color: "var(--status-warning)",
-                        borderColor: "var(--status-warning)",
-                    }}
-                >
-                    <Locale
-                        zh="\u6b64\u529f\u80fd\u5df2\u505c\u7528\u3002\u555f\u7528\u5f8c\u8a2d\u5b9a\u624d\u6703\u751f\u6548\u3002"
-                        en="This feature is currently disabled. Enable it using the toggle above for settings to take effect."
-                    />
-                </div>
-            )}
-            {query.isLoading ?
-                <ConfigGridSkeleton />
-                : query.error || !query.data ?
-                <span className="text-red-400">Failed to load feature configuration.</span>
-                :
-                <FeatureConfigPanel detail={query.data} enabled={enabled} />
-            }
-        </div>
+        <PageSection
+            title={locale(name)}
+            description={<Locale zh="管理此功能的詳細設定。" en="Manage detailed configuration for this feature." />}
+        >
+            <div className="flex flex-col mb-1">
+                {canToggle && !enabled && (
+                    <div
+                        className="px-4 py-3 mb-4 text-sm font-semibold rounded-xl border"
+                        style={{
+                            backgroundColor: "var(--status-warning-bg)",
+                            color: "var(--status-warning)",
+                            borderColor: "var(--status-warning)",
+                        }}
+                    >
+                        <Locale
+                            zh="\u6b64\u529f\u80fd\u5df2\u505c\u7528\u3002\u555f\u7528\u5f8c\u8a2d\u5b9a\u624d\u6703\u751f\u6548\u3002"
+                            en="This feature is currently disabled. Enable it using the toggle above for settings to take effect."
+                        />
+                    </div>
+                )}
+                {query.isLoading ?
+                    <ConfigGridSkeleton />
+                    : query.error || !query.data ?
+                    <span className="text-red-400">Failed to load feature configuration.</span>
+                    :
+                    <FeatureConfigPanel detail={query.data} enabled={enabled} />
+                }
+            </div>
+        </PageSection>
     );
 }
 

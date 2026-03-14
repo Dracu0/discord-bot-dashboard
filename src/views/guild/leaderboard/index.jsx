@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Trophy } from "lucide-react";
 import { GuildContext } from "contexts/guild/GuildContext";
@@ -9,7 +9,7 @@ import { Spinner } from "components/ui/spinner";
 import LeaderboardTable from "components/card/data/LeaderboardTable";
 import {
     Pagination, PaginationContent, PaginationItem, PaginationLink,
-    PaginationPrevious, PaginationNext,
+    PaginationPrevious, PaginationNext, PaginationEllipsis,
 } from "components/ui/pagination";
 import PageContainer from "components/layout/PageContainer";
 import PageHeader from "components/layout/PageHeader";
@@ -48,6 +48,16 @@ export default function Leaderboard() {
     if (!data) return null;
     const users = data.users || data.entries || [];
 
+    const pageWindow = useMemo(() => {
+        if (data.totalPages <= 7) {
+            return Array.from({ length: data.totalPages }, (_, i) => i + 1);
+        }
+        const pages = new Set([1, data.totalPages, page - 1, page, page + 1]);
+        return Array.from(pages)
+            .filter((n) => n >= 1 && n <= data.totalPages)
+            .sort((a, b) => a - b);
+    }, [data.totalPages, page]);
+
     return (
         <PageContainer>
             <PageHeader
@@ -82,17 +92,24 @@ export default function Leaderboard() {
                                         disabled={page <= 1}
                                     />
                                 </PaginationItem>
-                                {Array.from({ length: Math.min(data.totalPages, 5) }, (_, i) => {
-                                    const pageNum = i + 1;
+                                {pageWindow.map((pageNum, idx) => {
+                                    const prev = pageWindow[idx - 1];
                                     return (
-                                        <PaginationItem key={pageNum}>
-                                            <PaginationLink
-                                                isActive={page === pageNum}
-                                                onClick={() => setPage(pageNum)}
-                                            >
-                                                {pageNum}
-                                            </PaginationLink>
-                                        </PaginationItem>
+                                        <React.Fragment key={pageNum}>
+                                            {idx > 0 && prev != null && pageNum - prev > 1 && (
+                                                <PaginationItem>
+                                                    <PaginationEllipsis />
+                                                </PaginationItem>
+                                            )}
+                                            <PaginationItem>
+                                                <PaginationLink
+                                                    isActive={page === pageNum}
+                                                    onClick={() => setPage(pageNum)}
+                                                >
+                                                    {pageNum}
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                        </React.Fragment>
                                     );
                                 })}
                                 <PaginationItem>

@@ -26,7 +26,7 @@ function Sidebar({ routes }) {
         style={{
           width,
           transition: "width 0.25s cubic-bezier(.4,0,.2,1)",
-          boxShadow: "24px 0 64px color-mix(in srgb, var(--accent-primary) 8%, rgba(2,6,23,0.14))",
+          boxShadow: "18px 0 40px color-mix(in srgb, var(--accent-primary) 7%, transparent)",
         }}
       >
         <div className="flex-1 overflow-y-auto">
@@ -37,7 +37,7 @@ function Sidebar({ routes }) {
           className="flex items-center justify-center border-t border-(--sidebar-border) px-4 py-3"
           style={{
             background:
-              "linear-gradient(180deg, color-mix(in srgb, var(--accent-primary) 5%, transparent) 0%, transparent 100%)",
+              "linear-gradient(180deg, color-mix(in srgb, var(--accent-primary) 3%, transparent) 0%, transparent 100%)",
           }}
         >
           <TooltipProvider>
@@ -46,7 +46,7 @@ function Sidebar({ routes }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-9 w-9 rounded-full border border-(--border-subtle) bg-(--surface-primary) text-(--text-secondary) hover:bg-(--surface-secondary)"
+                  className="h-9 w-9 rounded-xl border border-(--border-subtle) bg-(--surface-primary) text-(--text-secondary) hover:bg-(--surface-secondary)"
                   onClick={toggle}
                   aria-label={
                     sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
@@ -76,7 +76,7 @@ export function SidebarResponsive({ routes }) {
 
   return (
     <div className="flex items-center xl:hidden">
-      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-(--surface-secondary) text-(--text-primary) hover:bg-(--surface-primary)" onClick={open}>
+      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl border border-(--border-subtle) bg-(--surface-primary) text-(--text-primary) hover:bg-(--surface-secondary)" onClick={open}>
         <Menu size={20} />
       </Button>
 

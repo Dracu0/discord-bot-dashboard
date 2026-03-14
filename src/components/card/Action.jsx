@@ -17,7 +17,7 @@ export function Action({ id, action }) {
       title={locale(action.name)}
       description={action.description}
       controls={(
-        <Button size="sm" className="h-10 rounded-full px-4 text-sm font-medium shadow-(--shadow-xs)">
+        <Button size="sm" className="h-10 rounded-xl px-4 text-sm font-semibold shadow-(--shadow-xs)">
           <Locale zh="打開" en="Open" />
           <ArrowRight className="ml-1 h-3.5 w-3.5" />
         </Button>

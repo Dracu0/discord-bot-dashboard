@@ -21,9 +21,9 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
   };
 
   return (
-    <div className="flex h-full flex-col px-3 pb-3 pt-4">
+    <div className="flex h-full flex-col px-3 pb-3 pt-3.5">
       <div
-        className={`mb-3 flex items-center gap-2 ${
+        className={`mb-2.5 flex items-center gap-2 ${
           collapsed ? "justify-center px-0" : "justify-start px-2"
         }`}
       >
@@ -33,7 +33,7 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-full border border-(--border-subtle) bg-(--surface-primary) text-(--text-secondary) hover:bg-(--surface-secondary)"
+                className="h-8 w-8 rounded-xl border border-(--border-subtle) bg-(--surface-primary) text-(--text-secondary) hover:bg-(--surface-secondary)"
                 onClick={handleBack}
                 aria-label="Back to servers"
               >
@@ -52,7 +52,7 @@ function SidebarContent({ routes, collapsed, onNavigate }) {
         )}
       </div>
       <Brand collapsed={collapsed} />
-      <div className="mb-auto mt-4">
+      <div className="mb-auto mt-3.5">
         <div className={collapsed ? "px-1" : "px-2"}>
           <Links routes={routes} collapsed={collapsed} onNavigate={onNavigate} />
         </div>

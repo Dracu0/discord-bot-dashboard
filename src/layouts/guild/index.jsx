@@ -43,7 +43,16 @@ function RouteWrapper({ children }) {
                         className="pointer-events-none absolute inset-x-0 top-0 z-0 h-64"
                         style={{
                             background:
-                                "linear-gradient(180deg, color-mix(in srgb, var(--accent-primary) 10%, transparent) 0%, transparent 72%)",
+                                "linear-gradient(180deg, color-mix(in srgb, var(--accent-primary) 7%, transparent) 0%, transparent 70%)",
+                        }}
+                    />
+
+                    <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 z-0"
+                        style={{
+                            background:
+                                "radial-gradient(circle_at_0%_0%, color-mix(in srgb, var(--accent-primary) 4%, transparent) 0%, transparent 35%), radial-gradient(circle_at_100%_100%, color-mix(in srgb, var(--accent-primary) 3%, transparent) 0%, transparent 38%)",
                         }}
                     />
 
@@ -52,7 +61,7 @@ function RouteWrapper({ children }) {
 
                     <main
                         id="main-content"
-                        className="relative z-1 mx-auto min-h-screen w-full max-w-420 px-4 pb-8 sm:px-5 md:px-6 md:pb-10 xl:px-8"
+                        className="relative z-1 mx-auto min-h-screen w-full max-w-430 px-4 pb-8 sm:px-5 md:px-6 md:pb-10 xl:px-8"
                         data-guild-content
                         style={{
                             animation: "fadeSlideUp 0.3s ease both",

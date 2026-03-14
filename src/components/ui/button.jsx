@@ -4,15 +4,15 @@ import { cva } from "class-variance-authority";
 import { cn } from "lib/utils";
 
 const buttonVariants = cva(
-  "touch-target inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-(--radius-md) text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--focus-ring-color) focus-visible:ring-offset-2 focus-visible:ring-offset-(--focus-ring-offset-color) disabled:pointer-events-none disabled:opacity-50 cursor-pointer active:scale-[0.98]",
+  "touch-target inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-(--radius-md) text-sm font-semibold tracking-[0.01em] transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--focus-ring-color) focus-visible:ring-offset-2 focus-visible:ring-offset-(--focus-ring-offset-color) disabled:pointer-events-none disabled:opacity-50 cursor-pointer active:scale-[0.985]",
   {
     variants: {
       variant: {
-        default: "bg-(--accent-primary) text-white hover:brightness-110 shadow-(--shadow-sm)",
+        default: "bg-(--accent-primary) text-white hover:brightness-108 hover:shadow-(--shadow-md) shadow-(--shadow-sm)",
         destructive: "bg-(--status-error) text-white hover:brightness-110",
-        outline: "border border-(--border-default) bg-transparent text-(--text-primary) hover:bg-(--surface-secondary)",
+        outline: "border border-(--border-default) bg-(--surface-primary) text-(--text-primary) hover:bg-(--surface-secondary)",
         secondary: "bg-(--surface-secondary) text-(--text-primary) hover:bg-(--border-subtle)",
-        ghost: "text-(--text-primary) hover:bg-(--surface-secondary)",
+        ghost: "text-(--text-primary) hover:bg-(--surface-secondary) hover:text-(--text-primary)",
         link: "text-(--accent-primary) underline-offset-4 hover:underline",
         success: "bg-(--status-success) text-white hover:brightness-110",
       },

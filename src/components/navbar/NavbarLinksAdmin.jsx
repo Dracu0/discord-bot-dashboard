@@ -24,7 +24,7 @@ function IconActionButton({ children, className, ...props }) {
         <Button
             variant="ghost"
             size="icon"
-            className={className || "rounded-full border border-(--border-subtle) bg-(--surface-primary) text-(--text-primary) hover:bg-(--surface-secondary)"}
+            className={className || "rounded-xl border border-(--border-subtle) bg-(--surface-primary) text-(--text-primary) hover:bg-(--surface-secondary)"}
             style={{ width: ICON_BTN, height: ICON_BTN, transition: "transform 0.2s ease, box-shadow 0.2s ease" }}
             {...props}
         >
@@ -40,9 +40,9 @@ export default function HeaderLinks() {
 
     return (
         <>
-            <SearchBar className="me-2.5" />
+            <SearchBar className="me-2 w-full min-w-48 md:min-w-68" />
             <SidebarResponsive routes={routes} />
-            <div className="flex items-center gap-1.5 rounded-full border border-(--border-subtle) bg-(--surface-primary)/90 px-2 py-1.25 shadow-(--shadow-xs)">
+            <div className="flex items-center gap-1.5 rounded-2xl border border-(--border-subtle) bg-(--surface-primary)/95 px-1.75 py-1.25 shadow-(--shadow-xs)">
                 <Notifications />
                 <IconActionButton
                     onClick={() => updateSettings({ colorScheme: isDark ? "light" : "dark" })}
@@ -79,7 +79,7 @@ function UserMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button type="button" className="flex items-center gap-2 rounded-full border border-transparent px-1.5 py-1 transition-colors hover:border-(--border-subtle) hover:bg-(--surface-secondary)">
+                <button type="button" className="flex items-center gap-2 rounded-xl border border-transparent px-1.5 py-1 transition-colors hover:border-(--border-subtle) hover:bg-(--surface-secondary)">
                     <Avatar
                         className="h-8 w-8"
                         style={{ border: "2px solid var(--accent-primary)" }}

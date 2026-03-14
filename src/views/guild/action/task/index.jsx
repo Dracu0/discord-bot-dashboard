@@ -44,7 +44,6 @@ export default function TaskBoard() {
                 : "Update task name and settings."
             }
         />}
-        className="rounded-[28px] border border-(--border-subtle) bg-(--surface-card) p-5 shadow-(--shadow-sm) md:p-6"
     >
         <TaskConfigPanel />
     </PageSection>

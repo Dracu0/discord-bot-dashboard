@@ -152,7 +152,15 @@ function AuditLogRow({ entry }) {
                 </TableCell>
                 <TableCell>
                     {hasDiff && (
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={(e) => e.stopPropagation()}>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setExpanded((p) => !p);
+                            }}
+                        >
                             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         </Button>
                     )}
@@ -263,18 +271,29 @@ export default function AuditLogPage() {
                 title={<Locale zh="審計日誌" en="Audit Log" />}
                 description={<Locale zh="追蹤設定變更與差異。" en="Track configuration changes and diffs." />}
                 meta={total > 0 ? <Badge variant="secondary">{total}</Badge> : null}
-                actions={<Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowFilters((p) => !p)}
-                >
-                    <Filter size={14} className="mr-1" />
-                    <Locale zh="篩選" en="Filters" />
-                </Button>}
+                actions={
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => query.refetch()}
+                        >
+                            <Locale zh="重新整理" en="Refresh" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowFilters((p) => !p)}
+                        >
+                            <Filter size={14} className="mr-1" />
+                            <Locale zh="篩選" en="Filters" />
+                        </Button>
+                    </div>
+                }
             />
 
             <Collapsible open={showFilters}>
-                <CollapsibleContent>
+                <CollapsibleContent className="pb-1">
                     <Card variant="panel" className="mb-2 bg-(--surface-card)">
                         <div className="flex flex-wrap items-center gap-3">
                             <div className="w-full md:w-72">
