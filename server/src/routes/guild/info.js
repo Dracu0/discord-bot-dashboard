@@ -10,6 +10,7 @@ const ScheduledMessage = require('../../models/ScheduledMessage');
 const TempRole = require('../../models/TempRole');
 const Giveaway = require('../../models/Giveaway');
 const AutoResponder = require('../../models/AutoResponder');
+const AFK = require('../../models/AFK');
 const { fetchGuild, fetchGuildEmojis, fetchGuildStickers } = require('../../utils/discord');
 
 function stickerExtension(formatType) {
@@ -49,7 +50,7 @@ router.get('/detail', async (req, res) => {
     try {
         const guildId = req.params.id;
         const now = new Date();
-        const [guild, config, customCommandsCount, announcementsCount, activeTempRolesCount, activeGiveawaysCount, autoRespondersCount] = await Promise.all([
+        const [guild, config, customCommandsCount, announcementsCount, activeTempRolesCount, activeGiveawaysCount, autoRespondersCount, afkCount] = await Promise.all([
             fetchGuild(guildId),
             GuildConfiguration.findOne({ guildId }),
             CustomCommand.countDocuments({ guildId }),
@@ -57,6 +58,7 @@ router.get('/detail', async (req, res) => {
             TempRole.countDocuments({ guildId, expiresAt: { $gt: now } }),
             Giveaway.countDocuments({ guildId, ended: false, endsAt: { $gt: now } }),
             AutoResponder.countDocuments({ guildId }),
+            AFK.countDocuments({ guildId }),
         ]);
 
         const totalMembers = guild.approximate_member_count || 0;
@@ -82,6 +84,7 @@ router.get('/detail', async (req, res) => {
             activeGiveawaysCount,
             musicEnabled: config?.musicEnabled !== false,
             autoRespondersCount,
+            afkCount,
         });
     } catch (err) {
         req.log?.error('guild_detail_fetch_failed', { guildId: req.params.id, error: err });

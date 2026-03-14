@@ -20,6 +20,7 @@ describe("dashboardData server overview parity", () => {
             activeGiveawaysCount: 1,
             musicEnabled: true,
             autoRespondersCount: 6,
+            afkCount: 7,
         };
 
         const infoMap = serverOverviewRow.items(detail)[0];
@@ -42,9 +43,10 @@ describe("dashboardData server overview parity", () => {
             "Giveaways",
             "Music",
             "Auto-Responder",
+            "AFK Profiles",
         ]);
 
-        expect(entries).toHaveLength(15);
+        expect(entries).toHaveLength(16);
     });
 
     it("shows sensible fallback values when detail payload is sparse", () => {
@@ -55,5 +57,6 @@ describe("dashboardData server overview parity", () => {
         expect(entries.find((entry) => entry.name === "Custom Commands")?.value).toBe("0 configured");
         expect(entries.find((entry) => entry.name === "Temporary Roles")?.value).toBe("0 active");
         expect(entries.find((entry) => entry.name === "Music")?.value).toBe("❌ Disabled");
+        expect(entries.find((entry) => entry.name === "AFK Profiles")?.value).toBe("0 active");
     });
 });

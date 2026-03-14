@@ -143,6 +143,10 @@ export const dashboardData = [
                         name: "Auto-Responder",
                         value: `${detail.autoRespondersCount || 0} configured`,
                     },
+                    {
+                        name: "AFK Profiles",
+                        value: `${detail.afkCount || 0} active`,
+                    },
                 ],
             },
         ],

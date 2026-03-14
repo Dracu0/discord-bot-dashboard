@@ -8,6 +8,7 @@ const ScheduledMessage = require('../../models/ScheduledMessage');
 const TempRole = require('../../models/TempRole');
 const Giveaway = require('../../models/Giveaway');
 const AutoResponder = require('../../models/AutoResponder');
+const AFK = require('../../models/AFK');
 const { fetchGuildChannels, fetchGuildRoles, addGuildMemberRole, removeGuildMemberRole, sendChannelMessage, addMessageReaction } = require('../../utils/discord');
 const { isObject, isValidObjectId } = require('./helpers');
 const { badRequest, notFound, sendApiError } = require('../../utils/apiError');
@@ -84,6 +85,11 @@ const FEATURE_FIELDS = {
         fields: [],
         virtual: true,
     },
+    afk: {
+        enableCheck: () => true,
+        fields: [],
+        virtual: true,
+    },
 };
 
 // GET /guild/:id/features
@@ -141,7 +147,7 @@ router.patch('/:featureId/enabled', async (req, res) => {
             return sendApiError(res, notFound('Unknown feature', { featureId }));
         }
 
-        // Virtual features (custom_commands, announcements, etc.) have no enable/disable toggle
+        // Virtual features (custom_commands, announcements, afk, etc.) have no enable/disable toggle
         if (featureDef.virtual) {
             return sendApiError(res, badRequest('This feature cannot be toggled — it is always available', {
                 featureId,
@@ -254,6 +260,8 @@ router.get('/:featureId', async (req, res) => {
                         order: Number.isFinite(order) && order >= 0 ? order : index,
                     };
                 });
+        } else if (featureId === 'afk') {
+            values.afkEntries = await AFK.find({ guildId }).sort({ timestamp: -1 }).limit(200).lean();
         }
 
         res.json({ values });
@@ -808,6 +816,23 @@ router.post('/:featureId/items', async (req, res) => {
                 break;
             }
 
+            case 'afk': {
+                const { userId, reason } = body;
+                if (!userId || !DISCORD_ID_RE.test(String(userId))) {
+                    return res.status(400).json({ error: 'Valid user ID is required' });
+                }
+                const safeReason = String(reason || '').trim();
+                if (!safeReason || safeReason.length > 200) {
+                    return res.status(400).json({ error: 'Reason is required (max 200 chars)' });
+                }
+                created = await AFK.findOneAndUpdate(
+                    { guildId, userId: String(userId) },
+                    { reason: safeReason, timestamp: new Date() },
+                    { upsert: true, new: true, setDefaultsOnInsert: true }
+                );
+                break;
+            }
+
             default:
                 return sendApiError(res, badRequest('This feature does not support item creation', { featureId }));
         }
@@ -916,7 +941,7 @@ router.patch('/:featureId/items/reorder', async (req, res) => {
 });
 
 // Features that store items in dedicated MongoDB collections (use ObjectId)
-const OBJECTID_FEATURES = new Set(['custom_commands', 'announcements', 'temp_roles', 'giveaways', 'auto_responder']);
+const OBJECTID_FEATURES = new Set(['custom_commands', 'announcements', 'temp_roles', 'giveaways', 'auto_responder', 'afk']);
 
 // PATCH /guild/:id/feature/:featureId/items/:itemId — Update item
 router.patch('/:featureId/items/:itemId', async (req, res) => {
@@ -1143,6 +1168,38 @@ router.patch('/:featureId/items/:itemId', async (req, res) => {
                 break;
             }
 
+            case 'afk': {
+                const afk = await AFK.findOne({ _id: itemId, guildId });
+                if (!afk) return res.status(404).json({ error: 'AFK entry not found' });
+
+                if (body.reason !== undefined) {
+                    const nextReason = String(body.reason || '').trim();
+                    if (!nextReason || nextReason.length > 200) {
+                        return res.status(400).json({ error: 'Reason is required (max 200 chars)' });
+                    }
+                    afk.reason = nextReason;
+                }
+
+                if (body.userId !== undefined) {
+                    if (!DISCORD_ID_RE.test(String(body.userId))) {
+                        return res.status(400).json({ error: 'Invalid user ID' });
+                    }
+                    afk.userId = String(body.userId);
+                }
+
+                if (body.timestamp !== undefined) {
+                    const nextDate = new Date(body.timestamp);
+                    if (Number.isNaN(nextDate.getTime())) {
+                        return res.status(400).json({ error: 'Invalid timestamp' });
+                    }
+                    afk.timestamp = nextDate;
+                }
+
+                await afk.save();
+                updated = afk;
+                break;
+            }
+
             default:
                 return sendApiError(res, badRequest('This feature does not support item updates', { featureId }));
         }
@@ -1239,6 +1296,12 @@ router.delete('/:featureId/items/:itemId', async (req, res) => {
                 config.markModified('reactionRoles');
                 await config.save();
                 publishConfigInvalidation(guildId);
+                break;
+            }
+
+            case 'afk': {
+                deleted = await AFK.findOneAndDelete({ _id: itemId, guildId });
+                if (!deleted) return res.status(404).json({ error: 'AFK entry not found' });
                 break;
             }
 

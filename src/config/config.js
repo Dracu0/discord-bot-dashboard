@@ -14,6 +14,7 @@ import { TempRolesFeature } from "./features/temproles";
 import { GiveawaysFeature } from "./features/giveaways";
 import { MusicFeature } from "./features/music";
 import { AutoResponderFeature } from "./features/autoresponder";
+import { AFKFeature } from "./features/afk";
 import { ManageSuggestionsAction } from "./actions/ManageSuggestions";
 import { ModHistoryAction } from "./actions/ModHistory";
 
@@ -92,6 +93,7 @@ export const config = {
         "giveaways": GiveawaysFeature,
         "music": MusicFeature,
         "auto_responder": AutoResponderFeature,
+        "afk": AFKFeature,
     },
     tutorialUrl: "https://github.com/Dracu0/Discord-Bot-v0.3.4",
     serverUrl: import.meta.env.PROD ? "/api" : "http://localhost:8080/api",
