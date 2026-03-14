@@ -14,6 +14,8 @@ import {Locale, useLocale} from "../../../../utils/Language";
 import BackNavButton from "components/navigation/BackNavButton";
 import PageSection from "components/layout/PageSection";
 import {ConfigItemListAnimated} from "components/fields/ConfigPanel";
+import Card from "components/card/Card";
+import { Button } from "components/ui/button";
 
 export default function TaskBoard() {
     const {action: actionId} = useParams()
@@ -53,7 +55,20 @@ function TaskConfigPanel() {
     const query = useTaskDetailQuery()
 
     if (query.isLoading) return <ConfigGridSkeleton />
-    if (query.error || !query.data) return <span className="text-red-400">Failed to load task details.</span>
+    if (query.error || !query.data) {
+        return (
+            <Card variant="panel" className="border-(--status-danger) bg-(--status-danger-bg)">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <span className="text-sm font-semibold text-(--status-danger)">
+                        <Locale zh="無法載入任務內容。" en="Failed to load task details." />
+                    </span>
+                    <Button variant="outline" size="sm" onClick={() => query.refetch()}>
+                        <Locale zh="重試" en="Retry" />
+                    </Button>
+                </div>
+            </Card>
+        )
+    }
     return <Config detail={query.data} />
 }
 

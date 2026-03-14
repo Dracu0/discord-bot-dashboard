@@ -11,6 +11,7 @@ import StatCard from "components/card/data/StatCard";
 import { Badge } from "components/ui/badge";
 import { Spinner } from "components/ui/spinner";
 import { SegmentedControl } from "components/ui/segmented-control";
+import { Button } from "components/ui/button";
 import PageContainer from "components/layout/PageContainer";
 import PageHeader from "components/layout/PageHeader";
 import PageSection from "components/layout/PageSection";
@@ -192,9 +193,18 @@ export default function Analytics() {
     if (query.isError) {
         return (
             <PageContainer>
-                <span className="text-red-500">
-                    <Locale zh="無法載入分析資料" en="Failed to load analytics data" />
-                </span>
+                    <PageSection>
+                        <Card variant="panel" className="border-(--status-danger) bg-(--status-danger-bg)">
+                            <div className="flex flex-wrap items-center justify-between gap-3">
+                                <span className="text-sm font-semibold text-(--status-danger)">
+                                    <Locale zh="無法載入分析資料。" en="Failed to load analytics data." />
+                                </span>
+                                <Button variant="outline" size="sm" onClick={() => query.refetch()}>
+                                    <Locale zh="重試" en="Retry" />
+                                </Button>
+                            </div>
+                        </Card>
+                    </PageSection>
             </PageContainer>
         );
     }

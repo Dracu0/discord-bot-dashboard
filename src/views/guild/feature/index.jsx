@@ -15,6 +15,8 @@ import { useLocale, Locale } from "utils/Language";
 import { usePageInfo } from "contexts/PageInfoContext";
 import useBanner from "./components/Banner";
 import PageSection from "components/layout/PageSection";
+import Card from "components/card/Card";
+import { Button } from "components/ui/button";
 
 export default function Feature() {
     const { feature } = useParams()
@@ -62,7 +64,16 @@ function FeaturePanel() {
                 {query.isLoading ?
                     <ConfigGridSkeleton />
                     : query.error || !query.data ?
-                    <span className="text-red-400">Failed to load feature configuration.</span>
+                    <Card variant="panel" className="border-(--status-danger) bg-(--status-danger-bg)">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <span className="text-sm font-semibold text-(--status-danger)">
+                                <Locale zh="無法載入功能設定。" en="Failed to load feature configuration." />
+                            </span>
+                            <Button variant="outline" size="sm" onClick={() => query.refetch()}>
+                                <Locale zh="重試" en="Retry" />
+                            </Button>
+                        </div>
+                    </Card>
                     :
                     <FeatureConfigPanel detail={query.data} enabled={enabled} />
                 }
